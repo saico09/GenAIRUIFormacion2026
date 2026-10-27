@@ -1,0 +1,5 @@
+[
+  { "name": "Ana Demo", "birth_date": "1990-01-10", "email": "ana@example.com" },
+  { "name": "Bruno Demo", "birth_date": "1985-02-20", "email": "bruno@example.com" },
+  { "name": "Carla Demo", "birth_date": "2000-03-30", "email": "carla@example.com" }
+]

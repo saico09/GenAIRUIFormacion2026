@@ -2,6 +2,15 @@
 
 Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos completos en [GUIA.md](GUIA.md).
 
+## HDU-002 · 27/10/2026 · Crear y consultar pacientes
+
+- **Tabla `public.patients`** (id autogenerado, name, birth_date, email). La crea la API al arrancar si no existe; no borra datos.
+- **`POST /patients`** guarda un paciente y responde 201 con su id. **`GET /patients`** lista todos y **`GET /patients/{id}`** trae uno.
+- **Validaciones** en `app/schemas.py`: name no vacío, birth_date `YYYY-MM-DD` de una fecha real y email válido. Si algo falla, responde 422 y no guarda nada.
+- **Código separado**: `db.py` conexión (variables de entorno), `models.py` la tabla, `schemas.py` validaciones, `main.py` endpoints.
+- **`datos/pacientes.json`**: Ana, Bruno y Carla Demo (ficticios). Ya cargados: ids 1, 2 y 3.
+- Ojo: un id que no existe todavía da 500; el 404 llega en la HDU-003.
+
 ## HDU-001 · 27/10/2026 · PostgreSQL + FastAPI en Docker
 
 - **codigo/** es el repo de Git; todo lo de la app vive ahí, separado de los documentos del programa.
