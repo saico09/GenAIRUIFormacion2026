@@ -105,6 +105,35 @@ probar que rechaza datos malos (debe dar error 422 y no guardar nada):
 try { Invoke-RestMethod -Method Post -Uri http://localhost:8000/patients -ContentType 'application/json' -Body '{"name":"X","birth_date":"2026-02-30","email":"x@example.com"}' } catch { $_.Exception.Response.StatusCode.value__; $_.ErrorDetails.Message }
 ```
 
+## Postman
+
+importar cada curl: en Postman, Import → Raw text → pegar el curl → Continue → Import. (También sirven en Git Bash, no en PowerShell.)
+
+health:
+```bash
+curl --location 'http://localhost:8000/health'
+```
+
+listar pacientes:
+```bash
+curl --location 'http://localhost:8000/patients'
+```
+
+ver uno por id:
+```bash
+curl --location 'http://localhost:8000/patients/1'
+```
+
+crear paciente (queda guardado, cambia los datos para no duplicar):
+```bash
+curl --location 'http://localhost:8000/patients' --header 'Content-Type: application/json' --data-raw '{"name":"Nombre Demo","birth_date":"1995-05-05","email":"nombre@example.com"}'
+```
+
+crear con fecha inválida (debe dar 422 y no guardar nada):
+```bash
+curl --location 'http://localhost:8000/patients' --header 'Content-Type: application/json' --data-raw '{"name":"X","birth_date":"2026-02-30","email":"x@example.com"}'
+```
+
 ## Logs
 
 ver logs de la api en vivo (sales con Ctrl+C):
