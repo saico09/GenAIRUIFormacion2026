@@ -7,11 +7,13 @@ entrar a la carpeta:
 cd C:/Users/marco/Documents/CONKORD/GenAIRUIFormacion2026/codigo
 ```
 
-## Primera vez
+## Primera vez (solo en un equipo nuevo)
 
-crear tu .env (después pon usuario y clave):
-```bash
-cp .env.example .env
+ojo: tu `.env` ya existe. Este paso es solo para un clon nuevo del repo; si lo corres ahora, pisa tu usuario y clave.
+
+crear el .env solo si no existe (PowerShell; después pon usuario y clave):
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
 ## Levantar / bajar
