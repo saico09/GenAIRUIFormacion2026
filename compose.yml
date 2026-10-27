@@ -8,6 +8,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?falta POSTGRES_DB en .env}
       POSTGRES_USER: ${POSTGRES_USER:?falta POSTGRES_USER en .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD en .env}
+    ports:
+      # Solo desde este equipo (DBeaver, psql local); no queda expuesto a la red
+      - "127.0.0.1:5432:5432"
     volumes:
       # Desde PostgreSQL 18 el volumen se monta en /var/lib/postgresql (no en .../data)
       - pgdata:/var/lib/postgresql

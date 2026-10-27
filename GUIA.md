@@ -48,6 +48,13 @@ entrar a la base con psql (sales con `\q`):
 docker compose exec postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 ```
 
+ver usuario y clave para DBeaver:
+```bash
+cat .env
+```
+
+conectar con DBeaver: Nueva conexión → PostgreSQL → Host `localhost`, Puerto `5432`, Base `genai`, usuario y clave los del `.env`. Si pide driver, dejar que lo descargue. Solo funciona con los contenedores arriba.
+
 ## python-api
 
 probar que la api está viva (debe responder 200 y {"status":"ok"}):
