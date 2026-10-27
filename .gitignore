@@ -1,11 +1,3 @@
-# Secretos y entorno local
 .env
 .venv/
 __pycache__/
-
-# Fuentes originales y material interno: no se suben al repo
-*.docx
-*.pdf
-*.msg
-*.zip
-.contexto/

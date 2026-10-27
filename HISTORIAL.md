@@ -4,6 +4,7 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 ## HDU-001 · 27/10/2026 · PostgreSQL + FastAPI en Docker
 
+- **codigo/** es el repo de Git; todo lo de la app vive ahí, separado de los documentos del programa.
 - **compose.yml**: levanta dos servicios con `docker compose up -d --build`.
 - **postgres** (18.6-alpine): base `genai`. Usuario y clave salen del `.env` (no va a Git). Los datos viven en el volumen `pgdata`, así que sobreviven a un `down`. Tiene healthcheck con `pg_isready`.
 - **python-api** (Python 3.15 + FastAPI): por ahora solo `GET /health`, que responde `{"status":"ok"}` en http://localhost:8000. Espera a que postgres esté sano antes de arrancar. Ya trae instaladas SQLAlchemy, psycopg y email-validator para el CRUD de la HDU-002, pero todavía no se conecta a la base.

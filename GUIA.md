@@ -1,6 +1,11 @@
 # Guía rápida
 
-Todo se corre desde la carpeta del proyecto (`GenAIRUIFormacion2026`). Docker Desktop tiene que estar abierto.
+Todo se corre desde la carpeta `codigo` (es el repo de Git). Docker Desktop tiene que estar abierto.
+
+entrar a la carpeta:
+```bash
+cd C:/Users/marco/Documents/CONKORD/GenAIRUIFormacion2026/codigo
+```
 
 ## Primera vez
 
