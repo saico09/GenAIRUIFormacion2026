@@ -141,7 +141,7 @@ try { Invoke-RestMethod -Method Post -Uri http://localhost:8000/patients -Conten
 
 ## Pacientes Java
 
-Ana, Bruno y Carla ya están cargados en Java. Los campos JSON son los mismos que en Python: `name`, `birth_date` y `email`; cada tabla genera sus propios ids, así que no dependas de que coincidan entre APIs.
+En este equipo, Ana, Bruno y Carla ya están cargados en Java. Los campos JSON son los mismos que en Python: `name`, `birth_date` y `email`; cada tabla genera sus propios ids, así que no dependas de que coincidan entre APIs.
 
 cargar los tres ficticios solo si todavía no están (ojo: repetirlo duplica las filas):
 ```powershell
@@ -222,6 +222,22 @@ Ojo: durante el reinicio se interrumpe brevemente el acceso a los datos de ambas
 `pgdata` conserva los datos aunque el contenedor se reinicie. En `db.py`, `pool_pre_ping=True` comprueba que la conexión siga viva antes de reutilizarla; así descarta conexiones viejas después de un reinicio de PostgreSQL.
 
 En Java, JPA trabaja con la tabla `java.patients`; la tabla de Python sigue siendo `public.patients`. El reinicio Java conservó sus tres pacientes, y Ana siguió disponible también desde Python. La revisión con Rui y la explicación personal del recorrido del dato siguen pendientes.
+
+## Historias ficticias
+
+leer las tres historias preparadas para la futura ingesta:
+```powershell
+Get-Content -Raw datos/paciente-1.md, datos/paciente-2.md, datos/paciente-3.md
+```
+
+leer las cuatro preguntas y sus respuestas esperadas:
+```powershell
+Get-Content -Raw datos/preguntas.json
+```
+
+Cada historia tiene `patient_id` y tres secciones: Enfermedad, Tratamiento y Medicamento. Son nueve secciones en total, vinculadas a Ana, Bruno y Carla por sus ids Python 1, 2 y 3. Los valores Alfa/Beta/Gamma son ficticios. La pregunta sobre la última cirugía de Ana no tiene respuesta en los documentos; se espera `No hay información suficiente`.
+
+Los archivos están listos como datos de entrada. Todavía no hay embeddings, Qdrant ni RAG implementados. La HDU-011 espera recursos: en la última medición había 0,32 GB de RAM libre y el programa pide al menos 8 GB. El comando para volver a medir está al final de esta guía.
 
 ## Postman
 

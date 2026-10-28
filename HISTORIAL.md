@@ -4,6 +4,13 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-010 · 28/10/2026 · Historias y preguntas ficticias
+
+- **`datos/paciente-1.md`, `paciente-2.md` y `paciente-3.md`** contienen nueve secciones: Enfermedad, Tratamiento y Medicamento para Ana, Bruno y Carla. Usan valores ficticios Alfa/Beta/Gamma y los ids Python 1, 2 y 3 comprobados por HTTP.
+- **`datos/preguntas.json`** guarda las cuatro preguntas del checklist y sus respuestas esperadas. Tres se responden con los documentos; la última cirugía de Ana no aparece y debe responderse `No hay información suficiente`.
+- **Datos listos para futura ingesta**: la guía permite leer los archivos; las comprobaciones están en `evidencias/S03.md`. Todavía no se implementaron embeddings ni RAG.
+- Ojo: HDU-011 queda bloqueada antes de instalar Ollama/Qdrant. La medición final dio 0,32 GB libres de 13,86 GB, frente al mínimo de 8 GB; falta disponer de memoria suficiente y volver a medir antes de continuar.
+
 ## HDU-009 · 28/10/2026 · Persistencia Java y repaso de equivalencia
 
 - **Prueba de persistencia con `-Servicio java-api`** reinicia Java y PostgreSQL y compara sus pacientes antes/después. Conservó las tres filas y los cuatro campos originales de Ana, sin borrar `pgdata`.

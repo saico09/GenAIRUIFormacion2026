@@ -1,8 +1,8 @@
 # GenAI · app de práctica
 
-Por ahora tenemos PostgreSQL y dos servicios de pacientes: FastAPI y Spring Boot. Ambos permiten crear, listar, consultar, editar y borrar datos ficticios. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
+Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y tres historias ficticias preparadas para la futura ingesta. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
 
-[Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
+[Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 
 ## Arrancar
 
@@ -32,7 +32,7 @@ curl.exe -i http://localhost:8080/health
 
 Abre [Swagger de FastAPI](http://localhost:8000/docs) para probar el CRUD desde el navegador. PostgreSQL escucha en `localhost:5432`; FastAPI en `localhost:8000`; Spring Boot en `localhost:8080`. La base guarda los datos en el volumen `pgdata`.
 
-Python usa `public.patients` y Java usa `java.patients`, dentro de la misma base. Eso permite conservar y probar las filas de cada servicio por separado. Ana, Bruno y Carla Demo ya están cargados en ambas; los ids se generan de forma independiente.
+Python usa `public.patients` y Java usa `java.patients`, dentro de la misma base. Eso permite conservar y probar las filas de cada servicio por separado. En este equipo, Ana, Bruno y Carla Demo ya están cargados en ambas; los ids se generan de forma independiente. En un clon nuevo, usa los comandos de carga de la guía antes de probar persistencia.
 
 ## Contrato HTTP
 
@@ -131,6 +131,24 @@ Get-Content -Raw scripts/verificar_crud.py | docker compose exec -T python-api p
 
 El nombre `java-api` funciona dentro de la red de Docker; desde Windows usas `localhost:8080`. Ejecuta ambos verificadores para repetir la comparación. El CRUD y las 56 respuestas 422 esperadas pasaron entre ambas APIs; quedaron intactas las filas previas. Resultados en [evidencias S02](evidencias/S02.md).
 
+## Datos para la futura ingesta
+
+leer las historias ficticias de Ana, Bruno y Carla:
+
+```powershell
+Get-Content -Raw datos/paciente-1.md, datos/paciente-2.md, datos/paciente-3.md
+```
+
+leer las cuatro preguntas con su respuesta esperada:
+
+```powershell
+Get-Content -Raw datos/preguntas.json
+```
+
+Cada historia identifica al paciente por su id Python y tiene Enfermedad, Tratamiento y Medicamento: nueve secciones en total. Tres preguntas se responden desde esos textos. La cirugía de Ana no está documentada, así que se espera `No hay información suficiente`.
+
+**HDU-011 bloqueada por RAM:** la última medición dio 0,32 GB libres de 13,86 GB, frente al mínimo de 8 GB del programa. Todavía no hay embeddings, Qdrant ni RAG implementados. El siguiente paso es liberar memoria o disponer de recursos autorizados, volver a [medir la RAM](GUIA.md#revisar-el-equipo) y reanudar HDU-011 cuando se cumpla el mínimo.
+
 ## Ubicarse en el código
 
 | Archivo | Para qué sirve |
@@ -146,6 +164,8 @@ El nombre `java-api` funciona dentro de la red de Docker; desde Windows usas `lo
 | `java-api/src/main/java/com/conkord/genai/PatientController.java` | Recibe las peticiones de pacientes y usa el repositorio JPA. |
 | `java-api/src/main/java/com/conkord/genai/PatientRequest.java` | Valida nombre, fecha y email recibidos por Java. |
 | `datos/pacientes.json` | Los tres pacientes ficticios iniciales. |
+| `datos/paciente-1.md` a `paciente-3.md` | Historias ficticias vinculadas a los ids de Python. |
+| `datos/preguntas.json` | Cuatro preguntas y respuestas esperadas para probar recuperación. |
 | `scripts/verificar_crud.py` | Prueba reproducible por HTTP; limpia su paciente temporal. |
 | `scripts/verificar_persistencia.ps1` | Reinicia servicios y compara los pacientes antes/después. |
 

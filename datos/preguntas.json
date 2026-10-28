@@ -1,0 +1,22 @@
+[
+  {
+    "patient_id": 1,
+    "question": "¿Qué enfermedad tiene Ana Demo?",
+    "expected": "Enfermedad Alfa"
+  },
+  {
+    "patient_id": 2,
+    "question": "¿Qué tratamiento sigue Bruno Demo?",
+    "expected": "Tratamiento Beta"
+  },
+  {
+    "patient_id": 3,
+    "question": "¿Qué medicamento recibe Carla Demo?",
+    "expected": "Medicamento Gamma"
+  },
+  {
+    "patient_id": 1,
+    "question": "¿Cuál fue la última cirugía de Ana Demo?",
+    "expected": "No hay información suficiente"
+  }
+]
