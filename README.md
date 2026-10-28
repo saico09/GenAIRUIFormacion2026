@@ -341,7 +341,7 @@ iniciar el perfil genai con 2 CPU, 3072 MiB y Kubernetes 1.36.6:
 .\.local\bin\minikube.exe start --profile=genai --driver=docker --cpus=2 --memory=3072 --kubernetes-version=v1.36.6 --keep-context --wait=all --wait-timeout=6m
 ```
 
-`--keep-context` conserva el contexto activo; las consultas de esta práctica usan `kubectl --context=genai`. Se comprobaron **2 CPU y 3072 MiB reales**, el nodo `genai` **Ready** con Kubernetes 1.36.6 y la imagen **genai-fastapi:s09** cargada. [Resumen y evidencias HDU-039](evidencias/s09/039-resumen.md). La [guía](GUIA.md#preparar-minikube) deja los comandos para comprobar el nodo, construir y cargar la imagen. Esta HDU prepara la imagen; todavía no despliega FastAPI en Kubernetes.
+`--keep-context` conserva el contexto activo; las consultas de esta práctica usan `kubectl --context=genai`. Se comprobaron **2 CPU y 3072 MiB reales**, el nodo `genai` **Ready** con Kubernetes 1.36.6 y la imagen **genai-fastapi:s09** cargada. [Resumen y evidencias HDU-039](evidencias/s09/039-resumen.md). La [guía](GUIA.md#preparar-minikube) deja los comandos para comprobar el nodo, construir y cargar la imagen. HDU-039 preparó la imagen; HDU-042 comprobó su despliegue.
 
 ## Chart de FastAPI y PostgreSQL
 
@@ -354,6 +354,14 @@ En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El char
 Argo CD **3.5.6** está instalado en el contexto `genai`, namespace `argocd`, con sus siete pods Ready. `scripts/instalar_argocd.ps1` verifica el manifiesto oficial por SHA-256 y aplica los recursos sin forzar conflictos. [Instalación](evidencias/s09/041-instalacion.json) y [componentes](evidencias/s09/041-componentes.txt).
 
 El acceso a [Argo CD en HTTPS 8443](https://localhost:8443) y el login pasaron; **Repositories** mostró **Successful** para el repo público [GenAIRUIFormacion2026](https://github.com/saico09/GenAIRUIFormacion2026). Argo CD leyó `deploy/helm/fastapi` como chart Helm en el commit publicado `1bc6af1235a6d96952334e41685c3acd829b3fed` de `main`. [Evidencia y captura HDU-041](evidencias/s09/041-repositorio.md). La [guía](GUIA.md#preparar-argo-cd) deja el acceso, la clave inicial y la comprobación repetible; esta HDU todavía no crea una Application.
+
+## FastAPI desplegado por Argo CD
+
+La Application `fastapi` sigue `main` y `deploy/helm/fastapi`, con sincronización automática, prune y selfHeal. En HDU-042 desplegó el commit **230a161d585a3106969d57d5103256872f001928**: una réplica Ready, **Synced/Healthy** y operación **Succeeded** con tiempos coherentes. [Estado y captura](evidencias/s09/despliegue-inicial.md).
+
+El CRUD de Minikube está en **http://localhost:8002** mediante el helper `scripts/abrir_fastapi_minikube.ps1`. `GET /patients/1` devolvió 200 y los mismos datos persistidos de Ana que Compose. El chatbot continúa en [localhost:8000](http://localhost:8000). [Comandos de acceso y comprobación](GUIA.md#fastapi-desde-git).
+
+El primer intento de Argo CD registró `counter cannot decrease in value` y una duración negativa. Un reintento real de **main**, sobre el mismo commit, terminó correctamente; se conservaron las evidencias iniciales. Eso resuelve esta ejecución, sin acreditar una corrección definitiva del problema de Argo CD. La guía incluye el reintento y la evidencia explica la incidencia.
 
 ## Ubicarse en el código
 
@@ -416,5 +424,9 @@ El acceso a [Argo CD en HTTPS 8443](https://localhost:8443) y el login pasaron; 
 | `scripts/abrir_argocd.ps1` | Inicia o reutiliza el port-forward local 8443 en segundo plano. |
 | `deploy/argocd/repositorio.yaml` | Declara el repositorio Git público para Argo CD, sin credenciales. |
 | `scripts/verificar_repo_argocd.py` | Comprueba conexión Git y lectura del chart en un commit concreto. |
+| `deploy/argocd/fastapi.yaml` | Declara la Application que sincroniza el chart desde main hacia namespace genai. |
+| `scripts/abrir_fastapi_minikube.ps1` | Inicia o reutiliza el port-forward local del Service en 8002. |
+| `scripts/verificar_gitops.py` | Exige commit exacto, sincronización correcta, réplicas Ready y paciente HTTP 200. |
+| `scripts/capturar_argocd.cjs` | Comprueba y captura el repositorio o la Application sin mostrar credenciales. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

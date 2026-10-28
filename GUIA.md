@@ -873,6 +873,42 @@ El verificador usa la clave inicial en memoria y no la imprime. Comprueba **Succ
 
 El repo es público, así que `repositorio.yaml` no lleva credenciales Git. Los PID/logs del port-forward quedan en `.local`, ignorados por Git. No hay bloqueos activos de lectura Git; el primer error del verificador se corrigió al indicar el proyecto `default`. La Application y el despliegue corresponden a HDU-042.
 
+## FastAPI desde Git
+
+Argo CD sigue `main` y el chart `deploy/helm/fastapi` hacia namespace `genai`, con auto-sync, prune y selfHeal. PostgreSQL de Compose debe estar disponible y el Secret preparado. Esta parte despliega el CRUD; el chatbot sigue en `http://localhost:8000`.
+
+crear o actualizar la Application declarada en Git:
+```powershell
+.\.local\bin\kubectl.exe --context=genai apply -f deploy/argocd/fastapi.yaml
+```
+
+abrir o reutilizar el acceso al Service de FastAPI en Minikube:
+```powershell
+.\scripts\abrir_fastapi_minikube.ps1
+```
+
+El helper deja el port-forward en segundo plano, solo en 127.0.0.1:8002. Se probaron su inicio y reutilización; sus logs y PID quedan en `.local`.
+
+consultar a Ana en Kubernetes (200):
+```powershell
+curl.exe -i http://localhost:8002/patients/1
+```
+
+comprobar el commit y la réplica del despliegue inicial:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_gitops.py --commit 230a161d585a3106969d57d5103256872f001928 --replicas 1 --output evidencias/s09/042-gitops.json
+```
+
+El verificador exige revisión exacta, Synced, Healthy, operación Succeeded y tiempos de inicio/fin coherentes. También exige una réplica Ready y la misma Ana en 8002 y 8000. Ojo: regenera `042-gitops.json`; cuando avances a otro commit o número de réplicas, usa sus valores esperados y otro archivo de salida.
+
+Si reaparece **counter cannot decrease in value**:
+
+1. Abre [la Application fastapi](https://localhost:8443/applications/argocd/fastapi) y conserva el mensaje y commit del intento.
+2. Pulsa **Sync**, selecciona **main** como revisión y confirma la sincronización. En la prueba, pedir el SHA directamente fue rechazado porque auto-sync sigue main.
+3. Espera Synced/Healthy y que la operación indique Succeeded; vuelve a ejecutar el verificador con el commit esperado. No basta con ver el pod funcionando.
+
+Ese reintento pasó para el mismo commit. Se preservaron el error inicial y los tiempos negativos; no se modificaron a mano el status ni los relojes. [Incidencia, reintento y captura final](evidencias/s09/despliegue-inicial.md).
+
 ## Revisar el equipo
 
 versiones:

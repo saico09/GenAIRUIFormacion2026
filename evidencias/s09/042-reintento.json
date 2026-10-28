@@ -1,0 +1,22 @@
+{
+  "operation": {
+    "sync": {
+      "revision": "230a161d585a3106969d57d5103256872f001928",
+      "prune": true,
+      "source": {
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "path": "deploy/helm/fastapi",
+        "targetRevision": "main"
+      }
+    },
+    "initiatedBy": {
+      "username": "admin"
+    },
+    "retry": {}
+  },
+  "requested_revision": "main",
+  "requested_at": "2026-10-28T19:13:45.3352581Z",
+  "method": "Reintento real mediante API de Argo CD; no se modifica status",
+  "previous_request_rejected": "La API rechazó pedir el SHA directo porque auto-sync apunta a main; se repitió pidiendo main.",
+  "expected_commit": "230a161d585a3106969d57d5103256872f001928"
+}

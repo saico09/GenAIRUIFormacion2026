@@ -42,14 +42,20 @@ def main():
         if (status.get("sync", {}).get("revision") == args.commit
                 and status.get("sync", {}).get("status") == "Synced"
                 and status.get("health", {}).get("status") == "Healthy"
+                and status.get("operationState", {}).get("phase") == "Succeeded"
+                and status.get("operationState", {}).get("syncResult", {}).get("revision") == args.commit
                 and deployment.get("spec", {}).get("replicas") == args.replicas
                 and len(active) == len(ready) == args.replicas):
             break
         if time.monotonic() >= deadline:
             raise RuntimeError(f"No coincide la revisión/estado/réplicas: {status.get('sync')}, "
-                               f"{status.get('health')}, {len(ready)}/{len(active)} pods Ready")
+                               f"{status.get('health')}, {len(ready)}/{len(active)} pods Ready; "
+                               f"operación {status.get('operationState', {}).get('phase')}: "
+                               f"{status.get('operationState', {}).get('message')}")
         time.sleep(2)
 
+    operation = status["operationState"]
+    assert datetime.fromisoformat(operation["finishedAt"]) >= datetime.fromisoformat(operation["startedAt"])
     responses = {}
     for name, url in (("minikube", "http://localhost:8002/patients/1"),
                       ("compose", "http://localhost:8000/patients/1")):
@@ -62,6 +68,7 @@ def main():
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "commit": args.commit, "replicas": args.replicas,
         "sync": status["sync"], "health": status["health"],
+        "operation": status["operationState"],
         "pods": [{"name": pod["metadata"]["name"], "uid": pod["metadata"]["uid"],
                   "ready": True, "node": pod["spec"]["nodeName"],
                   "image": pod["spec"]["containers"][0]["image"]} for pod in ready],
@@ -70,7 +77,7 @@ def main():
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"OK {args.commit}: Synced/Healthy, {len(ready)} pods Ready y paciente HTTP 200")
+    print(f"OK {args.commit}: Synced/Healthy, operación Succeeded, {len(ready)} pods Ready y paciente HTTP 200")
 
 
 if __name__ == "__main__":

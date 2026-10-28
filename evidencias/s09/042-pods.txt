@@ -1,0 +1,2 @@
+NAME                       READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+fastapi-766cfdc5d5-pf4q5   1/1     Running   0          28s   10.244.0.11   genai   <none>           <none>

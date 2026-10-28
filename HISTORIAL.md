@@ -4,6 +4,14 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-042 · 28/10/2026 · Primer despliegue desde Git
+
+- **Application fastapi con auto-sync, prune y selfHeal**, siguiendo main y el chart hacia namespace genai. Desplegó el commit `230a161d585a3106969d57d5103256872f001928` con una réplica Ready.
+- **CRUD en localhost:8002** mediante `abrir_fastapi_minikube.ps1`; GET de Ana devolvió 200 y los mismos datos que Compose. El chatbot continúa en 8000.
+- **Synced/Healthy y operación Succeeded comprobados** tras un reintento real de main, sin alterar status ni relojes. El intento inicial mostró `counter cannot decrease in value` y tiempos negativos; se conserva su evidencia.
+- **Verificadores reforzados**: revisión exacta, operación Succeeded, tiempos coherentes y captura sin Sync error. Resultados en `evidencias/s09/despliegue-inicial.md`.
+- Ojo: el reintento superó la incidencia local, pero no acredita una corrección definitiva de Argo CD. Explicación personal y revisión de Rui siguen pendientes.
+
 ## HDU-041 · 28/10/2026 · Argo CD conectado al repositorio
 
 - **Argo CD 3.5.6 instalado** mediante `scripts/instalar_argocd.ps1`, con manifiesto oficial verificado por SHA-256, server-side apply y sin forzar conflictos.

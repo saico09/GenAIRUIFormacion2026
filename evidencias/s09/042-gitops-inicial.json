@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-10-28T19:09:40.546383+00:00",
+  "commit": "230a161d585a3106969d57d5103256872f001928",
+  "replicas": 1,
+  "sync": {
+    "comparedTo": {
+      "destination": {
+        "namespace": "genai",
+        "server": "https://kubernetes.default.svc"
+      },
+      "source": {
+        "path": "deploy/helm/fastapi",
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "targetRevision": "main"
+      }
+    },
+    "revision": "230a161d585a3106969d57d5103256872f001928",
+    "status": "Synced"
+  },
+  "health": {
+    "lastTransitionTime": "2026-10-28T19:09:14Z",
+    "status": "Healthy"
+  },
+  "pods": [
+    {
+      "name": "fastapi-766cfdc5d5-pf4q5",
+      "uid": "ce4c9c95-71fe-431e-917e-263e36832b59",
+      "ready": true,
+      "node": "genai",
+      "image": "genai-fastapi:s09"
+    }
+  ],
+  "responses": {
+    "minikube": {
+      "url": "http://localhost:8002/patients/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    "compose": {
+      "url": "http://localhost:8000/patients/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    }
+  }
+}

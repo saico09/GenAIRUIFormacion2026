@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-28T19:11:41.602Z",
+  "url": "https://localhost:8443/applications/argocd/fastapi?resource=",
+  "login": true,
+  "screenshot": "042-argocd.png",
+  "commit": "230a161d585a3106969d57d5103256872f001928",
+  "health": "Healthy",
+  "sync": "Synced",
+  "expected_replicas": 1,
+  "pods": [
+    "fastapi-766cfdc5d5-pf4q5"
+  ]
+}

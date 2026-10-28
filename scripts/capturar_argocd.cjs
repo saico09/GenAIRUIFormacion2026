@@ -9,6 +9,7 @@ const path = require('node:path');
   const repository = input === '--repo';
   if (!input) throw new Error('Indica --repo o el JSON guardado por verificar_gitops.py');
   const evidence = repository ? null : JSON.parse(fs.readFileSync(input, 'utf8'));
+  if (evidence && evidence.operation?.phase !== 'Succeeded') throw new Error('La operación de sincronización no está comprobada como Succeeded');
   const directory = process.env.EVIDENCE_DIR || (repository ? 'evidencias/s09' : path.dirname(input));
   const prefix = process.env.EVIDENCE_PREFIX || (repository ? '041' : path.basename(input).split('-')[0]);
   fs.mkdirSync(directory, { recursive: true });
@@ -33,7 +34,7 @@ const path = require('node:path');
       await page.goto('https://localhost:8443/applications/argocd/fastapi');
       await page.waitForFunction(commit => {
         const body = document.body.innerText;
-        return body.includes(commit.slice(0, 7)) && body.includes('Synced') && body.includes('Healthy');
+        return body.includes(commit.slice(0, 7)) && body.includes('Synced') && body.includes('Healthy') && !body.includes('Sync error');
       }, evidence.commit);
     }
     const screenshot = `${prefix}-argocd.png`;
