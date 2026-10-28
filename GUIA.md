@@ -836,6 +836,43 @@ borrar solo el pod temporal al terminar:
 
 Lint, render y SELECT 1 pasaron; el pod se limpió. El cambio de publicación de PostgreSQL conservó cuatro pacientes Python y tres Java. [Evidencias HDU-040](evidencias/s09/040-helm.md). Esta preparación todavía no instala el Deployment de FastAPI.
 
+## Preparar Argo CD
+
+El clúster genai debe estar Ready. El script usa el manifiesto oficial de Argo CD 3.5.6, verifica su SHA-256, crea el namespace `argocd` si falta y aplica los recursos sin forzar conflictos. Espera los deployments, el controlador y los pods; no crea una Application de FastAPI.
+
+instalar o comprobar Argo CD:
+```powershell
+.\scripts\instalar_argocd.ps1
+```
+
+La instalación pasó y dejó siete pods Ready. [Versiones y estado](evidencias/s09/041-instalacion.json), [componentes](evidencias/s09/041-componentes.txt).
+
+abrir o reutilizar el acceso local de Argo CD:
+```powershell
+.\scripts\abrir_argocd.ps1
+```
+
+El script mantiene el port-forward en segundo plano, solo en 127.0.0.1:8443; repetirlo reutiliza el mismo proceso. Abre [Argo CD](https://localhost:8443) y entra como **admin**. Esta instalación local usa certificado autofirmado.
+
+consultar la clave inicial solo en tu terminal (no pegarla en capturas ni evidencias):
+```powershell
+[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((& .\.local\bin\kubectl.exe --context=genai -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}')))
+```
+
+registrar el repositorio público en Argo CD:
+```powershell
+.\.local\bin\kubectl.exe --context=genai apply -f deploy/argocd/repositorio.yaml
+```
+
+comprobar la conexión y el chart en el commit publicado de HDU-040:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_repo_argocd.py --commit 1bc6af1235a6d96952334e41685c3acd829b3fed
+```
+
+El verificador usa la clave inicial en memoria y no la imprime. Comprueba **Successful** y `deploy/helm/fastapi` de tipo Helm; repetirlo regenera `041-repositorio.json`. En la web, ve a **Settings → Repositories**: esa conexión también se comprobó visualmente. [Resultados y captura](evidencias/s09/041-repositorio.md).
+
+El repo es público, así que `repositorio.yaml` no lleva credenciales Git. Los PID/logs del port-forward quedan en `.local`, ignorados por Git. No hay bloqueos activos de lectura Git; el primer error del verificador se corrigió al indicar el proyecto `default`. La Application y el despliegue corresponden a HDU-042.
+
 ## Revisar el equipo
 
 versiones:

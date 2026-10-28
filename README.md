@@ -347,7 +347,13 @@ iniciar el perfil genai con 2 CPU, 3072 MiB y Kubernetes 1.36.6:
 
 `deploy/helm/fastapi` describe un Deployment de una réplica y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
 
-En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El chart usa esa IP para PostgreSQL, base `genai`, puerto 5432 y Secret `genai-postgres` en el namespace `genai`. El script de la [guía](GUIA.md#chart-y-conexión-a-postgres) crea o actualiza el Secret desde tu `.env` sin guardar credenciales en el chart. `helm lint` y `helm template` pasaron; un pod temporal ejecutó `SELECT 1` y devolvió 1, y luego se eliminó. Las cuatro filas Python y tres Java se conservaron al cambiar la publicación de PostgreSQL. [Evidencia HDU-040](evidencias/s09/040-helm.md). El chart queda preparado; su instalación es el siguiente paso.
+En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El chart usa esa IP para PostgreSQL, base `genai`, puerto 5432 y Secret `genai-postgres` en el namespace `genai`. El script de la [guía](GUIA.md#chart-y-conexión-a-postgres) crea o actualiza el Secret desde tu `.env` sin guardar credenciales en el chart. `helm lint` y `helm template` pasaron; un pod temporal ejecutó `SELECT 1` y devolvió 1, y luego se eliminó. Las cuatro filas Python y tres Java se conservaron al cambiar la publicación de PostgreSQL. [Evidencia HDU-040](evidencias/s09/040-helm.md). El despliegue del chart corresponde a HDU-042.
+
+## Preparar Argo CD
+
+Argo CD **3.5.6** está instalado en el contexto `genai`, namespace `argocd`, con sus siete pods Ready. `scripts/instalar_argocd.ps1` verifica el manifiesto oficial por SHA-256 y aplica los recursos sin forzar conflictos. [Instalación](evidencias/s09/041-instalacion.json) y [componentes](evidencias/s09/041-componentes.txt).
+
+El acceso a [Argo CD en HTTPS 8443](https://localhost:8443) y el login pasaron; **Repositories** mostró **Successful** para el repo público [GenAIRUIFormacion2026](https://github.com/saico09/GenAIRUIFormacion2026). Argo CD leyó `deploy/helm/fastapi` como chart Helm en el commit publicado `1bc6af1235a6d96952334e41685c3acd829b3fed` de `main`. [Evidencia y captura HDU-041](evidencias/s09/041-repositorio.md). La [guía](GUIA.md#preparar-argo-cd) deja el acceso, la clave inicial y la comprobación repetible; esta HDU todavía no crea una Application.
 
 ## Ubicarse en el código
 
@@ -406,5 +412,9 @@ En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El char
 | `deploy/helm/fastapi/values.yaml` | Define imagen, réplica, conexión PostgreSQL y recursos del microservicio. |
 | `deploy/helm/fastapi/templates/` | Plantillas del Deployment con readiness y del Service ClusterIP. |
 | `scripts/crear_secret_postgres.ps1` | Crea namespace/Secret desde .env por stdin, sin imprimir credenciales. |
+| `scripts/instalar_argocd.ps1` | Verifica e instala Argo CD 3.5.6 en genai y espera sus componentes Ready. |
+| `scripts/abrir_argocd.ps1` | Inicia o reutiliza el port-forward local 8443 en segundo plano. |
+| `deploy/argocd/repositorio.yaml` | Declara el repositorio Git público para Argo CD, sin credenciales. |
+| `scripts/verificar_repo_argocd.py` | Comprueba conexión Git y lectura del chart en un commit concreto. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

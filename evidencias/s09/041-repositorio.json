@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-28T19:05:43.898119+00:00",
+  "repo": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+  "commit": "1bc6af1235a6d96952334e41685c3acd829b3fed",
+  "connection": {
+    "status": "Successful",
+    "message": "",
+    "attemptedAt": "2026-10-28T19:05:34Z"
+  },
+  "applications_found": [
+    {
+      "type": "Helm",
+      "path": "deploy/helm/fastapi"
+    }
+  ],
+  "project": "default",
+  "ui": "https://localhost:8443"
+}

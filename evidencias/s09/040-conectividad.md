@@ -32,6 +32,6 @@ Validación del chart:
 .\.local\bin\helm.exe template fastapi deploy/helm/fastapi --namespace genai
 ```
 
-`helm lint` devolvió cero fallos; solo recomienda un icono opcional. [Lint](040-helm-lint.txt), [manifiestos renderizados sin credenciales](040-helm-template.yaml). No se instaló la release Helm durante esta HDU. El despliegue del microservicio corresponde a la HDU-041; RAG y sus servicios siguen funcionando en Compose.
+`helm lint` devolvió cero fallos; solo recomienda un icono opcional. [Lint](040-helm-lint.txt), [manifiestos renderizados sin credenciales](040-helm-template.yaml). No se instaló la release Helm durante esta HDU. El despliegue del microservicio corresponde a la HDU-042; RAG y sus servicios siguen funcionando en Compose.
 
 La explicación de Marco y revisión de Rui siguen pendientes; esta comprobación no atribuye horas reales.

@@ -4,6 +4,15 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-041 · 28/10/2026 · Argo CD conectado al repositorio
+
+- **Argo CD 3.5.6 instalado** mediante `scripts/instalar_argocd.ps1`, con manifiesto oficial verificado por SHA-256, server-side apply y sin forzar conflictos.
+- **Siete pods Ready** en namespace argocd del contexto genai; deployments disponibles y controlador listo. Evidencia en `evidencias/s09/041-instalacion.json`.
+- **Acceso HTTPS 8443 y login comprobados**; `abrir_argocd.ps1` inicia o reutiliza el port-forward local oculto. La captura de Repositories mostró Successful.
+- **Chart leído desde Git**, rama main, commit `1bc6af1235a6d96952334e41685c3acd829b3fed`, ruta `deploy/helm/fastapi` de tipo Helm. Resultados en `evidencias/s09/041-repositorio.md`.
+- **Verificador corregido** para enviar appProject=default y appName=fastapi; la repetición pasó. No quedan bloqueos activos de lectura Git.
+- Ojo: esta HDU conecta el repo; la Application y el despliegue FastAPI corresponden a HDU-042. La revisión humana sigue pendiente.
+
 ## HDU-040 · 28/10/2026 · Chart y conexión local a PostgreSQL
 
 - **Chart `deploy/helm/fastapi`** con una réplica, Deployment/Service, imagen s09, puerto 8000, recursos acotados y readiness GET `/health`. Lint y render pasaron.

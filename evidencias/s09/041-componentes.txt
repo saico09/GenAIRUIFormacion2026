@@ -1,0 +1,19 @@
+NAME                                               READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS                         IMAGES                                             SELECTOR
+deployment.apps/argocd-applicationset-controller   1/1     1            1           62s   argocd-applicationset-controller   quay.io/argoproj/argocd:v3.5.6                     app.kubernetes.io/name=argocd-applicationset-controller
+deployment.apps/argocd-dex-server                  1/1     1            1           62s   dex                                ghcr.io/dexidp/dex:v2.45.1                         app.kubernetes.io/name=argocd-dex-server
+deployment.apps/argocd-notifications-controller    1/1     1            1           62s   argocd-notifications-controller    quay.io/argoproj/argocd:v3.5.6                     app.kubernetes.io/name=argocd-notifications-controller
+deployment.apps/argocd-redis                       1/1     1            1           62s   redis                              public.ecr.aws/docker/library/redis:8.2.3-alpine   app.kubernetes.io/name=argocd-redis
+deployment.apps/argocd-repo-server                 1/1     1            1           62s   argocd-repo-server                 quay.io/argoproj/argocd:v3.5.6                     app.kubernetes.io/name=argocd-repo-server
+deployment.apps/argocd-server                      1/1     1            1           62s   argocd-server                      quay.io/argoproj/argocd:v3.5.6                     app.kubernetes.io/name=argocd-server
+
+NAME                                             READY   AGE   CONTAINERS                      IMAGES
+statefulset.apps/argocd-application-controller   1/1     56s   argocd-application-controller   quay.io/argoproj/argocd:v3.5.6
+
+NAME                                                    READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+pod/argocd-application-controller-0                     1/1     Running   0          61s   10.244.0.10   genai   <none>           <none>
+pod/argocd-applicationset-controller-58bb5c7479-l7dvr   1/1     Running   0          62s   10.244.0.4    genai   <none>           <none>
+pod/argocd-dex-server-dd6b85d9c-tnqjr                   1/1     Running   0          62s   10.244.0.5    genai   <none>           <none>
+pod/argocd-notifications-controller-6b85c65458-d9m6l    1/1     Running   0          62s   10.244.0.6    genai   <none>           <none>
+pod/argocd-redis-869b85489d-h52b2                       1/1     Running   0          62s   10.244.0.7    genai   <none>           <none>
+pod/argocd-repo-server-5bf66565cd-pbkhf                 1/1     Running   0          62s   10.244.0.8    genai   <none>           <none>
+pod/argocd-server-7474bb8f76-2bc46                      1/1     Running   0          56s   10.244.0.9    genai   <none>           <none>
