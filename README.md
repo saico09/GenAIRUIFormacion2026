@@ -1,6 +1,6 @@
 # GenAI · app de práctica
 
-Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y tres historias ficticias preparadas para la futura ingesta. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
+Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot—, Ollama para generar embeddings y Qdrant con las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
 
 [Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 
@@ -12,10 +12,16 @@ preparar la configuración solo en un clon nuevo (después completa los valores 
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-levantar postgres y las dos apis:
+levantar postgres, las dos apis y qdrant:
 
 ```bash
 docker compose up -d --build
+```
+
+iniciar Ollama en Windows (ya instalado en este equipo):
+
+```powershell
+.\scripts\iniciar_ollama.ps1
 ```
 
 comprobar que FastAPI responde (200):
@@ -131,7 +137,7 @@ Get-Content -Raw scripts/verificar_crud.py | docker compose exec -T python-api p
 
 El nombre `java-api` funciona dentro de la red de Docker; desde Windows usas `localhost:8080`. Ejecuta ambos verificadores para repetir la comparación. El CRUD y las 56 respuestas 422 esperadas pasaron entre ambas APIs; quedaron intactas las filas previas. Resultados en [evidencias S02](evidencias/S02.md).
 
-## Datos para la futura ingesta
+## Historias ficticias
 
 leer las historias ficticias de Ana, Bruno y Carla:
 
@@ -147,7 +153,49 @@ Get-Content -Raw datos/preguntas.json
 
 Cada historia identifica al paciente por su id Python y tiene Enfermedad, Tratamiento y Medicamento: nueve secciones en total. Tres preguntas se responden desde esos textos. La cirugía de Ana no está documentada, así que se espera `No hay información suficiente`.
 
-**HDU-011 bloqueada por RAM:** la última medición dio 0,32 GB libres de 13,86 GB, frente al mínimo de 8 GB del programa. Todavía no hay embeddings, Qdrant ni RAG implementados. El siguiente paso es liberar memoria o disponer de recursos autorizados, volver a [medir la RAM](GUIA.md#revisar-el-equipo) y reanudar HDU-011 cuando se cumpla el mínimo.
+## Preparar los vectores
+
+Ollama 0.40.12 corre en Windows y Qdrant 1.20.0 en Docker. Desde Windows, sus direcciones son `http://127.0.0.1:11434` y `http://localhost:6333`; desde `python-api` son `http://host.docker.internal:11434` y `http://qdrant:6333`.
+
+descargar el modelo si todavía no está en este equipo:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull nomic-embed-text
+```
+
+crear o comprobar la colección:
+
+```bash
+docker compose exec -T python-api python preparar_vectores.py
+```
+
+Resultado comprobado: `historias`, **768 componentes**, distancia **Cosine**. `EMBEDDING_MODEL=nomic-embed-text` está centralizado en Compose y lo lee `app/knowledge.py`; preparación, ingesta y búsqueda usan esa configuración. La colección se conserva en `qdrant_data`.
+
+cargar o actualizar las nueve secciones:
+
+```bash
+docker compose exec -T python-api python ingestar.py
+```
+
+Se ejecutó dos veces: ambas terminaron con nueve puntos, tres por paciente, y payloads iguales a los Markdown. Los UUID estables evitan duplicados al repetirlo. Cada punto conserva `patient_id`, `source`, `section` y `text`.
+
+Marco autorizó continuar aunque no se alcance el mínimo documental de RAM; las comprobaciones de embeddings e ingesta pasaron. Más comandos y ubicación de Ollama en la [guía](GUIA.md#embeddings-y-qdrant).
+
+## Buscar en los documentos
+
+recuperar la enfermedad de Ana:
+
+```powershell
+docker compose exec -T python-api python buscar.py 1 "¿Qué enfermedad tiene Ana Demo?"
+```
+
+comprobar qué ocurre con un dato ausente:
+
+```powershell
+docker compose exec -T python-api python buscar.py 1 "¿Cuál fue la última cirugía de Ana Demo?"
+```
+
+La búsqueda devuelve hasta dos fragmentos del paciente solicitado, con score, archivo, sección y texto. Las tres preguntas conocidas recuperaron su respuesta en el primer resultado. La cirugía de Ana devolvió fragmentos de Enfermedad y Tratamiento que no contienen esa información: similitud no equivale a respuesta. Todavía no se genera texto de un LLM ni se implementó el RAG. Las cuatro consultas están en la [guía](GUIA.md#buscar-por-paciente).
 
 ## Ubicarse en el código
 
@@ -168,5 +216,10 @@ Cada historia identifica al paciente por su id Python y tiene Enfermedad, Tratam
 | `datos/preguntas.json` | Cuatro preguntas y respuestas esperadas para probar recuperación. |
 | `scripts/verificar_crud.py` | Prueba reproducible por HTTP; limpia su paciente temporal. |
 | `scripts/verificar_persistencia.ps1` | Reinicia servicios y compara los pacientes antes/después. |
+| `scripts/iniciar_ollama.ps1` | Inicia o reutiliza Ollama local en Windows. |
+| `python-api/app/knowledge.py` | Comparte la configuración y las llamadas HTTP a Ollama/Qdrant. |
+| `python-api/preparar_vectores.py` | Comprueba la dimensión real y prepara la colección `historias`. |
+| `python-api/ingestar.py` | Valida los Markdown e ingiere sus secciones sin duplicarlas. |
+| `python-api/buscar.py` | Recupera hasta dos fragmentos filtrados por paciente. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

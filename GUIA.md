@@ -20,7 +20,7 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 
 ## Levantar / bajar
 
-levantar todo (postgres + python-api + java-api), reconstruyendo si cambiaste código:
+levantar los contenedores (postgres + python-api + java-api + qdrant), reconstruyendo si cambiaste código:
 ```bash
 docker compose up -d --build
 ```
@@ -30,12 +30,12 @@ ver qué está corriendo:
 docker compose ps
 ```
 
-bajar todo (los datos se mantienen en el volumen pgdata):
+bajar los contenedores (los datos se mantienen en pgdata y qdrant_data; Ollama corre aparte en Windows):
 ```bash
 docker compose down
 ```
 
-bajar todo y BORRAR la base (ojo, no hay vuelta atrás):
+bajar los contenedores y BORRAR pacientes y vectores (ojo: elimina pgdata y qdrant_data):
 ```bash
 docker compose down -v
 ```
@@ -237,7 +237,79 @@ Get-Content -Raw datos/preguntas.json
 
 Cada historia tiene `patient_id` y tres secciones: Enfermedad, Tratamiento y Medicamento. Son nueve secciones en total, vinculadas a Ana, Bruno y Carla por sus ids Python 1, 2 y 3. Los valores Alfa/Beta/Gamma son ficticios. La pregunta sobre la última cirugía de Ana no tiene respuesta en los documentos; se espera `No hay información suficiente`.
 
-Los archivos están listos como datos de entrada. Todavía no hay embeddings, Qdrant ni RAG implementados. La HDU-011 espera recursos: en la última medición había 0,32 GB de RAM libre y el programa pide al menos 8 GB. El comando para volver a medir está al final de esta guía.
+Los archivos ya se ingirieron en Qdrant: nueve secciones, tres por paciente. El RAG todavía está pendiente. Marco autorizó continuar aunque no se alcance el mínimo documental de RAM; el avance se comprueba con el funcionamiento real.
+
+## Embeddings y Qdrant
+
+En este equipo Ollama 0.40.12 quedó instalado en `$env:LOCALAPPDATA\Programs\Ollama`, desde el [ZIP oficial para Windows](https://github.com/ollama/ollama/releases/tag/v0.40.12). No hace falta añadirlo al PATH. El script siguiente reutiliza un servidor activo o lo inicia en segundo plano; usa un modelo cargado y una petición a la vez.
+
+iniciar Ollama en Windows:
+```powershell
+.\scripts\iniciar_ollama.ps1
+```
+
+descargar el modelo de embeddings (ya está descargado en este equipo):
+```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull nomic-embed-text
+```
+
+ver los modelos disponibles:
+```powershell
+Invoke-RestMethod http://127.0.0.1:11434/api/tags
+```
+
+comprobar que Qdrant responde (200):
+```bash
+curl.exe -i http://localhost:6333/collections
+```
+
+preparar o comprobar la colección usando la dimensión real del modelo:
+```bash
+docker compose exec -T python-api python preparar_vectores.py
+```
+
+La salida comprobada es `model: nomic-embed-text`, `collection: historias`, `size: 768`, `distance: Cosine`. El script crea la colección solo si falta; si existe con otra dimensión o distancia, avisa y la conserva. Los vectores viven en `qdrant_data`.
+
+Desde Windows, Ollama responde en `http://127.0.0.1:11434`; usamos esa dirección porque `localhost` dio problemas con IPv6. Desde `python-api`, Compose configura `OLLAMA_BASE_URL=http://host.docker.internal:11434` y `QDRANT_URL=http://qdrant:6333`. `EMBEDDING_MODEL=nomic-embed-text` se define una vez en Compose y lo lee `app/knowledge.py` para mantener el mismo modelo en preparación, ingesta y búsqueda.
+
+Si Ollama no inicia, el script indica dónde quedaron los logs: `$env:LOCALAPPDATA\Ollama\genai`. Compose no inicia ni detiene Ollama, porque corre en Windows.
+
+## Ingerir las historias
+
+cargar o actualizar las nueve secciones en Qdrant:
+```bash
+docker compose exec -T python-api python ingestar.py
+```
+
+Puedes repetir el mismo comando: se ejecutó dos veces y ambas terminaron con `count: 9`, tres puntos por paciente y `payloads_match: true`. Cada punto guarda `patient_id`, `source`, `section` y `text`. El UUID depende del paciente y la sección, así que la repetición actualiza ese punto sin duplicarlo.
+
+Compose monta `datos/` como `/datos` de solo lectura. El script valida los archivos y genera los vectores antes de guardarlos; después compara todos los ids y payloads con los Markdown. Si sobran puntos o algo no coincide, avisa y no borra la colección. Si cambias los ids de PostgreSQL, revisa primero `patient_id` en los documentos y preguntas.
+
+## Buscar por paciente
+
+buscar la enfermedad de Ana (id 1):
+```powershell
+docker compose exec -T python-api python buscar.py 1 "¿Qué enfermedad tiene Ana Demo?"
+```
+
+buscar el tratamiento de Bruno (id 2):
+```powershell
+docker compose exec -T python-api python buscar.py 2 "¿Qué tratamiento sigue Bruno Demo?"
+```
+
+buscar el medicamento de Carla (id 3):
+```powershell
+docker compose exec -T python-api python buscar.py 3 "¿Qué medicamento recibe Carla Demo?"
+```
+
+buscar un dato que no está en los documentos:
+```powershell
+docker compose exec -T python-api python buscar.py 1 "¿Cuál fue la última cirugía de Ana Demo?"
+```
+
+`buscar.py` recibe el id y la pregunta entre comillas. Usa el mismo modelo de embeddings, filtra por ese `patient_id` y devuelve hasta dos fragmentos con `score`, `source`, `section` y `text`. Las tres preguntas conocidas recuperaron primero la sección que contiene Alfa, Beta o Gamma, siempre del paciente correcto.
+
+Ojo con la cirugía: devolvió Enfermedad y Tratamiento de Ana, pero ninguno contiene la respuesta. Un score de similitud sirve para ordenar fragmentos; no demuestra que el dato exista. Esta búsqueda todavía no genera respuestas de un LLM.
 
 ## Postman
 

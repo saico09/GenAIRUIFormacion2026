@@ -4,12 +4,35 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-013 · 28/10/2026 · Buscar dos fragmentos del paciente
+
+- **`python-api/buscar.py`** recibe id y pregunta; comparte `search_fragments()` de `app/knowledge.py` y el modelo de embeddings usado en la ingesta.
+- **Filtro por `patient_id` y máximo dos resultados**: devuelve score, paciente, archivo, sección y texto. Las cuatro preguntas se comprobaron sin mezclar pacientes.
+- **Tres respuestas conocidas recuperadas**: Enfermedad Alfa, Tratamiento Beta y Medicamento Gamma aparecieron en el primer resultado de su consulta.
+- Ojo: preguntar por cirugía de Ana recuperó Enfermedad y Tratamiento, que no contestan esa pregunta. Similitud no prueba que exista respuesta; todavía no interviene un LLM.
+
+## HDU-012 · 28/10/2026 · Ingesta sin duplicados
+
+- **`python-api/ingestar.py`** lee los tres Markdown, separa las nueve secciones y genera sus embeddings antes de guardarlos en `historias`.
+- **UUID estable por paciente y sección**: repetir la carga actualiza el mismo punto; conserva `patient_id`, `source`, `section` y `text` para reconocer su origen.
+- **Dos ejecuciones comprobadas** terminaron con nueve puntos, tres por paciente, y todos los ids y payloads iguales a los documentos. Los datos quedan en `qdrant_data`.
+- Ojo: no se borran puntos para forzar un resultado correcto; si el cotejo falla, el script avisa. La búsqueda y la prueba tras reiniciar Qdrant vienen en las HDU siguientes.
+
+## HDU-011 · 28/10/2026 · Embeddings y colección Qdrant
+
+- **Reanudación autorizada por Marco** aunque no se alcance el mínimo documental de RAM. Se arrancó Docker Desktop y las comprobaciones de esta HDU pasaron; el bloqueo de HDU-010 queda como antecedente.
+- **Qdrant 1.20.0** se añadió a Compose en `localhost:6333`, con datos en `qdrant_data`. La consulta de colecciones responde 200.
+- **Ollama 0.40.12 para Windows** quedó instalado desde el ZIP oficial en la carpeta local de programas. `scripts/iniciar_ollama.ps1` lo inicia o reutiliza; no se cambió el PATH global.
+- **`nomic-embed-text`** descargado y probado desde `python-api`: genera vectores de 768 componentes. `EMBEDDING_MODEL` centraliza la elección y `app/knowledge.py` la comparte.
+- **`preparar_vectores.py`** crea `historias` solo si falta y comprueba dimensión 768 y distancia Cosine; una configuración incompatible se informa sin borrar la colección.
+- Ojo: ingesta y búsqueda siguen en las HDU siguientes; todavía no se acredita RAG por disponer de un vector y una colección.
+
 ## HDU-010 · 28/10/2026 · Historias y preguntas ficticias
 
 - **`datos/paciente-1.md`, `paciente-2.md` y `paciente-3.md`** contienen nueve secciones: Enfermedad, Tratamiento y Medicamento para Ana, Bruno y Carla. Usan valores ficticios Alfa/Beta/Gamma y los ids Python 1, 2 y 3 comprobados por HTTP.
 - **`datos/preguntas.json`** guarda las cuatro preguntas del checklist y sus respuestas esperadas. Tres se responden con los documentos; la última cirugía de Ana no aparece y debe responderse `No hay información suficiente`.
 - **Datos listos para futura ingesta**: la guía permite leer los archivos; las comprobaciones están en `evidencias/S03.md`. Todavía no se implementaron embeddings ni RAG.
-- Ojo: HDU-011 queda bloqueada antes de instalar Ollama/Qdrant. La medición final dio 0,32 GB libres de 13,86 GB, frente al mínimo de 8 GB; falta disponer de memoria suficiente y volver a medir antes de continuar.
+- Ojo en el primer intento: HDU-011 quedó bloqueada antes de instalar Ollama/Qdrant. La medición dio 0,32 GB libres de 13,86 GB, frente al mínimo de 8 GB. Después Marco autorizó continuar; la reanudación y sus pruebas están en HDU-011.
 
 ## HDU-009 · 28/10/2026 · Persistencia Java y repaso de equivalencia
 
