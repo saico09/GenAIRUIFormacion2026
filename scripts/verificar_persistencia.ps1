@@ -13,8 +13,13 @@ if ($ana.Count -ne 1 -or $ana[0].birth_date -ne '1990-01-10') {
     throw 'Se necesita una Ana Demo original para comprobar persistencia.'
 }
 
-docker compose restart postgres $Servicio
-if ($LASTEXITCODE -ne 0) { throw 'No se pudo reiniciar el proyecto.' }
+# restart no espera depends_on: primero recupera la base y después arranca la API.
+docker compose restart postgres
+if ($LASTEXITCODE -ne 0) { throw 'No se pudo reiniciar PostgreSQL.' }
+docker compose up -d --wait --wait-timeout 60 postgres
+if ($LASTEXITCODE -ne 0) { throw 'PostgreSQL no quedó saludable.' }
+docker compose restart $Servicio
+if ($LASTEXITCODE -ne 0) { throw 'No se pudo reiniciar la API.' }
 
 $despues = $null
 for ($intento = 0; $intento -lt 30; $intento++) {

@@ -34,5 +34,20 @@ services:
       postgres:
         condition: service_healthy
 
+  java-api:
+    build: ./java-api
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # El heap tiene un máximo de 256 MiB; queda margen para memoria nativa de Java.
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   pgdata:

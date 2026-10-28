@@ -20,7 +20,7 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 
 ## Levantar / bajar
 
-levantar todo (postgres + python-api), reconstruyendo si cambiaste código:
+levantar todo (postgres + python-api + java-api), reconstruyendo si cambiaste código:
 ```bash
 docker compose up -d --build
 ```
@@ -78,7 +78,21 @@ curl.exe -i http://localhost:8000/health
 
 documentación automática de FastAPI (ahí puedes probar cada endpoint con "Try it out"): abrir http://localhost:8000/docs en el navegador.
 
-## Pacientes
+## java-api
+
+levantar o reconstruir java-api y su dependencia postgres:
+```bash
+docker compose up -d --build --wait java-api
+```
+
+probar que java-api está viva (200 y {"status":"ok"}):
+```bash
+curl.exe -i http://localhost:8080/health
+```
+
+Java usa el mismo PostgreSQL, pero su tabla es `java.patients`; FastAPI mantiene `public.patients`. Cada API conserva sus filas por separado. Java ya permite crear, listar, consultar, editar y borrar pacientes.
+
+## Pacientes Python
 
 cargar los 3 pacientes de `datos/pacientes.json` (PowerShell; muestra 201 y el id de cada uno). Ojo: si lo corres de nuevo, se duplican:
 ```powershell
@@ -125,6 +139,52 @@ probar que rechaza datos malos (422 y no guarda nada):
 try { Invoke-RestMethod -Method Post -Uri http://localhost:8000/patients -ContentType 'application/json' -Body '{"name":"Prueba Invalida","birth_date":"2026-02-30","email":"guia@example.com"}' } catch { $_.Exception.Response.StatusCode.value__; $_.ErrorDetails.Message }
 ```
 
+## Pacientes Java
+
+Ana, Bruno y Carla ya están cargados en Java. Los campos JSON son los mismos que en Python: `name`, `birth_date` y `email`; cada tabla genera sus propios ids, así que no dependas de que coincidan entre APIs.
+
+cargar los tres ficticios solo si todavía no están (ojo: repetirlo duplica las filas):
+```powershell
+(Get-Content datos/pacientes.json -Raw | ConvertFrom-Json) | ForEach-Object { $r = Invoke-WebRequest -UseBasicParsing -Method Post -Uri http://localhost:8080/patients -ContentType 'application/json' -Body ($_ | ConvertTo-Json); "$($r.StatusCode) $($r.Content)" }
+```
+
+listar los pacientes de Java (200):
+```bash
+curl.exe -i http://localhost:8080/patients
+```
+
+consultar a Ana Demo en Java (200; el id 1 corresponde a la carga inicial comprobada):
+```bash
+curl.exe -i http://localhost:8080/patients/1
+```
+
+Un id que no existe devuelve 404. Si el nombre está vacío, la fecha no existe o el email no es válido, POST devuelve 422 y no crea una fila. La fecha usa `YYYY-MM-DD`, igual que en Python.
+
+crear un temporal Java para probar edición y borrado (conserva esta ventana de PowerShell):
+```powershell
+$pruebaJava = Invoke-RestMethod -Method Post -Uri http://localhost:8080/patients -ContentType 'application/json' -Body '{"name":"Test Demo","birth_date":"1995-05-05","email":"test@example.com"}'
+```
+
+consultar el temporal Java (200):
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8080/patients/$($pruebaJava.id)"
+```
+
+editar sus tres campos (200; PUT necesita todos):
+```powershell
+Invoke-RestMethod -Method Put -Uri "http://localhost:8080/patients/$($pruebaJava.id)" -ContentType 'application/json' -Body '{"name":"Test Editado","birth_date":"1996-06-06","email":"editado@example.com"}'
+```
+
+borrar solo el temporal Java (ojo, elimina ese registro; debe mostrar 204):
+```powershell
+(Invoke-WebRequest -UseBasicParsing -Method Delete -Uri "http://localhost:8080/patients/$($pruebaJava.id)").StatusCode
+```
+
+comprobar que ya no existe (404):
+```powershell
+curl.exe -i "http://localhost:8080/patients/$($pruebaJava.id)"
+```
+
 ## Comprobar el CRUD
 
 repetir la prueba completa usando el Python del contenedor (no necesitas instalar Python en Windows):
@@ -132,9 +192,18 @@ repetir la prueba completa usando el Python del contenedor (no necesitas instala
 Get-Content -Raw scripts/verificar_crud.py | docker compose exec -T python-api python - --base-url http://localhost:8000
 ```
 
-El script crea un paciente ficticio, lo consulta, cambia sus tres campos y lo borra. Comprueba 404 en GET/PUT/DELETE, 204 sin cuerpo y 422 para nombre vacío, fecha imposible y email inválido en POST/PUT. Al terminar verifica que los pacientes que había antes siguen iguales. Si falla, intenta limpiar únicamente el paciente que creó y muestra cualquier limpieza pendiente. No edites pacientes desde otra ventana durante la prueba.
+repetir la misma prueba contra Java (el script corre dentro de Python y encuentra al otro contenedor por `java-api`):
+```powershell
+Get-Content -Raw scripts/verificar_crud.py | docker compose exec -T python-api python - --base-url http://java-api:8080
+```
+
+El script crea un paciente ficticio, lo consulta, cambia sus tres campos y lo borra. Comprueba 404 en GET/PUT/DELETE, 204 sin cuerpo y 14 entradas inválidas tanto en POST como en PUT: son 28 respuestas 422 por API. Incluye nombre vacío/numérico, fechas imposibles o con formato incorrecto, email inválido o sin dominio completo y campos ausentes. Al terminar verifica que los pacientes que había antes siguen iguales. Si falla, intenta limpiar únicamente el paciente que creó y muestra cualquier limpieza pendiente. No edites pacientes desde otra ventana durante la prueba.
+
+Para comparar Python y Java, ejecuta los dos comandos de arriba. Se comparan los códigos HTTP, los campos devueltos y que los errores no cambien datos; el texto y la estructura interna de los errores 422 pueden ser distintos entre frameworks. Las [evidencias S02](evidencias/S02.md) guardan los resultados comprobados.
 
 `schemas.py` revisa la entrada antes de llegar al endpoint; `main.py` usa la sesión de `db.py`, guarda el modelo de `models.py` y confirma el cambio con `commit()`. `find_patient()` resuelve la búsqueda compartida: si no existe el id, responde 404. No hace falta memorizarlo: sigue un POST y luego un PUT para ver el recorrido.
+
+En Java, `PatientRequest` valida, `PatientController` recibe la petición y `PatientRepository` accede a PostgreSQL mediante JPA. `findPatient()` comparte el 404. En PUT, `@Transactional` mantiene juntos la búsqueda y el cambio: al confirmar la transacción, JPA guarda los tres campos modificados.
 
 ## Comprobar persistencia
 
@@ -143,9 +212,16 @@ reiniciar postgres y python-api y comprobar que los pacientes siguen iguales:
 .\scripts\verificar_persistencia.ps1
 ```
 
-Ojo: durante el reinicio la API deja de responder unos segundos. La prueba necesita que exista Ana Demo original; compara todas las filas y los cuatro campos de Ana antes/después, sin mostrar datos de otros pacientes. No borra el volumen `pgdata`. Evita editar pacientes mientras corre.
+reiniciar postgres y java-api y comprobar lo mismo en Java:
+```powershell
+.\scripts\verificar_persistencia.ps1 -Servicio java-api
+```
+
+Ojo: durante el reinicio se interrumpe brevemente el acceso a los datos de ambas APIs porque comparten PostgreSQL. La prueba necesita que exista Ana Demo original en la API elegida; compara todas sus filas y los cuatro campos de Ana antes/después, sin mostrar datos de otros pacientes. No borra el volumen `pgdata`. Evita editar pacientes mientras corre.
 
 `pgdata` conserva los datos aunque el contenedor se reinicie. En `db.py`, `pool_pre_ping=True` comprueba que la conexión siga viva antes de reutilizarla; así descarta conexiones viejas después de un reinicio de PostgreSQL.
+
+En Java, JPA trabaja con la tabla `java.patients`; la tabla de Python sigue siendo `public.patients`. El reinicio Java conservó sus tres pacientes, y Ana siguió disponible también desde Python. La revisión con Rui y la explicación personal del recorrido del dato siguen pendientes.
 
 ## Postman
 
@@ -186,6 +262,11 @@ docker compose logs -f python-api
 ver logs de postgres:
 ```bash
 docker compose logs postgres
+```
+
+ver logs de java-api:
+```bash
+docker compose logs java-api
 ```
 
 ## Revisar el equipo

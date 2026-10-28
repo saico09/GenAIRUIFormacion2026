@@ -85,13 +85,27 @@ def verificar(base_url):
         expected_rows = {**initial, created_id: expected_edited}
         comprobar(pacientes(base_url) == expected_rows, "PUT modificó otras filas")
 
-        # Cada campo inválido se prueba por separado en ambas operaciones.
-        for field, bad_value in (("name", "   "), ("birth_date", "2026-02-30"), ("email", "sin-arroba")):
-            invalid = {**ORIGINAL, field: bad_value}
+        # Casos compartidos por ambas APIs: cada fallo se prueba de forma aislada.
+        cases = [
+            ("name con espacios", {**ORIGINAL, "name": "   "}),
+            ("name vacío", {**ORIGINAL, "name": ""}),
+            ("name numérico", {**ORIGINAL, "name": 123}),
+            ("fecha inexistente", {**ORIGINAL, "birth_date": "2026-02-30"}),
+            ("fecha con formato incorrecto", {**ORIGINAL, "birth_date": "10-01-1990"}),
+            ("fecha numérica", {**ORIGINAL, "birth_date": 0}),
+            ("fecha con año cero", {**ORIGINAL, "birth_date": "0000-01-01"}),
+            ("email sin arroba", {**ORIGINAL, "email": "sin-arroba"}),
+            ("email nulo", {**ORIGINAL, "email": None}),
+            ("email localhost", {**ORIGINAL, "email": "ana@localhost"}),
+            ("email sin punto en dominio", {**ORIGINAL, "email": "ana@com"}),
+        ]
+        for field in ORIGINAL:
+            cases.append((f"falta {field}", {key: value for key, value in ORIGINAL.items() if key != field}))
+        for description, invalid in cases:
             for method, target in (("POST", "/patients"), ("PUT", path)):
                 request(base_url, method, target, 422, invalid)
-                comprobar(pacientes(base_url) == expected_rows, f"{method} con {field} inválido cambió filas")
-                print(f"OK {method}: {field} inválido no cambia filas")
+                comprobar(pacientes(base_url) == expected_rows, f"{method}: {description} cambió filas")
+                print(f"OK {method}: {description} devuelve 422 y no cambia filas")
 
         request(base_url, "DELETE", path, 204)
         created_id = None

@@ -4,6 +4,46 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-009 · 28/10/2026 · Persistencia Java y repaso de equivalencia
+
+- **Prueba de persistencia con `-Servicio java-api`** reinicia Java y PostgreSQL y compara sus pacientes antes/después. Conservó las tres filas y los cuatro campos originales de Ana, sin borrar `pgdata`.
+- **Python conservado**: tras ese reinicio, la consulta de Ana en FastAPI respondió 200.
+- **Errores después del reinicio**: Java siguió rechazando el email sin arroba con 422 y respondió 404 al consultar el id ausente 999999.
+- **Guía y evidencias S02** dejan el comando reproducible y el resultado, junto con el recorrido controlador → JPA → PostgreSQL para repasar.
+- Ojo: la explicación de Marco y la revisión de Rui están pendientes. No se registra una cita ni una revisión recibida por haber terminado las pruebas técnicas.
+
+## HDU-008 · 28/10/2026 · Comparar el contrato de las dos APIs
+
+- **Verificador ampliado** a 14 entradas inválidas, probadas en POST y PUT: 28 respuestas 422 por API, 56 entre ambas. Cada error conserva las filas anteriores.
+- **Contrato comprobado**: 201 al crear, 200 al listar/consultar/editar, 204 vacío al borrar y 404 para ids ausentes. Los cuatro campos de respuesta coinciden con lo enviado.
+- **Email Java corregido**: aceptaba `ana@localhost` y `ana@com`; ahora los rechaza con 422, como Python, mediante una restricción de dominio completo.
+- **Resultados guardados** en `evidencias/S02.md` y las salidas `S02-crud-python.txt` / `S02-crud-java.txt`. Quedaron intactas las cuatro filas Python y las tres Java, sin temporales.
+- Ojo: la equivalencia comprobada cubre estos casos y el contrato HTTP. Los detalles internos de los errores 422 pueden diferir entre frameworks; no se exige el mismo mensaje.
+
+## HDU-007 · 28/10/2026 · Editar y borrar pacientes en Java
+
+- **`PUT /patients/{id}`** actualiza los tres campos y responde 200. `@Transactional` mantiene búsqueda y cambios en la misma transacción; JPA los guarda al confirmar.
+- **`DELETE /patients/{id}`** borra el paciente y responde 204 sin cuerpo. GET, PUT y DELETE comparten `findPatient()` y devuelven 404 si no existe.
+- **Verificador CRUD común** probado contra Java: creó el temporal id 4, cambió sus tres campos, lo borró y comprobó el 404 posterior. Los tres pacientes originales quedaron intactos.
+- **Errores comprobados**: id 999999 devuelve 404 en las tres operaciones y los seis casos inválidos de POST/PUT devuelven 422 sin cambios en las filas.
+- Ojo: la comparación detallada entre las APIs continúa en HDU-008; estos resultados cubren los casos básicos del CRUD.
+
+## HDU-006 · 28/10/2026 · Crear y consultar pacientes en Java
+
+- **`POST /patients` en Java** guarda los mismos tres campos JSON que Python y responde 201. `PatientRequest` valida la entrada y `PatientResponse` conserva los nombres del contrato, incluido `birth_date`.
+- **`GET /patients` y `GET /patients/{id}`** devuelven 200 con los datos guardados. El listado sale ordenado por id; un id inexistente responde 404.
+- **Ana, Bruno y Carla Demo** se cargaron desde `datos/pacientes.json` y quedaron con ids Java 1–3. Sus tres campos coinciden con Python; los ids se generan por separado en cada tabla.
+- **Validaciones comprobadas**: nombre de espacios, fecha imposible y email sin arroba responden 422 sin modificar las tres filas Java. Python conservó sus cuatro filas.
+- Ojo: en este punto editar y borrar en Java seguía pendiente de HDU-007. Repetir la carga de los tres pacientes crea duplicados.
+
+## HDU-005 · 28/10/2026 · Spring Boot conectado a PostgreSQL
+
+- **`java-api/`** agrega el segundo servicio: Spring Boot 4.1.2, Maven 3.10.0 y Temurin Java 27. El build en Docker terminó correctamente y el arranque comprobó acceso a PostgreSQL.
+- **`GET /health` en `localhost:8080`** responde 200 con `{"status":"ok"}`. FastAPI sigue disponible en el puerto 8000.
+- **`java.patients`** separa las filas de Java de las de Python, que siguen en `public.patients`. Al comprobar esta HDU, Java tenía cero filas y Python conservaba cuatro.
+- **Contenedor Java** corre con usuario 10001, un límite de 512 MiB y heap de 64–256 MiB; se observó un consumo de unos 263 MiB.
+- Ojo: en esta HDU quedó conexión y health. El CRUD Java todavía no formaba parte de lo verificado; la explicación de Marco continúa pendiente.
+
 ## HDU-004 · 28/10/2026 · Persistencia y repaso del CRUD Python
 
 - **`scripts/verificar_persistencia.ps1`** reinicia PostgreSQL y FastAPI y compara las filas antes/después. Se probó con cuatro filas: todas se conservaron y Ana mantuvo sus cuatro campos.
