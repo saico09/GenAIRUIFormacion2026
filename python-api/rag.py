@@ -1,7 +1,4 @@
-"""Recupera el mismo contexto de buscar.py y lo entrega al LLM compartido."""
-
-from app.knowledge import search_fragments
-from app.llm import llamar_llm
+"""Construye el prompt con fuentes; el grafo coordina la búsqueda y la llamada al modelo."""
 
 
 def build_rag_prompt(question: str, sources: list[dict]) -> str:
@@ -21,8 +18,3 @@ def build_rag_prompt(question: str, sources: list[dict]) -> str:
         f"CONTEXTO:\n{context or '(Sin fragmentos para este paciente)'}\n\n"
         f"PREGUNTA:\n{question}\n\nRESPUESTA:"
     )
-
-
-def answer_rag(patient_id: int, question: str) -> tuple[str, list[dict]]:
-    sources = search_fragments(patient_id, question)
-    return llamar_llm(build_rag_prompt(question, sources), branch="rag"), sources

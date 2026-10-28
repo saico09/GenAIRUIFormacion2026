@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-10-28T18:30:56.963723+00:00",
+  "request_id": "hdu036-a91935fe126a42a6b9530146db9ad37e",
+  "trace_id": "b257ce77561364693451e5a2324687ed",
+  "url": "http://localhost:6006/redirects/traces/b257ce77561364693451e5a2324687ed",
+  "question": "¿Qué enfermedad tiene Ana Demo?",
+  "patient_id": 1,
+  "response": {
+    "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de tratar de ayudarte.",
+    "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+    "sources": [
+      {
+        "score": 0.8387875,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Enfermedad",
+        "text": "Ana Demo tiene Enfermedad Alfa."
+      },
+      {
+        "score": 0.727611,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Tratamiento",
+        "text": "Ana Demo sigue Tratamiento Alfa."
+      }
+    ]
+  },
+  "spans_url": "http://localhost:6006/v1/projects/genai/spans?attribute=request_id%3Ahdu036-a91935fe126a42a6b9530146db9ad37e&limit=100",
+  "spans": [
+    {
+      "id": "U3Bhbjo0MA==",
+      "name": "rag",
+      "context": {
+        "trace_id": "b257ce77561364693451e5a2324687ed",
+        "span_id": "ebadd3a75e0652f6"
+      },
+      "span_kind": "CHAIN",
+      "parent_id": null,
+      "start_time": "2026-10-28T18:30:36.883232+00:00",
+      "end_time": "2026-10-28T18:30:44.701979+00:00",
+      "status_code": "OK",
+      "status_message": "",
+      "attributes": {
+        "request_id": "hdu036-a91935fe126a42a6b9530146db9ad37e"
+      },
+      "events": []
+    }
+  ],
+  "checks": {
+    "single_root_rag": true,
+    "request_id_matches_header": true,
+    "status_ok": true,
+    "no_automatic_http_spans": true
+  }
+}

@@ -25,6 +25,7 @@ async function main() {
     await page.goto(process.env.CHAT_URL || 'http://127.0.0.1:8000/');
     await page.locator('#patient option[value="1"]').waitFor({state: 'attached'});
     let posts = 0;
+    let responseRequestId;
     page.on('request', request => { if (request.url().endsWith('/chat') && request.method() === 'POST') posts++; });
     await page.fill('#question', '   ');
     await page.click('#submit');
@@ -43,6 +44,7 @@ async function main() {
       }
       const response = await responsePromise;
       assert.equal(response.status(), expectedStatus);
+      responseRequestId = response.headers()['x-request-id'];
       assert.deepEqual(response.request().postDataJSON(), {patient_id: question.patient_id, question: question.question});
       await page.waitForFunction(() => !document.querySelector('#submit').disabled);
       assert.equal(await page.locator('#patient').isDisabled(), false);
@@ -96,7 +98,7 @@ async function main() {
         assert.ok(await page.getByRole('heading', {name: 'Sin RAG', exact: true}).isVisible());
         assert.ok(await page.getByRole('heading', {name: 'Con RAG', exact: true}).isVisible());
         await page.screenshot({path: evidencePath(`caso-${results.length + 1}.png`), fullPage: true});
-        results.push({...question, ...result});
+        results.push({...question, ...result, request_id: responseRequestId});
         console.log(`OK ID ${question.patient_id}: ${question.expected}, fuentes correctas`);
       }
       fs.writeFileSync(process.env.EVIDENCE_DIR ? evidencePath('resultados.json') : path.join(outputDir, '../S04-ui-019.json'), JSON.stringify(results, null, 2));

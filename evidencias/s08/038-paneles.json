@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-28T18:40:57.020Z",
+  "url": "http://localhost:3000/d/genai-apis/apis-genai?from=now-15m&to=now&timezone=browser&refresh=5s",
+  "values": [
+    {
+      "panel": 2,
+      "title": "Tráfico",
+      "unit": "reqps",
+      "last": 0.07680250236516796
+    },
+    {
+      "panel": 3,
+      "title": "Errores 4xx/5xx",
+      "unit": "percent",
+      "last": 0
+    },
+    {
+      "panel": 4,
+      "title": "Latencia p95",
+      "unit": "s",
+      "last": 0.00475
+    },
+    {
+      "panel": 12,
+      "title": "Tráfico",
+      "unit": "reqps",
+      "last": 0.07680330673146071
+    },
+    {
+      "panel": 13,
+      "title": "Errores 4xx/5xx",
+      "unit": "percent",
+      "last": 0
+    },
+    {
+      "panel": 14,
+      "title": "Latencia p95",
+      "unit": "s",
+      "last": 0.009740104633333331
+    }
+  ]
+}

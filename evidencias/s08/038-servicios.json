@@ -1,0 +1,117 @@
+{
+  "checked_at": "2026-10-28T18:39:53.468036+00:00",
+  "scope": "GET de disponibilidad; sin CRUD ni generación LLM",
+  "services": {
+    "python_api": {
+      "url": "http://localhost:8000/health",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.431953+00:00",
+      "health": {
+        "status": "ok"
+      },
+      "ok": true
+    },
+    "java_api": {
+      "url": "http://localhost:8080/health",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.433865+00:00",
+      "health": {
+        "status": "ok"
+      },
+      "ok": true
+    },
+    "qdrant": {
+      "url": "http://localhost:6333/collections/historias",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.468901+00:00",
+      "points_count": 9,
+      "collection_status": "green",
+      "ok": true
+    },
+    "ollama": {
+      "url": "http://localhost:11434/api/tags",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.457624+00:00",
+      "models": [
+        {
+          "name": "llama3.2:3b",
+          "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+        },
+        {
+          "name": "nomic-embed-text:latest",
+          "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+        }
+      ],
+      "ok": true
+    },
+    "prometheus": {
+      "url": "http://localhost:9090/api/v1/targets",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.480711+00:00",
+      "targets": [
+        {
+          "url": "http://python-api:8000/metrics",
+          "health": "up",
+          "labels": {
+            "instance": "python-api:8000",
+            "job": "fastapi",
+            "service": "fastapi"
+          },
+          "last_error": ""
+        },
+        {
+          "url": "http://java-api:8080/actuator/prometheus",
+          "health": "up",
+          "labels": {
+            "instance": "java-api:8080",
+            "job": "springboot",
+            "service": "springboot"
+          },
+          "last_error": ""
+        }
+      ],
+      "ok": true
+    },
+    "grafana": {
+      "url": "http://localhost:3000/api/health",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.429758+00:00",
+      "health": {
+        "database": "ok",
+        "version": "13.3.0",
+        "commit": "6f8ce3c693b493043ebcd4787566d2b6b118b0f0"
+      },
+      "ok": true
+    },
+    "loki": {
+      "url": "http://localhost:3100/ready",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.433865+00:00",
+      "body": "ready",
+      "ok": true
+    },
+    "phoenix_ui": {
+      "url": "http://localhost:6006/",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:51.433865+00:00",
+      "html_received": true,
+      "ok": true
+    },
+    "phoenix_api": {
+      "url": "http://localhost:6006/v1/projects",
+      "http_status": 200,
+      "checked_at": "2026-10-28T18:39:53.467468+00:00",
+      "projects": [
+        {
+          "id": "UHJvamVjdDoy",
+          "name": "genai"
+        },
+        {
+          "id": "UHJvamVjdDox",
+          "name": "default"
+        }
+      ],
+      "ok": true
+    }
+  }
+}

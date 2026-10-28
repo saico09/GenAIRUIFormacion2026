@@ -8,6 +8,10 @@ Para recorrer la etapa 1, usa el [guion de demo](evidencias/S05-guion.md): arran
 
 El ciclo completo de detener todo y arrancarlo desde detenido sigue **NO EJECUTADO** por un rechazo automático previo al detener Qdrant. Su recreación automática en HDU-020 conservó nueve puntos, pero no acredita ese ciclo. Detalles en [arranque](evidencias/S05-arranque.md) y [pendientes](evidencias/S05-pendientes.md).
 
+El [control HDU-038](evidencias/s08/control.md), comprobado el 28/10/2026, reúne el estado por componente y una misma pregunta de Ana en métricas, logs y trazas: HTTP 200, cinco spans y siete logs. El contador POST `/chat` 200 pasó de 1 a 2; los paneles son métricas agregadas, no tiempos de esa consulta individual.
+
+El calendario conserva el **receso del 21/12/2026 al 01/01/2027, sin tareas ni recuperación de pendientes dentro de ese período**. La primera acción prevista para el **04/01/2027** es seguir [Arrancar](#arrancar), esperar ambas APIs y comprobar sus health; después consultar a Ana y repetir una pregunta RAG con la [guía de regreso](GUIA.md#retomar-después-del-receso). El ciclo completo desde detenido y la validación humana continúan pendientes; estas fechas son planificación, no una sesión confirmada.
+
 ## Arrancar
 
 preparar la configuración solo en un clon nuevo (después completa los valores de `.env`; si ya existe, lo conserva):
@@ -18,7 +22,7 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 
 En un clon nuevo, completa `POSTGRES_USER`, `POSTGRES_PASSWORD` y `GRAFANA_ADMIN_PASSWORD` en `.env` antes de arrancar. La clave de Grafana ya está configurada en este equipo; se queda solo en ese archivo local.
 
-levantar postgres, las dos apis, qdrant, prometheus, grafana, loki y alloy:
+levantar postgres, las dos apis, qdrant, prometheus, grafana, loki, alloy y phoenix:
 
 ```bash
 docker compose up -d --build
@@ -255,6 +259,27 @@ Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api p
 
 Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y reintenta. Una conexión fallida a Qdrant devuelve 503 `Qdrant no disponible`; pregunta vacía y paciente inexistente responden 422 y 404 respectivamente. Los prompts, respuestas y parámetros reales están en [S04-rag.json](evidencias/S04-rag.json).
 
+## RAG en cuatro pasos
+
+LangGraph 1.2.18 ejecuta `retrieval → prompt → llamada_llm → respuesta` en `python-api/grafo.py`. El estado conserva pregunta, patient_id, request_id, fragmentos, prompt y respuesta. Reutiliza las funciones y el modelo existentes:
+
+| Paso | Qué añade al estado |
+|---|---|
+| retrieval | Hasta dos fragmentos del paciente solicitado. |
+| prompt | La pregunta y los fragmentos dentro del prompt RAG. |
+| llamada_llm | La respuesta real del modelo, con el mismo request_id. |
+| respuesta | Entrega esa respuesta sin modificarla ni llamar otra vez al modelo. |
+
+La [prueba HDU-034](evidencias/s08/034-grafo.md) se ejecutó por consola: la pregunta exacta del dataset sobre Ana devolvió Enfermedad Alfa con su fuente. [Comandos para repetirla](GUIA.md#ejecutar-el-grafo). Esa HDU comprobó el grafo de forma independiente.
+
+Desde **HDU-035**, el POST `/chat` invoca ese StateGraph para la rama RAG y conserva la respuesta directa y las dos columnas. Las dos preguntas de Ana pasaron en la página: enfermedad con Alfa y cita; cirugía sin información suficiente. Por petición se cotejaron cuatro nodos en orden, dos llamadas LLM y el HTTP 200, todos con el mismo request_id. [Casos, respuestas y capturas](evidencias/s08/casos-chatbot.md) y [cómo repetirlos](GUIA.md#comprobar-el-chatbot-con-el-grafo).
+
+## Trazas del RAG en Phoenix
+
+[Phoenix 20.26.1](http://localhost:6006) recibe las trazas del proyecto **genai** y conserva sus datos en `phoenix_data`. Python usa OpenTelemetry 1.45.1 y envía por lotes al endpoint interno `http://phoenix:6006/v1/traces`.
+
+La [prueba HDU-036](evidencias/s08/phoenix.md) comprobó la primera raíz `rag`. Desde **HDU-037**, Phoenix muestra esa raíz y cuatro spans hijos con entrada, salida y duración por nodo. El mismo request_id enlaza los cinco spans y los siete logs del chatbot. Abre la [traza completa de Ana](http://localhost:6006/redirects/traces/e55201e7c50f71a9938bb739b9a66abd), selecciona `prompt` y revisa **Info** para ver los fragmentos y el prompt completo. [Prueba y capturas](evidencias/s08/037-nodos.md) · [Comandos de Phoenix](GUIA.md#trazas-en-phoenix).
+
 ## Métricas de FastAPI
 
 ver contadores y duraciones HTTP:
@@ -316,6 +341,7 @@ La [revisión HDU-033](evidencias/s07/revision.md) volvió a consultar los inter
 | `python-api/app/db.py` | Abre la conexión y entrega una sesión por petición. |
 | `python-api/app/metrics.py` | Cuenta peticiones y duraciones por método, ruta normalizada y status. |
 | `python-api/app/observability.py` | Conserva el request_id entre middleware y endpoint y escribe eventos JSON HTTP/LLM. |
+| `python-api/app/tracing.py` | Configura OpenTelemetry y registra entradas/salidas y tiempos de cada nodo en Phoenix. |
 | `java-api/pom.xml` | Dependencias y versión de Spring Boot; Maven construye el servicio. |
 | `java-api/src/main/resources/application.properties` | Configura la conexión de Java usando las variables de Compose. |
 | `java-api/src/main/resources/schema.sql` | Crea el esquema `java` si todavía no existe. |
@@ -336,7 +362,8 @@ La [revisión HDU-033](evidencias/s07/revision.md) volvió a consultar los inter
 | `python-api/buscar.py` | Recupera hasta dos fragmentos filtrados por paciente. |
 | `scripts/verificar_recuperacion.py` | Coteja los nueve payloads y las cuatro consultas conocidas. |
 | `python-api/app/llm.py` | Llama al LLM con parámetros compartidos y registra cada rama, prompt y respuesta. |
-| `python-api/rag.py` | Arma el contexto recuperado y pide respuesta con fuente al mismo LLM. |
+| `python-api/rag.py` | Construye el prompt RAG con pregunta, contexto y regla de cita. |
+| `python-api/grafo.py` | Ejecuta los cuatro nodos RAG y permite guardar el estado final desde consola. |
 | `scripts/verificar_chat.py` | Comprueba las dos respuestas y fuentes para dato conocido y ausente. |
 | `python-api/app/static/index.html` | Página del chatbot: selector, pregunta, dos respuestas, fuentes y reintento. |
 | `scripts/verificar_chat_ui.cjs` | Prueba el formulario en Edge y compara las cuatro respuestas visibles con el JSON. |
@@ -353,5 +380,8 @@ La [revisión HDU-033](evidencias/s07/revision.md) volvió a consultar los inter
 | `scripts/verificar_loki.py` | Genera cuatro GET y encuentra sus eventos por servicio y request_id. |
 | `scripts/capturar_loki.cjs` | Abre las consultas verificadas en Explore y guarda capturas y URLs. |
 | `scripts/verificar_llm_logs.py` | Comprueba que las dos llamadas LLM coincidan con el POST y su respuesta en Loki. |
+| `scripts/verificar_grafo_logs.py` | Relaciona los casos del navegador con cuatro nodos, dos llamadas LLM y su HTTP en Loki. |
+| `scripts/capturar_phoenix.cjs` | Abre una traza guardada y comprueba que sus ids aparezcan antes de capturarla. |
+| `scripts/verificar_traza.py` | Envía el caso de Ana y coteja cinco spans con sus entradas/salidas y siete logs. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

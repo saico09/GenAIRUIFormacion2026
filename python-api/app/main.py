@@ -2,8 +2,9 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Response
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse
+from opentelemetry.trace import StatusCode
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -12,19 +13,26 @@ from app.models import Patient
 from app.metrics import install_metrics
 from app.observability import install_request_logging
 from app.schemas import ChatIn, PatientIn, PatientOut
+from app.tracing import configure_tracing, tracer
 from app.llm import LLMUnavailable, llamar_llm
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
-from rag import answer_rag
+from grafo import grafo
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Al arrancar crea public.patients si todavía no existe (no borra datos)
     Base.metadata.create_all(engine)
-    yield
+    tracing_provider = configure_tracing()
+    try:
+        yield
+    finally:
+        tracing_provider.shutdown()
 
 
-app = FastAPI(title="python-api", lifespan=lifespan)
+# Las trazas de esta práctica cubren solo el RAG; FastAPI 0.162 trae spans HTTP propios.
+app = FastAPI(title="python-api", lifespan=lifespan,
+              telemetry={"tracing": False, "operation_spans": False})
 install_metrics(app)
 install_request_logging(app)
 
@@ -43,12 +51,18 @@ def health():
 
 
 @app.post("/chat")
-def chat(body: ChatIn, db: Db):
+def chat(body: ChatIn, db: Db, request: Request):
     find_patient(body.patient_id, db)
     try:
         direct_answer = llamar_llm(body.question)
-        rag_answer, sources = answer_rag(body.patient_id, body.question)
-        return {"direct_answer": direct_answer, "rag_answer": rag_answer, "sources": sources}
+        with tracer.start_as_current_span("rag", attributes={
+            "openinference.span.kind": "CHAIN", "request_id": request.state.request_id,
+        }) as span:
+            state = grafo.invoke({"pregunta": body.question, "patient_id": body.patient_id,
+                                  "request_id": request.state.request_id})
+            span.set_status(StatusCode.OK)
+        return {"direct_answer": direct_answer, "rag_answer": state["respuesta"],
+                "sources": state["fragmentos"]}
     except (LLMUnavailable, EmbeddingUnavailable, QdrantUnavailable) as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
 

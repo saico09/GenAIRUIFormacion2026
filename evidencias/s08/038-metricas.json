@@ -1,0 +1,26 @@
+{
+  "request_id": "hdu038-2d68ab54f9fe4c57b8ef54f725df3b6d",
+  "started_at": "2026-10-28T18:40:26.447477+00:00",
+  "checked_at": "2026-10-28T18:40:53.813348+00:00",
+  "metric": "http_requests_total",
+  "before": 1.0,
+  "after": 2.0,
+  "delta": 1.0,
+  "query": "sum(http_requests_total{service=\"fastapi\",method=\"POST\",route=\"/chat\",status=\"200\"})",
+  "prometheus_result": {
+    "status": "success",
+    "data": {
+      "resultType": "vector",
+      "result": [
+        {
+          "metric": {},
+          "value": [
+            1793212848.487,
+            "2"
+          ]
+        }
+      ]
+    }
+  },
+  "note": "Contador agregado; request_id identifica la ejecución de prueba, no es etiqueta métrica."
+}

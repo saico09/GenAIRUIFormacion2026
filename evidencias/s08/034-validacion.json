@@ -1,0 +1,9 @@
+{
+  "dataset_case": 0,
+  "exact_question": true,
+  "request_id": "hdu034-c82ced150e7b482398aadd649f1deae4",
+  "fragment_count": 2,
+  "answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+  "llm_event_matches_state": true,
+  "health_status": 200
+}

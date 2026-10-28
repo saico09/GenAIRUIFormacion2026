@@ -34,6 +34,7 @@ services:
       EMBEDDING_MODEL: nomic-embed-text
       CHAT_MODEL: llama3.2:3b
       QDRANT_URL: http://qdrant:6333
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://phoenix:6006/v1/traces
     volumes:
       - ./datos:/datos:ro
     depends_on:
@@ -72,6 +73,15 @@ services:
     depends_on:
       - python-api
       - java-api
+
+  phoenix:
+    image: arizephoenix/phoenix:version-20.26.1@sha256:623813cbf1bbd4811456bb4936f21666ae50a1fbf862cf59ea0e3ca824b6b114
+    ports:
+      - "127.0.0.1:6006:6006"
+    environment:
+      PHOENIX_WORKING_DIR: /data
+    volumes:
+      - phoenix_data:/data
 
   loki:
     image: grafana/loki:3.7.9@sha256:0db216b630ae1f348a1584c67f3cead8b4c1fc839169a39501db664744158e28
@@ -117,3 +127,4 @@ volumes:
   grafana_data:
   loki_data:
   alloy_data:
+  phoenix_data:

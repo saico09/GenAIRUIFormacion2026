@@ -1,0 +1,50 @@
+[
+  {
+    "patient_id": 1,
+    "question": "¿Qué enfermedad tiene Ana Demo?",
+    "expected": "Enfermedad Alfa",
+    "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de tratar de ayudarte.",
+    "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+    "sources": [
+      {
+        "score": 0.8387875,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Enfermedad",
+        "text": "Ana Demo tiene Enfermedad Alfa."
+      },
+      {
+        "score": 0.727611,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Tratamiento",
+        "text": "Ana Demo sigue Tratamiento Alfa."
+      }
+    ],
+    "request_id": "1d6ca156-4d3d-4c94-ace9-ea7f223781fd"
+  },
+  {
+    "patient_id": 1,
+    "question": "¿Cuál fue la última cirugía de Ana Demo?",
+    "expected": "No hay información suficiente",
+    "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su historial de cirugías. Es posible que la información que buscas sea confidencial o no esté disponible públicamente. Si puedes proporcionar más contexto o detalles sobre quién es Ana Demo y qué tipo de cirugías está hablando, estaré encantado de tratar de ayudarte.",
+    "rag_answer": "No hay información suficiente.",
+    "sources": [
+      {
+        "score": 0.7146107,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Enfermedad",
+        "text": "Ana Demo tiene Enfermedad Alfa."
+      },
+      {
+        "score": 0.6861502,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Tratamiento",
+        "text": "Ana Demo sigue Tratamiento Alfa."
+      }
+    ],
+    "request_id": "8ed7120d-2024-46ee-94ad-79131d9f376d"
+  }
+]

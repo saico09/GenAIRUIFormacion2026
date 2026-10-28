@@ -22,7 +22,7 @@ Abre `.env` en tu editor y completa `POSTGRES_USER`, `POSTGRES_PASSWORD` y `GRAF
 
 ## Levantar / bajar
 
-levantar los contenedores (postgres, ambas apis, qdrant, prometheus, grafana, loki y alloy), reconstruyendo si cambiaste código:
+levantar los contenedores (postgres, ambas apis, qdrant, prometheus, grafana, loki, alloy y phoenix), reconstruyendo si cambiaste código:
 ```bash
 docker compose up -d --build
 ```
@@ -44,7 +44,7 @@ bajar los contenedores (se conservan los volúmenes; Ollama corre aparte en Wind
 docker compose down
 ```
 
-bajar los contenedores y BORRAR los datos (ojo: elimina pacientes, vectores, historial Prometheus, datos Grafana, logs Loki y posiciones Alloy):
+bajar los contenedores y BORRAR los datos (ojo: elimina pacientes, vectores, historial Prometheus, datos Grafana, logs Loki, posiciones Alloy y trazas Phoenix):
 ```bash
 docker compose down -v
 ```
@@ -415,6 +415,109 @@ Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api p
 
 Si Ollama no está disponible, responde 503 con `LLM no disponible`; inicia de nuevo con `scripts/iniciar_ollama.ps1` y reintenta. Una conexión inaccesible a Qdrant devuelve 503 con `Qdrant no disponible`: ese caso se comprobó con una API de prueba y una URL inaccesible, sin detener el servicio real.
 
+## Ejecutar el grafo
+
+Con los servicios y Ollama encendidos, esta prueba ejecuta los cuatro nodos desde consola. Usa la primera pregunta del dataset y guarda el estado completo: pregunta, paciente, id de petición, fragmentos, prompt y respuesta.
+
+tomar el primer caso del dataset sin cambiar el texto:
+```powershell
+$caso = (Get-Content datos/preguntas.json -Raw | ConvertFrom-Json)[0]
+```
+
+generar un id para esta ejecución:
+```powershell
+$requestId = 'hdu034-' + [guid]::NewGuid().ToString('N')
+```
+
+ejecutar retrieval, prompt, llamada_llm y respuesta:
+```powershell
+docker compose exec -T python-api python grafo.py $caso.patient_id $caso.question --request-id $requestId --output /tmp/grafo.json
+```
+
+copiar el estado final a la carpeta de evidencias:
+```powershell
+docker compose cp python-api:/tmp/grafo.json evidencias/s08/grafo.json
+```
+
+Ojo: el último comando reemplaza `grafo.json`. La prueba devolvió Alfa con `[paciente-1.md/Enfermedad]`, dos fragmentos de Ana y el mismo request_id en el estado y el evento LLM. El nodo respuesta entrega el texto obtenido; no hace una segunda llamada. [Resultado y build comprobados](evidencias/s08/034-grafo.md).
+
+LangGraph 1.2.18 funciona aquí con Python 3.15.2. Docker compila las dependencias que lo necesitan en una etapa separada; no hace falta instalar un compilador en Windows. La comprobación de HDU-034 fue por consola; desde HDU-035 el mismo grafo también responde en el endpoint.
+
+## Comprobar el chatbot con el grafo
+
+Abre [el chatbot](http://localhost:8000), elige Ana y prueba las preguntas exactas `¿Qué enfermedad tiene Ana Demo?` y `¿Cuál fue la última cirugía de Ana Demo?`. Pasaron las dos: RAG devolvió Alfa con fuente y falta de información para cirugía; la directa reconoció que no tenía datos. Las fuentes de cirugía son fragmentos recuperados de Ana, no evidencia de una operación.
+
+Para repetir la prueba de navegador y cotejar sus logs, usa estos comandos en la misma terminal. Ojo: con el prefijo `035` se reemplazan los JSON y capturas de esa prueba; si lo cambias, cambia también los nombres de entrada y salida del último comando.
+
+indicar dónde está Playwright en este equipo:
+```powershell
+$env:NODE_PATH = 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+```
+
+guardar la prueba en la carpeta del grafo:
+```powershell
+$env:EVIDENCE_DIR = 'evidencias/s08'
+```
+
+identificar los resultados y las capturas:
+```powershell
+$env:EVIDENCE_PREFIX = '035'
+```
+
+probar enfermedad y cirugía desde la página:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' scripts/verificar_chat_ui.cjs --demo
+```
+
+cotejar enseguida esos dos casos con los logs recientes de Loki:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_grafo_logs.py evidencias/s08/035-resultados.json --output evidencias/s08/035-correlacion.json
+```
+
+El segundo verificador consulta la última hora y exige cuatro eventos `rag_node` en orden, dos eventos `llm` con el mismo modelo y un HTTP 200. Compara la pregunta, las respuestas y las fuentes con el JSON del navegador; todos conservan su request_id. [Resultados y capturas inspeccionadas](evidencias/s08/casos-chatbot.md).
+
+## Trazas en Phoenix
+
+Abre [Phoenix](http://localhost:6006), entra al proyecto **genai** y selecciona una traza. Para ver la comprobación guardada, abre [esta traza de Ana](http://localhost:6006/redirects/traces/b257ce77561364693451e5a2324687ed) y la pestaña **Attributes**. Su request_id es `hdu036-a91935fe126a42a6b9530146db9ad37e`; coincide con los logs HTTP y LLM de Loki.
+
+levantar solo Phoenix si todavía no está activo:
+```powershell
+docker compose up -d --no-deps phoenix
+```
+
+consultar por API los spans de la traza comprobada:
+```powershell
+Invoke-RestMethod 'http://localhost:6006/v1/projects/genai/spans?trace_id=b257ce77561364693451e5a2324687ed&limit=100'
+```
+
+En HDU-036 devolvió un único span `rag`, sin padre (`parent_id=null`), estado `OK` y duración positiva. Una traza nueva puede tardar unos segundos en aparecer porque el envío usa lotes; no hace falta repetir la pregunta inmediatamente. Las trazas quedan en el volumen `phoenix_data`.
+
+La app conserva el proveedor global OpenTelemetry y lo cierra al apagar la API. Se desactivaron los spans automáticos HTTP/operación de FastAPI para que `rag` sea la raíz. Los primeros ensayos se conservan como históricos; usa el enlace de arriba para ver la prueba final. [Captura, correlación y configuración](evidencias/s08/phoenix.md).
+
+Desde HDU-037, abre [la traza con los cuatro nodos](http://localhost:6006/redirects/traces/e55201e7c50f71a9938bb739b9a66abd). Bajo `rag` aparecen `retrieval`, `prompt`, `llamada_llm` y `respuesta`. Selecciona cada nodo y abre **Info** para ver su entrada y salida; **Attributes** conserva request_id y, en llamada_llm, modelo y parámetros.
+
+enviar una pregunta nueva de Ana y comprobar los cinco spans y siete logs:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_traza.py --prefix hdu037 --output evidencias/s08/037-traza.json
+```
+
+El verificador imprime la URL de la nueva traza y compara la cadena de valores: los fragmentos de retrieval entran a prompt, ese prompt entra al LLM y su respuesta llega intacta al último nodo. También comprueba padre, orden, tiempos positivos y coincidencia con Loki. Ojo: reemplaza `037-traza.json`; cambia `--output` para conservar otra ejecución.
+
+Los parámetros del span LLM y de la petición a Ollama salen del mismo `MODEL_OPTIONS`. En la prueba, prompt y respuesta tardaron 0,334 y 0,138 ms: Phoenix puede redondearlos a **0 ms** en pantalla, mientras el JSON conserva su duración positiva. [Entradas, salidas, tiempos y capturas inspeccionadas](evidencias/s08/037-nodos.md).
+
+## Retomar después del receso
+
+El receso previsto es **21/12/2026–01/01/2027**, sin tareas ni recuperación automática de pendientes. El **04/01/2027**, empieza por [Arrancar en el README](README.md#arrancar): Compose, espera de las APIs, Ollama y ambos health. Son pasos de reanudación; no incluyen repetir la parada de Qdrant rechazada anteriormente.
+
+consultar a Ana después del arranque (200):
+```powershell
+curl.exe -i http://localhost:8000/patients/1
+```
+
+Después repite [la prueba de trazas](#trazas-en-phoenix): envía la pregunta de Ana y comprueba Alfa con fuente, cinco spans y siete logs. Revisa también Targets de Prometheus, el dashboard y Explore con los enlaces de esta guía. Si algo no está listo, registra el resultado antes de continuar con HDU-039; no des por hecha una comprobación anterior.
+
+El [control HDU-038](evidencias/s08/control.md) guarda el estado y los pendientes. En esa prueba, POST `/chat` 200 aumentó en uno; el p95 del dashboard agrupa tráfico y no mide esa pregunta concreta. La explicación de Marco y la revisión con Rui siguen pendientes.
+
 ## Métricas FastAPI
 
 ver las métricas HTTP (200; es texto Prometheus, no JSON):
@@ -613,7 +716,7 @@ docker compose exec -T loki /usr/bin/loki '-verify-config=true' '-config.file=/e
 
 ## Logs del LLM
 
-Con Ollama, la API y Loki encendidos, cada comparación deja dos eventos `llm`, uno `direct` y otro `rag`, y un evento `http` del POST `/chat`. Comparten el request_id, incluso al pasar del middleware al hilo que ejecuta el endpoint.
+Con Ollama, la API y Loki encendidos, cada comparación deja dos eventos `llm`, uno `direct` y otro `rag`, y un evento `http` del POST `/chat`. Desde HDU-035 también deja cuatro eventos `rag_node` para seguir el grafo. Comparten el request_id, incluso al pasar del middleware al hilo que ejecuta el endpoint.
 
 preguntar por Ana y cotejar las dos llamadas LLM con la respuesta y los logs:
 ```powershell
@@ -634,7 +737,7 @@ En Explore, conserva el filtro por `service` y `request_id`, pero quita `event="
 {service="fastapi"} | json | request_id="hdu032-b1f2ddff60e54e5cb1cb301cf59a9d76"
 ```
 
-Usa el intervalo **28/10/2026 18:05:39–18:07:54 UTC**; los límites exactos y la URL guardada están en [033-explore.json](evidencias/s07/033-explore.json). Para otra petición, toma su id y el intervalo de la evidencia nueva. Una ventana que no cubre la petición puede mostrar cero líneas aunque el evento exista.
+Usa el intervalo **28/10/2026 18:05:39.283233–18:07:53.514385 UTC**; la URL guardada en [033-explore.json](evidencias/s07/033-explore.json) ya lo incorpora. Para otra petición, toma su id y el intervalo de la evidencia nueva. Una ventana que no cubre la petición puede mostrar cero líneas aunque el evento exista.
 
 La [revisión HDU-033](evidencias/s07/revision.md) también recuperó dos eventos 200/404 de cada API usando las consultas guardadas de HDU-031. Frase para repasarlo: **el request_id une la respuesta HTTP con los logs de sus llamadas al modelo; service distingue qué API los emitió**. Es apoyo para explicarlo, no una explicación personal ya realizada ni revisión de Rui recibida.
 

@@ -8,6 +8,7 @@ from app.observability import log_event
 
 CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.2:3b")
 TEMPERATURE = 0
+MODEL_OPTIONS = {"temperature": TEMPERATURE, "num_ctx": 2048, "num_predict": 256}
 TIMEOUT_SECONDS = 120
 
 
@@ -22,7 +23,7 @@ def llamar_llm(prompt: str, *, branch: str = "direct") -> str:
             "model": CHAT_MODEL,
             "prompt": prompt,
             "stream": False,
-            "options": {"temperature": TEMPERATURE, "num_ctx": 2048, "num_predict": 256},
+            "options": MODEL_OPTIONS,
             "keep_alive": "1m",
         }, timeout=TIMEOUT_SECONDS)
         answer = result["response"]

@@ -1,0 +1,44 @@
+{
+  "python": "3.15.2",
+  "libc": [
+    "glibc",
+    "2.41"
+  ],
+  "versions": {
+    "langgraph": "1.2.18",
+    "langchain-core": "1.7.1",
+    "langgraph-checkpoint": "4.3.1",
+    "langgraph-sdk": "0.4.10",
+    "langsmith": "0.14.14",
+    "pyyaml": "6.0.3",
+    "zstandard": "0.25.0",
+    "orjson": "3.13.0",
+    "ormsgpack": "1.13.0",
+    "xxhash": "4.0.2"
+  },
+  "edges": [
+    [
+      "__start__",
+      "retrieval"
+    ],
+    [
+      "llamada_llm",
+      "respuesta"
+    ],
+    [
+      "prompt",
+      "llamada_llm"
+    ],
+    [
+      "respuesta",
+      "__end__"
+    ],
+    [
+      "retrieval",
+      "prompt"
+    ]
+  ],
+  "gcc_present": false,
+  "wheelhouse_present": false,
+  "zstandard_roundtrip": true
+}

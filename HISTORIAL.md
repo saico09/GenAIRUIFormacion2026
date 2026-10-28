@@ -4,11 +4,49 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-038 · 28/10/2026 · Control y pasos de regreso
+
+- **Una pregunta de Ana comprobada de extremo a extremo**: Alfa con cita, HTTP 200, cinco spans y siete logs con el mismo request_id. El contador POST `/chat` 200 pasó de 1 a 2.
+- **Servicios y observabilidad disponibles**: APIs, nueve puntos Qdrant, modelos Ollama, targets UP, dashboard, Loki y Phoenix. Capturas inspeccionadas y estado por componente en `evidencias/s08/control.md`.
+- **README y guía de regreso** conservan receso 21/12–01/01 sin tareas. Primera acción prevista del 04/01: arrancar, esperar APIs y comprobar health; después Ana y pregunta RAG.
+- Ojo: las métricas del dashboard son agregadas, no la latencia de ese chat. El ciclo completo desde detenido sigue sin ejecutar por rechazo automático; explicación personal y revisión de Rui pendientes, sin horas ni sesiones atribuidas.
+
+## HDU-037 · 28/10/2026 · Entradas y salidas de cada nodo
+
+- **Cuatro spans hijos de rag** mediante `trace_node`, con request_id, entrada y salida JSON, inicio, fin y estado. Los eventos existentes de Loki se conservan.
+- **`MODEL_OPTIONS` compartido** por la llamada real a Ollama y el span LLM; se mantienen modelo y parámetros entre directa y RAG.
+- **`scripts/verificar_traza.py`** comprobó cinco spans ordenados, relaciones padre/hijo, valores encadenados, tiempos positivos y siete logs coincidentes. Ana volvió a responder Alfa con fuente.
+- **Capturas de la traza y del prompt inspeccionadas**, con fragmentos de entrada y prompt completo visibles. Resultados en `evidencias/s08/037-nodos.md`.
+- Ojo: Phoenix redondea duraciones muy pequeñas a 0 ms; el JSON mantiene el valor positivo. Explicación de Marco y revisión de Rui siguen pendientes.
+
+## HDU-036 · 28/10/2026 · Primera traza RAG en Phoenix
+
+- **Phoenix 20.26.1 en localhost:6006**, proyecto genai y volumen `phoenix_data`. OpenTelemetry 1.45.1 funciona con Python 3.15.2, mediante el exportador HTTP estándar.
+- **Una raíz `rag` alrededor del grafo**, con request_id común al chatbot y Loki; la prueba final devolvió un único span sin padre, estado OK y duración positiva. UI y captura inspeccionadas.
+- **Proveedor global, exportación por lotes y cierre al apagar la API**. Se desactivaron los spans automáticos de FastAPI con `telemetry={"tracing": False, "operation_spans": False}` para conservar la raíz prevista.
+- **Enlaces y comprobaciones en `evidencias/s08/phoenix.md`**. Esta HDU todavía no añade spans hijos a los cuatro nodos; los ensayos anteriores se conservan como históricos.
+- Ojo: explicación de Marco y revisión de Rui pendientes; la prueba técnica no acredita una sesión ni horas reales.
+
+## HDU-035 · 28/10/2026 · Chatbot conectado al StateGraph
+
+- **El POST `/chat` invoca el grafo para RAG** y conserva la rama directa, la pregunta y las columnas de la página. `rag.py` queda como constructor del prompt; se retiró la función anterior sin usos restantes.
+- **Dos preguntas exactas desde el navegador**: enfermedad de Ana → Alfa con cita; cirugía → sin información suficiente. Ambas dieron 200 y las capturas se inspeccionaron.
+- **Cuatro eventos `rag_node` en orden**, dos llamadas LLM y un HTTP por caso, con el mismo request_id. `scripts/verificar_grafo_logs.py` comprobó modelo, pregunta, fuentes y respuestas contra el JSON de la página.
+- **Casos y comandos en `evidencias/s08/casos-chatbot.md` y la guía**. La explicación personal de Marco y la revisión de Rui siguen pendientes.
+
+## HDU-034 · 28/10/2026 · RAG como grafo de cuatro nodos
+
+- **LangGraph 1.2.18 en `grafo.py`** conecta retrieval, prompt, llamada_llm y respuesta. Reutiliza búsqueda, construcción del prompt y llamada al mismo modelo.
+- **Estado final guardado por consola** con pregunta exacta del dataset, paciente, request_id, fragmentos, prompt y respuesta. Ana devolvió Alfa con fuente; estado y evento LLM conservaron el mismo id.
+- **Python 3.15.2 y dependencias comprobados**: Docker compila PyYAML/zstandard en una etapa separada; la imagen final no contiene gcc ni las ruedas temporales. `pip check` pasó.
+- **Comandos en la guía y evidencia en `evidencias/s08/034-grafo.md`**. Esta HDU probó el grafo independiente; la integración del endpoint corresponde a HDU-035.
+- Ojo: explicación de Marco y revisión de Rui pendientes; no se acreditan horas ni una sesión realizada.
+
 ## HDU-033 · 28/10/2026 · Correlación de logs revisada
 
 - **Consultas guardadas repetidas**: dos eventos 200/404 en FastAPI, dos en Spring Boot y tres del chatbot al incluir HTTP y ambas ramas LLM.
 - **Un request_id común** permite seguir el POST `/chat` y sus llamadas direct/rag. La guía deja la consulta completa, su intervalo y una frase de apoyo para explicarla.
-- **Resultados y vistas de Explore** en `evidencias/s07/revision.md`. Se ajustaron el verificador y la altura de captura para comprobar y leer la evidencia; no se encontró un fallo de la app en esta revisión.
+- **Resultados y capturas inspeccionadas de Explore** en `evidencias/s07/revision.md`. Tras la corrección previa del verificador, se amplió la altura de la captura para leer los tres eventos completos; no hizo falta corregir las APIs.
 - Ojo: siguen pendientes la explicación propia de Marco y la revisión de Rui. No se atribuyen horas de trabajo ni una sesión realizada.
 
 ## HDU-032 · 28/10/2026 · Prompt y respuesta del LLM en Loki
