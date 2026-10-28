@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.db import Base, engine, get_db
 from app.models import Patient
+from app.metrics import install_metrics
 from app.schemas import ChatIn, PatientIn, PatientOut
 from app.llm import LLMUnavailable, llamar_llm
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
@@ -23,6 +24,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="python-api", lifespan=lifespan)
+install_metrics(app)
 
 Db = Annotated[Session, Depends(get_db)]
 

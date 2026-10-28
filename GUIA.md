@@ -18,9 +18,11 @@ crear el .env solo si no existe (PowerShell; después pon usuario y clave):
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
+Abre `.env` en tu editor y completa `POSTGRES_USER`, `POSTGRES_PASSWORD` y `GRAFANA_ADMIN_PASSWORD`. La última es la clave local que quieres usar para entrar como `admin` a Grafana; no dejes el valor vacío ni subas el archivo a Git. En este equipo ya está configurada.
+
 ## Levantar / bajar
 
-levantar los contenedores (postgres + python-api + java-api + qdrant), reconstruyendo si cambiaste código:
+levantar los contenedores (postgres, ambas apis, qdrant, prometheus y grafana), reconstruyendo si cambiaste código:
 ```bash
 docker compose up -d --build
 ```
@@ -37,12 +39,12 @@ ver qué está corriendo:
 docker compose ps
 ```
 
-bajar los contenedores (los datos se mantienen en pgdata y qdrant_data; Ollama corre aparte en Windows):
+bajar los contenedores (se conservan los volúmenes; Ollama corre aparte en Windows):
 ```bash
 docker compose down
 ```
 
-bajar los contenedores y BORRAR pacientes y vectores (ojo: elimina pgdata y qdrant_data):
+bajar los contenedores y BORRAR los datos (ojo: elimina pacientes, vectores, historial Prometheus y datos Grafana):
 ```bash
 docker compose down -v
 ```
@@ -412,6 +414,102 @@ Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api p
 `rag.py` arma el contexto y pide una cita literal del archivo/sección; la respuesta viene del modelo. `app/llm.py` centraliza `CHAT_MODEL=llama3.2:3b`, temperatura 0, contexto 2048, salida máxima de 256 tokens y timeout de 120 segundos por llamada al LLM. Cada petición comparativa hace dos llamadas y la recuperación, así que puede tardar más que la antigua respuesta directa.
 
 Si Ollama no está disponible, responde 503 con `LLM no disponible`; inicia de nuevo con `scripts/iniciar_ollama.ps1` y reintenta. Una conexión inaccesible a Qdrant devuelve 503 con `Qdrant no disponible`: ese caso se comprobó con una API de prueba y una URL inaccesible, sin detener el servicio real.
+
+## Métricas FastAPI
+
+ver las métricas HTTP (200; es texto Prometheus, no JSON):
+```powershell
+curl.exe -i http://localhost:8000/metrics
+```
+
+- `http_requests_total`: cuántas peticiones lleva el proceso.
+- `http_request_duration_seconds_count` y `_sum`: cuántas duraciones midió y cuántos segundos suman.
+- `http_request_duration_seconds_bucket`: cuántas peticiones quedaron dentro de cada límite de duración.
+
+Cada serie distingue método, ruta y status. Para los pacientes se usa `/patients/{id}`; las rutas desconocidas se agrupan como `unmatched`. Así los ids concretos no generan series nuevas. Los contadores parten de nuevo si reinicias Python; consultar `/metrics` también cuenta como una petición.
+
+comprobar que un GET de Ana y uno inexistente suman exactamente una petición cada uno:
+```powershell
+Get-Content -Raw scripts/verificar_metricas.py | docker compose exec -T python-api python -
+```
+
+La prueba pasó con 200 y 404, tanto en el contador como en el count del histograma; no modifica pacientes. Las duraciones miden hasta construir la respuesta. Resultado guardado en [s06/fastapi.md](evidencias/s06/fastapi.md).
+
+## Prometheus y Grafana
+
+1. Abre [Targets de Prometheus](http://localhost:9090/targets). `fastapi` y `springboot` deben aparecer **UP**.
+2. Abre [Grafana](http://localhost:3000) y entra con usuario **admin**. La clave es el valor de `GRAFANA_ADMIN_PASSWORD` en tu `.env`.
+3. Abre la fuente **Prometheus** y pulsa **Save & test**. Ya se comprobó el mensaje `Successfully queried the Prometheus API.`
+
+consultar tu clave solo en la terminal local (no pegar el resultado en capturas ni evidencias):
+```powershell
+Get-Content .env | Select-String '^GRAFANA_ADMIN_PASSWORD='
+```
+
+La fuente se configura desde `observabilidad/grafana-datasources.yml` y usa `http://prometheus:9090`. Prometheus consulta `python-api:8000/metrics` y `java-api:8080/actuator/prometheus` cada 15 segundos. Dentro de Docker se usan esos nombres; `localhost` apuntaría al propio contenedor.
+
+comprobar de nuevo las métricas Java con GET 200/404, sin modificar pacientes:
+```powershell
+Get-Content -Raw scripts/verificar_metricas.py | docker compose exec -T python-api python - --service springboot
+```
+
+validar el archivo de recolección:
+```powershell
+docker compose exec -T prometheus promtool check config /etc/prometheus/prometheus.yml
+```
+
+Java usa `http_server_requests_seconds_count` y `_bucket`, con `uri="/patients/{id}"`; Prometheus añade `service="springboot"`. Para Python añade `service="fastapi"`. Al repetir los verificadores, evita otras peticiones a esos dos ids mientras se comparan los incrementos exactos. [Pruebas de conexión y métricas](evidencias/s06/026.md).
+
+## Dashboard de las APIs
+
+Abre [APIs GenAI](http://localhost:3000/d/genai-apis/apis-genai). Tiene dos filas, FastAPI y Spring Boot; cada una muestra tráfico en peticiones/segundo, errores 4xx/5xx en porcentaje y latencia p95 en segundos.
+
+Las tasas usan los últimos cinco minutos. El panel de errores divide B (tasa de 4xx/5xx) por A (tasa total) mediante `100 * $B / $A`; ambas consultas están ocultas y se muestra el porcentaje. El rango visible inicial es de quince minutos.
+
+Ojo: también cuentan las peticiones de health y las consultas a métricas. Un GET correcto y uno 404 no implican exactamente 50 % en esa ventana. Sin tráfico puede no haber un porcentaje definido; no equivale a 0 %. Los cuatro paneles se comprobaron con datos numéricos en [HDU-027](evidencias/s06/consultas.md).
+
+El dashboard vive en `observabilidad/dashboard.json`; Grafana lee sus cambios cada 30 segundos mediante `grafana-dashboards.yml`. Mantén los cambios en ese archivo para que queden en Git. Los datos persistentes de Grafana y Prometheus están en sus volúmenes.
+
+## Carga y latencia p95
+
+generar 20 GET válidos y 5 inexistentes por API en unos dos minutos, sin modificar pacientes:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts\generar_trafico.py --output evidencias/s06/nueva-carga.json
+```
+
+Esa es la ruta Python probada en este equipo; `python` a secas no funciona aquí. El archivo de salida guarda cada petición, status, hora y duración. Cambia `nueva-carga.json` si quieres conservar una ejecución manual anterior.
+
+Al terminar, espera al menos dos scrapes de 15 segundos y abre el dashboard en el intervalo que contiene la carga. Se comprobaron las 50 respuestas y los seis paneles con valores numéricos. [Resultados y capturas](evidencias/s06/028-latencia.md), [dashboard exportado](evidencias/s06/dashboard.json).
+
+El **p95** estima el umbral bajo el que quedó el 95 % de las duraciones del servidor en cinco minutos; no es un promedio ni el tiempo de red del script. Se obtiene con `histogram_quantile(0.95, ...)` sobre los buckets. Grafana usa segundos y puede mostrar automáticamente milisegundos para valores pequeños. Los valores observados pertenecen a esta carga local; las peticiones de health y métricas también entran en el intervalo.
+
+## Revisar el dashboard
+
+Repite los verificadores de métricas Python y Java de arriba para comprobar que cada GET 200/404 suma uno; no modifican pacientes. Después espera dos scrapes de 15 segundos y abre [APIs GenAI](http://localhost:3000/d/genai-apis/apis-genai). La [revisión HDU-029](evidencias/s06/revision.md) comprobó los seis paneles y deja tres frases de apoyo sobre req/s, error % y p95. La explicación de Marco y la revisión de Rui siguen pendientes.
+
+Para volver a consultar y capturar los paneles en este equipo, usa el Node/Playwright de Codex. El verificador lee la clave de `.env` sin imprimirla.
+
+indicar dónde está Playwright:
+```powershell
+$env:NODE_PATH = 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+```
+
+guardar los resultados en la carpeta de métricas:
+```powershell
+$env:EVIDENCE_DIR = 'evidencias/s06'
+```
+
+usar la fecha y hora como prefijo para conservar los ensayos anteriores:
+```powershell
+$env:EVIDENCE_PREFIX = Get-Date -Format 'yyyyMMdd-HHmmss'
+```
+
+consultar los seis paneles y guardar las capturas:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' scripts/verificar_dashboard.cjs
+```
+
+Las lecturas cambian con la ventana de cinco minutos; una captura posterior puede diferir del JSON anterior. Sin tráfico suficiente, un porcentaje o percentil puede quedar sin valor definido.
 
 ## Recorrer la demo de etapa 1
 

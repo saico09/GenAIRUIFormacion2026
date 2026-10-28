@@ -4,6 +4,42 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-029 · 28/10/2026 · Métricas revisadas
+
+- **GET 200 y 404 repetidos en ambas APIs**: cada petición sumó exactamente uno en sus contadores; Prometheus recogió los valores nuevos sin modificar pacientes.
+- **Seis paneles comprobados** mediante Grafana, con tráfico, porcentaje de errores y p95 finitos; dashboard exportado y dos capturas inspeccionadas en `evidencias/s06/revision.md`.
+- **`scripts/verificar_dashboard.cjs`** permite repetir la consulta y guardar capturas. La guía incluye sus comandos locales y las frases de apoyo para explicar los cálculos.
+- Ojo: la explicación propia de Marco y la revisión de Rui siguen pendientes. Los resultados son una lectura de esa ventana de cinco minutos, no una garantía de rendimiento.
+
+## HDU-028 · 28/10/2026 · Latencia p95 y carga comprobada
+
+- **Dos paneles p95** completan las filas del dashboard, con unidad segundos y cálculo sobre los buckets de los últimos cinco minutos.
+- **`scripts/generar_trafico.py`** hizo 20 GET 200 y 5 GET 404 por API, distribuidos en unos dos minutos: 50 respuestas esperadas, sin modificar pacientes.
+- **Seis paneles con datos numéricos** y capturas inspeccionadas; últimos p95 observados de 0,004760 s en FastAPI y 0,009647 s en Spring Boot. Resultados en `evidencias/s06/028-latencia.md` y dashboard exportado en esa carpeta.
+- Ojo: p95 es una estimación desde buckets del servidor, no el tiempo de red del script ni una garantía de rendimiento. La guía usa la ruta Python real del equipo.
+
+## HDU-027 · 28/10/2026 · Dashboard de tráfico y errores
+
+- **Dashboard APIs GenAI** provisionado desde `observabilidad/dashboard.json`, con una fila por API y cuatro paneles: tráfico en req/s y errores 4xx/5xx en porcentaje.
+- **Ventana de cinco minutos** y expresión Grafana `100 * $B / $A`, usando B como tasa de errores y A como tasa total. El dashboard muestra inicialmente quince minutos.
+- **Cuatro paneles comprobados** mediante la API de Grafana, incluida su expresión matemática: valores finitos tras GET 200/404 en ambas APIs; captura inspeccionada en `evidencias/s06/consultas.md`.
+- Ojo: sin tráfico puede no haber porcentaje definido. Health y consultas a métricas también cuentan; dos peticiones aisladas no obligan a mostrar 50 %.
+
+## HDU-026 · 28/10/2026 · Java, Prometheus y Grafana conectados
+
+- **Actuator y Micrometer** exponen `/actuator/prometheus` en Java, con contador e histograma HTTP. GET 200/404 sumaron exactamente uno por status y mantuvieron la ruta normalizada.
+- **Prometheus 3.15.1** recoge ambas APIs cada 15 segundos; targets `fastapi` y `springboot` comprobados UP, con la etiqueta service en las series.
+- **Grafana 13.3.0** tiene la fuente Prometheus provisionada; el clic real en Save & test pasó. Puertos locales 9090 y 3000, volúmenes propios y versiones/digests fijados.
+- **Usuario admin y clave local** en `GRAFANA_ADMIN_PASSWORD` de `.env`; el ejemplo la deja vacía para completar en clones nuevos. No se guarda el secreto en Git ni evidencias.
+- **Evidencia** en `evidencias/s06/026.md`, con targets y captura de Grafana. La comprobación técnica no acredita explicación personal ni revisión experta.
+
+## HDU-025 · 28/10/2026 · Métricas HTTP en FastAPI
+
+- **`app/metrics.py` y prometheus-client 0.26.0** exponen `GET /metrics`: contador de peticiones e histograma de duración en segundos.
+- **Etiquetas acotadas**: método, ruta y status. Los pacientes usan `/patients/{id}` y las rutas desconocidas `unmatched`, sin una serie por URL o paciente.
+- **`scripts/verificar_metricas.py`** comprobó GET 200/404 e incremento exacto de uno en contador y count del histograma por status, sin modificar datos. Evidencia en `evidencias/s06/fastapi.md`.
+- Ojo: los contadores se reinician con el proceso e incluyen las consultas a `/metrics`. En esta HDU se comprobó la exposición de métricas; la recolección y el dashboard vienen después.
+
 ## HDU-024 · 28/10/2026 · Preparación de demo comprobada
 
 - **Comprobación previa repetida**: health y Ana responden 200 en ambas APIs; el chatbot devuelve Alfa con fuente y cirugía sin información.

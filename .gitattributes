@@ -1,0 +1,2 @@
+# Micrometer emite HELP vacíos con espacios finales; conservar la captura real.
+evidencias/s06/java-metricas.txt whitespace=-blank-at-eol

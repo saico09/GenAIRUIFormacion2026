@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-28T17:40:03.740Z",
+  "checks": [
+    {
+      "port": 8000,
+      "id": 1,
+      "status": 200,
+      "time": "2026-10-28T17:40:00.121Z"
+    },
+    {
+      "port": 8000,
+      "id": 999999,
+      "status": 404,
+      "time": "2026-10-28T17:40:00.134Z"
+    },
+    {
+      "port": 8080,
+      "id": 1,
+      "status": 200,
+      "time": "2026-10-28T17:40:00.150Z"
+    },
+    {
+      "port": 8080,
+      "id": 999999,
+      "status": 404,
+      "time": "2026-10-28T17:40:00.160Z"
+    }
+  ],
+  "values": [
+    {
+      "panel": 2,
+      "title": "Tráfico",
+      "unit": "reqps",
+      "last": 0.09076310828736997
+    },
+    {
+      "panel": 3,
+      "title": "Errores 4xx/5xx",
+      "unit": "percent",
+      "last": 3.8461538461538463
+    },
+    {
+      "panel": 12,
+      "title": "Tráfico",
+      "unit": "reqps",
+      "last": 0.09454062786038551
+    },
+    {
+      "panel": 13,
+      "title": "Errores 4xx/5xx",
+      "unit": "percent",
+      "last": 3.8440660474736603
+    }
+  ]
+}

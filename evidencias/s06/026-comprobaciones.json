@@ -1,0 +1,155 @@
+{
+  "checked_at": "2026-10-28T14:38:22.2772027-03:00",
+  "targets": [
+    {
+      "health": "up",
+      "labels": {
+        "instance": "python-api:8000",
+        "job": "fastapi",
+        "service": "fastapi"
+      },
+      "scrapeUrl": "http://python-api:8000/metrics",
+      "lastError": ""
+    },
+    {
+      "health": "up",
+      "labels": {
+        "instance": "java-api:8080",
+        "job": "springboot",
+        "service": "springboot"
+      },
+      "scrapeUrl": "http://java-api:8080/actuator/prometheus",
+      "lastError": ""
+    }
+  ],
+  "queries": {
+    "fastapi_counts": {
+      "query": "http_requests_total{service=\"fastapi\",method=\"GET\",route=\"/patients/{id}\",status=~\"200|404\"}",
+      "series": [
+        {
+          "metric": {
+            "__name__": "http_requests_total",
+            "instance": "python-api:8000",
+            "job": "fastapi",
+            "method": "GET",
+            "route": "/patients/{id}",
+            "service": "fastapi",
+            "status": "200"
+          },
+          "value": [
+            1793209090.715,
+            "2"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "http_requests_total",
+            "instance": "python-api:8000",
+            "job": "fastapi",
+            "method": "GET",
+            "route": "/patients/{id}",
+            "service": "fastapi",
+            "status": "404"
+          },
+          "value": [
+            1793209090.715,
+            "2"
+          ]
+        }
+      ]
+    },
+    "springboot_buckets": {
+      "query": "count by (service,status) (http_server_requests_seconds_bucket{service=\"springboot\",uri=\"/patients/{id}\",status=~\"200|404\"})",
+      "series": [
+        {
+          "metric": {
+            "service": "springboot",
+            "status": "404"
+          },
+          "value": [
+            1793209092.963,
+            "69"
+          ]
+        },
+        {
+          "metric": {
+            "service": "springboot",
+            "status": "200"
+          },
+          "value": [
+            1793209092.963,
+            "69"
+          ]
+        }
+      ]
+    },
+    "fastapi_buckets": {
+      "query": "count by (service,status) (http_request_duration_seconds_bucket{service=\"fastapi\",route=\"/patients/{id}\",status=~\"200|404\"})",
+      "series": [
+        {
+          "metric": {
+            "service": "fastapi",
+            "status": "200"
+          },
+          "value": [
+            1793209095.195,
+            "15"
+          ]
+        },
+        {
+          "metric": {
+            "service": "fastapi",
+            "status": "404"
+          },
+          "value": [
+            1793209095.195,
+            "15"
+          ]
+        }
+      ]
+    },
+    "springboot_counts": {
+      "query": "http_server_requests_seconds_count{service=\"springboot\",method=\"GET\",uri=\"/patients/{id}\",status=~\"200|404\"}",
+      "series": [
+        {
+          "metric": {
+            "__name__": "http_server_requests_seconds_count",
+            "error": "none",
+            "exception": "none",
+            "instance": "java-api:8080",
+            "job": "springboot",
+            "method": "GET",
+            "outcome": "CLIENT_ERROR",
+            "service": "springboot",
+            "status": "404",
+            "uri": "/patients/{id}"
+          },
+          "value": [
+            1793209096.915,
+            "2"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "http_server_requests_seconds_count",
+            "error": "none",
+            "exception": "none",
+            "instance": "java-api:8080",
+            "job": "springboot",
+            "method": "GET",
+            "outcome": "SUCCESS",
+            "service": "springboot",
+            "status": "200",
+            "uri": "/patients/{id}"
+          },
+          "value": [
+            1793209096.915,
+            "2"
+          ]
+        }
+      ]
+    }
+  },
+  "prometheus": "3.15.1",
+  "grafana": "13.3.0"
+}

@@ -16,7 +16,9 @@ preparar la configuración solo en un clon nuevo (después completa los valores 
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-levantar postgres, las dos apis y qdrant:
+En un clon nuevo, completa `POSTGRES_USER`, `POSTGRES_PASSWORD` y `GRAFANA_ADMIN_PASSWORD` en `.env` antes de arrancar. La clave de Grafana ya está configurada en este equipo; se queda solo en ese archivo local.
+
+levantar postgres, las dos apis, qdrant, prometheus y grafana:
 
 ```bash
 docker compose up -d --build
@@ -60,6 +62,8 @@ Los cuerpos de POST y PUT llevan `name` (texto no vacío), `birth_date` (fecha r
 |---|---|---|---|
 | `GET /` | Python | 200, página del chatbot | — |
 | `GET /health` | Python y Java | 200, `{"status":"ok"}` | — |
+| `GET /metrics` | Python | 200, métricas en texto Prometheus | — |
+| `GET /actuator/prometheus` | Java | 200, métricas en texto Prometheus | — |
 | `POST /patients` | Python y Java | 201, paciente creado | 422 si la entrada no es válida |
 | `GET /patients` | Python y Java | 200, lista ordenada por id | — |
 | `GET /patients/{id}` | Python y Java | 200, paciente | 404 si no existe |
@@ -251,6 +255,44 @@ Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api p
 
 Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y reintenta. Una conexión fallida a Qdrant devuelve 503 `Qdrant no disponible`; pregunta vacía y paciente inexistente responden 422 y 404 respectivamente. Los prompts, respuestas y parámetros reales están en [S04-rag.json](evidencias/S04-rag.json).
 
+## Métricas de FastAPI
+
+ver contadores y duraciones HTTP:
+
+```powershell
+curl.exe -i http://localhost:8000/metrics
+```
+
+`http_requests_total` cuenta peticiones y `http_request_duration_seconds` agrupa duraciones en segundos. Las etiquetas son `method`, `route` y `status`; los pacientes comparten la ruta `/patients/{id}`, sin crear una serie por id. Los contadores viven en el proceso y se reinician con él. Las métricas incluyen también las consultas a `/metrics`.
+
+repetir la comprobación de un 200 y un 404, sin modificar pacientes:
+
+```powershell
+Get-Content -Raw scripts/verificar_metricas.py | docker compose exec -T python-api python -
+```
+
+La prueba comprobó un incremento exacto de uno en el contador y en el count del histograma para cada status, con ruta normalizada. [Evidencia HDU-025](evidencias/s06/fastapi.md) y [detalle de uso](GUIA.md#métricas-fastapi).
+
+## Prometheus y Grafana
+
+Abre [Targets de Prometheus](http://localhost:9090/targets) y comprueba que `fastapi` y `springboot` estén **UP**. Prometheus 3.15.1 recoge métricas cada 15 segundos usando los nombres internos de Compose. Java expone contadores y buckets con Actuator/Micrometer; se comprobaron incrementos exactos de uno para GET 200 y 404.
+
+repetir la comprobación de métricas Java:
+
+```powershell
+Get-Content -Raw scripts/verificar_metricas.py | docker compose exec -T python-api python - --service springboot
+```
+
+Entra a [Grafana 13.3.0](http://localhost:3000) con usuario `admin` y la clave `GRAFANA_ADMIN_PASSWORD` de tu `.env`. La [guía](GUIA.md#prometheus-y-grafana) muestra cómo verla localmente. La fuente Prometheus ya está configurada y su **Save & test** pasó. [Evidencia HDU-026](evidencias/s06/026.md).
+
+El dashboard [APIs GenAI](http://localhost:3000/d/genai-apis/apis-genai) tiene una fila por API, con tráfico en peticiones/segundo, errores 4xx/5xx en porcentaje y latencia p95 en segundos. Usa una ventana de cinco minutos y calcula errores como `100 * $B / $A`. El p95 estima el tiempo bajo el que quedó el 95 % de las peticiones, a partir de los buckets del servidor. [Consultas de tráfico/errores](evidencias/s06/consultas.md) y [prueba de latencia](evidencias/s06/028-latencia.md).
+
+La carga de HDU-028 hizo 20 GET válidos y 5 inexistentes por API en unos dos minutos: 50 respuestas correctas, sin modificar pacientes. Los seis paneles devolvieron datos numéricos; los últimos p95 observados fueron 0,004760 s en FastAPI y 0,009647 s en Java. Son resultados de ese ensayo, no una garantía de rendimiento. El [comando para repetirlo](GUIA.md#carga-y-latencia-p95) usa el Python disponible en este equipo.
+
+Sin tráfico, el porcentaje puede quedar sin valor; no significa automáticamente 0 %. También cuentan health y las consultas a métricas. La configuración está en `observabilidad/` y los cambios del dashboard se leen cada 30 segundos. Los volúmenes `prometheus_data` y `grafana_data` conservan los datos de estos servicios.
+
+La [revisión HDU-029](evidencias/s06/revision.md) repitió GET 200/404, confirmó el incremento exacto de uno por petición y comprobó los seis paneles con datos finitos. Incluye exportación, capturas y tres frases para repasar req/s, error % y p95. Puedes [repetir la revisión](GUIA.md#revisar-el-dashboard); la explicación personal de Marco y la revisión de Rui siguen pendientes.
+
 ## Ubicarse en el código
 
 | Archivo | Para qué sirve |
@@ -260,6 +302,7 @@ Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y rein
 | `python-api/app/schemas.py` | Valida lo que entra y define el JSON de salida. |
 | `python-api/app/models.py` | Define la tabla `public.patients`. |
 | `python-api/app/db.py` | Abre la conexión y entrega una sesión por petición. |
+| `python-api/app/metrics.py` | Cuenta peticiones y duraciones por método, ruta normalizada y status. |
 | `java-api/pom.xml` | Dependencias y versión de Spring Boot; Maven construye el servicio. |
 | `java-api/src/main/resources/application.properties` | Configura la conexión de Java usando las variables de Compose. |
 | `java-api/src/main/resources/schema.sql` | Crea el esquema `java` si todavía no existe. |
@@ -282,5 +325,12 @@ Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y rein
 | `scripts/verificar_chat.py` | Comprueba las dos respuestas y fuentes para dato conocido y ausente. |
 | `python-api/app/static/index.html` | Página del chatbot: selector, pregunta, dos respuestas, fuentes y reintento. |
 | `scripts/verificar_chat_ui.cjs` | Prueba el formulario en Edge y compara las cuatro respuestas visibles con el JSON. |
+| `scripts/verificar_metricas.py` | Compara métricas antes/después de un GET 200 y otro 404. |
+| `observabilidad/prometheus.yml` | Recoge ambas APIs cada 15 segundos y les asigna la etiqueta service. |
+| `observabilidad/grafana-datasources.yml` | Configura la fuente Prometheus de Grafana. |
+| `observabilidad/dashboard.json` | Define los paneles del dashboard APIs GenAI. |
+| `observabilidad/grafana-dashboards.yml` | Carga el dashboard desde su archivo. |
+| `scripts/generar_trafico.py` | Hace 50 GET en unos dos minutos y guarda horas, estados y tiempos de respuesta. |
+| `scripts/verificar_dashboard.cjs` | Consulta los seis paneles en Grafana y guarda resultados y capturas. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

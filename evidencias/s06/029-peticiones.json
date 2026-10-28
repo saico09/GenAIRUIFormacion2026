@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-10-28T17:47:55.232Z",
+  "checks": [
+    {
+      "service": "fastapi",
+      "requests": [
+        {
+          "time": "2026-10-28T17:47:41.854Z",
+          "path": "/patients/1",
+          "status": 200
+        },
+        {
+          "time": "2026-10-28T17:47:41.865Z",
+          "path": "/patients/999999",
+          "status": 404
+        }
+      ],
+      "before": {
+        "http_requests_total": {
+          "200": 23,
+          "404": 8
+        },
+        "http_request_duration_seconds_count": {
+          "200": 23,
+          "404": 8
+        }
+      },
+      "after": {
+        "http_requests_total": {
+          "200": 24,
+          "404": 9
+        },
+        "http_request_duration_seconds_count": {
+          "200": 24,
+          "404": 9
+        }
+      },
+      "prometheus": {
+        "query": "sum by(status) (http_requests_total{service=\"fastapi\",method=\"GET\",route=\"/patients/{id}\",status=~\"200|404\"})",
+        "values": {
+          "200": 24,
+          "404": 9
+        },
+        "checked_at": "2026-10-28T17:47:42.979Z"
+      }
+    },
+    {
+      "service": "springboot",
+      "requests": [
+        {
+          "time": "2026-10-28T17:47:41.905Z",
+          "path": "/patients/1",
+          "status": 200
+        },
+        {
+          "time": "2026-10-28T17:47:41.918Z",
+          "path": "/patients/999999",
+          "status": 404
+        }
+      ],
+      "before": {
+        "http_server_requests_seconds_count": {
+          "200": 23,
+          "404": 8
+        }
+      },
+      "after": {
+        "http_server_requests_seconds_count": {
+          "200": 24,
+          "404": 9
+        }
+      },
+      "prometheus": {
+        "query": "sum by(status) (http_server_requests_seconds_count{service=\"springboot\",method=\"GET\",uri=\"/patients/{id}\",status=~\"200|404\"})",
+        "values": {
+          "200": 24,
+          "404": 9
+        },
+        "checked_at": "2026-10-28T17:47:55.232Z"
+      }
+    }
+  ]
+}
