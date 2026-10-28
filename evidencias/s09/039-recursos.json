@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-10-28T18:50:18.9128302Z",
+  "docker": {
+    "memory_bytes": 7194066944,
+    "cpus": 12,
+    "version": "28.3.3",
+    "os_type": "linux"
+  },
+  "minikube_requested": {
+    "kubernetes": "v1.36.6",
+    "profile": "genai",
+    "memory_mib": 3072,
+    "cpus": 2,
+    "driver": "docker"
+  },
+  "host": {
+    "free_memory_kib": 1560980,
+    "total_memory_kib": 14528572
+  },
+  "note": "Recursos observados; la RAM libre no se usa como requisito previo por instruccion del usuario.",
+  "minikube_container": {
+    "name": "genai",
+    "nano_cpus": 2000000000,
+    "cpu_quota": 0,
+    "memory_bytes": 3221225472,
+    "cpu_period": 0
+  }
+}

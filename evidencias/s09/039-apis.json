@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-28T18:48:47.4555019Z",
+  "patient": {
+    "id": 1,
+    "name": "Ana Demo",
+    "birth_date": "1990-01-10",
+    "email": "ana@example.com"
+  },
+  "python_health": {
+    "status": "ok"
+  },
+  "java_health": {
+    "status": "ok"
+  }
+}

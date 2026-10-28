@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: genai-fastapi
+  tag: s09
+  pullPolicy: IfNotPresent
+
+postgres:
+  # Obtenida con: minikube --profile=genai ssh -- getent hosts host.minikube.internal
+  host: "192.168.65.254"
+  port: 5432
+  database: genai
+  existingSecret: genai-postgres
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

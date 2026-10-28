@@ -1,0 +1,6 @@
+apiVersion: v2
+name: fastapi
+description: CRUD FastAPI de la formacion, conectado al PostgreSQL local
+type: application
+version: 0.1.0
+appVersion: "s09"

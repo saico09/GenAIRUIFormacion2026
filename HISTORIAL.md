@@ -4,6 +4,22 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-040 · 28/10/2026 · Chart y conexión local a PostgreSQL
+
+- **Chart `deploy/helm/fastapi`** con una réplica, Deployment/Service, imagen s09, puerto 8000, recursos acotados y readiness GET `/health`. Lint y render pasaron.
+- **Namespace genai y Secret genai-postgres** creados por `scripts/crear_secret_postgres.ps1`, leyendo `.env` y enviándolo por stdin sin imprimir credenciales ni guardarlas en el chart.
+- **PostgreSQL publicado en 5432:5432** para Minikube; host resuelto a 192.168.65.254. Se conservaron las cuatro filas Python y tres Java.
+- **SELECT 1 desde un pod temporal** devolvió 1 con la imagen s09 y el Secret; el pod quedó eliminado. Comandos y resultados en `evidencias/s09/040-helm.md` y la guía.
+- Ojo: esta HDU prepara el despliegue del CRUD FastAPI; todavía no lo instala. El chatbot y sus dependencias siguen en Compose, puerto 8000.
+
+## HDU-039 · 28/10/2026 · Minikube e imagen FastAPI preparados
+
+- **Arranque del README repetido**: ambas APIs y Ana responden; la pregunta RAG pasó con cinco spans y siete logs correlacionados. Evidencia en `evidencias/s09/039-chat.json`.
+- **Herramientas verificadas en `.local/bin`**: Minikube 1.39.0, kubectl 1.36.6 y Helm 4.3.1, con SHA-256 oficiales y sin cambiar el PATH.
+- **Nodo genai Ready con Kubernetes 1.36.6**, driver Docker y recursos reales de 2 CPU y 3072 MiB. `--keep-context` conserva el contexto activo; los comandos usan `--context=genai`.
+- **Imagen `genai-fastapi:s09` construida y cargada**, Linux amd64; `minikube image ls` confirmó la etiqueta. Hash y evidencia en `evidencias/s09/039-resumen.md`.
+- Ojo: esta HDU deja la imagen disponible, sin desplegar aún el microservicio. La ejecución es del 28/10; no acredita una actividad en enero ni una revisión humana.
+
 ## HDU-038 · 28/10/2026 · Control y pasos de regreso
 
 - **Una pregunta de Ana comprobada de extremo a extremo**: Alfa con cita, HTTP 200, cinco spans y siete logs con el mismo request_id. El contador POST `/chat` 200 pasó de 1 a 2.

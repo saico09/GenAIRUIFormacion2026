@@ -54,7 +54,7 @@ comprobar que Spring Boot responde (200):
 curl.exe -i http://localhost:8080/health
 ```
 
-Abre el [chatbot](http://localhost:8000) para comparar respuestas o [Swagger de FastAPI](http://localhost:8000/docs) para probar el CRUD. PostgreSQL escucha en `localhost:5432`; FastAPI en `localhost:8000`; Spring Boot en `localhost:8080`. La base guarda los datos en el volumen `pgdata`.
+Abre el [chatbot](http://localhost:8000) para comparar respuestas o [Swagger de FastAPI](http://localhost:8000/docs) para probar el CRUD. PostgreSQL es accesible en `localhost:5432`; desde HDU-040 se publica como `5432:5432` en las interfaces del host para recibir conexiones de Minikube. FastAPI sigue en `localhost:8000` y Spring Boot en `localhost:8080`. La base guarda los datos en el volumen `pgdata`.
 
 Python usa `public.patients` y Java usa `java.patients`, dentro de la misma base. Eso permite conservar y probar las filas de cada servicio por separado. En este equipo, Ana, Bruno y Carla Demo ya están cargados en ambas; los ids se generan de forma independiente. En un clon nuevo, usa los comandos de carga de la guía antes de probar persistencia.
 
@@ -330,6 +330,25 @@ Las llamadas al LLM añaden eventos `llm`: rama `direct` o `rag`, modelo, prompt
 
 La [revisión HDU-033](evidencias/s07/revision.md) volvió a consultar los intervalos guardados: dos eventos HTTP por API y, para el chatbot, dos eventos LLM más el HTTP 200. **El request_id une la petición con sus llamadas al modelo**; el filtro por servicio separa las APIs. La guía explica [cómo seguir ese recorrido](GUIA.md#seguir-una-consulta-completa). La explicación personal y la revisión de Rui siguen pendientes.
 
+## Preparar Minikube
+
+La preparación HDU-039 se comprobó el **28/10/2026**; el 04/01 sigue siendo la fecha prevista del plan. El arranque del README, ambos health, Ana y la pregunta RAG pasaron: [arranque](evidencias/s09/039-arranque.txt), [APIs](evidencias/s09/039-apis.json) y [chat con cinco spans y siete logs](evidencias/s09/039-chat.json).
+
+`scripts/instalar_gitops.ps1` dejó Minikube **1.39.0**, kubectl **1.36.6** y Helm **4.3.1** en `.local/bin`, comprobando los SHA-256 oficiales y las versiones. No cambia el PATH. [Herramientas verificadas](evidencias/s09/039-herramientas.json).
+
+iniciar el perfil genai con 2 CPU, 3072 MiB y Kubernetes 1.36.6:
+```powershell
+.\.local\bin\minikube.exe start --profile=genai --driver=docker --cpus=2 --memory=3072 --kubernetes-version=v1.36.6 --keep-context --wait=all --wait-timeout=6m
+```
+
+`--keep-context` conserva el contexto activo; las consultas de esta práctica usan `kubectl --context=genai`. Se comprobaron **2 CPU y 3072 MiB reales**, el nodo `genai` **Ready** con Kubernetes 1.36.6 y la imagen **genai-fastapi:s09** cargada. [Resumen y evidencias HDU-039](evidencias/s09/039-resumen.md). La [guía](GUIA.md#preparar-minikube) deja los comandos para comprobar el nodo, construir y cargar la imagen. Esta HDU prepara la imagen; todavía no despliega FastAPI en Kubernetes.
+
+## Chart de FastAPI y PostgreSQL
+
+`deploy/helm/fastapi` describe un Deployment de una réplica y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
+
+En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El chart usa esa IP para PostgreSQL, base `genai`, puerto 5432 y Secret `genai-postgres` en el namespace `genai`. El script de la [guía](GUIA.md#chart-y-conexión-a-postgres) crea o actualiza el Secret desde tu `.env` sin guardar credenciales en el chart. `helm lint` y `helm template` pasaron; un pod temporal ejecutó `SELECT 1` y devolvió 1, y luego se eliminó. Las cuatro filas Python y tres Java se conservaron al cambiar la publicación de PostgreSQL. [Evidencia HDU-040](evidencias/s09/040-helm.md). El chart queda preparado; su instalación es el siguiente paso.
+
 ## Ubicarse en el código
 
 | Archivo | Para qué sirve |
@@ -383,5 +402,9 @@ La [revisión HDU-033](evidencias/s07/revision.md) volvió a consultar los inter
 | `scripts/verificar_grafo_logs.py` | Relaciona los casos del navegador con cuatro nodos, dos llamadas LLM y su HTTP en Loki. |
 | `scripts/capturar_phoenix.cjs` | Abre una traza guardada y comprueba que sus ids aparezcan antes de capturarla. |
 | `scripts/verificar_traza.py` | Envía el caso de Ana y coteja cinco spans con sus entradas/salidas y siete logs. |
+| `scripts/instalar_gitops.ps1` | Descarga y verifica las herramientas Windows x64 en .local/bin, sin cambiar el PATH. |
+| `deploy/helm/fastapi/values.yaml` | Define imagen, réplica, conexión PostgreSQL y recursos del microservicio. |
+| `deploy/helm/fastapi/templates/` | Plantillas del Deployment con readiness y del Service ClusterIP. |
+| `scripts/crear_secret_postgres.ps1` | Crea namespace/Secret desde .env por stdin, sin imprimir credenciales. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

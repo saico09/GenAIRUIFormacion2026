@@ -1,0 +1,3 @@
+Comando: .\.local\bin\minikube.exe --profile=genai image load genai-fastapi:s09
+ExitCode: 0
+El comando termino sin salida stdout/stderr; etiqueta comprobada en 039-images.txt.

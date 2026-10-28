@@ -1,0 +1,225 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"name\":\"postgres-check-hdu040\",\"namespace\":\"genai\"},\"spec\":{\"containers\":[{\"args\":[\"import os\\nimport sys\\nimport psycopg\\ntry:\\n    with psycopg.connect(\\n        host=os.environ[\\\"POSTGRES_HOST\\\"], port=os.environ[\\\"POSTGRES_PORT\\\"],\\n        dbname=os.environ[\\\"POSTGRES_DB\\\"], user=os.environ[\\\"POSTGRES_USER\\\"],\\n        password=os.environ[\\\"POSTGRES_PASSWORD\\\"], connect_timeout=10,\\n    ) as connection:\\n        value = connection.execute(\\\"SELECT 1\\\").fetchone()[0]\\n        assert value == 1\\nexcept Exception:\\n    print(\\\"Fallo SELECT 1; revisar red y Secret sin publicar credenciales.\\\", file=sys.stderr)\\n    sys.exit(1)\\nprint(value)\\n\"],\"command\":[\"python\",\"-c\"],\"env\":[{\"name\":\"POSTGRES_HOST\",\"value\":\"192.168.65.254\"},{\"name\":\"POSTGRES_PORT\",\"value\":\"5432\"},{\"name\":\"POSTGRES_DB\",\"value\":\"genai\"}],\"envFrom\":[{\"secretRef\":{\"name\":\"genai-postgres\"}}],\"image\":\"genai-fastapi:s09\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"postgres-check\"}],\"restartPolicy\":\"Never\"}}\n"
+        },
+        "creationTimestamp": "2026-10-28T18:57:49Z",
+        "generation": 1,
+        "name": "postgres-check-hdu040",
+        "namespace": "genai",
+        "resourceVersion": "890",
+        "uid": "6c87b3ed-f86f-4588-90de-6a66269c1298"
+    },
+    "spec": {
+        "containers": [
+            {
+                "args": [
+                    "import os\nimport sys\nimport psycopg\ntry:\n    with psycopg.connect(\n        host=os.environ[\"POSTGRES_HOST\"], port=os.environ[\"POSTGRES_PORT\"],\n        dbname=os.environ[\"POSTGRES_DB\"], user=os.environ[\"POSTGRES_USER\"],\n        password=os.environ[\"POSTGRES_PASSWORD\"], connect_timeout=10,\n    ) as connection:\n        value = connection.execute(\"SELECT 1\").fetchone()[0]\n        assert value == 1\nexcept Exception:\n    print(\"Fallo SELECT 1; revisar red y Secret sin publicar credenciales.\", file=sys.stderr)\n    sys.exit(1)\nprint(value)\n"
+                ],
+                "command": [
+                    "python",
+                    "-c"
+                ],
+                "env": [
+                    {
+                        "name": "POSTGRES_HOST",
+                        "value": "192.168.65.254"
+                    },
+                    {
+                        "name": "POSTGRES_PORT",
+                        "value": "5432"
+                    },
+                    {
+                        "name": "POSTGRES_DB",
+                        "value": "genai"
+                    }
+                ],
+                "envFrom": [
+                    {
+                        "secretRef": {
+                            "name": "genai-postgres"
+                        }
+                    }
+                ],
+                "image": "genai-fastapi:s09",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "postgres-check",
+                "resources": {},
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-rjl55",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "genai",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "kube-api-access-rjl55",
+                "projected": {
+                    "defaultMode": 420,
+                    "sources": [
+                        {
+                            "serviceAccountToken": {
+                                "expirationSeconds": 3607,
+                                "path": "token"
+                            }
+                        },
+                        {
+                            "configMap": {
+                                "items": [
+                                    {
+                                        "key": "ca.crt",
+                                        "path": "ca.crt"
+                                    }
+                                ],
+                                "name": "kube-root-ca.crt"
+                            }
+                        },
+                        {
+                            "downwardAPI": {
+                                "items": [
+                                    {
+                                        "fieldRef": {
+                                            "apiVersion": "v1",
+                                            "fieldPath": "metadata.namespace"
+                                        },
+                                        "path": "namespace"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-28T18:57:51Z",
+                "observedGeneration": 1,
+                "status": "False",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-28T18:57:49Z",
+                "observedGeneration": 1,
+                "reason": "PodCompleted",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-28T18:57:51Z",
+                "observedGeneration": 1,
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-28T18:57:51Z",
+                "observedGeneration": 1,
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-28T18:57:49Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "containerID": "containerd://6f742564329f854e031e658e0b103fdae1d8dd734cbd690a2a9a82e0f9f656d8",
+                "image": "docker.io/library/genai-fastapi:s09",
+                "imageID": "sha256:a832221c478a6d21635fee51854cfc7bd76a4d7c746787429734069d8c89fd75",
+                "lastState": {},
+                "name": "postgres-check",
+                "ready": false,
+                "resources": {},
+                "restartCount": 0,
+                "started": false,
+                "state": {
+                    "terminated": {
+                        "containerID": "containerd://6f742564329f854e031e658e0b103fdae1d8dd734cbd690a2a9a82e0f9f656d8",
+                        "exitCode": 0,
+                        "finishedAt": "2026-10-28T18:57:51Z",
+                        "reason": "Completed",
+                        "startedAt": "2026-10-28T18:57:50Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 0
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-rjl55",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "192.168.49.2",
+        "hostIPs": [
+            {
+                "ip": "192.168.49.2"
+            }
+        ],
+        "observedGeneration": 1,
+        "phase": "Succeeded",
+        "podIP": "10.244.0.3",
+        "podIPs": [
+            {
+                "ip": "10.244.0.3"
+            }
+        ],
+        "qosClass": "BestEffort",
+        "resources": {},
+        "startTime": "2026-10-28T18:57:49Z"
+    }
+}

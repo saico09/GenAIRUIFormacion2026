@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres-check-hdu040
+  namespace: genai
+spec:
+  restartPolicy: Never
+  containers:
+    - name: postgres-check
+      image: genai-fastapi:s09
+      imagePullPolicy: IfNotPresent
+      command: ["python", "-c"]
+      args:
+        - |
+          import os
+          import sys
+          import psycopg
+          try:
+              with psycopg.connect(
+                  host=os.environ["POSTGRES_HOST"], port=os.environ["POSTGRES_PORT"],
+                  dbname=os.environ["POSTGRES_DB"], user=os.environ["POSTGRES_USER"],
+                  password=os.environ["POSTGRES_PASSWORD"], connect_timeout=10,
+              ) as connection:
+                  value = connection.execute("SELECT 1").fetchone()[0]
+                  assert value == 1
+          except Exception:
+              print("Fallo SELECT 1; revisar red y Secret sin publicar credenciales.", file=sys.stderr)
+              sys.exit(1)
+          print(value)
+      envFrom:
+        - secretRef:
+            name: genai-postgres
+      env:
+        - name: POSTGRES_HOST
+          value: "192.168.65.254"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: genai

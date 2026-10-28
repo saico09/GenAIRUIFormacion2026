@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-10-28T18:53:08.0237750Z",
+  "source_commit": "c2bcfafa5b25e71f08e44fbba730a9c225e7cfee",
+  "image": {
+    "tag": "genai-fastapi:s09",
+    "architecture": "amd64",
+    "id": "sha256:62d67d465efc66fd6bb591cfe044a2b978be2b373099bf0d919b745cca39274d",
+    "size_bytes": 86026424,
+    "repo_tags": [
+      "genai-fastapi:s09"
+    ],
+    "os": "linux"
+  },
+  "minikube_status": {
+    "Name": "genai",
+    "Host": "Running",
+    "Kubelet": "Running",
+    "APIServer": "Running",
+    "Kubeconfig": "Configured",
+    "Worker": false
+  },
+  "loaded_image": "docker.io/library/genai-fastapi:s09",
+  "image_load_exit_code": 0
+}

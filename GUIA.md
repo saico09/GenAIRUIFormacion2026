@@ -78,6 +78,8 @@ cat .env
 
 conectar con DBeaver: Nueva conexión → PostgreSQL → Host `localhost`, Puerto `5432`, Base `genai`, usuario y clave los del `.env`. Si pide driver, dejar que lo descargue. Solo funciona con los contenedores arriba.
 
+Desde HDU-040, Compose publica PostgreSQL como `5432:5432` para la conexión desde Minikube; el puerto queda en las interfaces del host, no limitado a 127.0.0.1. Conserva la autenticación y el volumen `pgdata`.
+
 ## python-api
 
 probar que la api está viva (debe responder 200 y {"status":"ok"}):
@@ -740,6 +742,99 @@ En Explore, conserva el filtro por `service` y `request_id`, pero quita `event="
 Usa el intervalo **28/10/2026 18:05:39.283233–18:07:53.514385 UTC**; la URL guardada en [033-explore.json](evidencias/s07/033-explore.json) ya lo incorpora. Para otra petición, toma su id y el intervalo de la evidencia nueva. Una ventana que no cubre la petición puede mostrar cero líneas aunque el evento exista.
 
 La [revisión HDU-033](evidencias/s07/revision.md) también recuperó dos eventos 200/404 de cada API usando las consultas guardadas de HDU-031. Frase para repasarlo: **el request_id une la respuesta HTTP con los logs de sus llamadas al modelo; service distingue qué API los emitió**. Es apoyo para explicarlo, no una explicación personal ya realizada ni revisión de Rui recibida.
+
+## Preparar Minikube
+
+Docker Desktop debe estar disponible. Las herramientas de esta práctica quedan en `.local/bin`, dentro del repo e ignoradas por Git. El instalador verifica las descargas y reutiliza los archivos correctos; no cambia el PATH ni inicia el clúster.
+
+preparar Minikube 1.39.0, kubectl 1.36.6 y Helm 4.3.1 para Windows x64:
+```powershell
+.\scripts\instalar_gitops.ps1
+```
+
+iniciar el perfil genai, conservando el contexto activo de Kubernetes:
+```powershell
+.\.local\bin\minikube.exe start --profile=genai --driver=docker --cpus=2 --memory=3072 --kubernetes-version=v1.36.6 --keep-context --wait=all --wait-timeout=6m
+```
+
+Se asignaron **2 CPU y 3072 MiB** a Minikube, comprobados en su contenedor. La primera ejecución descarga imágenes. `--keep-context` evita cambiar tu contexto activo; por eso las consultas de esta práctica llevan `--context=genai`. Marco autorizó continuar pese a la RAM libre baja y la prueba pasó; los [recursos observados](evidencias/s09/039-recursos.json) quedan registrados.
+
+esperar a que el nodo genai esté Ready:
+```powershell
+.\.local\bin\kubectl.exe --context=genai wait --for=condition=Ready node/genai --timeout=90s
+```
+
+ver el nodo y su versión:
+```powershell
+.\.local\bin\kubectl.exe --context=genai get nodes -o wide
+```
+
+construir FastAPI con la etiqueta de esta etapa:
+```powershell
+docker build --tag genai-fastapi:s09 --progress=plain ./python-api
+```
+
+cargar la imagen en el perfil genai:
+```powershell
+.\.local\bin\minikube.exe --profile=genai image load genai-fastapi:s09
+```
+
+comprobar que la imagen aparece dentro de Minikube:
+```powershell
+.\.local\bin\minikube.exe --profile=genai image ls
+```
+
+La prueba mostró `genai` Ready con v1.36.6 y `docker.io/library/genai-fastapi:s09` en la lista. El build y la carga terminaron correctamente. [Resultados, hash de imagen y recursos](evidencias/s09/039-resumen.md). Cargar la imagen la deja disponible para Kubernetes; el despliegue del microservicio corresponde a los pasos siguientes.
+
+## Chart y conexión a Postgres
+
+El chart `deploy/helm/fastapi` prepara el CRUD de FastAPI en namespace `genai`. Lleva una réplica, imagen `genai-fastapi:s09`, `IfNotPresent`, puerto 8000 y readiness `/health` con espera inicial y período de cinco segundos. Pide 100m CPU/128 MiB y limita a 500m/512 MiB. El chatbot sigue en [Compose](http://localhost:8000).
+
+consultar la dirección del host vista desde Minikube:
+```powershell
+.\.local\bin\minikube.exe --profile=genai ssh -- getent hosts host.minikube.internal
+```
+
+Aquí devolvió `192.168.65.254`. Si cambia en otro equipo o perfil, actualiza `postgres.host` en `deploy/helm/fastapi/values.yaml` y `POSTGRES_HOST` en `evidencias/s09/040-pod-sql.yaml` antes de probar. PostgreSQL debe estar arriba y publicado en 5432.
+
+crear o actualizar namespace genai y Secret genai-postgres desde tu .env:
+```powershell
+.\scripts\crear_secret_postgres.ps1
+```
+
+El script lee `POSTGRES_USER` y `POSTGRES_PASSWORD`, exige `POSTGRES_DB=genai` y envía el Secret por stdin. No imprime claves ni las escribe en el chart; repetirlo actualiza el mismo Secret.
+
+validar el chart:
+```powershell
+.\.local\bin\helm.exe lint deploy/helm/fastapi
+```
+
+ver los manifiestos que genera para namespace genai:
+```powershell
+.\.local\bin\helm.exe template fastapi deploy/helm/fastapi --namespace genai
+```
+
+crear el pod temporal que prueba SELECT 1 con la imagen ya cargada y el Secret:
+```powershell
+.\.local\bin\kubectl.exe --context=genai apply -f evidencias/s09/040-pod-sql.yaml
+```
+
+esperar a que termine correctamente:
+```powershell
+.\.local\bin\kubectl.exe --context=genai -n genai wait '--for=jsonpath={.status.phase}=Succeeded' pod/postgres-check-hdu040 --timeout=90s
+```
+
+ver el resultado (debe mostrar 1):
+```powershell
+.\.local\bin\kubectl.exe --context=genai -n genai logs pod/postgres-check-hdu040
+```
+
+borrar solo el pod temporal al terminar:
+```powershell
+.\.local\bin\kubectl.exe --context=genai -n genai delete pod postgres-check-hdu040 --wait=true
+```
+
+Lint, render y SELECT 1 pasaron; el pod se limpió. El cambio de publicación de PostgreSQL conservó cuatro pacientes Python y tres Java. [Evidencias HDU-040](evidencias/s09/040-helm.md). Esta preparación todavía no instala el Deployment de FastAPI.
 
 ## Revisar el equipo
 

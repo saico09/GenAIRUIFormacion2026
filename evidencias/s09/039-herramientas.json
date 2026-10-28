@@ -1,0 +1,41 @@
+{
+  "versions": {
+    "kubectl": "v1.36.6",
+    "minikube": "v1.39.0",
+    "helm": "v4.3.1+gc0d08d0"
+  },
+  "phase": "Preparacion de binarios; este script no inicia el cluster",
+  "downloads": [
+    {
+      "sha256": "776386465ded2cf610ae397fe302de32c44d12134b5ce7ce98ab05bd7713b360",
+      "version": "1.39.0",
+      "name": "minikube",
+      "checksum_url": "https://github.com/kubernetes/minikube/releases/download/v1.39.0/minikube-windows-amd64.exe.sha256",
+      "url": "https://github.com/kubernetes/minikube/releases/download/v1.39.0/minikube-windows-amd64.exe",
+      "file": "minikube.exe"
+    },
+    {
+      "sha256": "fcfd7b796dcf0f225abc40b5636a3b01f55f3de2fb1dfb18475df94e62c14112",
+      "version": "4.3.1",
+      "name": "helm",
+      "checksum_url": "https://get.helm.sh/helm-v4.3.1-windows-amd64.zip.sha256sum",
+      "url": "https://get.helm.sh/helm-v4.3.1-windows-amd64.zip",
+      "file": "helm-v4.3.1-windows-amd64.zip"
+    },
+    {
+      "sha256": "2bc0fbea066016c62cfef307108c303c2f796420d4a5dfc844de6e25d4bc47e0",
+      "version": "1.36.6",
+      "name": "kubectl",
+      "checksum_url": "https://dl.k8s.io/release/v1.36.6/bin/windows/amd64/kubectl.exe.sha256",
+      "url": "https://dl.k8s.io/release/v1.36.6/bin/windows/amd64/kubectl.exe",
+      "file": "kubectl.exe"
+    }
+  ],
+  "platform": "windows/amd64",
+  "executable_sha256": {
+    "kubectl": "2bc0fbea066016c62cfef307108c303c2f796420d4a5dfc844de6e25d4bc47e0",
+    "minikube": "776386465ded2cf610ae397fe302de32c44d12134b5ce7ce98ab05bd7713b360",
+    "helm": "912d7210c880c48b2ac91102b1297d6ac637edd9aaaf05beb12da0b496b53ba9"
+  },
+  "checked_at": "2026-10-28T18:48:35.0687429Z"
+}

@@ -1,0 +1,8 @@
+{
+  "postgres_binding": "5432:5432",
+  "python_rows": 4,
+  "snapshots_equal": true,
+  "modified_service": "postgres",
+  "java_rows": 3,
+  "checked_at": "2026-10-28T18:56:34.4136906Z"
+}

@@ -1,0 +1,4 @@
+pod/postgres-check-hdu040 created
+pod/postgres-check-hdu040 condition met
+1
+pod "postgres-check-hdu040" deleted from genai namespace
