@@ -1,0 +1,9 @@
+{
+  "request_id": "hdu045-1d77ef312e904ee58d4f481ac8fc1f55",
+  "trace_id": "b19855f8ff27eacdf2c0637d4758d59a",
+  "url": "http://localhost:6006/redirects/traces/b19855f8ff27eacdf2c0637d4758d59a",
+  "resolved_url": "http://localhost:6006/projects/UHJvamVjdDoy/traces/b19855f8ff27eacdf2c0637d4758d59a?timeRangeKey=7d",
+  "screenshot": "045-phoenix.png",
+  "prompt_screenshot": "045-prompt.png",
+  "prompt_url": "http://localhost:6006/projects/UHJvamVjdDoy/traces/b19855f8ff27eacdf2c0637d4758d59a?timeRangeKey=7d&selectedSpanNodeId=U3Bhbjo2Mg%3D%3D"
+}

@@ -1,8 +1,8 @@
 # Guía rápida
 
-Todo se corre desde la carpeta `codigo` (es el repo de Git), en PowerShell. Docker Desktop tiene que estar abierto. La entrada rápida y el contrato HTTP están en [README.md](README.md).
+Todo se corre desde la carpeta `codigo` (es el repo de Git), en **PowerShell 7**, probado con **7.6.5**. Docker Desktop tiene que estar abierto. La entrada rápida y el contrato HTTP están en [README.md](README.md).
 
-ojo en PowerShell: usa `curl.exe` y no `curl` a secas (en PowerShell `curl` es otro comando y falla).
+usa `curl.exe` para llamar al ejecutable sin depender de los alias de tu terminal.
 
 entrar a la carpeta:
 ```bash
@@ -614,7 +614,7 @@ consultar los seis paneles y guardar las capturas:
 & 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' scripts/verificar_dashboard.cjs
 ```
 
-Las lecturas cambian con la ventana de cinco minutos; una captura posterior puede diferir del JSON anterior. Sin tráfico suficiente, un porcentaje o percentil puede quedar sin valor definido.
+El verificador fija un intervalo de quince minutos al empezar y lo reutiliza en la URL y en las consultas. Así el enlace guardado vuelve al intervalo de la captura. Cada nueva ejecución elige su propio intervalo; sin tráfico suficiente, un porcentaje o percentil puede quedar sin valor definido.
 
 ## Recorrer la demo de etapa 1
 
@@ -847,12 +847,12 @@ instalar o comprobar Argo CD:
 
 La instalación pasó y dejó siete pods Ready. [Versiones y estado](evidencias/s09/041-instalacion.json), [componentes](evidencias/s09/041-componentes.txt).
 
-abrir o reutilizar el acceso local de Argo CD:
+abrir o reutilizar el acceso local de Argo CD desde PowerShell 7:
 ```powershell
 .\scripts\abrir_argocd.ps1
 ```
 
-El script mantiene el port-forward en segundo plano, solo en 127.0.0.1:8443. Comprueba `/api/version` por HTTPS antes de reutilizarlo y mientras espera el arranque; repetirlo reutiliza el proceso sano. Si el acceso falla después de reiniciar Minikube, vuelve a ejecutar este comando. Se probaron un nuevo túnel y su reutilización en [HDU-044](evidencias/s10/044-argocd-tunel.json). Abre [Argo CD](https://localhost:8443) y entra como **admin**. Esta instalación local usa certificado autofirmado.
+El script mantiene el port-forward en segundo plano, solo en 127.0.0.1:8443. Comprueba `/api/version` por HTTPS antes de reutilizarlo y mientras espera el arranque; repetirlo reutiliza el proceso sano. Usa `-SkipCertificateCheck` para el certificado local, un parámetro que Windows PowerShell 5.1 no tiene. Si el acceso falla después de reiniciar Minikube, vuelve a ejecutar este comando desde PowerShell 7. Se probaron un nuevo túnel y su reutilización en [HDU-044](evidencias/s10/044-argocd-tunel.json). Abre [Argo CD](https://localhost:8443) y entra como **admin**. Esta instalación local usa certificado autofirmado.
 
 consultar la clave inicial solo en tu terminal (no pegarla en capturas ni evidencias):
 ```powershell
@@ -921,6 +921,26 @@ ver los pods de FastAPI y comprobar que ambos estén 1/1 Running:
 La prueba eliminó exactamente uno de los dos pods. Kubernetes creó otro con nombre y UID distintos, mantuvo el otro pod y volvió a dejar dos Ready. No hizo falta otro commit: el Deployment ya pedía dos réplicas. El GET final de Ana en 8002 respondió 200. [Cambio desde Git, reposición y captura](evidencias/s09/gitops.md).
 
 Si el túnel estaba ligado al pod eliminado, repite `abrir_fastapi_minikube.ps1` antes de consultar 8002. En el ensayo, el proceso viejo terminó tras fallar la petición y el helper abrió otro; no se probó específicamente su rama Stop-Process. La explicación personal y la revisión de Rui siguen pendientes.
+
+## Repetir la observabilidad
+
+El ensayo HDU-045 hizo 50 GET en 124,1 segundos y comprobó req/s, error % y p95 de las dos APIs. Después siguió una pregunta de Ana por siete logs y cinco spans. [Resultados, consultas y capturas](evidencias/s10/observabilidad.md).
+
+repetir los 20 GET válidos y 5 inexistentes por API:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/generar_trafico.py --output evidencias/s10/045-peticiones.json
+```
+
+Al terminar, usa [la comprobación del dashboard](#revisar-el-dashboard) con `EVIDENCE_DIR` en `evidencias/s10` y un prefijo nuevo; revisa el intervalo que contiene tu carga. Los seis paneles deben tener datos numéricos. Sus métricas incluyen health y scrapes; no representan solo tus 50 peticiones.
+
+enviar la pregunta de Ana y comprobar una nueva traza con sus logs:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_traza.py --prefix hdu045 --output evidencias/s10/045-traza.json
+```
+
+Abre la URL que imprime el verificador y usa su request_id en Explore, con la fuente Loki. Añade `| event="llm"` al filtro por id para ver las ramas direct y rag con prompt, respuesta y duración. En Phoenix comprueba `retrieval → prompt → llamada_llm → respuesta` bajo `rag`. [Consulta exacta y ejemplo comprobado](evidencias/s10/observabilidad.md#la-misma-pregunta-en-loki-y-phoenix).
+
+Ojo: estos comandos regeneran sus JSON; cambia las rutas de `--output` para conservar la ejecución anterior. El request_id será nuevo. La explicación personal y la revisión de Rui siguen pendientes.
 
 ## Comprobar el entorno completo
 

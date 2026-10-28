@@ -6,6 +6,8 @@ const path = require('node:path');
 (async () => {
   const directory = process.env.EVIDENCE_DIR || 'evidencias/s06';
   const prefix = process.env.EVIDENCE_PREFIX || '028';
+  const to = Date.now();
+  const from = to - 900000;
   fs.mkdirSync(directory, { recursive: true });
   const setting = fs.readFileSync('.env', 'utf8').split(/\r?\n/)
     .find(line => line.startsWith('GRAFANA_ADMIN_PASSWORD='));
@@ -22,7 +24,7 @@ const path = require('node:path');
     await page.locator('input[name="password"]').fill(password);
     await page.getByRole('button', { name: 'Log in', exact: true }).click();
     await page.waitForURL(url => !url.pathname.includes('login'));
-    await page.goto('http://localhost:3000/d/genai-apis/apis-genai?from=now-15m&to=now');
+    await page.goto(`http://localhost:3000/d/genai-apis/apis-genai?from=${from}&to=${to}`);
     await page.getByText('Latencia p95', { exact: true }).first().waitFor();
     const response = await page.request.get('http://localhost:3000/api/dashboards/uid/genai-apis');
     if (!response.ok()) throw new Error(`Dashboard HTTP ${response.status()}`);
@@ -33,7 +35,7 @@ const path = require('node:path');
     for (const panel of panels) {
       const query = await page.request.post('http://localhost:3000/api/ds/query', {
         data: {
-          from: String(Date.now() - 900000), to: String(Date.now()),
+          from: String(from), to: String(to),
           queries: panel.targets.map(target => ({ ...target, intervalMs: 15000, maxDataPoints: 1000 })),
         },
       });

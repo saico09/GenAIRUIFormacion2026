@@ -4,6 +4,15 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-045 · 28/10/2026 · Reproducir métricas, logs y trazas
+
+- **50 GET en 124,1 segundos**, 20 respuestas 200 y 5 respuestas 404 por API, con hora y duración guardadas; sin modificar pacientes.
+- **Seis paneles con valores numéricos**, capturas de FastAPI y Spring Boot inspeccionadas y dashboard exportado con sus consultas de req/s, error % y p95. El verificador fija el mismo intervalo para consultas, captura y enlace.
+- **Pregunta de Ana seguida por request_id**: dos eventos LLM en Loki con mismo modelo, prompt, respuesta y duración; RAG respondió Alfa con fuente y la directa pidió contexto.
+- **Una raíz y cuatro nodos en Phoenix**, en orden y con duraciones positivas; entradas/salidas y siete logs cotejados. Capturas de la traza y del prompt inspeccionadas.
+- **Resultados y enlaces en `evidencias/s10/observabilidad.md`**; comandos para repetir carga y consulta en la guía.
+- Ojo: el p95 del dashboard es agregado, no el tiempo de esa pregunta. Explicación personal y revisión de Rui siguen pendientes.
+
 ## HDU-044 · 28/10/2026 · Repetir arranque y corregir accesos
 
 - **Arranque repetido sobre el entorno existente**, con ocho accesos HTTP 200. `scripts/verificar_componentes.py` guarda URLs, respuestas y fallos; comando en la guía.

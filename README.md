@@ -1,6 +1,6 @@
 # GenAI · app de práctica
 
-Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y una comparación de respuestas con y sin RAG. Ollama genera embeddings y respuestas; Qdrant guarda las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
+Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y una comparación de respuestas con y sin RAG. Ollama genera embeddings y respuestas; Qdrant guarda las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para **PowerShell 7** (probados con **7.6.5**), desde esta carpeta `codigo`, con Docker Desktop abierto. El helper de Argo CD usa `-SkipCertificateCheck`, que no está disponible en Windows PowerShell 5.1.
 
 [Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Evidencias S04](evidencias/S04.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 
@@ -11,6 +11,8 @@ El ciclo completo de detener todo y arrancarlo desde detenido sigue **NO EJECUTA
 El [control HDU-038](evidencias/s08/control.md), comprobado el 28/10/2026, reúne el estado por componente y una misma pregunta de Ana en métricas, logs y trazas: HTTP 200, cinco spans y siete logs. El contador POST `/chat` 200 pasó de 1 a 2; los paneles son métricas agregadas, no tiempos de esa consulta individual.
 
 La [repetición HDU-044](evidencias/s10/fallos.md) comprobó el arranque sobre el entorno existente, ocho accesos HTTP 200, ambos CRUD y la pregunta conocida de Ana en el navegador. Se corrigieron el panel de errores sin series 4xx/5xx y la comprobación HTTPS del túnel de Argo CD. Puedes [comprobar los ocho accesos](GUIA.md#comprobar-el-entorno-completo) con un comando; el ciclo completo desde detenido y las revisiones humanas siguen pendientes.
+
+La [comprobación HDU-045](evidencias/s10/observabilidad.md) reúne 50 GET, los seis paneles de ambas APIs y una pregunta de Ana con sus dos llamadas LLM en Loki y cinco spans en Phoenix. Las capturas e ids permiten seguir el mismo caso; los valores del dashboard siguen siendo agregados. [Cómo repetirlo](GUIA.md#repetir-la-observabilidad).
 
 El calendario conserva el **receso del 21/12/2026 al 01/01/2027, sin tareas ni recuperación de pendientes dentro de ese período**. La primera acción prevista para el **04/01/2027** es seguir [Arrancar](#arrancar), esperar ambas APIs y comprobar sus health; después consultar a Ana y repetir una pregunta RAG con la [guía de regreso](GUIA.md#retomar-después-del-receso). El ciclo completo desde detenido y la validación humana continúan pendientes; estas fechas son planificación, no una sesión confirmada.
 

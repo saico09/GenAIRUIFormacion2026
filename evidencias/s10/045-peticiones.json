@@ -1,0 +1,352 @@
+[
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:31:52.335335+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2079.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:31:54.417499+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:31:57.337666+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:31:59.371436+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2062.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:02.338724+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:04.368450+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:07.336387+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:09.377086+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:12.338370+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:14.371167+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:17.336587+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2016.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:19.356673+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:22.342286+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:24.373547+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2062.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:27.333538+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2016.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:29.356318+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:32.340259+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:34.371733+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:37.336339+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:39.362817+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:42.333675+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:44.362418+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:47.339174+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:49.371943+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:52.339971+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:54.372605+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:32:57.333545+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:32:59.362429+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:02.334288+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:04.377899+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:07.330558+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:09.368981+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:12.340960+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:14.377825+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:17.333281+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:19.377534+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:22.342525+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:24.385344+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2016.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:27.344519+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:29.377882+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:32.329331+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:34.362837+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:37.339839+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:39.371568+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:42.332545+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:44.371654+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2047.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:47.330171+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2032.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:49.360617+00:00",
+    "patient_id": 1,
+    "status": 200,
+    "duration_ms": 2031.0
+  },
+  {
+    "service": "fastapi",
+    "time": "2026-10-28T19:33:52.329814+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2016.0
+  },
+  {
+    "service": "springboot",
+    "time": "2026-10-28T19:33:54.353024+00:00",
+    "patient_id": 999999,
+    "status": 404,
+    "duration_ms": 2031.0
+  }
+]
