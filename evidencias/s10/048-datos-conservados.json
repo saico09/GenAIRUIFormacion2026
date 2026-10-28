@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-28T19:51:39.519342+00:00",
+  "python_count": 4,
+  "python_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "java_count": 3,
+  "java_ids": [
+    1,
+    2,
+    3
+  ],
+  "qdrant_points": 9,
+  "note": "Consultas de solo lectura; datos conservados."
+}

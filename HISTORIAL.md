@@ -4,6 +4,15 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-048 · 28/10/2026 · Escala final comprobada, evaluación pendiente
+
+- **Preparación técnica comprobada**: ocho accesos HTTP 200, modelos Ollama disponibles, nueve fragmentos Qdrant y una réplica como estado inicial.
+- **Cambio 1→2 publicado**, commit `0e89a564811e6769c40d70281323cb004b1275a7`; auto-sync Succeeded de 19:49:36 a 19:49:37 UTC, Synced/Healthy, dos pods Ready y GET de Ana 200 igual a Compose.
+- **Captura final inspeccionada** con Sync OK y dos pods. El primer intento agotó la espera del navegador; repetir el mismo script pasó sin cambiar el servidor ni la operación.
+- **Datos conservados**: cuatro pacientes Python, tres Java y nueve puntos Qdrant. Evidencias y pendientes en `evidencias/s10/evaluacion.md`.
+- **Guion y guía actualizados al estado de dos réplicas**, con restablecimiento 2→1 por Git para quien quiera repetir la demo desde el principio.
+- Ojo: explicación personal, demo y evaluación de Rui siguen pendientes. La escala correcta no corrige definitivamente la incidencia externa de Argo CD; el ciclo completo desde detenido sigue sin ejecutarse.
+
 ## HDU-047 · 28/10/2026 · Guion final y ensayo de consultas
 
 - **Guion en `evidencias/s10/guion.md`**, con comandos, URLs y resultados esperados para CRUD, RAG, métricas, logs, nodos Phoenix y push de réplicas; enlaza HDU-044 a HDU-046.

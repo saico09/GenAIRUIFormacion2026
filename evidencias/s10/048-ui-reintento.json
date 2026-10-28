@@ -1,0 +1,5 @@
+{
+  "first_attempt": "Timeout de waitForFunction tras30000ms al capturarUI",
+  "second_attempt": "Mismo script y misma revisión:PASS",
+  "note": "Sin cambios en servidor, chart ni operación Argo; no se atribuye una causa al timeout del navegador"
+}

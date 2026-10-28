@@ -2,7 +2,7 @@
 
 Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y una comparación de respuestas con y sin RAG. Ollama genera embeddings y respuestas; Qdrant guarda las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para **PowerShell 7** (probados con **7.6.5**), desde esta carpeta `codigo`, con Docker Desktop abierto. El helper de Argo CD usa `-SkipCertificateCheck`, que no está disponible en Windows PowerShell 5.1.
 
-[Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Evidencias S04](evidencias/S04.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
+[Arrancar](#arrancar) · [Guion final](evidencias/s10/guion.md) · [Resultados y pendientes](evidencias/s10/evaluacion.md) · [Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 
 Para recorrer la etapa 1, usa el [guion de demo](evidencias/S05-guion.md): arranque, ambos CRUD, persistencia, búsqueda y chatbot. El [ensayo HDU-023](evidencias/S05-ensayo.md) pasó sobre el entorno existente después de añadir la espera de disponibilidad de las APIs; conservó cuatro filas Python, tres Java y nueve puntos Qdrant. La [comprobación previa HDU-024](evidencias/S05-validacion.md) también pasó. **La explicación personal, la demo con Rui y su valoración siguen pendientes.**
 
@@ -14,9 +14,9 @@ La [repetición HDU-044](evidencias/s10/fallos.md) comprobó el arranque sobre e
 
 La [comprobación HDU-045](evidencias/s10/observabilidad.md) reúne 50 GET, los seis paneles de ambas APIs y una pregunta de Ana con sus dos llamadas LLM en Loki y cinco spans en Phoenix. Las capturas e ids permiten seguir el mismo caso; los valores del dashboard siguen siendo agregados. [Cómo repetirlo](GUIA.md#repetir-la-observabilidad).
 
-El estado inicial de la demo queda en **una réplica FastAPI Ready**, con GET de Ana 200 en Minikube. [HDU-046](evidencias/s10/gitops-preparacion.md) guarda el cambio 2→1, la incidencia recurrente de Argo CD y el reintento correcto, más la secuencia futura 1→2. Para consultar el estado actual usa [la guía](GUIA.md#fastapi-desde-git); los SHA de las evidencias describen ejecuciones históricas.
+El estado vigente queda en **dos réplicas FastAPI Ready**, Synced/Healthy y GET de Ana 200 en Minikube. [HDU-048](evidencias/s10/evaluacion.md) comprobó el cambio 1→2 automático desde el commit `0e89a564811e6769c40d70281323cb004b1275a7`, con operación Succeeded y datos conservados: cuatro pacientes Python, tres Java y nueve puntos Qdrant. Para otra demo desde una réplica, usa [el restablecimiento 2→1 por Git](evidencias/s10/gitops-preparacion.md#volver-a-una-réplica-para-otra-demo). La incidencia recurrente anterior de Argo CD sigue documentada; esta ejecución correcta no acredita su corrección definitiva.
 
-El [guion final HDU-047](evidencias/s10/guion.md) reúne CRUD, comparación RAG, métricas, logs, nodos Phoenix y el push preparado. El ensayo de consultas pasó y conservó una réplica. Incluye una frase de apoyo por componente; la explicación personal, la demo y la evaluación de Rui siguen pendientes.
+El [guion final](evidencias/s10/guion.md) reúne CRUD, comparación RAG, métricas, logs, nodos Phoenix y el cambio de réplicas. Su ensayo HDU-047 conservó una réplica antes de la escala HDU-048. Incluye una frase de apoyo por componente; **la explicación personal, la demo y la evaluación de Rui siguen pendientes**. Para consultar el estado actual usa [la guía](GUIA.md#fastapi-desde-git); los SHA de las evidencias describen ejecuciones históricas.
 
 El calendario conserva el **receso del 21/12/2026 al 01/01/2027, sin tareas ni recuperación de pendientes dentro de ese período**. La primera acción prevista para el **04/01/2027** es seguir [Arrancar](#arrancar), esperar ambas APIs y comprobar sus health; después consultar a Ana y repetir una pregunta RAG con la [guía de regreso](GUIA.md#retomar-después-del-receso). El ciclo completo desde detenido y la validación humana continúan pendientes; estas fechas son planificación, no una sesión confirmada.
 
@@ -353,7 +353,7 @@ iniciar el perfil genai con 2 CPU, 3072 MiB y Kubernetes 1.36.6:
 
 ## Chart de FastAPI y PostgreSQL
 
-`deploy/helm/fastapi` describe un Deployment de una réplica y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. Pasó a dos desde Git en HDU-043 y volvió a una en HDU-046 para preparar la demo. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
+`deploy/helm/fastapi` describe un Deployment de dos réplicas y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. HDU-046 lo preparó con una réplica y HDU-048 comprobó la escala final a dos desde Git. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
 
 En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El chart usa esa IP para PostgreSQL, base `genai`, puerto 5432 y Secret `genai-postgres` en el namespace `genai`. El script de la [guía](GUIA.md#chart-y-conexión-a-postgres) crea o actualiza el Secret desde tu `.env` sin guardar credenciales en el chart. `helm lint` y `helm template` pasaron; un pod temporal ejecutó `SELECT 1` y devolvió 1, y luego se eliminó. Las cuatro filas Python y tres Java se conservaron al cambiar la publicación de PostgreSQL. [Evidencia HDU-040](evidencias/s09/040-helm.md). El despliegue del chart corresponde a HDU-042.
 

@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-10-28T19:48:25.8688250Z",
+  "models": [
+    "llama3.2:3b",
+    "nomic-embed-text:latest"
+  ],
+  "qdrant_points": 9,
+  "note": "Preparación técnica, sin acreditar hora de preparación o sesión humana"
+}

@@ -1,5 +1,7 @@
 # HDU-047 · Guion final · 28/10/2026
 
+**Estado vigente después de HDU-048: dos réplicas Ready.** El ensayo de una réplica descrito abajo es histórico. Para otra demo desde ese estado inicial, primero [restablece 2→1 mediante Git](gitops-preparacion.md#volver-a-una-réplica-para-otra-demo). [Resultado final y evaluación pendiente](evaluacion.md).
+
 Desde `codigo`, en **PowerShell 7**, con el entorno preparado. El ensayo de consultas conservó **una réplica**; no ejecutó el push final 1→2. [Resultado del ensayo](047-ensayo.json). El 14/01/2027 es la fecha prevista del plan, no la fecha de esta ejecución. La explicación personal de Marco y la revisión de Rui siguen pendientes.
 
 ## 1. Abrir y comprobar
@@ -50,16 +52,16 @@ El caso guardado usa `hdu045-1d77ef312e904ee58d4f481ac8fc1f55`. El ensayo HDU-04
 
 ## 5. Estado de GitOps y cambio final preparado
 
-Abre [la Application fastapi](https://localhost:8443/applications/argocd/fastapi): debe estar Synced/Healthy. La [última escala comprobada](gitops-preparacion.md) dejó una réplica tras un reintento real por el error recurrente del contador.
+Abre [la Application fastapi](https://localhost:8443/applications/argocd/fastapi): debe estar Synced/Healthy. La [preparación HDU-046](gitops-preparacion.md) dejó una réplica tras un reintento real por el error recurrente del contador. La [escala posterior HDU-048](evaluacion.md) dejó dos; si vas a repetirla desde una, realiza primero el restablecimiento indicado al comienzo.
 
 ver el pod que queda antes de la demo:
 ```powershell
 .\.local\bin\kubectl.exe --context=genai -n genai get pods -l app=fastapi -o wide
 ```
 
-Esperado: **un pod 1/1 Running** y [GET de Ana en Minikube](http://localhost:8002/patients/1) con HTTP 200. El ensayo lo conservó así. Un commit documental posterior puede cambiar la revisión comparada sin repetir la última operación; [cómo revisar ambos estados](../../GUIA.md#fastapi-desde-git).
+Esperado **después del restablecimiento para otra demo**: un pod 1/1 Running y [GET de Ana en Minikube](http://localhost:8002/patients/1) con HTTP 200. Sin restablecer, el estado vigente muestra dos pods. El ensayo HDU-047 mantuvo uno. Un commit documental posterior puede cambiar la revisión comparada sin repetir la última operación; [cómo revisar ambos estados](../../GUIA.md#fastapi-desde-git).
 
-Para el cambio final, sigue la [secuencia exacta 1→2](gitops-preparacion.md#cambio-preparado-para-la-demo-final): editar `replicaCount`, revisar diff, commit, push y comprobar el SHA nuevo, Succeeded, dos pods Ready y GET 200. **Ese push no forma parte del ensayo HDU-047**: se conserva una réplica como punto de partida. Código para explicar: [values](../../deploy/helm/fastapi/values.yaml), [Deployment](../../deploy/helm/fastapi/templates/deployment.yaml) y [Application](../../deploy/argocd/fastapi.yaml).
+Para repetir el cambio final, sigue la [secuencia exacta 1→2](gitops-preparacion.md#cambio-preparado-para-la-demo-final): editar `replicaCount`, revisar diff, commit, push y comprobar el SHA nuevo, Succeeded, dos pods Ready y GET 200. Ese push se comprobó técnicamente en HDU-048; no forma parte del ensayo histórico HDU-047 ni acredita que se haya mostrado ante Rui. Código para explicar: [values](../../deploy/helm/fastapi/values.yaml), [Deployment](../../deploy/helm/fastapi/templates/deployment.yaml) y [Application](../../deploy/argocd/fastapi.yaml).
 
 ## Frases de apoyo para explicar
 
@@ -77,4 +79,4 @@ Estas frases son material de apoyo, no una explicación ya realizada por Marco. 
 
 ## Pendientes para la revisión
 
-El ensayo de consulta pasó y mantuvo una réplica; no exigió una corrección adicional del README. Siguen pendientes la explicación personal, la sesión/evaluación de Rui y el cambio final 1→2 durante la demo. El error recurrente de Argo CD se registra con su reintento; no se da por corregido definitivamente. El ciclo completo desde detenido sigue sin ejecutarse por el rechazo automático previo. No se atribuyen horas ni una revisión acordada.
+El ensayo de consulta pasó y mantuvo una réplica; no exigió una corrección adicional del README. HDU-048 comprobó posteriormente el cambio 1→2. Siguen pendientes la explicación personal y mostrar/evaluar el recorrido con Rui. El error recurrente de Argo CD se registra con su reintento; no se da por corregido definitivamente. El ciclo completo desde detenido sigue sin ejecutarse por el rechazo automático previo. No se atribuyen horas ni una revisión acordada.

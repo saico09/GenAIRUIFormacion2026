@@ -2,6 +2,8 @@
 
 Todo se corre desde la carpeta `codigo` (es el repo de Git), en **PowerShell 7**, probado con **7.6.5**. Docker Desktop tiene que estar abierto. La entrada rápida y el contrato HTTP están en [README.md](README.md).
 
+Para recorrerlo todo usa [el guion final](evidencias/s10/guion.md); [la evaluación](evidencias/s10/evaluacion.md) separa resultados técnicos y revisión humana pendiente. El estado actual de Minikube tiene **dos réplicas**.
+
 usa `curl.exe` para llamar al ejecutable sin depender de los alias de tu terminal.
 
 entrar a la carpeta:
@@ -788,7 +790,7 @@ La prueba mostró `genai` Ready con v1.36.6 y `docker.io/library/genai-fastapi:s
 
 ## Chart y conexión a Postgres
 
-El chart `deploy/helm/fastapi` prepara el CRUD de FastAPI en namespace `genai`. Lleva una réplica, imagen `genai-fastapi:s09`, `IfNotPresent`, puerto 8000 y readiness `/health` con espera inicial y período de cinco segundos. Pide 100m CPU/128 MiB y limita a 500m/512 MiB. El chatbot sigue en [Compose](http://localhost:8000).
+El chart `deploy/helm/fastapi` prepara el CRUD de FastAPI en namespace `genai`. Lleva dos réplicas, imagen `genai-fastapi:s09`, `IfNotPresent`, puerto 8000 y readiness `/health` con espera inicial y período de cinco segundos. Pide 100m CPU/128 MiB y limita a 500m/512 MiB por réplica. El chatbot sigue en [Compose](http://localhost:8000).
 
 consultar la dirección del host vista desde Minikube:
 ```powershell
@@ -904,7 +906,7 @@ ver las réplicas disponibles del Deployment:
 .\.local\bin\kubectl.exe --context=genai -n genai get deployment fastapi
 ```
 
-El estado preparado en HDU-046 es **una réplica Ready**. Comprueba Synced/Healthy, pods Ready y el GET de Ana 200. Un push que solo cambia documentación puede actualizar REVISION sin repetir la última operación de escala, por lo que REVISION_OPERACION puede ser anterior. Las [evidencias HDU-043](evidencias/s09/gitops.md) y [HDU-046](evidencias/s10/gitops-preparacion.md) conservan sus SHA históricos; no los uses como expectativas permanentes del estado actual.
+El estado vigente después de HDU-048 es **dos réplicas Ready**. Comprueba Synced/Healthy, pods Ready y el GET de Ana 200. Un push que solo cambia documentación puede actualizar REVISION sin repetir la última operación de escala, por lo que REVISION_OPERACION puede ser anterior. Las evidencias [HDU-043](evidencias/s09/gitops.md), [HDU-046](evidencias/s10/gitops-preparacion.md) y [HDU-048](evidencias/s10/evaluacion.md) conservan sus SHA históricos; no los uses como expectativas permanentes del estado actual.
 
 `verificar_gitops.py` exige además que la operación Succeeded corresponda al SHA exacto. Úsalo inmediatamente después de un **cambio real de réplicas**, con el SHA nuevo que acabas de publicar, como muestra la [secuencia preparada para la demo](evidencias/s10/gitops-preparacion.md#cambio-preparado-para-la-demo-final). No cambies status ni fuerces una operación solo para hacer coincidir un SHA documental.
 
@@ -918,9 +920,9 @@ El error reapareció en HDU-046; el reintento sobre el mismo commit volvió a te
 
 ## Dos réplicas y reposición
 
-En la prueba histórica HDU-043, `replicaCount: 2` se sincronizó automáticamente desde Git, sin Sync ni refresh manual. HDU-046 lo dejó en **1** para el inicio de la demo; la [secuencia 1→2](evidencias/s10/gitops-preparacion.md#cambio-preparado-para-la-demo-final) queda preparada para ejecutarla después.
+En la prueba histórica HDU-043, `replicaCount: 2` se sincronizó automáticamente desde Git, sin Sync ni refresh manual. HDU-046 lo dejó en **1** para el ensayo; HDU-048 volvió a **2** automáticamente. Para repetir el recorrido, primero [restablece una réplica por Git](evidencias/s10/gitops-preparacion.md#volver-a-una-réplica-para-otra-demo) y después usa [la secuencia 1→2](evidencias/s10/gitops-preparacion.md#cambio-preparado-para-la-demo-final).
 
-ver los pods de FastAPI (ahora debe quedar uno, 1/1 Running):
+ver los pods de FastAPI (ahora deben aparecer dos, cada uno 1/1 Running):
 ```powershell
 .\.local\bin\kubectl.exe --context=genai -n genai get pods -l app=fastapi -o wide
 ```
@@ -966,7 +968,7 @@ En HDU-044 los ocho accesos devolvieron 200. También pasaron los verificadores 
 
 Abre [el guion de S10](evidencias/s10/guion.md): trae comandos, URLs, resultados esperados y las evidencias HDU-044 a HDU-046. El ensayo de consultas HDU-047 comprobó Ana en los tres accesos, nueve puntos Qdrant, dos targets UP, los eventos LLM, cinco spans y una réplica Ready.
 
-Mantén esa réplica para empezar la demo. El cambio 1→2 queda en un paso separado con commit, push y comprobación del SHA nuevo. Las frases por componente sirven para repasar; explicación propia, sesión y valoración de Rui siguen pendientes.
+Ese ensayo fue anterior a HDU-048, que dejó **dos réplicas**. Si quieres repetir la demo desde una, usa el restablecimiento por Git del guion antes del paso 1→2. [Resultado técnico y pendientes](evidencias/s10/evaluacion.md). Las frases por componente sirven para repasar; explicación propia, sesión y valoración de Rui siguen pendientes.
 
 ## Revisar el equipo
 
