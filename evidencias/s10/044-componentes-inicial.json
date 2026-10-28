@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-28T19:29:16.8598236Z",
+  "checks": [
+    {
+      "component": "FastAPI",
+      "url": "http://localhost:8000/health",
+      "status": 200
+    },
+    {
+      "component": "Spring Boot",
+      "url": "http://localhost:8080/health",
+      "status": 200
+    },
+    {
+      "component": "Chatbot",
+      "url": "http://localhost:8000/",
+      "status": 200
+    },
+    {
+      "component": "Grafana",
+      "url": "http://localhost:3000/api/health",
+      "status": 200
+    },
+    {
+      "component": "Phoenix",
+      "url": "http://localhost:6006/",
+      "status": 200
+    },
+    {
+      "component": "Argo CD",
+      "url": "https://localhost:8443/",
+      "status": null,
+      "error": "No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (localhost:8443)"
+    },
+    {
+      "component": "Loki",
+      "url": "http://localhost:3100/ready",
+      "status": 200
+    },
+    {
+      "component": "FastAPI Minikube",
+      "url": "http://localhost:8002/patients/1",
+      "status": 200
+    }
+  ],
+  "cold_start": false,
+  "note": "Arranque sobre servicios existentes, sin parada completa"
+}

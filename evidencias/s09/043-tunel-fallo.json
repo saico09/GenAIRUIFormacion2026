@@ -1,0 +1,8 @@
+{
+  "next_action": "Validar /health antes de reutilizar el túnel; reiniciar solo el kubectl propio cuando falle.",
+  "checked_at": "2026-10-28T19:21:52.5665988Z",
+  "cause": "El helper reutilizó un listener kubectl todavía ligado al pod eliminado.",
+  "obtained": "RemoteDisconnected: Remote end closed connection without response",
+  "expected": "HTTP200 después de reposición",
+  "step": "GET8002 tras borrar fastapi-766cfdc5d5-pf4q5"
+}

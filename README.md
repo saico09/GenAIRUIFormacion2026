@@ -10,6 +10,8 @@ El ciclo completo de detener todo y arrancarlo desde detenido sigue **NO EJECUTA
 
 El [control HDU-038](evidencias/s08/control.md), comprobado el 28/10/2026, reúne el estado por componente y una misma pregunta de Ana en métricas, logs y trazas: HTTP 200, cinco spans y siete logs. El contador POST `/chat` 200 pasó de 1 a 2; los paneles son métricas agregadas, no tiempos de esa consulta individual.
 
+La [repetición HDU-044](evidencias/s10/fallos.md) comprobó el arranque sobre el entorno existente, ocho accesos HTTP 200, ambos CRUD y la pregunta conocida de Ana en el navegador. Se corrigieron el panel de errores sin series 4xx/5xx y la comprobación HTTPS del túnel de Argo CD. Puedes [comprobar los ocho accesos](GUIA.md#comprobar-el-entorno-completo) con un comando; el ciclo completo desde detenido y las revisiones humanas siguen pendientes.
+
 El calendario conserva el **receso del 21/12/2026 al 01/01/2027, sin tareas ni recuperación de pendientes dentro de ese período**. La primera acción prevista para el **04/01/2027** es seguir [Arrancar](#arrancar), esperar ambas APIs y comprobar sus health; después consultar a Ana y repetir una pregunta RAG con la [guía de regreso](GUIA.md#retomar-después-del-receso). El ciclo completo desde detenido y la validación humana continúan pendientes; estas fechas son planificación, no una sesión confirmada.
 
 ## Arrancar
@@ -314,7 +316,7 @@ El dashboard [APIs GenAI](http://localhost:3000/d/genai-apis/apis-genai) tiene u
 
 La carga de HDU-028 hizo 20 GET válidos y 5 inexistentes por API en unos dos minutos: 50 respuestas correctas, sin modificar pacientes. Los seis paneles devolvieron datos numéricos; los últimos p95 observados fueron 0,004760 s en FastAPI y 0,009647 s en Java. Son resultados de ese ensayo, no una garantía de rendimiento. El [comando para repetirlo](GUIA.md#carga-y-latencia-p95) usa el Python disponible en este equipo.
 
-Sin tráfico, el porcentaje puede quedar sin valor; no significa automáticamente 0 %. También cuentan health y las consultas a métricas. La configuración está en `observabilidad/` y los cambios del dashboard se leen cada 30 segundos. Los volúmenes `prometheus_data` y `grafana_data` conservan los datos de estos servicios.
+Con tráfico total positivo y sin series de errores, el panel muestra **0 %**: HDU-044 corrigió la consulta B para usar cero a partir de la serie total. Si tampoco hay métricas totales, conserva **No data**; no inventa un 0 %. [Comprobación de ambos casos](evidencias/s10/044-validacion-error-cero.json). Sin tráfico, el porcentaje puede quedar sin valor. También cuentan health y las consultas a métricas. La configuración está en `observabilidad/` y los cambios del dashboard se leen cada 30 segundos. Los volúmenes `prometheus_data` y `grafana_data` conservan los datos de estos servicios.
 
 La [revisión HDU-029](evidencias/s06/revision.md) repitió GET 200/404, confirmó el incremento exacto de uno por petición y comprobó los seis paneles con datos finitos. Incluye exportación, capturas y tres frases para repasar req/s, error % y p95. Puedes [repetir la revisión](GUIA.md#revisar-el-dashboard); la explicación personal de Marco y la revisión de Rui siguen pendientes.
 
@@ -345,7 +347,7 @@ iniciar el perfil genai con 2 CPU, 3072 MiB y Kubernetes 1.36.6:
 
 ## Chart de FastAPI y PostgreSQL
 
-`deploy/helm/fastapi` describe un Deployment de una réplica y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
+`deploy/helm/fastapi` describe un Deployment de dos réplicas y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. Empezó con una réplica en HDU-040 y pasó a dos desde Git en HDU-043. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
 
 En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El chart usa esa IP para PostgreSQL, base `genai`, puerto 5432 y Secret `genai-postgres` en el namespace `genai`. El script de la [guía](GUIA.md#chart-y-conexión-a-postgres) crea o actualiza el Secret desde tu `.env` sin guardar credenciales en el chart. `helm lint` y `helm template` pasaron; un pod temporal ejecutó `SELECT 1` y devolvió 1, y luego se eliminó. Las cuatro filas Python y tres Java se conservaron al cambiar la publicación de PostgreSQL. [Evidencia HDU-040](evidencias/s09/040-helm.md). El despliegue del chart corresponde a HDU-042.
 
@@ -362,6 +364,10 @@ La Application `fastapi` sigue `main` y `deploy/helm/fastapi`, con sincronizaci�
 El CRUD de Minikube está en **http://localhost:8002** mediante el helper `scripts/abrir_fastapi_minikube.ps1`. `GET /patients/1` devolvió 200 y los mismos datos persistidos de Ana que Compose. El chatbot continúa en [localhost:8000](http://localhost:8000). [Comandos de acceso y comprobación](GUIA.md#fastapi-desde-git).
 
 El primer intento de Argo CD registró `counter cannot decrease in value` y una duración negativa. Un reintento real de **main**, sobre el mismo commit, terminó correctamente; se conservaron las evidencias iniciales. Eso resuelve esta ejecución, sin acreditar una corrección definitiva del problema de Argo CD. La guía incluye el reintento y la evidencia explica la incidencia.
+
+HDU-043 publicó `replicaCount: 2` en **4844f919647381ee36e27ef0d2cb7f4170408abe**. Argo CD lo sincronizó automáticamente y dejó **dos pods Ready** y GET de Ana 200. Después se eliminó un pod: Kubernetes lo repuso, conservando dos Ready y el mismo commit, sin otro push ni Sync manual. [Evidencia y captura](evidencias/s09/gitops.md).
+
+**Git define las réplicas, Argo CD aplica ese estado y Kubernetes repone los pods que faltan.** El port-forward local perdió su conexión con el pod eliminado; abrirlo de nuevo recuperó el acceso. El helper comprueba health y reutiliza un túnel sano. [Comandos y explicación](GUIA.md#dos-réplicas-y-reposición). La explicación personal de Marco y la revisión de Rui siguen pendientes.
 
 ## Ubicarse en el código
 
@@ -417,16 +423,17 @@ El primer intento de Argo CD registró `counter cannot decrease in value` y una 
 | `scripts/capturar_phoenix.cjs` | Abre una traza guardada y comprueba que sus ids aparezcan antes de capturarla. |
 | `scripts/verificar_traza.py` | Envía el caso de Ana y coteja cinco spans con sus entradas/salidas y siete logs. |
 | `scripts/instalar_gitops.ps1` | Descarga y verifica las herramientas Windows x64 en .local/bin, sin cambiar el PATH. |
-| `deploy/helm/fastapi/values.yaml` | Define imagen, réplica, conexión PostgreSQL y recursos del microservicio. |
+| `deploy/helm/fastapi/values.yaml` | Define imagen, número de réplicas, conexión PostgreSQL y recursos del microservicio. |
 | `deploy/helm/fastapi/templates/` | Plantillas del Deployment con readiness y del Service ClusterIP. |
 | `scripts/crear_secret_postgres.ps1` | Crea namespace/Secret desde .env por stdin, sin imprimir credenciales. |
 | `scripts/instalar_argocd.ps1` | Verifica e instala Argo CD 3.5.6 en genai y espera sus componentes Ready. |
-| `scripts/abrir_argocd.ps1` | Inicia o reutiliza el port-forward local 8443 en segundo plano. |
+| `scripts/abrir_argocd.ps1` | Comprueba HTTPS e inicia o reutiliza el port-forward local 8443 en segundo plano. |
 | `deploy/argocd/repositorio.yaml` | Declara el repositorio Git público para Argo CD, sin credenciales. |
 | `scripts/verificar_repo_argocd.py` | Comprueba conexión Git y lectura del chart en un commit concreto. |
 | `deploy/argocd/fastapi.yaml` | Declara la Application que sincroniza el chart desde main hacia namespace genai. |
 | `scripts/abrir_fastapi_minikube.ps1` | Inicia o reutiliza el port-forward local del Service en 8002. |
 | `scripts/verificar_gitops.py` | Exige commit exacto, sincronización correcta, réplicas Ready y paciente HTTP 200. |
 | `scripts/capturar_argocd.cjs` | Comprueba y captura el repositorio o la Application sin mostrar credenciales. |
+| `scripts/verificar_componentes.py` | Consulta ocho accesos locales y guarda tanto respuestas correctas como fallos. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

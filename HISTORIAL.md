@@ -4,6 +4,23 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-044 · 28/10/2026 · Repetir arranque y corregir accesos
+
+- **Arranque repetido sobre el entorno existente**, con ocho accesos HTTP 200. `scripts/verificar_componentes.py` guarda URLs, respuestas y fallos; comando en la guía.
+- **Ambos CRUD y chatbot comprobados**: estados acordados, 28 validaciones 422 por API, cuatro filas Python y tres Java conservadas. La pregunta de Ana mostró dos respuestas, mismo modelo y Alfa con fuente correcta.
+- **Errores de Grafana corregidos**: con tráfico positivo y sin series 4xx/5xx muestra 0 %; cuando faltan también las métricas totales conserva No data. Ambos casos se comprobaron.
+- **Túnel Argo CD comprobado por HTTPS**, consultando api/version antes de reutilizarlo. Un nuevo acceso pasó y la segunda ejecución conservó el mismo PID sano; el túnel original ya había terminado.
+- **Registro de fallos en `evidencias/s10/fallos.md`**, con pasos, esperado, obtenido, corrección y repetición, incluidos los antecedentes de Argo y FastAPI.
+- Ojo: el ciclo completo desde detenido sigue sin ejecutar por el rechazo automático anterior. Explicación personal, demo y revisión de Rui siguen pendientes.
+
+## HDU-043 · 28/10/2026 · Dos réplicas y reposición de un pod
+
+- **Réplicas de una a dos desde Git**, mediante `replicaCount: 2` y commit `4844f919647381ee36e27ef0d2cb7f4170408abe`; Argo CD lo sincronizó automáticamente, con operación Succeeded, Synced/Healthy y dos pods Ready.
+- **GET de Ana 200** antes y después de eliminar exactamente un pod. Kubernetes lo repuso con otro nombre y UID, conservando el otro pod y el mismo commit, sin nuevo push ni Sync manual.
+- **Acceso local recuperado**: el port-forward estaba ligado al pod eliminado; abrir otro devolvió el acceso. El helper ahora comprueba health antes de reutilizarlo y se probó con un túnel sano.
+- **Explicación y evidencias** en `evidencias/s09/gitops.md`: Git define el estado, Argo CD lo aplica y Kubernetes mantiene las réplicas; captura inspeccionada y comparación de UID.
+- Ojo: no se ejercitó específicamente la rama Stop-Process del helper porque el proceso viejo ya había terminado. Explicación personal y revisión de Rui pendientes, sin horas ni sesiones atribuidas.
+
 ## HDU-042 · 28/10/2026 · Primer despliegue desde Git
 
 - **Application fastapi con auto-sync, prune y selfHeal**, siguiendo main y el chart hacia namespace genai. Desplegó el commit `230a161d585a3106969d57d5103256872f001928` con una réplica Ready.

@@ -1,0 +1,385 @@
+{
+  "checked_at": "2026-10-28T19:27:43.265787+00:00",
+  "hdu": "HDU-044",
+  "scope": "Validacion de consultas existentes antes de CRUD. Sin carga ni respuestas 4xx/5xx generadas; no reinicios.",
+  "reload": {
+    "message": "Dashboards config reloaded"
+  },
+  "dashboard_uid": "genai-apis",
+  "panels": [
+    {
+      "id": 3,
+      "service": "fastapi",
+      "query_A": "sum(rate(http_requests_total{service=\"fastapi\"}[5m]))",
+      "query_B": "sum(rate(http_requests_total{service=\"fastapi\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_requests_total{service=\"fastapi\"}[5m])))",
+      "positive_traffic_without_errors": {
+        "total": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": [
+              {
+                "metric": {},
+                "value": [
+                  1793215659.709,
+                  "0.0698177756056692"
+                ]
+              }
+            ]
+          }
+        },
+        "original_errors": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": []
+          }
+        },
+        "fixed_errors": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": [
+              {
+                "metric": {},
+                "value": [
+                  1793215664.188,
+                  "0"
+                ]
+              }
+            ]
+          }
+        },
+        "grafana_C": {
+          "status": 200,
+          "frames": [
+            {
+              "schema": {
+                "refId": "C",
+                "meta": {
+                  "type": "timeseries-multi",
+                  "typeVersion": [
+                    0,
+                    1
+                  ]
+                },
+                "fields": [
+                  {
+                    "name": "Time",
+                    "type": "time",
+                    "typeInfo": {
+                      "frame": "time.Time"
+                    }
+                  },
+                  {
+                    "name": "C",
+                    "type": "number",
+                    "typeInfo": {
+                      "frame": "float64",
+                      "nullable": true
+                    },
+                    "labels": {}
+                  }
+                ]
+              },
+              "data": {
+                "values": [
+                  [
+                    1793215365000,
+                    1793215380000,
+                    1793215395000,
+                    1793215410000,
+                    1793215425000,
+                    1793215440000,
+                    1793215455000,
+                    1793215470000,
+                    1793215485000,
+                    1793215500000,
+                    1793215515000,
+                    1793215530000,
+                    1793215545000,
+                    1793215560000,
+                    1793215575000,
+                    1793215590000,
+                    1793215605000,
+                    1793215620000,
+                    1793215635000,
+                    1793215650000,
+                    1793215665000
+                  ],
+                  [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "last_percentage": 0
+      },
+      "missing_all_metrics": {
+        "method": "Consultas de solo lectura con una etiqueta service inexistente; no se modifica el dashboard ni se crean series.",
+        "query_A": "sum(rate(http_requests_total{service=\"hdu044-ausente-894f3fcbb6e044a18271e6faf1f7b3cb\"}[5m]))",
+        "query_B": "sum(rate(http_requests_total{service=\"hdu044-ausente-894f3fcbb6e044a18271e6faf1f7b3cb\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_requests_total{service=\"hdu044-ausente-894f3fcbb6e044a18271e6faf1f7b3cb\"}[5m])))",
+        "A": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": []
+          }
+        },
+        "B": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": []
+          }
+        },
+        "grafana_C": {
+          "status": 200,
+          "frames": [
+            {
+              "schema": {
+                "refId": "C",
+                "meta": {
+                  "typeVersion": [
+                    0,
+                    0
+                  ],
+                  "custom": {
+                    "calculatedMinStep": 15000
+                  },
+                  "notices": [
+                    {
+                      "severity": "warning",
+                      "text": "1 items dropped from union(s): [\"100 * $B\": (100: {})][\"100 * $B / $A\": ]"
+                    }
+                  ],
+                  "executedQueryString": "Expr: sum(rate(http_requests_total{service=\"hdu044-ausente-894f3fcbb6e044a18271e6faf1f7b3cb\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_requests_total{service=\"hdu044-ausente-894f3fcbb6e044a18271e6faf1f7b3cb\"}[5m])))\nStep: 15s"
+                },
+                "fields": []
+              },
+              "data": {
+                "values": []
+              }
+            }
+          ]
+        }
+      },
+      "checks": {
+        "dashboard_uses_saved_queries": true,
+        "total_positive": true,
+        "error_series_absent": true,
+        "percentage_zero": true,
+        "no_metrics_keeps_no_data": true
+      }
+    },
+    {
+      "id": 13,
+      "service": "springboot",
+      "query_A": "sum(rate(http_server_requests_seconds_count{service=\"springboot\"}[5m]))",
+      "query_B": "sum(rate(http_server_requests_seconds_count{service=\"springboot\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_server_requests_seconds_count{service=\"springboot\"}[5m])))",
+      "positive_traffic_without_errors": {
+        "total": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": [
+              {
+                "metric": {},
+                "value": [
+                  1793215679.538,
+                  "0.07479058635819703"
+                ]
+              }
+            ]
+          }
+        },
+        "original_errors": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": []
+          }
+        },
+        "fixed_errors": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": [
+              {
+                "metric": {},
+                "value": [
+                  1793215677.99,
+                  "0"
+                ]
+              }
+            ]
+          }
+        },
+        "grafana_C": {
+          "status": 200,
+          "frames": [
+            {
+              "schema": {
+                "refId": "C",
+                "meta": {
+                  "type": "timeseries-multi",
+                  "typeVersion": [
+                    0,
+                    1
+                  ]
+                },
+                "fields": [
+                  {
+                    "name": "Time",
+                    "type": "time",
+                    "typeInfo": {
+                      "frame": "time.Time"
+                    }
+                  },
+                  {
+                    "name": "C",
+                    "type": "number",
+                    "typeInfo": {
+                      "frame": "float64",
+                      "nullable": true
+                    },
+                    "labels": {}
+                  }
+                ]
+              },
+              "data": {
+                "values": [
+                  [
+                    1793215380000,
+                    1793215395000,
+                    1793215410000,
+                    1793215425000,
+                    1793215440000,
+                    1793215455000,
+                    1793215470000,
+                    1793215485000,
+                    1793215500000,
+                    1793215515000,
+                    1793215530000,
+                    1793215545000,
+                    1793215560000,
+                    1793215575000,
+                    1793215590000,
+                    1793215605000,
+                    1793215620000,
+                    1793215635000,
+                    1793215650000,
+                    1793215665000,
+                    1793215680000
+                  ],
+                  [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "last_percentage": 0
+      },
+      "missing_all_metrics": {
+        "method": "Consultas de solo lectura con una etiqueta service inexistente; no se modifica el dashboard ni se crean series.",
+        "query_A": "sum(rate(http_server_requests_seconds_count{service=\"hdu044-ausente-10696f0b74504bd68387b026c15d846a\"}[5m]))",
+        "query_B": "sum(rate(http_server_requests_seconds_count{service=\"hdu044-ausente-10696f0b74504bd68387b026c15d846a\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_server_requests_seconds_count{service=\"hdu044-ausente-10696f0b74504bd68387b026c15d846a\"}[5m])))",
+        "A": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": []
+          }
+        },
+        "B": {
+          "status": "success",
+          "data": {
+            "resultType": "vector",
+            "result": []
+          }
+        },
+        "grafana_C": {
+          "status": 200,
+          "frames": [
+            {
+              "schema": {
+                "refId": "C",
+                "meta": {
+                  "typeVersion": [
+                    0,
+                    0
+                  ],
+                  "custom": {
+                    "calculatedMinStep": 15000
+                  },
+                  "notices": [
+                    {
+                      "severity": "warning",
+                      "text": "1 items dropped from union(s): [\"100 * $B / $A\": ][\"100 * $B\": (100: {})]"
+                    }
+                  ],
+                  "executedQueryString": "Expr: sum(rate(http_server_requests_seconds_count{service=\"hdu044-ausente-10696f0b74504bd68387b026c15d846a\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_server_requests_seconds_count{service=\"hdu044-ausente-10696f0b74504bd68387b026c15d846a\"}[5m])))\nStep: 15s"
+                },
+                "fields": []
+              },
+              "data": {
+                "values": []
+              }
+            }
+          ]
+        }
+      },
+      "checks": {
+        "dashboard_uses_saved_queries": true,
+        "total_positive": true,
+        "error_series_absent": true,
+        "percentage_zero": true,
+        "no_metrics_keeps_no_data": true
+      }
+    }
+  ]
+}

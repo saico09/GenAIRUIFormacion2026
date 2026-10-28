@@ -1,0 +1,120 @@
+{
+  "checked_at": "2026-10-28T19:20:28.164748+00:00",
+  "commit": "4844f919647381ee36e27ef0d2cb7f4170408abe",
+  "replicas": 2,
+  "sync": {
+    "comparedTo": {
+      "destination": {
+        "namespace": "genai",
+        "server": "https://kubernetes.default.svc"
+      },
+      "source": {
+        "path": "deploy/helm/fastapi",
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "targetRevision": "main"
+      }
+    },
+    "revision": "4844f919647381ee36e27ef0d2cb7f4170408abe",
+    "status": "Synced"
+  },
+  "health": {
+    "lastTransitionTime": "2026-10-28T19:20:17Z",
+    "status": "Healthy"
+  },
+  "operation": {
+    "finishedAt": "2026-10-28T19:20:11Z",
+    "message": "successfully synced (all tasks run)",
+    "operation": {
+      "initiatedBy": {
+        "automated": true
+      },
+      "retry": {
+        "limit": 5
+      },
+      "sync": {
+        "prune": true,
+        "revision": "4844f919647381ee36e27ef0d2cb7f4170408abe",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      }
+    },
+    "phase": "Succeeded",
+    "startedAt": "2026-10-28T19:20:11Z",
+    "syncResult": {
+      "resources": [
+        {
+          "group": "",
+          "hookPhase": "Running",
+          "kind": "Service",
+          "message": "service/fastapi unchanged",
+          "name": "fastapi",
+          "namespace": "genai",
+          "status": "Synced",
+          "syncPhase": "Sync",
+          "version": "v1"
+        },
+        {
+          "group": "apps",
+          "hookPhase": "Running",
+          "images": [
+            "genai-fastapi:s09"
+          ],
+          "kind": "Deployment",
+          "message": "deployment.apps/fastapi configured",
+          "name": "fastapi",
+          "namespace": "genai",
+          "status": "Synced",
+          "syncPhase": "Sync",
+          "version": "v1"
+        }
+      ],
+      "revision": "4844f919647381ee36e27ef0d2cb7f4170408abe",
+      "source": {
+        "path": "deploy/helm/fastapi",
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "targetRevision": "main"
+      }
+    }
+  },
+  "pods": [
+    {
+      "name": "fastapi-766cfdc5d5-jw9hn",
+      "uid": "0b06e3db-f400-4009-9475-e29e1ddca47e",
+      "ready": true,
+      "node": "genai",
+      "image": "genai-fastapi:s09"
+    },
+    {
+      "name": "fastapi-766cfdc5d5-pf4q5",
+      "uid": "ce4c9c95-71fe-431e-917e-263e36832b59",
+      "ready": true,
+      "node": "genai",
+      "image": "genai-fastapi:s09"
+    }
+  ],
+  "responses": {
+    "minikube": {
+      "url": "http://localhost:8002/patients/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    "compose": {
+      "url": "http://localhost:8000/patients/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    }
+  }
+}

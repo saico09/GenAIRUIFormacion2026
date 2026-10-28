@@ -105,7 +105,7 @@
         },
         {
           "refId": "B",
-          "expr": "sum(rate(http_requests_total{service=\"fastapi\",status=~\"4..|5..\"}[5m]))",
+          "expr": "sum(rate(http_requests_total{service=\"fastapi\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_requests_total{service=\"fastapi\"}[5m])))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -287,7 +287,7 @@
         },
         {
           "refId": "B",
-          "expr": "sum(rate(http_server_requests_seconds_count{service=\"springboot\",status=~\"4..|5..\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{service=\"springboot\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_server_requests_seconds_count{service=\"springboot\"}[5m])))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"

@@ -1,0 +1,2 @@
+E1028 16:20:54.640625    8404 portforward.go:522] "Unhandled Error" err="an error occurred forwarding 8002 -> 8000: error forwarding port 8000 to pod 5a2c027fdd3ad873f6b00cfaa5dd81f9e9775739792eb3273331809d9c247234, uid : network namespace for sandbox \"5a2c027fdd3ad873f6b00cfaa5dd81f9e9775739792eb3273331809d9c247234\" is closed"
+error: lost connection to pod

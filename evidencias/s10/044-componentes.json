@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-10-28T19:31:25.606316+00:00",
+  "checks": [
+    {
+      "component": "FastAPI",
+      "url": "http://localhost:8000/health",
+      "status": 200
+    },
+    {
+      "component": "Spring Boot",
+      "url": "http://localhost:8080/health",
+      "status": 200
+    },
+    {
+      "component": "Chatbot",
+      "url": "http://localhost:8000/",
+      "status": 200
+    },
+    {
+      "component": "Grafana",
+      "url": "http://localhost:3000/api/health",
+      "status": 200
+    },
+    {
+      "component": "Phoenix",
+      "url": "http://localhost:6006/",
+      "status": 200
+    },
+    {
+      "component": "Argo CD",
+      "url": "https://localhost:8443/",
+      "status": 200
+    },
+    {
+      "component": "Loki",
+      "url": "http://localhost:3100/ready",
+      "status": 200
+    },
+    {
+      "component": "FastAPI Minikube",
+      "url": "http://localhost:8002/patients/1",
+      "status": 200
+    }
+  ],
+  "note": "Comprueba acceso al entorno existente; no acredita un arranque desde detenido."
+}

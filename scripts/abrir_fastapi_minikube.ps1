@@ -12,9 +12,17 @@ if ($listener) {
     if ($owner.ExecutablePath -ne $kubectlPath -or $owner.CommandLine -notmatch '--context=genai' -or $owner.CommandLine -notmatch '--namespace=genai' -or $owner.CommandLine -notmatch 'svc/fastapi') {
         throw 'El puerto 8002 ya esta ocupado por otro proceso; no se modifico.'
     }
-    $listener.OwningProcess | Set-Content -LiteralPath $pidFile -Encoding ascii
-    Write-Output 'FastAPI ya tiene port-forward activo: http://localhost:8002'
-    return
+    $healthy = $false
+    try { $healthy = (Invoke-RestMethod -Uri http://127.0.0.1:8002/health -TimeoutSec 3).status -eq 'ok' } catch {}
+    if ($healthy) {
+        $listener.OwningProcess | Set-Content -LiteralPath $pidFile -Encoding ascii
+        Write-Output 'FastAPI ya tiene port-forward activo: http://localhost:8002'
+        return
+    }
+    # Un listener puede seguir vivo despues de perder el pod al que estaba conectado.
+    Stop-Process -Id $listener.OwningProcess -Force -ErrorAction SilentlyContinue
+    Get-Process -Id $listener.OwningProcess -ErrorAction SilentlyContinue | Wait-Process -Timeout 5
+    Write-Output 'El tunel anterior no responde; se abre otro hacia un pod disponible.'
 }
 
 $forward = Start-Process -FilePath $kubectlPath -ArgumentList @(
@@ -26,7 +34,9 @@ $deadline = (Get-Date).AddSeconds(30)
 do {
     $forward.Refresh()
     if ($forward.HasExited) { throw 'El port-forward termino; revisar .local/fastapi-minikube-port-forward.err.log.' }
-    if (Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 8002 -State Listen -ErrorAction SilentlyContinue) {
+    $healthy = $false
+    try { $healthy = (Invoke-RestMethod -Uri http://127.0.0.1:8002/health -TimeoutSec 2).status -eq 'ok' } catch {}
+    if ($healthy) {
         Write-Output 'FastAPI disponible mediante port-forward: http://localhost:8002'
         return
     }

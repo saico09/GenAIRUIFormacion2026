@@ -569,7 +569,7 @@ Java usa `http_server_requests_seconds_count` y `_bucket`, con `uri="/patients/{
 
 Abre [APIs GenAI](http://localhost:3000/d/genai-apis/apis-genai). Tiene dos filas, FastAPI y Spring Boot; cada una muestra tráfico en peticiones/segundo, errores 4xx/5xx en porcentaje y latencia p95 en segundos.
 
-Las tasas usan los últimos cinco minutos. El panel de errores divide B (tasa de 4xx/5xx) por A (tasa total) mediante `100 * $B / $A`; ambas consultas están ocultas y se muestra el porcentaje. El rango visible inicial es de quince minutos.
+Las tasas usan los últimos cinco minutos. El panel de errores divide B (tasa de 4xx/5xx) por A (tasa total) mediante `100 * $B / $A`; ambas consultas están ocultas y se muestra el porcentaje. Si no existen series de errores, B toma `0 * tasa_total`: con tráfico positivo muestra 0 %, y sin métricas totales conserva No data. [Comprobación HDU-044](evidencias/s10/044-validacion-error-cero.json). El rango visible inicial es de quince minutos.
 
 Ojo: también cuentan las peticiones de health y las consultas a métricas. Un GET correcto y uno 404 no implican exactamente 50 % en esa ventana. Sin tráfico puede no haber un porcentaje definido; no equivale a 0 %. Los cuatro paneles se comprobaron con datos numéricos en [HDU-027](evidencias/s06/consultas.md).
 
@@ -852,7 +852,7 @@ abrir o reutilizar el acceso local de Argo CD:
 .\scripts\abrir_argocd.ps1
 ```
 
-El script mantiene el port-forward en segundo plano, solo en 127.0.0.1:8443; repetirlo reutiliza el mismo proceso. Abre [Argo CD](https://localhost:8443) y entra como **admin**. Esta instalación local usa certificado autofirmado.
+El script mantiene el port-forward en segundo plano, solo en 127.0.0.1:8443. Comprueba `/api/version` por HTTPS antes de reutilizarlo y mientras espera el arranque; repetirlo reutiliza el proceso sano. Si el acceso falla después de reiniciar Minikube, vuelve a ejecutar este comando. Se probaron un nuevo túnel y su reutilización en [HDU-044](evidencias/s10/044-argocd-tunel.json). Abre [Argo CD](https://localhost:8443) y entra como **admin**. Esta instalación local usa certificado autofirmado.
 
 consultar la clave inicial solo en tu terminal (no pegarla en capturas ni evidencias):
 ```powershell
@@ -887,19 +887,19 @@ abrir o reutilizar el acceso al Service de FastAPI en Minikube:
 .\scripts\abrir_fastapi_minikube.ps1
 ```
 
-El helper deja el port-forward en segundo plano, solo en 127.0.0.1:8002. Se probaron su inicio y reutilización; sus logs y PID quedan en `.local`.
+El helper deja el port-forward en segundo plano, solo en 127.0.0.1:8002, y comprueba `/health` antes de reutilizarlo. Si pierdes el acceso después de reemplazar un pod, vuelve a ejecutar el mismo comando. Se probaron el inicio de un túnel nuevo tras fallar el anterior y la reutilización de uno sano; sus logs y PID quedan en `.local`.
 
 consultar a Ana en Kubernetes (200):
 ```powershell
 curl.exe -i http://localhost:8002/patients/1
 ```
 
-comprobar el commit y la réplica del despliegue inicial:
+comprobar el commit y las dos réplicas de HDU-043:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_gitops.py --commit 230a161d585a3106969d57d5103256872f001928 --replicas 1 --output evidencias/s09/042-gitops.json
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_gitops.py --commit 4844f919647381ee36e27ef0d2cb7f4170408abe --replicas 2 --output evidencias/s09/043-gitops.json
 ```
 
-El verificador exige revisión exacta, Synced, Healthy, operación Succeeded y tiempos de inicio/fin coherentes. También exige una réplica Ready y la misma Ana en 8002 y 8000. Ojo: regenera `042-gitops.json`; cuando avances a otro commit o número de réplicas, usa sus valores esperados y otro archivo de salida.
+El verificador exige revisión exacta, Synced, Healthy, operación Succeeded y tiempos de inicio/fin coherentes. También exige dos réplicas Ready y la misma Ana en 8002 y 8000. Ojo: regenera `043-gitops.json`; cuando avances a otro commit o número de réplicas, usa sus valores esperados y otro archivo de salida. La prueba histórica de una réplica se conserva en HDU-042.
 
 Si reaparece **counter cannot decrease in value**:
 
@@ -908,6 +908,32 @@ Si reaparece **counter cannot decrease in value**:
 3. Espera Synced/Healthy y que la operación indique Succeeded; vuelve a ejecutar el verificador con el commit esperado. No basta con ver el pod funcionando.
 
 Ese reintento pasó para el mismo commit. Se preservaron el error inicial y los tiempos negativos; no se modificaron a mano el status ni los relojes. [Incidencia, reintento y captura final](evidencias/s09/despliegue-inicial.md).
+
+## Dos réplicas y reposición
+
+En `deploy/helm/fastapi/values.yaml`, `replicaCount: 2` indica lo que queremos mantener. El commit y push de HDU-043 quedaron sincronizados automáticamente; no se pulsó Sync ni refresh manual para aplicar ese cambio.
+
+ver los pods de FastAPI y comprobar que ambos estén 1/1 Running:
+```powershell
+.\.local\bin\kubectl.exe --context=genai -n genai get pods -l app=fastapi -o wide
+```
+
+La prueba eliminó exactamente uno de los dos pods. Kubernetes creó otro con nombre y UID distintos, mantuvo el otro pod y volvió a dejar dos Ready. No hizo falta otro commit: el Deployment ya pedía dos réplicas. El GET final de Ana en 8002 respondió 200. [Cambio desde Git, reposición y captura](evidencias/s09/gitops.md).
+
+Si el túnel estaba ligado al pod eliminado, repite `abrir_fastapi_minikube.ps1` antes de consultar 8002. En el ensayo, el proceso viejo terminó tras fallar la petición y el helper abrió otro; no se probó específicamente su rama Stop-Process. La explicación personal y la revisión de Rui siguen pendientes.
+
+## Comprobar el entorno completo
+
+Primero sigue el arranque del README, espera las APIs e inicia Ollama. Para la parte Kubernetes, el perfil genai debe estar arriba y los helpers de Argo CD y FastAPI deben haber abierto 8443 y 8002. El verificador solo consulta; no arranca servicios.
+
+comprobar los ocho accesos locales y guardar el resultado:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_componentes.py --output evidencias/s10/044-componentes.json
+```
+
+Comprueba FastAPI, Spring Boot, chatbot, Grafana, Phoenix, Argo CD, Loki y Ana en Minikube. Guarda también los fallos y termina con error si alguno no responde correctamente. Ojo: ese comando regenera el JSON; cambia `--output` si quieres conservar la ejecución anterior.
+
+En HDU-044 los ocho accesos devolvieron 200. También pasaron los verificadores CRUD de ambas APIs, conservando cuatro filas Python y tres Java, y la pregunta de Ana mostró ambas respuestas y la fuente de Enfermedad Alfa. [Fallos, correcciones y repeticiones](evidencias/s10/fallos.md). El arranque completo desde detenido continúa sin ejecutar; estas comprobaciones usan el entorno existente.
 
 ## Revisar el equipo
 
