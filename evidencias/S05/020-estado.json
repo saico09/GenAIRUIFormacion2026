@@ -1,0 +1,22 @@
+{
+  "apis": [
+    {
+      "api": "Python",
+      "health_status": 200,
+      "ana_status": 200,
+      "ana_id": 1,
+      "ana_matches_dataset": true,
+      "patient_count": 4
+    },
+    {
+      "api": "Java",
+      "health_status": 200,
+      "ana_status": 200,
+      "ana_id": 1,
+      "ana_matches_dataset": true,
+      "patient_count": 3
+    }
+  ],
+  "qdrant_exact_count": 9,
+  "ollama_version": "0.40.12"
+}

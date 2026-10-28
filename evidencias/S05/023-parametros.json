@@ -1,0 +1,6 @@
+{
+  "model": "llama3.2:3b",
+  "temperature": 0,
+  "timeout_seconds_per_call": 120,
+  "shared_function": "app.llm.llamar_llm"
+}

@@ -4,6 +4,10 @@ Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boo
 
 [Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Evidencias S04](evidencias/S04.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 
+Para recorrer la etapa 1, usa el [guion de demo](evidencias/S05-guion.md): arranque, ambos CRUD, persistencia, búsqueda y chatbot. El [ensayo HDU-023](evidencias/S05-ensayo.md) pasó sobre el entorno existente después de añadir la espera de disponibilidad de las APIs; conservó cuatro filas Python, tres Java y nueve puntos Qdrant. La [comprobación previa HDU-024](evidencias/S05-validacion.md) también pasó. **La explicación personal, la demo con Rui y su valoración siguen pendientes.**
+
+El ciclo completo de detener todo y arrancarlo desde detenido sigue **NO EJECUTADO** por un rechazo automático previo al detener Qdrant. Su recreación automática en HDU-020 conservó nueve puntos, pero no acredita ese ciclo. Detalles en [arranque](evidencias/S05-arranque.md) y [pendientes](evidencias/S05-pendientes.md).
+
 ## Arrancar
 
 preparar la configuración solo en un clon nuevo (después completa los valores de `.env`; si ya existe, lo conserva):
@@ -17,6 +21,14 @@ levantar postgres, las dos apis y qdrant:
 ```bash
 docker compose up -d --build
 ```
+
+esperar a que ambas apis respondan (hasta 90 segundos):
+
+```powershell
+.\scripts\esperar_apis.ps1
+```
+
+Compose puede terminar antes de que las APIs acepten peticiones. Este paso evita consultar mientras todavía arrancan; si vence el plazo, avisa qué API no quedó lista.
 
 iniciar Ollama en Windows (ya instalado en este equipo):
 
@@ -211,7 +223,9 @@ Pasó antes y después de reiniciar Qdrant: nueve puntos conservados, tres por p
 
 En el [chatbot](http://localhost:8000), elige **Ana Demo**, escribe `¿Qué enfermedad tiene Ana Demo?` y pulsa **Consultar**. Verás las columnas **Sin RAG** y **Con RAG**, junto con los archivos y secciones recuperados. El selector obtiene los pacientes de la API y ambas ramas reciben el mismo texto.
 
-Mientras responde aparece **Cargando…** y el botón queda desactivado. Una pregunta vacía muestra `Escribe una pregunta` sin enviarla. Si aparece `LLM no disponible`, inicia Ollama y pulsa Consultar otra vez: la pregunta se conserva y no necesitas recargar la página. Ese reintento se comprobó con Ollama realmente detenido y luego reiniciado. Paso a paso en la [guía](GUIA.md#chatbot-en-el-navegador).
+Mientras responde aparece **Cargando…** y se desactivan el botón, el selector y la pregunta. El resultado identifica qué paciente y texto se consultaron. Una pregunta vacía muestra `Escribe una pregunta` sin enviarla. Si aparece `LLM no disponible`, inicia Ollama y pulsa Consultar otra vez: la pregunta se conserva y no necesitas recargar la página. Ese reintento se comprobó con Ollama realmente detenido y luego reiniciado. Paso a paso en la [guía](GUIA.md#chatbot-en-el-navegador).
+
+Las cuatro preguntas de `datos/preguntas.json` pasaron desde la página: Enfermedad Alfa, Tratamiento Beta, Medicamento Gamma y cirugía sin información suficiente. Se comprobó que el texto enviado y las respuestas/fuentes visibles coinciden con el JSON. La [guía](GUIA.md#comprobar-las-cuatro-preguntas-en-la-página) deja los casos y cómo repetir la prueba; las respuestas completas están en [S04-ui-019.json](evidencias/S04-ui-019.json). La explicación personal y la revisión de Rui siguen pendientes.
 
 descargar el modelo si todavía no está disponible:
 
@@ -257,6 +271,7 @@ Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y rein
 | `scripts/verificar_crud.py` | Prueba reproducible por HTTP; limpia su paciente temporal. |
 | `scripts/verificar_persistencia.ps1` | Reinicia servicios y compara los pacientes antes/después. |
 | `scripts/iniciar_ollama.ps1` | Inicia o reutiliza Ollama local en Windows. |
+| `scripts/esperar_apis.ps1` | Espera health de ambas APIs con un plazo máximo de 90 segundos. |
 | `python-api/app/knowledge.py` | Comparte la configuración y las llamadas HTTP a Ollama/Qdrant. |
 | `python-api/preparar_vectores.py` | Comprueba la dimensión real y prepara la colección `historias`. |
 | `python-api/ingestar.py` | Valida los Markdown e ingiere sus secciones sin duplicarlas. |
@@ -266,5 +281,6 @@ Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y rein
 | `python-api/rag.py` | Arma el contexto recuperado y pide respuesta con fuente al mismo LLM. |
 | `scripts/verificar_chat.py` | Comprueba las dos respuestas y fuentes para dato conocido y ausente. |
 | `python-api/app/static/index.html` | Página del chatbot: selector, pregunta, dos respuestas, fuentes y reintento. |
+| `scripts/verificar_chat_ui.cjs` | Prueba el formulario en Edge y compara las cuatro respuestas visibles con el JSON. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

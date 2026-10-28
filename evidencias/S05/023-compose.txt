@@ -1,0 +1,132 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.21kB 0.0s done
+#1 DONE 0.0s
+
+#2 [python-api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 337B done
+#2 DONE 0.0s
+
+#3 [java-api internal] load build definition from Dockerfile
+#3 transferring dockerfile: 659B 0.0s done
+#3 DONE 0.0s
+
+#4 [java-api internal] load metadata for docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e
+#4 DONE 0.0s
+
+#5 [java-api internal] load metadata for docker.io/library/maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58
+#5 DONE 0.0s
+
+#6 [java-api internal] load .dockerignore
+#6 transferring context: 63B done
+#6 DONE 0.0s
+
+#7 [java-api internal] load build context
+#7 DONE 0.0s
+
+#8 [java-api build 1/5] FROM docker.io/library/maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58
+#8 resolve docker.io/library/maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58 0.0s done
+#8 DONE 0.0s
+
+#9 [java-api stage-1 1/3] FROM docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e
+#9 resolve docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e 0.0s done
+#9 DONE 0.0s
+
+#7 [java-api internal] load build context
+#7 transferring context: 1.13kB done
+#7 DONE 0.0s
+
+#10 [java-api build 5/5] RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp package
+#10 CACHED
+
+#11 [java-api build 2/5] WORKDIR /build
+#11 CACHED
+
+#12 [java-api build 4/5] COPY src ./src
+#12 CACHED
+
+#13 [java-api build 3/5] COPY pom.xml .
+#13 CACHED
+
+#14 [java-api stage-1 2/3] WORKDIR /app
+#14 CACHED
+
+#15 [auth] library/python:pull token for registry-1.docker.io
+#15 DONE 0.0s
+
+#16 [java-api stage-1 3/3] COPY --from=build /build/target/java-api.jar ./app.jar
+#16 CACHED
+
+#17 [java-api] exporting to image
+#17 exporting layers done
+#17 exporting manifest sha256:7feb0e8937f94a844b03a2c4746616e5531577313f6037e3d7eea23ba00072d4 done
+#17 exporting config sha256:e1cbb2db907355608fa6a05da6e5bb5d667d63b30cafd23ef25e4423a13b4997 done
+#17 exporting attestation manifest sha256:b4e15e78463250ef7ca93a293c2f052eafe58e47821b2c0aac0c41e2cd0e1ead 0.0s done
+#17 exporting manifest list sha256:57120b9f5f86fba95583f40c795876686a80dc5fbd98626fa62e239ade215822 0.0s done
+#17 naming to docker.io/library/genairuiformacion2026-java-api:latest done
+#17 unpacking to docker.io/library/genairuiformacion2026-java-api:latest 0.0s done
+#17 DONE 0.1s
+
+#18 [python-api internal] load metadata for docker.io/library/python:3.15.2-slim
+#18 ...
+
+#19 [java-api] resolving provenance for metadata file
+#19 DONE 0.0s
+
+#18 [python-api internal] load metadata for docker.io/library/python:3.15.2-slim
+#18 DONE 1.1s
+
+#20 [python-api internal] load .dockerignore
+#20 transferring context: 69B done
+#20 DONE 0.0s
+
+#21 [python-api internal] load build context
+#21 transferring context: 450B done
+#21 DONE 0.0s
+
+#22 [python-api 1/6] FROM docker.io/library/python:3.15.2-slim@sha256:c4158543ecb725b99e57d129dfd43d761d4c43e4577b5e23326aabb223cf7f4e
+#22 resolve docker.io/library/python:3.15.2-slim@sha256:c4158543ecb725b99e57d129dfd43d761d4c43e4577b5e23326aabb223cf7f4e 0.0s done
+#22 DONE 0.0s
+
+#23 [python-api 3/6] COPY requirements.txt .
+#23 CACHED
+
+#24 [python-api 2/6] WORKDIR /code
+#24 CACHED
+
+#25 [python-api 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#25 CACHED
+
+#26 [python-api 5/6] COPY app ./app
+#26 CACHED
+
+#27 [python-api 6/6] COPY *.py ./
+#27 CACHED
+
+#28 [python-api] exporting to image
+#28 exporting layers done
+#28 exporting manifest sha256:7b4e1406609d5b5e7518b16d0ee0bc087157ccb0181c45530535cd71befa4f0a done
+#28 exporting config sha256:0e2ff1614b9fae77c54d4776f9e20d8f728b762c6dcecb13d9fcb2a6a38d9d67 done
+#28 exporting attestation manifest sha256:69128909ff25b15fe35d46def3e33a81ec95d9aa876c6b4146a9a4ea040e05b6 0.0s done
+#28 exporting manifest list sha256:d2d67a130fc3cb06b1e36e40653e005d799ecb4d27297a27b9d54aaf041fa287 0.0s done
+#28 naming to docker.io/library/genairuiformacion2026-python-api:latest done
+#28 unpacking to docker.io/library/genairuiformacion2026-python-api:latest 0.0s done
+#28 DONE 0.1s
+
+#29 [python-api] resolving provenance for metadata file
+#29 DONE 0.0s
+ genairuiformacion2026-java-api  Built
+ genairuiformacion2026-python-api  Built
+ Container genairuiformacion2026-qdrant-1  Running
+ Container genairuiformacion2026-postgres-1  Running
+ Container genairuiformacion2026-python-api-1  Recreate
+ Container genairuiformacion2026-java-api-1  Recreate
+ Container genairuiformacion2026-java-api-1  Recreated
+ Container genairuiformacion2026-python-api-1  Recreated
+ Container genairuiformacion2026-postgres-1  Waiting
+ Container genairuiformacion2026-postgres-1  Waiting
+ Container genairuiformacion2026-postgres-1  Healthy
+ Container genairuiformacion2026-python-api-1  Starting
+ Container genairuiformacion2026-postgres-1  Healthy
+ Container genairuiformacion2026-java-api-1  Starting
+ Container genairuiformacion2026-java-api-1  Started
+ Container genairuiformacion2026-python-api-1  Started

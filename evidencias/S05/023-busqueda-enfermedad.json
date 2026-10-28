@@ -1,0 +1,16 @@
+[
+  {
+    "score": 0.8387875,
+    "patient_id": 1,
+    "source": "paciente-1.md",
+    "section": "Enfermedad",
+    "text": "Ana Demo tiene Enfermedad Alfa."
+  },
+  {
+    "score": 0.727611,
+    "patient_id": 1,
+    "source": "paciente-1.md",
+    "section": "Tratamiento",
+    "text": "Ana Demo sigue Tratamiento Alfa."
+  }
+]

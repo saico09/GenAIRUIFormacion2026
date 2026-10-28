@@ -1,0 +1,6 @@
+HTTP/1.1 200
+Content-Type: application/json
+Content-Length: 78
+Date: Wed, 28 Oct 2026 17:23:29 GMT
+
+{"id":1,"name":"Ana Demo","birth_date":"1990-01-10","email":"ana@example.com"}

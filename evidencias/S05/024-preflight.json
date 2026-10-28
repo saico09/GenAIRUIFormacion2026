@@ -1,0 +1,27 @@
+{
+  "fecha": "2026-10-28T14:27:02.2272531-03:00",
+  "apis": [
+    {
+      "puerto": 8000,
+      "health": 200,
+      "get_ana": 200,
+      "ana": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    {
+      "puerto": 8080,
+      "health": 200,
+      "get_ana": 200,
+      "ana": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    }
+  ]
+}

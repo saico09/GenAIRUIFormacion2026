@@ -1,0 +1,99 @@
+OK GET /patients -> 200
+OK GET /patients/999999 -> 404
+OK PUT /patients/999999 -> 404
+OK DELETE /patients/999999 -> 404
+OK GET /patients -> 200
+OK POST /patients -> 201
+OK GET /patients -> 200
+OK GET /patients/11 -> 200
+OK PUT /patients/11 -> 200
+OK GET /patients/11 -> 200
+OK GET /patients -> 200
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: name con espacios devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: name con espacios devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: name vacío devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: name vacío devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: name numérico devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: name numérico devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: fecha inexistente devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: fecha inexistente devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: fecha con formato incorrecto devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: fecha con formato incorrecto devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: fecha numérica devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: fecha numérica devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: fecha con año cero devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: fecha con año cero devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: email sin arroba devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: email sin arroba devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: email nulo devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: email nulo devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: email localhost devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: email localhost devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: email sin punto en dominio devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: email sin punto en dominio devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: falta name devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: falta name devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: falta birth_date devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: falta birth_date devuelve 422 y no cambia filas
+OK POST /patients -> 422
+OK GET /patients -> 200
+OK POST: falta email devuelve 422 y no cambia filas
+OK PUT /patients/11 -> 422
+OK GET /patients -> 200
+OK PUT: falta email devuelve 422 y no cambia filas
+OK DELETE /patients/11 -> 204
+OK GET /patients/11 -> 404
+OK GET /patients -> 200
+OK CRUD completo; 4 pacientes previos conservados, sin paciente de prueba

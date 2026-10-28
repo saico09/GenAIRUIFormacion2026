@@ -1,0 +1,94 @@
+[
+  {
+    "patient_id": 1,
+    "question": "¿Qué enfermedad tiene Ana Demo?",
+    "expected": "Enfermedad Alfa",
+    "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de tratar de ayudarte.",
+    "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+    "sources": [
+      {
+        "score": 0.8387875,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Enfermedad",
+        "text": "Ana Demo tiene Enfermedad Alfa."
+      },
+      {
+        "score": 0.727611,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Tratamiento",
+        "text": "Ana Demo sigue Tratamiento Alfa."
+      }
+    ]
+  },
+  {
+    "patient_id": 2,
+    "question": "¿Qué tratamiento sigue Bruno Demo?",
+    "expected": "Tratamiento Beta",
+    "direct_answer": "Lo siento, pero no tengo información sobre un personaje llamado Bruno Demo o su tratamiento. Es posible que sea un personaje ficticio o que no sea una figura pública conocida. Si puedes proporcionar más contexto o detalles sobre quién es Bruno Demo, estaré encantado de tratar de ayudarte.",
+    "rag_answer": "Respuesta: Tratamiento Beta.\nFuente: [paciente-2.md/Tratamiento]",
+    "sources": [
+      {
+        "score": 0.8692719,
+        "patient_id": 2,
+        "source": "paciente-2.md",
+        "section": "Tratamiento",
+        "text": "Bruno Demo sigue Tratamiento Beta."
+      },
+      {
+        "score": 0.8102678,
+        "patient_id": 2,
+        "source": "paciente-2.md",
+        "section": "Enfermedad",
+        "text": "Bruno Demo tiene Enfermedad Beta."
+      }
+    ]
+  },
+  {
+    "patient_id": 3,
+    "question": "¿Qué medicamento recibe Carla Demo?",
+    "expected": "Medicamento Gamma",
+    "direct_answer": "No tengo información sobre una persona llamada Carla Demo o el medicamento que pueda estar tomando. Si necesitas información sobre un medicamento específico o sobre la salud en general, puedo proporcionarte información general o recomendarte buscar en fuentes confiables como el Centro Nacional de Información en Medicamentos (NIC) o la Organización Mundial de la Salud (OMS). ¿Hay algo más en lo que pueda ayudarte?",
+    "rag_answer": "Respuesta: Medicamento Gamma.\nFuente: [paciente-3.md/Medicamento]",
+    "sources": [
+      {
+        "score": 0.8579705,
+        "patient_id": 3,
+        "source": "paciente-3.md",
+        "section": "Medicamento",
+        "text": "Carla Demo recibe Medicamento Gamma."
+      },
+      {
+        "score": 0.7952935,
+        "patient_id": 3,
+        "source": "paciente-3.md",
+        "section": "Tratamiento",
+        "text": "Carla Demo sigue Tratamiento Gamma."
+      }
+    ]
+  },
+  {
+    "patient_id": 1,
+    "question": "¿Cuál fue la última cirugía de Ana Demo?",
+    "expected": "No hay información suficiente",
+    "direct_answer": "No tengo información sobre una persona llamada Ana Demo o su última cirugía. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre su vida personal o sus operaciones médicas.\n\nSi puedes proporcionar más contexto o detalles sobre quién es Ana Demo y qué tipo de cirugía se refiere, estaré encantado de tratar de ayudarte.",
+    "rag_answer": "No hay información suficiente.",
+    "sources": [
+      {
+        "score": 0.7146107,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Enfermedad",
+        "text": "Ana Demo tiene Enfermedad Alfa."
+      },
+      {
+        "score": 0.6861502,
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Tratamiento",
+        "text": "Ana Demo sigue Tratamiento Alfa."
+      }
+    ]
+  }
+]

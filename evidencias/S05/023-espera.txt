@@ -1,0 +1,2 @@
+OK API disponible: http://localhost:8000/health
+OK API disponible: http://localhost:8080/health

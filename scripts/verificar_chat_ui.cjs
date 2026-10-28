@@ -1,15 +1,20 @@
 // Prueba real de navegador; requiere Playwright y Edge instalados.
 // --error-y-reintento espera que el operador detenga Ollama y lo vuelva a iniciar.
+// --demo prueba enfermedad y cirugía de Ana; EVIDENCE_DIR/PREFIX conservan cada ensayo.
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
 async function main() {
-  const outputDir = path.resolve(__dirname, '../evidencias/S04');
+  const outputDir = process.env.EVIDENCE_DIR
+    ? path.resolve(process.env.EVIDENCE_DIR) : path.resolve(__dirname, '../evidencias/S04');
+  const prefix = process.env.EVIDENCE_PREFIX ? `${process.env.EVIDENCE_PREFIX}-` : '';
+  const evidencePath = name => path.join(outputDir, `${prefix}${name}`);
   fs.mkdirSync(outputDir, {recursive: true});
   const errorMode = process.argv.includes('--error-y-reintento');
   const datasetMode = process.argv.includes('--dataset');
+  const demoMode = process.argv.includes('--demo');
   const dataset = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../datos/preguntas.json'), 'utf8'));
   const browser = await chromium.launch({
     executablePath: process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
@@ -53,7 +58,7 @@ async function main() {
       const failure = await send(dataset[0], 503);
       assert.equal(failure.detail, 'LLM no disponible');
       assert.equal(await page.locator('#error').textContent(), 'LLM no disponible');
-      await page.screenshot({path: path.join(outputDir, 'error-ollama.png'), fullPage: true});
+      await page.screenshot({path: evidencePath('error-ollama.png'), fullPage: true});
       console.log('ERROR_VERIFICADO: 503 visible y pregunta conservada; esperando reinicio de Ollama');
       const deadline = Date.now() + 90000;
       let available = false;
@@ -68,12 +73,12 @@ async function main() {
       const result = await send(dataset[0], 200, true);
       assert.match(result.rag_answer, /Alfa/);
       assert.equal(await page.locator('#error').isVisible(), false);
-      await page.screenshot({path: path.join(outputDir, 'reintento.png'), fullPage: true});
-      fs.writeFileSync(path.join(outputDir, '../S04-ui-018.json'), JSON.stringify({error: failure, retry: result, question_preserved: true, empty_posts: 0, loading_verified: true}, null, 2));
+      await page.screenshot({path: evidencePath('reintento.png'), fullPage: true});
+      fs.writeFileSync(process.env.EVIDENCE_DIR ? evidencePath('resultados.json') : path.join(outputDir, '../S04-ui-018.json'), JSON.stringify({error: failure, retry: result, question_preserved: true, empty_posts: 0, loading_verified: true}, null, 2));
       console.log('018 OK: error, misma pregunta, reintento, carga y ambas respuestas');
     } else {
       const results = [];
-      for (const question of datasetMode ? dataset : [dataset[0]]) {
+      for (const question of datasetMode ? dataset : demoMode ? [dataset[0], dataset[3]] : [dataset[0]]) {
         await page.selectOption('#patient', String(question.patient_id));
         await page.fill('#question', question.question);
         const result = await send(question, 200, true);
@@ -90,11 +95,11 @@ async function main() {
           `Paciente consultado: ${patientName}. Pregunta enviada: ${question.question}`);
         assert.ok(await page.getByRole('heading', {name: 'Sin RAG', exact: true}).isVisible());
         assert.ok(await page.getByRole('heading', {name: 'Con RAG', exact: true}).isVisible());
-        await page.screenshot({path: path.join(outputDir, `caso-${results.length + 1}.png`), fullPage: true});
+        await page.screenshot({path: evidencePath(`caso-${results.length + 1}.png`), fullPage: true});
         results.push({...question, ...result});
         console.log(`OK ID ${question.patient_id}: ${question.expected}, fuentes correctas`);
       }
-      fs.writeFileSync(path.join(outputDir, '../S04-ui-019.json'), JSON.stringify(results, null, 2));
+      fs.writeFileSync(process.env.EVIDENCE_DIR ? evidencePath('resultados.json') : path.join(outputDir, '../S04-ui-019.json'), JSON.stringify(results, null, 2));
     }
   } finally { await browser.close(); }
 }

@@ -25,6 +25,13 @@ levantar los contenedores (postgres + python-api + java-api + qdrant), reconstru
 docker compose up -d --build
 ```
 
+esperar las dos apis antes de consultarlas (plazo máximo de 90 segundos):
+```powershell
+.\scripts\esperar_apis.ps1
+```
+
+Compose puede mostrar Started antes de que la API responda. El script consulta health con intentos acotados y avisa si alguna no queda lista.
+
 ver qué está corriendo:
 ```bash
 docker compose ps
@@ -337,10 +344,10 @@ Con los contenedores y Ollama encendidos:
 1. Abre [el chatbot](http://localhost:8000).
 2. Elige **Ana Demo** en el selector; los pacientes vienen de FastAPI.
 3. Escribe `¿Qué enfermedad tiene Ana Demo?` y pulsa **Consultar**.
-4. Espera mientras aparece **Cargando…**. El botón se bloquea hasta terminar.
+4. Espera mientras aparece **Cargando…**. El botón, el selector y la pregunta se bloquean hasta terminar.
 5. Compara **Sin RAG** y **Con RAG**. En la prueba, RAG respondió Enfermedad Alfa y mostró `paciente-1.md / Enfermedad`; la directa indicó que no tenía información.
 
-La pregunta queda escrita. Si está vacía o tiene solo espacios, verás `Escribe una pregunta` y no se enviará nada.
+La pregunta queda escrita y el resultado identifica al paciente consultado. Si está vacía o tiene solo espacios, verás `Escribe una pregunta` y no se enviará nada.
 
 si aparece `LLM no disponible`, volver a iniciar Ollama:
 ```powershell
@@ -348,6 +355,33 @@ si aparece `LLM no disponible`, volver a iniciar Ollama:
 ```
 
 Después pulsa **Consultar** otra vez en la misma página, sin recargar. Se comprobó el error 503 con Ollama detenido y el reintento correcto tras iniciarlo; el botón vuelve a habilitarse tanto en éxito como en error. Las capturas y resultados están en [S04](evidencias/S04.md).
+
+## Comprobar las cuatro preguntas en la página
+
+Elige el paciente de cada fila, pega la pregunta tal cual y pulsa Consultar. Estos cuatro casos ya pasaron desde el formulario:
+
+| Paciente | Pregunta | Respuesta esperada con RAG |
+|---|---|---|
+| Ana Demo | ¿Qué enfermedad tiene Ana Demo? | Enfermedad Alfa; fuente Enfermedad de `paciente-1.md` |
+| Bruno Demo | ¿Qué tratamiento sigue Bruno Demo? | Tratamiento Beta; fuente Tratamiento de `paciente-2.md` |
+| Carla Demo | ¿Qué medicamento recibe Carla Demo? | Medicamento Gamma; fuente Medicamento de `paciente-3.md` |
+| Ana Demo | ¿Cuál fue la última cirugía de Ana Demo? | No hay información suficiente |
+
+La rama sin RAG reconoció falta de datos en los cuatro casos. En cirugía, las fuentes recuperadas no contienen una cirugía: aparecer en la lista no convierte un texto en evidencia de esa respuesta. Se mantienen la misma pregunta, modelo y parámetros en ambas ramas.
+
+Para repetirlo automáticamente en este equipo se usó el Node/Playwright disponible en Codex y Edge. Estas rutas son locales; no son dependencias de la app.
+
+indicar dónde está Playwright en este equipo:
+```powershell
+$env:NODE_PATH = 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+```
+
+ejecutar las cuatro preguntas desde Edge (guarda resultados y capturas en `evidencias/`):
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' scripts\verificar_chat_ui.cjs --dataset
+```
+
+El verificador comprueba los cuatro POST exactos, 200, respuestas y fuentes visibles iguales al JSON, paciente correcto y bloqueo/restauración de los campos. Las salidas completas están en [S04-ui-019.json](evidencias/S04-ui-019.json). Las frases de apoyo para repasar RAG están en [S04](evidencias/S04.md); la explicación de Marco y la revisión de Rui siguen pendientes.
 
 ## Comparar respuestas con y sin contexto
 
@@ -378,6 +412,16 @@ Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api p
 `rag.py` arma el contexto y pide una cita literal del archivo/sección; la respuesta viene del modelo. `app/llm.py` centraliza `CHAT_MODEL=llama3.2:3b`, temperatura 0, contexto 2048, salida máxima de 256 tokens y timeout de 120 segundos por llamada al LLM. Cada petición comparativa hace dos llamadas y la recuperación, así que puede tardar más que la antigua respuesta directa.
 
 Si Ollama no está disponible, responde 503 con `LLM no disponible`; inicia de nuevo con `scripts/iniciar_ollama.ps1` y reintenta. Una conexión inaccesible a Qdrant devuelve 503 con `Qdrant no disponible`: ese caso se comprobó con una API de prueba y una URL inaccesible, sin detener el servicio real.
+
+## Recorrer la demo de etapa 1
+
+Abre el [guion S05](evidencias/S05-guion.md) y sigue los seis pasos: arranque, CRUD Python, CRUD Java, persistencia, búsqueda y chatbot. Cada paso enlaza el código, el resultado esperado y una evidencia real. Los CRUD usan un Test Demo propio y conservan los pacientes del RAG.
+
+El arranque sobre el entorno existente y la repetición de ambos CRUD y cuatro preguntas pasaron en HDU-020/021. El ciclo completo desde detenido sigue **NO EJECUTADO**: la revisión automática rechazó detener Qdrant. El guion no repite esa parada; los reinicios de PostgreSQL y las APIs conservan sus volúmenes. [Pendientes concretos](evidencias/S05-pendientes.md).
+
+La prueba UI admite `--demo` para solo enfermedad y cirugía de Ana, y `EVIDENCE_DIR` / `EVIDENCE_PREFIX` para guardar cada ensayo sin sobrescribir S04. Los comandos completos están al final del guion.
+
+El [ensayo HDU-023](evidencias/S05-ensayo.md) repitió todos los pasos permitidos y añadió `esperar_apis.ps1` tras detectar una consulta demasiado temprana. Pasaron CRUD, persistencia, búsqueda y las cuatro preguntas. La [preparación HDU-024](evidencias/S05-validacion.md) volvió a comprobar health, Ana y las dos consultas de demo. Las frases del ensayo sirven para repasar; la explicación propia de Marco, la sesión y la valoración de Rui siguen pendientes.
 
 ## Postman
 

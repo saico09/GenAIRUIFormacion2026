@@ -4,6 +4,49 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-024 · 28/10/2026 · Preparación de demo comprobada
+
+- **Comprobación previa repetida**: health y Ana responden 200 en ambas APIs; el chatbot devuelve Alfa con fuente y cirugía sin información.
+- **`evidencias/S05-validacion.md`** enlaza resultados y capturas y deja explícito el estado: Validación pendiente. No hay valoración 1–4 ni correcciones expertas recibidas.
+- Ojo: las frases del ensayo son apoyo; siguen pendientes las frases propias de Marco, la demo/explicación con Rui y el ciclo completo desde detenido. No se acreditan horas ni una sesión realizada.
+
+## HDU-023 · 28/10/2026 · Ensayo y espera de disponibilidad
+
+- **`scripts/esperar_apis.ps1`** espera health de ambas APIs hasta 90 segundos. Se añadió tras un `Empty reply from server`: Compose había terminado, pero Python todavía arrancaba.
+- **Arranque repetido con la espera**: health y Ana 200 en ambas APIs, nueve puntos Qdrant y Ollama disponible. README, guía y guion incluyen el paso corregido.
+- **Recorrido ensayado**: ambos CRUD, reinicios de PostgreSQL/APIs, dos búsquedas y cuatro preguntas HTML pasaron; cuatro filas Python y tres Java quedaron intactas.
+- **`evidencias/S05-ensayo.md`** guarda resultados, capturas y seis frases de apoyo ligadas al código. No reemplazan una explicación personal.
+- Ojo: el ciclo completo desde detenido sigue NO EJECUTADO; comprensión de Marco y revisión de Rui continúan pendientes.
+
+## HDU-022 · 28/10/2026 · Guion de demo de etapa 1
+
+- **`evidencias/S05-guion.md`** ordena arranque, CRUD Python/Java, reinicio de PostgreSQL y APIs sin borrar volúmenes, búsqueda y chatbot.
+- **Comandos y resultados esperados** enlazados con código y evidencia; los CRUD crean, editan y borran su propio Test Demo, conservando a Ana, Bruno y Carla.
+- **Dos preguntas fijas de demo**: enfermedad de Ana → Alfa con fuente; cirugía de Ana → falta de información. Se mantienen pregunta, modelo y parámetros entre ambas ramas.
+- Ojo: el ensayo conjunto corresponde a HDU-023; el ciclo completo desde detenido y la validación humana siguen pendientes. El guion no vuelve a intentar la parada rechazada de Qdrant.
+
+## HDU-021 · 28/10/2026 · Repetición y pendientes concretos
+
+- **Ambos CRUD repetidos**: códigos correctos, 56 respuestas 422 esperadas y cuatro filas Python / tres Java intactas, sin temporales.
+- **Cuatro preguntas repetidas en HTML**: Alfa, Beta, Gamma y cirugía sin información; se inspeccionaron respuestas, fuentes y capturas. No hizo falta cambiar la aplicación.
+- **`evidencias/S05-pendientes.md`** conserva el resultado de cada repetición y el ciclo completo desde detenido como NO EJECUTADO; no se presenta como fallo de la app ni como corrección realizada.
+- Ojo: siguen pendientes la explicación personal y la revisión de Rui; no se registra una sesión ni valoración recibida.
+
+## HDU-020 · 28/10/2026 · Arranque y comprobación de etapa 1
+
+- **README seguido en el entorno existente**: Compose y Ollama disponibles, health y Ana correctos en ambas APIs, nueve puntos en Qdrant.
+- **CRUD y dos consultas HTML comprobados**: temporales eliminados, filas anteriores conservadas, Alfa con fuente y cirugía sin información.
+- **`--demo` y carpetas de evidencia** en el verificador UI permiten ensayar los dos casos de Ana sin sobrescribir S04. Resultados en `evidencias/S05-arranque.md`.
+- Ojo: detener todo y arrancar desde detenido quedó NO EJECUTADO por el rechazo automático previo de la parada de Qdrant. Compose lo recreó automáticamente durante `up` y conservó nueve puntos; eso no completa el ciclo pendiente.
+
+## HDU-019 · 28/10/2026 · Cuatro preguntas comprobadas desde HTML
+
+- **Dataset completo en Edge**: cuatro POST exactos y 200. RAG respondió Enfermedad Alfa, Tratamiento Beta, Medicamento Gamma y `No hay información suficiente.` para cirugía; la directa reconoció falta de datos.
+- **Respuestas y fuentes visibles** cotejadas contra el JSON, siempre del paciente elegido. Se conservaron el modelo, parámetros, textos y recuperación.
+- **Campos bloqueados durante la espera** y paciente consultado identificado en el resultado, para evitar confundir una respuesta con otro paciente. Se comprobó también su restauración al terminar.
+- **`scripts/verificar_chat_ui.cjs --dataset`** repite los casos; la guía deja el comando usado en este equipo. Respuestas y cuatro capturas inspeccionadas en S04.
+- Ojo: las frases de apoyo de S04 son para repasar; no acreditan una explicación de Marco ni revisión recibida de Rui. Ambas siguen pendientes.
+
 ## HDU-018 · 28/10/2026 · Espera y reintento en el chatbot
 
 - **Cargando y botón desactivado** mientras llega la respuesta; `finally` restaura ambos al terminar, también si ocurre un error.
