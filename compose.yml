@@ -23,7 +23,7 @@ services:
   python-api:
     build: ./python-api
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       # Mismas credenciales del .env; "postgres" es el nombre del servicio dentro de la red de Compose
       POSTGRES_HOST: postgres

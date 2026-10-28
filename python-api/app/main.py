@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -45,4 +45,31 @@ def list_patients(db: Db):
 
 @app.get("/patients/{patient_id}", response_model=PatientOut)
 def get_patient(patient_id: int, db: Db):
-    return db.get(Patient, patient_id)
+    return find_patient(patient_id, db)
+
+
+@app.put("/patients/{patient_id}", response_model=PatientOut)
+def update_patient(patient_id: int, patient: PatientIn, db: Db):
+    # PUT reemplaza los tres campos; usa las mismas validaciones que POST.
+    row = find_patient(patient_id, db)
+    row.name = patient.name
+    row.birth_date = patient.birth_date
+    row.email = patient.email
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@app.delete("/patients/{patient_id}", status_code=204, response_class=Response)
+def delete_patient(patient_id: int, db: Db):
+    row = find_patient(patient_id, db)
+    db.delete(row)
+    db.commit()
+    return Response(status_code=204)
+
+
+def find_patient(patient_id: int, db: Session) -> Patient:
+    row = db.get(Patient, patient_id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Paciente no encontrado")
+    return row

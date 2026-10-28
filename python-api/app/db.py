@@ -13,7 +13,8 @@ DATABASE_URL = URL.create(
     database=os.environ["POSTGRES_DB"],
 )
 
-engine = create_engine(DATABASE_URL)
+# Descarta conexiones antiguas si PostgreSQL se reinicia mientras la API sigue viva.
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 
 
