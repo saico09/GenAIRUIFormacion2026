@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comparar respuestas · GenAI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #172b3a; background: #f3f6fa; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 1100px; margin: 40px auto; padding: 0 24px 32px; }
+    h1 { font-size: clamp(25px, 4vw, 38px); line-height: 1.2; margin: 6px 0 12px; }
+    h2 { margin-top: 0; font-size: 22px; }
+    .eyebrow { font-size: 13px; color: #315b90; font-weight: 700; letter-spacing: .1em; }
+    .muted { color: #586779; }
+    form, article { background: white; border: 1px solid #d7e0eb; border-radius: 12px; padding: 24px; }
+    form { margin: 24px 0; }
+    label { display: block; font-weight: 600; margin: 12px 0 6px; }
+    select, textarea { width: 100%; font: inherit; color: inherit; padding: 10px 12px; border: 1px solid #8c9eb1; border-radius: 6px; }
+    select { max-width: 380px; }
+    textarea { resize: vertical; min-height: 90px; }
+    button { margin-top: 16px; background: #215d9f; border: 0; border-radius: 6px; color: white; padding: 11px 24px; font: inherit; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: wait; }
+    :focus-visible { outline: 3px solid #e59e32; outline-offset: 3px; }
+    .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .answer { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .rag { border-top: 4px solid #278267; }
+    #error { color: #a82424; }
+    #sources { padding-left: 20px; font-size: 14px; }
+    @media (max-width: 680px) { .answers { grid-template-columns: 1fr; } main { margin-top: 24px; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">PRÁCTICA GENAI</div>
+  <h1>Una pregunta, dos respuestas</h1>
+  <p class="muted">Compara el mismo modelo con y sin las historias ficticias del paciente.</p>
+  <form id="chat-form" novalidate>
+    <label for="patient">Paciente</label>
+    <select id="patient" required aria-label="Paciente"><option value="">Cargando pacientes…</option></select>
+    <label for="question">Pregunta</label>
+    <textarea id="question" required maxlength="2000" placeholder="¿Qué enfermedad tiene Ana Demo?"></textarea>
+    <button id="submit" type="submit" disabled>Consultar</button>
+    <span id="loading" role="status" hidden> Cargando…</span>
+    <p id="error" role="alert" hidden></p>
+  </form>
+  <p id="used-question" class="muted" hidden></p>
+  <div class="answers">
+    <article><h2>Sin RAG</h2><p class="muted">Solo recibe tu pregunta.</p><div id="direct" class="answer">Aquí aparecerá la respuesta directa.</div></article>
+    <article class="rag"><h2>Con RAG</h2><p class="muted">Recibe la pregunta y hasta dos fragmentos del paciente.</p><div id="rag" class="answer">Aquí aparecerá la respuesta con contexto.</div><h3>Fuentes recuperadas</h3><ul id="sources"></ul></article>
+  </div>
+  <p class="muted">Datos sintéticos para aprender. Una fuente recuperada puede no contener la respuesta.</p>
+</main>
+<script>
+  const patient = document.querySelector('#patient');
+  const question = document.querySelector('#question');
+  const submit = document.querySelector('#submit');
+  const error = document.querySelector('#error');
+  const loading = document.querySelector('#loading');
+  function showError(message) { error.textContent = message; error.hidden = false; }
+
+  async function loadPatients() {
+    try {
+      const response = await fetch('/patients');
+      if (!response.ok) throw new Error('No se pudieron cargar los pacientes');
+      const patients = await response.json();
+      patient.replaceChildren(...patients.map(row => {
+        const option = document.createElement('option');
+        option.value = row.id; option.textContent = row.name; return option;
+      }));
+      if (!patients.length) throw new Error('Primero agrega los pacientes de práctica');
+      submit.disabled = false;
+    } catch (failure) { showError(failure.message); }
+  }
+
+  document.querySelector('#chat-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const sentQuestion = question.value;
+    const sentPatientName = patient.selectedOptions[0]?.textContent || '';
+    error.hidden = true;
+    if (!sentQuestion.trim()) { showError('Escribe una pregunta'); question.focus(); return; }
+    submit.disabled = true;
+    patient.disabled = true;
+    question.disabled = true;
+    loading.hidden = false;
+    try {
+      const response = await fetch('/chat', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({patient_id: Number(patient.value), question: sentQuestion})
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Revisa la pregunta y el paciente');
+      document.querySelector('#direct').textContent = result.direct_answer;
+      document.querySelector('#rag').textContent = result.rag_answer;
+      document.querySelector('#used-question').textContent = `Paciente consultado: ${sentPatientName}. Pregunta enviada: ${sentQuestion}`;
+      document.querySelector('#used-question').hidden = false;
+      document.querySelector('#sources').replaceChildren(...result.sources.map(source => {
+        const item = document.createElement('li');
+        item.textContent = `${source.source} / ${source.section}`; return item;
+      }));
+    } catch (failure) { showError(failure.message || 'No se pudo conectar con la API'); }
+    finally { submit.disabled = false; patient.disabled = false; question.disabled = false; loading.hidden = true; }
+  });
+  loadPatients();
+</script>
+</body>
+</html>

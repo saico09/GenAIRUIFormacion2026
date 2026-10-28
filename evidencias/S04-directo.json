@@ -1,0 +1,9 @@
+{
+  "patient_id": 1,
+  "question": "¿Qué enfermedad tiene Ana Demo?",
+  "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de tratar de ayudarte.",
+  "model": "llama3.2:3b",
+  "temperature": 0,
+  "timeout_seconds": 120,
+  "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+}

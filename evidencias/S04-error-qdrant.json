@@ -1,0 +1,9 @@
+{
+  "status": 503,
+  "body": {
+    "detail": "Qdrant no disponible"
+  },
+  "test_qdrant_url": "http://127.0.0.1:1",
+  "isolated_api_port": 8001,
+  "production_services_stopped": false
+}

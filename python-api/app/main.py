@@ -1,13 +1,18 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Response
+from fastapi.responses import FileResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db import Base, engine, get_db
 from app.models import Patient
-from app.schemas import PatientIn, PatientOut
+from app.schemas import ChatIn, PatientIn, PatientOut
+from app.llm import LLMUnavailable, llamar_llm
+from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
+from rag import answer_rag
 
 
 @asynccontextmanager
@@ -22,10 +27,26 @@ app = FastAPI(title="python-api", lifespan=lifespan)
 Db = Annotated[Session, Depends(get_db)]
 
 
+@app.get("/", include_in_schema=False)
+def chatbot_page():
+    return FileResponse(Path(__file__).parent / "static" / "index.html")
+
+
 @app.get("/health")
 def health():
     # FastAPI convierte el dict a JSON y responde 200 por defecto
     return {"status": "ok"}
+
+
+@app.post("/chat")
+def chat(body: ChatIn, db: Db):
+    find_patient(body.patient_id, db)
+    try:
+        direct_answer = llamar_llm(body.question)
+        rag_answer, sources = answer_rag(body.patient_id, body.question)
+        return {"direct_answer": direct_answer, "rag_answer": rag_answer, "sources": sources}
+    except (LLMUnavailable, EmbeddingUnavailable, QdrantUnavailable) as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
 
 
 @app.post("/patients", response_model=PatientOut, status_code=201)

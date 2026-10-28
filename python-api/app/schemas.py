@@ -2,7 +2,7 @@ import re
 from datetime import date
 from typing import Annotated
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, EmailStr, StringConstraints
+from pydantic import BaseModel, BeforeValidator, ConfigDict, EmailStr, Field, StringConstraints, field_validator
 
 # Si algún campo no cumple, FastAPI responde 422 sin llegar a la base de datos.
 
@@ -31,3 +31,16 @@ class PatientOut(BaseModel):
     name: str
     birth_date: date
     email: str
+
+
+class ChatIn(BaseModel):
+    patient_id: Annotated[int, Field(strict=True, gt=0)]
+    question: Annotated[str, StringConstraints(min_length=1, max_length=2000)]
+
+    @field_validator("question")
+    @classmethod
+    def question_not_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Escribe una pregunta")
+        # Conservamos el texto exacto para enviarlo a ambas ramas.
+        return value

@@ -4,6 +4,43 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-018 · 28/10/2026 · Espera y reintento en el chatbot
+
+- **Cargando y botón desactivado** mientras llega la respuesta; `finally` restaura ambos al terminar, también si ocurre un error.
+- **Pregunta vacía** muestra `Escribe una pregunta` y se comprobó que no hace ningún POST `/chat`.
+- **Ollama realmente detenido** produjo 503 `LLM no disponible`, conservando el texto. Tras iniciar Ollama con el script, Consultar funcionó en la misma página: dos respuestas, Alfa y fuente correcta.
+- **Evidencias UI** en `evidencias/S04-ui-018.json` y las capturas de error/reintento. La explicación personal sigue pendiente.
+
+## HDU-017 · 28/10/2026 · Chatbot en el navegador
+
+- **`python-api/app/static/index.html`** se abre en `http://localhost:8000`: selector de pacientes, pregunta y columnas Sin RAG / Con RAG con fuentes.
+- **Selector conectado a `GET /patients`** y envío a `POST /chat` con el paciente elegido y la pregunta exacta. Las respuestas se muestran como texto.
+- **Prueba real con Ana en Edge**: 200, Enfermedad Alfa en RAG y fuente `paciente-1.md / Enfermedad`; la rama directa reconoció falta de datos.
+- **Captura y respuesta** en `evidencias/S04/comparacion.png` y `S04-ui-017.json`. La comprensión personal sigue pendiente.
+
+## HDU-016 · 28/10/2026 · Comparación directa y RAG
+
+- **`python-api/rag.py`** recupera hasta dos fragmentos del paciente y arma el prompt con texto, archivo y sección. Pide citar la fuente y reconocer los datos ausentes.
+- **`POST /chat`** devuelve `direct_answer`, `rag_answer` y `sources`; conserva la misma pregunta, `llama3.2:3b` y temperatura 0 en ambas ramas.
+- **Dos casos reales comprobados**: Ana → Enfermedad Alfa con `[paciente-1.md/Enfermedad]`; cirugía → `No hay información suficiente.`. La rama directa reconoció falta de datos en ambos casos.
+- **`scripts/verificar_chat.py`** repite esos casos. `evidencias/S04-rag.json` conserva prompts, modelo, parámetros, respuestas y fuentes; la cita y la respuesta salen del modelo.
+- Ojo: el 503 `Qdrant no disponible` se probó con una API aislada y URL inaccesible, sin detener Qdrant real. La comprensión personal del flujo sigue pendiente.
+
+## HDU-015 · 28/10/2026 · Respuesta directa del LLM
+
+- **`llama3.2:3b`** descargado en Ollama y probado con `Responde hola`. Se mantiene separado de `nomic-embed-text`, que genera los vectores.
+- **`app/llm.py`** centraliza la llamada: temperatura 0, contexto 2048, salida máxima de 256 tokens y timeout de 120 segundos; el modelo sale de `CHAT_MODEL` en Compose.
+- **`POST /chat`** recibe paciente y pregunta y devuelve `direct_answer` enviando solo la pregunta. La prueba de Ana respondió 200 y reconoció que no tenía información, sin inventar enfermedad.
+- **Errores comprobados**: pregunta vacía → 422, paciente inexistente → 404 y Ollama realmente detenido → 503 `LLM no disponible`. El script de inicio levantó de nuevo el servidor correctamente.
+- Ojo: en esta HDU la respuesta todavía no usa documentos ni Qdrant. La explicación personal sigue pendiente; las respuestas y parámetros están en `evidencias/S04.md`.
+
+## HDU-014 · 28/10/2026 · Recuperación y persistencia Qdrant
+
+- **`scripts/verificar_recuperacion.py`** coteja los nueve payloads y repite las cuatro preguntas: tres respuestas presentes, cirugía ausente y ocho resultados del paciente correcto.
+- **Reinicio de Qdrant comprobado**: antes y después quedaron nueve puntos, tres por paciente, sin repetir la ingesta. Fuentes, textos y scores se conservaron.
+- **Código y evidencias** guardados en el commit `c0c62e5`; S03 incluye los resultados y tres frases para repasar vectores, filtro por paciente y límites de similitud.
+- Ojo: la explicación personal de Marco y la revisión de Rui siguen pendientes; la comprobación técnica no acredita una sesión recibida.
+
 ## HDU-013 · 28/10/2026 · Buscar dos fragmentos del paciente
 
 - **`python-api/buscar.py`** recibe id y pregunta; comparte `search_fragments()` de `app/knowledge.py` y el modelo de embeddings usado en la ingesta.

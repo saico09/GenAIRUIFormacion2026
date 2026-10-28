@@ -11,6 +11,14 @@ QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333").rstrip("/")
 COLLECTION = "historias"
 
 
+class EmbeddingUnavailable(OSError):
+    """No se pudo obtener un vector del modelo de embeddings."""
+
+
+class QdrantUnavailable(OSError):
+    """No se pudo consultar la base vectorial."""
+
+
 def request_json(method: str, url: str, data: dict | None = None, timeout: int = 120) -> dict:
     body = None if data is None else json.dumps(data, ensure_ascii=False).encode("utf-8")
     request = Request(url, data=body, headers={"Content-Type": "application/json"}, method=method)
@@ -21,18 +29,24 @@ def request_json(method: str, url: str, data: dict | None = None, timeout: int =
 def embed(text: str, *, query: bool = False) -> list[float]:
     # Nomic distingue documentos de consultas mediante estos prefijos.
     prefix = "search_query: " if query else "search_document: "
-    result = request_json("POST", f"{OLLAMA_BASE_URL}/api/embed", {
-        "model": EMBEDDING_MODEL, "input": prefix + text, "truncate": False,
-        "keep_alive": "1m",
-    })
-    vector = result["embeddings"][0]
-    if not vector or not all(isinstance(n, (int, float)) and math.isfinite(n) for n in vector):
-        raise ValueError("Ollama devolvió un vector vacío o inválido")
-    return vector
+    try:
+        result = request_json("POST", f"{OLLAMA_BASE_URL}/api/embed", {
+            "model": EMBEDDING_MODEL, "input": prefix + text, "truncate": False,
+            "keep_alive": "1m",
+        })
+        vector = result["embeddings"][0]
+        if not vector or not all(isinstance(n, (int, float)) and math.isfinite(n) for n in vector):
+            raise ValueError("Ollama devolvió un vector vacío o inválido")
+        return vector
+    except (OSError, ValueError, KeyError, IndexError, TypeError) as error:
+        raise EmbeddingUnavailable("Embeddings no disponibles") from error
 
 
 def qdrant(method: str, path: str, data: dict | None = None) -> dict:
-    return request_json(method, f"{QDRANT_URL}{path}", data)
+    try:
+        return request_json(method, f"{QDRANT_URL}{path}", data)
+    except (OSError, ValueError) as error:
+        raise QdrantUnavailable("Qdrant no disponible") from error
 
 
 def prepare_collection() -> dict:

@@ -225,7 +225,7 @@ En Java, JPA trabaja con la tabla `java.patients`; la tabla de Python sigue sien
 
 ## Historias ficticias
 
-leer las tres historias preparadas para la futura ingesta:
+leer las tres historias usadas en la ingesta:
 ```powershell
 Get-Content -Raw datos/paciente-1.md, datos/paciente-2.md, datos/paciente-3.md
 ```
@@ -237,7 +237,7 @@ Get-Content -Raw datos/preguntas.json
 
 Cada historia tiene `patient_id` y tres secciones: Enfermedad, Tratamiento y Medicamento. Son nueve secciones en total, vinculadas a Ana, Bruno y Carla por sus ids Python 1, 2 y 3. Los valores Alfa/Beta/Gamma son ficticios. La pregunta sobre la última cirugía de Ana no tiene respuesta en los documentos; se espera `No hay información suficiente`.
 
-Los archivos ya se ingirieron en Qdrant: nueve secciones, tres por paciente. El RAG todavía está pendiente. Marco autorizó continuar aunque no se alcance el mínimo documental de RAM; el avance se comprueba con el funcionamiento real.
+Los archivos ya se ingirieron en Qdrant: nueve secciones, tres por paciente. La rama RAG recupera hasta dos de esas secciones para responder con contexto. Marco autorizó continuar aunque no se alcance el mínimo documental de RAM; el avance se comprueba con el funcionamiento real.
 
 ## Embeddings y Qdrant
 
@@ -310,6 +310,74 @@ docker compose exec -T python-api python buscar.py 1 "¿Cuál fue la última cir
 `buscar.py` recibe el id y la pregunta entre comillas. Usa el mismo modelo de embeddings, filtra por ese `patient_id` y devuelve hasta dos fragmentos con `score`, `source`, `section` y `text`. Las tres preguntas conocidas recuperaron primero la sección que contiene Alfa, Beta o Gamma, siempre del paciente correcto.
 
 Ojo con la cirugía: devolvió Enfermedad y Tratamiento de Ana, pero ninguno contiene la respuesta. Un score de similitud sirve para ordenar fragmentos; no demuestra que el dato exista. Esta búsqueda todavía no genera respuestas de un LLM.
+
+## Comprobar recuperación
+
+comparar los nueve fragmentos y repetir las cuatro preguntas:
+```powershell
+Get-Content -Raw scripts\verificar_recuperacion.py | docker compose exec -T python-api python
+```
+
+reiniciar solo Qdrant para comprobar persistencia:
+```bash
+docker compose restart qdrant
+```
+
+esperar hasta que la colección vuelva a responder y después repetir el verificador de arriba:
+```powershell
+Invoke-RestMethod http://127.0.0.1:6333/collections/historias
+```
+
+Antes y después del reinicio se conservaron nueve puntos, tres por paciente, con todos los payloads iguales a los Markdown. Las tres respuestas conocidas aparecieron, la cirugía siguió ausente y los ocho resultados pertenecían al paciente correcto. No hizo falta volver a ingerir. La revisión de Rui y la explicación personal de Marco siguen pendientes.
+
+## Chatbot en el navegador
+
+Con los contenedores y Ollama encendidos:
+
+1. Abre [el chatbot](http://localhost:8000).
+2. Elige **Ana Demo** en el selector; los pacientes vienen de FastAPI.
+3. Escribe `¿Qué enfermedad tiene Ana Demo?` y pulsa **Consultar**.
+4. Espera mientras aparece **Cargando…**. El botón se bloquea hasta terminar.
+5. Compara **Sin RAG** y **Con RAG**. En la prueba, RAG respondió Enfermedad Alfa y mostró `paciente-1.md / Enfermedad`; la directa indicó que no tenía información.
+
+La pregunta queda escrita. Si está vacía o tiene solo espacios, verás `Escribe una pregunta` y no se enviará nada.
+
+si aparece `LLM no disponible`, volver a iniciar Ollama:
+```powershell
+.\scripts\iniciar_ollama.ps1
+```
+
+Después pulsa **Consultar** otra vez en la misma página, sin recargar. Se comprobó el error 503 con Ollama detenido y el reintento correcto tras iniciarlo; el botón vuelve a habilitarse tanto en éxito como en error. Las capturas y resultados están en [S04](evidencias/S04.md).
+
+## Comparar respuestas con y sin contexto
+
+descargar el modelo de chat (ya está descargado en este equipo):
+```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull llama3.2:3b
+```
+
+comprobar el modelo directamente:
+```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" run llama3.2:3b "Responde hola"
+```
+
+preguntar desde FastAPI y recibir las dos respuestas:
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:8000/chat -ContentType 'application/json; charset=utf-8' -Body '{"patient_id":1,"question":"¿Qué enfermedad tiene Ana Demo?"}' | ConvertTo-Json -Depth 5
+```
+
+Devuelve 200 con `direct_answer`, `rag_answer` y `sources`. La rama directa recibe solo la pregunta; la rama RAG recibe la misma pregunta y hasta dos fragmentos del paciente elegido. Ambas usan el mismo modelo y temperatura. `patient_id` debe existir y `question` conserva el texto enviado. Una pregunta vacía responde 422; un paciente inexistente, 404.
+
+En la prueba de Ana, la directa reconoció que no tenía información y la respuesta RAG devolvió Enfermedad Alfa con `[paciente-1.md/Enfermedad]`. Para la cirugía, RAG dijo `No hay información suficiente.`. Las fuentes de esa consulta son textos recuperados; no prueban que haya ocurrido una cirugía.
+
+repetir las dos preguntas y comprobar respuestas, fuentes, prompts y parámetros:
+```powershell
+Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api python
+```
+
+`rag.py` arma el contexto y pide una cita literal del archivo/sección; la respuesta viene del modelo. `app/llm.py` centraliza `CHAT_MODEL=llama3.2:3b`, temperatura 0, contexto 2048, salida máxima de 256 tokens y timeout de 120 segundos por llamada al LLM. Cada petición comparativa hace dos llamadas y la recuperación, así que puede tardar más que la antigua respuesta directa.
+
+Si Ollama no está disponible, responde 503 con `LLM no disponible`; inicia de nuevo con `scripts/iniciar_ollama.ps1` y reintenta. Una conexión inaccesible a Qdrant devuelve 503 con `Qdrant no disponible`: ese caso se comprobó con una API de prueba y una URL inaccesible, sin detener el servicio real.
 
 ## Postman
 

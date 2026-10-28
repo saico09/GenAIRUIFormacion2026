@@ -32,6 +32,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       OLLAMA_BASE_URL: http://host.docker.internal:11434
       EMBEDDING_MODEL: nomic-embed-text
+      CHAT_MODEL: llama3.2:3b
       QDRANT_URL: http://qdrant:6333
     volumes:
       - ./datos:/datos:ro

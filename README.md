@@ -1,8 +1,8 @@
 # GenAI · app de práctica
 
-Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot—, Ollama para generar embeddings y Qdrant con las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
+Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y una comparación de respuestas con y sin RAG. Ollama genera embeddings y respuestas; Qdrant guarda las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para PowerShell, desde esta carpeta `codigo`, con Docker Desktop abierto.
 
-[Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
+[Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Evidencias S01](evidencias/S01.md) · [Evidencias S02](evidencias/S02.md) · [Evidencias S03](evidencias/S03.md) · [Evidencias S04](evidencias/S04.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 
 ## Arrancar
 
@@ -36,7 +36,7 @@ comprobar que Spring Boot responde (200):
 curl.exe -i http://localhost:8080/health
 ```
 
-Abre [Swagger de FastAPI](http://localhost:8000/docs) para probar el CRUD desde el navegador. PostgreSQL escucha en `localhost:5432`; FastAPI en `localhost:8000`; Spring Boot en `localhost:8080`. La base guarda los datos en el volumen `pgdata`.
+Abre el [chatbot](http://localhost:8000) para comparar respuestas o [Swagger de FastAPI](http://localhost:8000/docs) para probar el CRUD. PostgreSQL escucha en `localhost:5432`; FastAPI en `localhost:8000`; Spring Boot en `localhost:8080`. La base guarda los datos en el volumen `pgdata`.
 
 Python usa `public.patients` y Java usa `java.patients`, dentro de la misma base. Eso permite conservar y probar las filas de cada servicio por separado. En este equipo, Ana, Bruno y Carla Demo ya están cargados en ambas; los ids se generan de forma independiente. En un clon nuevo, usa los comandos de carga de la guía antes de probar persistencia.
 
@@ -46,12 +46,14 @@ Los cuerpos de POST y PUT llevan `name` (texto no vacío), `birth_date` (fecha r
 
 | Operación | Disponible en | Respuesta correcta | Error previsto |
 |---|---|---|---|
+| `GET /` | Python | 200, página del chatbot | — |
 | `GET /health` | Python y Java | 200, `{"status":"ok"}` | — |
 | `POST /patients` | Python y Java | 201, paciente creado | 422 si la entrada no es válida |
 | `GET /patients` | Python y Java | 200, lista ordenada por id | — |
 | `GET /patients/{id}` | Python y Java | 200, paciente | 404 si no existe |
 | `PUT /patients/{id}` | Python y Java | 200, paciente actualizado | 404 si no existe; 422 si la entrada no es válida |
 | `DELETE /patients/{id}` | Python y Java | 204, sin cuerpo | 404 si no existe |
+| `POST /chat` | Python | 200, `direct_answer`, `rag_answer`, `sources` | 422 entrada inválida; 404 paciente ausente; 503 servicio no disponible |
 
 El 404 de ambas APIs usa `{"detail":"Paciente no encontrado"}`. Se comprobaron 14 entradas inválidas en POST y PUT: nombre vacío o numérico, fechas imposibles o con formato incorrecto, emails inválidos o sin dominio completo y campos ausentes. Cada API devolvió 28 respuestas 422 sin guardar cambios. El detalle interno de los errores 422 puede ser distinto entre frameworks; se comparan los códigos y el efecto en los datos, sin exigir mensajes idénticos.
 
@@ -195,7 +197,45 @@ comprobar qué ocurre con un dato ausente:
 docker compose exec -T python-api python buscar.py 1 "¿Cuál fue la última cirugía de Ana Demo?"
 ```
 
-La búsqueda devuelve hasta dos fragmentos del paciente solicitado, con score, archivo, sección y texto. Las tres preguntas conocidas recuperaron su respuesta en el primer resultado. La cirugía de Ana devolvió fragmentos de Enfermedad y Tratamiento que no contienen esa información: similitud no equivale a respuesta. Todavía no se genera texto de un LLM ni se implementó el RAG. Las cuatro consultas están en la [guía](GUIA.md#buscar-por-paciente).
+La búsqueda devuelve hasta dos fragmentos del paciente solicitado, con score, archivo, sección y texto. Las tres preguntas conocidas recuperaron su respuesta en el primer resultado. La cirugía de Ana devolvió fragmentos de Enfermedad y Tratamiento que no contienen esa información: similitud no equivale a respuesta. `buscar.py` devuelve documentos; la llamada directa al LLM se prueba por separado. Las cuatro consultas están en la [guía](GUIA.md#buscar-por-paciente).
+
+comprobar los nueve payloads y las cuatro preguntas automáticamente:
+
+```powershell
+Get-Content -Raw scripts\verificar_recuperacion.py | docker compose exec -T python-api python
+```
+
+Pasó antes y después de reiniciar Qdrant: nueve puntos conservados, tres por paciente, tres respuestas presentes y cirugía ausente. Todos los resultados correspondían al paciente solicitado. El reinicio reproducible está en la [guía](GUIA.md#comprobar-recuperación).
+
+## Comparar respuestas con y sin RAG
+
+En el [chatbot](http://localhost:8000), elige **Ana Demo**, escribe `¿Qué enfermedad tiene Ana Demo?` y pulsa **Consultar**. Verás las columnas **Sin RAG** y **Con RAG**, junto con los archivos y secciones recuperados. El selector obtiene los pacientes de la API y ambas ramas reciben el mismo texto.
+
+Mientras responde aparece **Cargando…** y el botón queda desactivado. Una pregunta vacía muestra `Escribe una pregunta` sin enviarla. Si aparece `LLM no disponible`, inicia Ollama y pulsa Consultar otra vez: la pregunta se conserva y no necesitas recargar la página. Ese reintento se comprobó con Ollama realmente detenido y luego reiniciado. Paso a paso en la [guía](GUIA.md#chatbot-en-el-navegador).
+
+descargar el modelo si todavía no está disponible:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull llama3.2:3b
+```
+
+enviar una pregunta con un paciente existente:
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:8000/chat -ContentType 'application/json; charset=utf-8' -Body '{"patient_id":1,"question":"¿Qué enfermedad tiene Ana Demo?"}' | ConvertTo-Json -Depth 5
+```
+
+La respuesta tiene `direct_answer`, `rag_answer` y `sources`. La directa recibe solo la pregunta; RAG añade hasta dos fragmentos del paciente. Ambas conservan la misma pregunta, `CHAT_MODEL=llama3.2:3b`, temperatura 0, contexto 2048 y máximo 256 tokens de salida. El timeout es de 120 segundos por llamada al LLM; una petición comparativa hace dos llamadas y la recuperación.
+
+En las pruebas, RAG respondió Enfermedad Alfa con la fuente `[paciente-1.md/Enfermedad]`; para cirugía de Ana respondió `No hay información suficiente.`. La rama directa dijo que no tenía datos, lo cual es válido. La respuesta y la cita se generan desde el contexto, sin respuestas fijas en el código.
+
+repetir ambos casos y comprobar las fuentes:
+
+```powershell
+Get-Content -Raw scripts\verificar_chat.py | docker compose exec -T python-api python
+```
+
+Si aparece 503 `LLM no disponible`, ejecuta el script de inicio de Ollama y reintenta. Una conexión fallida a Qdrant devuelve 503 `Qdrant no disponible`; pregunta vacía y paciente inexistente responden 422 y 404 respectivamente. Los prompts, respuestas y parámetros reales están en [S04-rag.json](evidencias/S04-rag.json).
 
 ## Ubicarse en el código
 
@@ -221,5 +261,10 @@ La búsqueda devuelve hasta dos fragmentos del paciente solicitado, con score, a
 | `python-api/preparar_vectores.py` | Comprueba la dimensión real y prepara la colección `historias`. |
 | `python-api/ingestar.py` | Valida los Markdown e ingiere sus secciones sin duplicarlas. |
 | `python-api/buscar.py` | Recupera hasta dos fragmentos filtrados por paciente. |
+| `scripts/verificar_recuperacion.py` | Coteja los nueve payloads y las cuatro consultas conocidas. |
+| `python-api/app/llm.py` | Llama al LLM local con modelo y parámetros compartidos. |
+| `python-api/rag.py` | Arma el contexto recuperado y pide respuesta con fuente al mismo LLM. |
+| `scripts/verificar_chat.py` | Comprueba las dos respuestas y fuentes para dato conocido y ausente. |
+| `python-api/app/static/index.html` | Página del chatbot: selector, pregunta, dos respuestas, fuentes y reintento. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.
