@@ -1,0 +1,20 @@
+[
+  {
+    "query": "{service=\"fastapi\"} | json | event=\"http\" | request_id=~\"hdu031-fastapi-(200|404)-216028e8054e4fa2b2cd3d4b56565f1c\"",
+    "url": "http://localhost:3000/explore?panes=%7B%22a%22%3A%7B%22datasource%22%3A%22loki%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22expr%22%3A%22%7Bservice%3D%5C%22fastapi%5C%22%7D+%7C+json+%7C+event%3D%5C%22http%5C%22+%7C+request_id%3D%7E%5C%22hdu031-fastapi-%28200%7C404%29-216028e8054e4fa2b2cd3d4b56565f1c%5C%22%22%2C%22queryType%22%3A%22range%22%2C%22datasource%22%3A%7B%22uid%22%3A%22loki%22%2C%22type%22%3A%22loki%22%7D%7D%5D%2C%22range%22%3A%7B%22from%22%3A%221793210201286%22%2C%22to%22%3A%221793210322393%22%7D%7D%7D&schemaVersion=1&orgId=1",
+    "screenshot": "033-fastapi.png",
+    "lines": 2
+  },
+  {
+    "query": "{service=\"springboot\"} | json | event=\"http\" | request_id=~\"hdu031-springboot-(200|404)-216028e8054e4fa2b2cd3d4b56565f1c\"",
+    "url": "http://localhost:3000/explore?panes=%7B%22a%22%3A%7B%22datasource%22%3A%22loki%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22expr%22%3A%22%7Bservice%3D%5C%22springboot%5C%22%7D+%7C+json+%7C+event%3D%5C%22http%5C%22+%7C+request_id%3D%7E%5C%22hdu031-springboot-%28200%7C404%29-216028e8054e4fa2b2cd3d4b56565f1c%5C%22%22%2C%22queryType%22%3A%22range%22%2C%22datasource%22%3A%7B%22uid%22%3A%22loki%22%2C%22type%22%3A%22loki%22%7D%7D%5D%2C%22range%22%3A%7B%22from%22%3A%221793210201286%22%2C%22to%22%3A%221793210322402%22%7D%7D%7D&schemaVersion=1&orgId=1",
+    "screenshot": "033-springboot.png",
+    "lines": 2
+  },
+  {
+    "query": "{service=\"fastapi\"} | json | request_id=\"hdu032-b1f2ddff60e54e5cb1cb301cf59a9d76\"",
+    "url": "http://localhost:3000/explore?panes=%7B%22a%22%3A%7B%22datasource%22%3A%22loki%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22expr%22%3A%22%7Bservice%3D%5C%22fastapi%5C%22%7D+%7C+json+%7C+request_id%3D%5C%22hdu032-b1f2ddff60e54e5cb1cb301cf59a9d76%5C%22%22%2C%22queryType%22%3A%22range%22%2C%22datasource%22%3A%7B%22uid%22%3A%22loki%22%2C%22type%22%3A%22loki%22%7D%7D%5D%2C%22range%22%3A%7B%22from%22%3A%221793210739283%22%2C%22to%22%3A%221793210873514%22%7D%7D%7D&schemaVersion=1&orgId=1",
+    "screenshot": "033-chatbot.png",
+    "lines": 3
+  }
+]

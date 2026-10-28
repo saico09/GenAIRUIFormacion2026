@@ -25,4 +25,4 @@ def build_rag_prompt(question: str, sources: list[dict]) -> str:
 
 def answer_rag(patient_id: int, question: str) -> tuple[str, list[dict]]:
     sources = search_fragments(patient_id, question)
-    return llamar_llm(build_rag_prompt(question, sources)), sources
+    return llamar_llm(build_rag_prompt(question, sources), branch="rag"), sources

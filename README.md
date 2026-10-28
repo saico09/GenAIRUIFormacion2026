@@ -18,7 +18,7 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 
 En un clon nuevo, completa `POSTGRES_USER`, `POSTGRES_PASSWORD` y `GRAFANA_ADMIN_PASSWORD` en `.env` antes de arrancar. La clave de Grafana ya está configurada en este equipo; se queda solo en ese archivo local.
 
-levantar postgres, las dos apis, qdrant, prometheus y grafana:
+levantar postgres, las dos apis, qdrant, prometheus, grafana, loki y alloy:
 
 ```bash
 docker compose up -d --build
@@ -293,6 +293,18 @@ Sin tráfico, el porcentaje puede quedar sin valor; no significa automáticament
 
 La [revisión HDU-029](evidencias/s06/revision.md) repitió GET 200/404, confirmó el incremento exacto de uno por petición y comprobó los seis paneles con datos finitos. Incluye exportación, capturas y tres frases para repasar req/s, error % y p95. Puedes [repetir la revisión](GUIA.md#revisar-el-dashboard); la explicación personal de Marco y la revisión de Rui siguen pendientes.
 
+## Logs por petición
+
+Ambas APIs devuelven `X-Request-ID` y escriben un evento JSON con ese mismo `request_id`, fecha UTC, servicio, método, ruta, status y duración en milisegundos. Puedes enviar tu propio id válido; si falta o no es válido, generan un UUID. Las rutas se normalizan y los eventos HTTP no incluyen cuerpos ni parámetros de consulta.
+
+La prueba [HDU-030](evidencias/s07/030-logs.md) relacionó cuatro respuestas 200/404 con sus cuatro logs y comprobó un 500 Python aislado. La [guía de logs](GUIA.md#logs) permite repetirlo y consultar ambos contenedores.
+
+**Loki 3.7.9 y Alloy 1.21.2** llevan esos logs a Grafana. Alloy recoge solo las dos APIs de este proyecto; `service` identifica `fastapi` o `springboot`, mientras `request_id` se consulta dentro del JSON. Loki escucha en `localhost:3100`; la fuente **Loki** de Grafana usa la dirección interna `http://loki:3100` y su Save & test pasó. Se vieron dos eventos 200/404 por API en Explore con sus ids correctos. [Guía de consulta](GUIA.md#logs-en-grafana) y [evidencia HDU-031](evidencias/s07/loki-apis.md).
+
+Las llamadas al LLM añaden eventos `llm`: rama `direct` o `rag`, modelo, prompt completo, respuesta, duración y estado. Comparten el id del POST `/chat`, conservando el mismo modelo y parámetros. La [prueba HDU-032](evidencias/s07/llm.md) mostró ambas ramas en Explore; RAG respondió Alfa con fuente y la directa pidió contexto. Como estos eventos sí contienen la pregunta y el contexto, sigue usando los datos ficticios de la práctica. [Cómo repetirlo](GUIA.md#logs-del-llm).
+
+La [revisión HDU-033](evidencias/s07/revision.md) volvió a consultar los intervalos guardados: dos eventos HTTP por API y, para el chatbot, dos eventos LLM más el HTTP 200. **El request_id une la petición con sus llamadas al modelo**; el filtro por servicio separa las APIs. La guía explica [cómo seguir ese recorrido](GUIA.md#seguir-una-consulta-completa). La explicación personal y la revisión de Rui siguen pendientes.
+
 ## Ubicarse en el código
 
 | Archivo | Para qué sirve |
@@ -303,11 +315,14 @@ La [revisión HDU-029](evidencias/s06/revision.md) repitió GET 200/404, confirm
 | `python-api/app/models.py` | Define la tabla `public.patients`. |
 | `python-api/app/db.py` | Abre la conexión y entrega una sesión por petición. |
 | `python-api/app/metrics.py` | Cuenta peticiones y duraciones por método, ruta normalizada y status. |
+| `python-api/app/observability.py` | Conserva el request_id entre middleware y endpoint y escribe eventos JSON HTTP/LLM. |
 | `java-api/pom.xml` | Dependencias y versión de Spring Boot; Maven construye el servicio. |
 | `java-api/src/main/resources/application.properties` | Configura la conexión de Java usando las variables de Compose. |
 | `java-api/src/main/resources/schema.sql` | Crea el esquema `java` si todavía no existe. |
 | `java-api/src/main/java/com/conkord/genai/PatientController.java` | Recibe las peticiones de pacientes y usa el repositorio JPA. |
 | `java-api/src/main/java/com/conkord/genai/PatientRequest.java` | Valida nombre, fecha y email recibidos por Java. |
+| `java-api/src/main/java/com/conkord/genai/HttpLoggingFilter.java` | Devuelve X-Request-ID y registra los metadatos HTTP de Java. |
+| `java-api/src/main/resources/logback-spring.xml` | Escribe los eventos HTTP Java como una línea JSON. |
 | `datos/pacientes.json` | Los tres pacientes ficticios iniciales. |
 | `datos/paciente-1.md` a `paciente-3.md` | Historias ficticias vinculadas a los ids de Python. |
 | `datos/preguntas.json` | Cuatro preguntas y respuestas esperadas para probar recuperación. |
@@ -320,17 +335,23 @@ La [revisión HDU-029](evidencias/s06/revision.md) repitió GET 200/404, confirm
 | `python-api/ingestar.py` | Valida los Markdown e ingiere sus secciones sin duplicarlas. |
 | `python-api/buscar.py` | Recupera hasta dos fragmentos filtrados por paciente. |
 | `scripts/verificar_recuperacion.py` | Coteja los nueve payloads y las cuatro consultas conocidas. |
-| `python-api/app/llm.py` | Llama al LLM local con modelo y parámetros compartidos. |
+| `python-api/app/llm.py` | Llama al LLM con parámetros compartidos y registra cada rama, prompt y respuesta. |
 | `python-api/rag.py` | Arma el contexto recuperado y pide respuesta con fuente al mismo LLM. |
 | `scripts/verificar_chat.py` | Comprueba las dos respuestas y fuentes para dato conocido y ausente. |
 | `python-api/app/static/index.html` | Página del chatbot: selector, pregunta, dos respuestas, fuentes y reintento. |
 | `scripts/verificar_chat_ui.cjs` | Prueba el formulario en Edge y compara las cuatro respuestas visibles con el JSON. |
 | `scripts/verificar_metricas.py` | Compara métricas antes/después de un GET 200 y otro 404. |
 | `observabilidad/prometheus.yml` | Recoge ambas APIs cada 15 segundos y les asigna la etiqueta service. |
-| `observabilidad/grafana-datasources.yml` | Configura la fuente Prometheus de Grafana. |
+| `observabilidad/grafana-datasources.yml` | Configura las fuentes Prometheus y Loki de Grafana. |
 | `observabilidad/dashboard.json` | Define los paneles del dashboard APIs GenAI. |
 | `observabilidad/grafana-dashboards.yml` | Carga el dashboard desde su archivo. |
 | `scripts/generar_trafico.py` | Hace 50 GET en unos dos minutos y guarda horas, estados y tiempos de respuesta. |
 | `scripts/verificar_dashboard.cjs` | Consulta los seis paneles en Grafana y guarda resultados y capturas. |
+| `scripts/verificar_logs.py` | Coteja cuatro respuestas HTTP con un evento JSON por request_id. |
+| `observabilidad/loki.yml` | Configura Loki con almacenamiento local persistente. |
+| `observabilidad/alloy.alloy` | Recoge los logs de las dos APIs y los envía a Loki. |
+| `scripts/verificar_loki.py` | Genera cuatro GET y encuentra sus eventos por servicio y request_id. |
+| `scripts/capturar_loki.cjs` | Abre las consultas verificadas en Explore y guarda capturas y URLs. |
+| `scripts/verificar_llm_logs.py` | Comprueba que las dos llamadas LLM coincidan con el POST y su respuesta en Loki. |
 
 El recorrido Python es JSON → validación → endpoint → sesión SQLAlchemy → PostgreSQL → respuesta. En Java es JSON → `PatientRequest` → controlador → repositorio JPA → PostgreSQL → respuesta. El código y las pruebas no acreditan todavía la explicación de Marco ni la revisión de Rui; esos pendientes se registran aparte.

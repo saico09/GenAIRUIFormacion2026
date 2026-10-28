@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-10-28T17:53:20.432Z",
+  "log_collection": "Últimas 1000 líneas, selección por request_id único; no depende del reloj del host.",
+  "cases": [
+    {
+      "name": "manual_200",
+      "path": "/patients/1?prueba_log=NO_REGISTRAR_QUERY_030",
+      "input_request_id": "hdu030-java-200-1793209999902",
+      "response": {
+        "status": 200,
+        "request_id": "hdu030-java-200-1793209999902",
+        "body": {
+          "id": 1,
+          "name": "Ana Demo",
+          "birth_date": "1990-01-10",
+          "email": "ana@example.com"
+        }
+      },
+      "log": {
+        "route": "/patients/{id}",
+        "timestamp": "2026-10-28T17:53:14.730881629Z",
+        "service": "springboot",
+        "duration_ms": 5.806114,
+        "status": 200,
+        "method": "GET",
+        "request_id": "hdu030-java-200-1793209999902",
+        "event": "http"
+      },
+      "raw_log": "{\"route\":\"/patients/{id}\",\"timestamp\":\"2026-10-28T17:53:14.730881629Z\",\"service\":\"springboot\",\"duration_ms\":5.806114,\"status\":200,\"method\":\"GET\",\"request_id\":\"hdu030-java-200-1793209999902\",\"event\":\"http\"}"
+    },
+    {
+      "name": "generated_404",
+      "path": "/patients/999999",
+      "input_request_id": null,
+      "response": {
+        "status": 404,
+        "request_id": "9c1cc9cb-7b0e-4a4d-903f-6af4f875a3c0",
+        "body": {
+          "detail": "Paciente no encontrado"
+        }
+      },
+      "log": {
+        "route": "/patients/{id}",
+        "timestamp": "2026-10-28T17:53:14.750659499Z",
+        "service": "springboot",
+        "duration_ms": 5.918201,
+        "status": 404,
+        "method": "GET",
+        "request_id": "9c1cc9cb-7b0e-4a4d-903f-6af4f875a3c0",
+        "event": "http"
+      },
+      "raw_log": "{\"route\":\"/patients/{id}\",\"timestamp\":\"2026-10-28T17:53:14.750659499Z\",\"service\":\"springboot\",\"duration_ms\":5.918201,\"status\":404,\"method\":\"GET\",\"request_id\":\"9c1cc9cb-7b0e-4a4d-903f-6af4f875a3c0\",\"event\":\"http\"}"
+    },
+    {
+      "name": "invalid_id",
+      "path": "/health",
+      "input_request_id": "invalid request id",
+      "response": {
+        "status": 200,
+        "request_id": "428b61e4-7b7c-47ec-9aa9-9099af849fa6",
+        "body": {
+          "status": "ok"
+        }
+      },
+      "log": {
+        "route": "/health",
+        "timestamp": "2026-10-28T17:53:14.766252363Z",
+        "service": "springboot",
+        "duration_ms": 1.759617,
+        "status": 200,
+        "method": "GET",
+        "request_id": "428b61e4-7b7c-47ec-9aa9-9099af849fa6",
+        "event": "http"
+      },
+      "raw_log": "{\"route\":\"/health\",\"timestamp\":\"2026-10-28T17:53:14.766252363Z\",\"service\":\"springboot\",\"duration_ms\":1.759617,\"status\":200,\"method\":\"GET\",\"request_id\":\"428b61e4-7b7c-47ec-9aa9-9099af849fa6\",\"event\":\"http\"}"
+    }
+  ]
+}

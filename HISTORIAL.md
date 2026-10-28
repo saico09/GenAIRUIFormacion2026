@@ -4,6 +4,35 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-033 · 28/10/2026 · Correlación de logs revisada
+
+- **Consultas guardadas repetidas**: dos eventos 200/404 en FastAPI, dos en Spring Boot y tres del chatbot al incluir HTTP y ambas ramas LLM.
+- **Un request_id común** permite seguir el POST `/chat` y sus llamadas direct/rag. La guía deja la consulta completa, su intervalo y una frase de apoyo para explicarla.
+- **Resultados y vistas de Explore** en `evidencias/s07/revision.md`. Se ajustaron el verificador y la altura de captura para comprobar y leer la evidencia; no se encontró un fallo de la app en esta revisión.
+- Ojo: siguen pendientes la explicación propia de Marco y la revisión de Rui. No se atribuyen horas de trabajo ni una sesión realizada.
+
+## HDU-032 · 28/10/2026 · Prompt y respuesta del LLM en Loki
+
+- **Eventos `llm` para direct y rag** con fecha, modelo, prompt completo, respuesta, duración y estado. Comparten el request_id del POST mediante ContextVar.
+- **Mismo modelo y parámetros** en ambas ramas; solo RAG recibe los fragmentos recuperados. La consulta de Ana respondió Alfa con fuente en RAG y falta de contexto en la directa.
+- **`scripts/verificar_llm_logs.py`** cotejó ambas respuestas con dos eventos LLM y un HTTP 200; Explore mostró las dos líneas con su id común. Resultados y captura inspeccionada en `evidencias/s07/llm.md`.
+- Ojo: estos eventos contienen preguntas y contexto; seguimos usando datos ficticios. Se corrigió una expectativa de nombre de archivo en el verificador y la repetición pasó, sin cambiar la respuesta de la app.
+
+## HDU-031 · 28/10/2026 · Logs de ambas APIs en Loki
+
+- **Loki 3.7.9 y Alloy 1.21.2** en Compose, con versiones/digests fijados y volúmenes propios. Loki escucha solo en el puerto local 3100.
+- **Alloy recoge solo las dos APIs del proyecto** y las distingue con `service=fastapi/springboot`. Conserva el JSON original; request_id no es una etiqueta almacenada.
+- **Fuente Loki en Grafana** añadida junto a Prometheus. Save & test pasó; Explore mostró dos eventos 200/404 por API con sus request_id visibles y capturas inspeccionadas.
+- **`scripts/verificar_loki.py` y `scripts/capturar_loki.cjs`** comprueban cuatro GET correlacionados y guardan sus consultas/capturas. Evidencia en `evidencias/s07/loki-apis.md`; comandos de uso en la guía.
+
+## HDU-030 · 28/10/2026 · Logs JSON y request_id
+
+- **Un evento JSON por petición** en ambas APIs, con fecha UTC, servicio, método, ruta normalizada, status y duración numérica en milisegundos.
+- **`X-Request-ID`** conserva un id válido enviado por el cliente o genera un UUID; el mismo valor sale en el header y en el log.
+- **`scripts/verificar_logs.py`** cotejó cuatro respuestas 200/404 con sus cuatro eventos. Java comprobó un id inválido y una query excluida; Python comprobó un 500 aislado con id y mensaje genérico.
+- **Sin cuerpos ni queries en los eventos HTTP**; los mensajes de arranque mantienen su formato. Resultados y comandos en `evidencias/s07/030-logs.md` y la guía.
+- Ojo: el verificador vuelve a generar `logs-apis.txt`; estas pruebas no acreditan explicación personal ni revisión de Rui.
+
 ## HDU-029 · 28/10/2026 · Métricas revisadas
 
 - **GET 200 y 404 repetidos en ambas APIs**: cada petición sumó exactamente uno en sus contadores; Prometheus recogió los valores nuevos sin modificar pacientes.

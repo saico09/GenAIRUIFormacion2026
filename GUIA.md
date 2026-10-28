@@ -22,7 +22,7 @@ Abre `.env` en tu editor y completa `POSTGRES_USER`, `POSTGRES_PASSWORD` y `GRAF
 
 ## Levantar / bajar
 
-levantar los contenedores (postgres, ambas apis, qdrant, prometheus y grafana), reconstruyendo si cambiaste código:
+levantar los contenedores (postgres, ambas apis, qdrant, prometheus, grafana, loki y alloy), reconstruyendo si cambiaste código:
 ```bash
 docker compose up -d --build
 ```
@@ -44,7 +44,7 @@ bajar los contenedores (se conservan los volúmenes; Ollama corre aparte en Wind
 docker compose down
 ```
 
-bajar los contenedores y BORRAR los datos (ojo: elimina pacientes, vectores, historial Prometheus y datos Grafana):
+bajar los contenedores y BORRAR los datos (ojo: elimina pacientes, vectores, historial Prometheus, datos Grafana, logs Loki y posiciones Alloy):
 ```bash
 docker compose down -v
 ```
@@ -552,6 +552,22 @@ curl --location 'http://localhost:8000/patients' --header 'Content-Type: applica
 
 ## Logs
 
+Cada petición deja un JSON con `timestamp`, `service`, `event`, `request_id`, `method`, `route`, `status` y `duration_ms`. `service` distingue `fastapi` y `springboot`; el header `X-Request-ID` de la respuesta permite localizar su evento.
+
+Si envías ese header, se conserva cuando tiene entre 1 y 128 caracteres de `A-Z`, `a-z`, dígitos, `.`, `_`, `:` o `-`. Si falta o no cumple, se genera un UUID. Los eventos HTTP no guardan cuerpos, emails ni queries; los pacientes usan la ruta `/patients/{id}`. Los mensajes de arranque conservan el formato de cada runtime.
+
+ver los eventos recientes de ambas apis sin el prefijo de Compose:
+```powershell
+docker compose logs --no-log-prefix --since 2m python-api java-api
+```
+
+comprobar GET 200/404 y su request_id en ambos servicios:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_logs.py
+```
+
+La prueba usa Ana y un id inexistente, conserva los pacientes y exige exactamente un evento por respuesta. Ojo: vuelve a generar `evidencias/s07/logs-apis.txt`. Los resultados y la comprobación aislada de error 500 están en [HDU-030](evidencias/s07/030-logs.md).
+
 ver logs de la api en vivo (sales con Ctrl+C):
 ```bash
 docker compose logs -f python-api
@@ -566,6 +582,61 @@ ver logs de java-api:
 ```bash
 docker compose logs java-api
 ```
+
+## Logs en Grafana
+
+Alloy recoge solo `python-api` y `java-api` de este proyecto y envía sus líneas a Loki. En Grafana, la fuente **Loki** usa `http://loki:3100`; desde Windows el puerto es `localhost:3100`. Los volúmenes `loki_data` y `alloy_data` conservan logs y posiciones de lectura.
+
+1. Entra a [Grafana](http://localhost:3000) con tu usuario y clave local.
+2. Abre la fuente **Loki** y pulsa **Save & test**. La conexión ya se comprobó.
+3. En **Explore**, elige **Loki** y el modo **Code** para pegar una consulta LogQL.
+4. Usa el campo `query` y el intervalo `start_utc` / `end_utc` del JSON generado por la prueba siguiente. Cada consulta busca los dos eventos de un servicio por sus ids únicos.
+
+generar cuatro GET y comprobar sus logs en Loki, sin modificar pacientes:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_loki.py --output evidencias/s07/loki-local.json
+```
+
+El verificador espera hasta 60 segundos a que lleguen los logs y guarda consultas, intervalos y eventos. Ojo: repetir ese nombre reemplaza `loki-local.json`; cambia el nombre para conservar una prueba manual anterior. Loki puede necesitar unos segundos para quedar listo al arrancar.
+
+`service` permite separar FastAPI de Spring Boot. `| json` extrae los campos al consultar; `request_id` permanece dentro del JSON y no crea una etiqueta almacenada por petición. Se comprobaron cuatro eventos y las dos consultas en Explore: dos líneas por API, con 200/404 e ids correctos. [Resultados, URLs y capturas](evidencias/s07/loki-apis.md).
+
+validar la configuración de Alloy sin reiniciarlo:
+```powershell
+docker compose exec -T alloy /bin/alloy validate /etc/alloy/config.alloy
+```
+
+validar la configuración de Loki sin reiniciarlo:
+```powershell
+docker compose exec -T loki /usr/bin/loki '-verify-config=true' '-config.file=/etc/loki/config.yml'
+```
+
+## Logs del LLM
+
+Con Ollama, la API y Loki encendidos, cada comparación deja dos eventos `llm`, uno `direct` y otro `rag`, y un evento `http` del POST `/chat`. Comparten el request_id, incluso al pasar del middleware al hilo que ejecuta el endpoint.
+
+preguntar por Ana y cotejar las dos llamadas LLM con la respuesta y los logs:
+```powershell
+& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_llm_logs.py
+```
+
+Usa `¿Cuál es el diagnóstico de Ana?`, comprueba Alfa con fuente en RAG y compara los prompts, respuestas y duraciones. Ojo: regenera `evidencias/s07/032-llm.json`; ese archivo incluye la consulta LogQL y su intervalo para pegar en Explore, como en el apartado anterior.
+
+`event="llm"` muestra modelo, rama, prompt completo, respuesta, `duration_ms` y `status`. El estado `ok` indica una respuesta válida; el código registra `error` y respuesta nula cuando falla la llamada. El evento HTTP conserva el estado HTTP numérico. El modelo y los parámetros son los mismos en ambas ramas; RAG añade el contexto recuperado.
+
+Estos logs sí guardan el texto de la pregunta y los fragmentos usados, así que usa los datos ficticios de la práctica. La [evidencia HDU-032](evidencias/s07/llm.md) contiene las dos líneas vistas en Grafana, su consulta y captura. Los tiempos son de esa ejecución local, no un objetivo de rendimiento.
+
+## Seguir una consulta completa
+
+En Explore, conserva el filtro por `service` y `request_id`, pero quita `event="llm"` para ver también el evento HTTP. Esta consulta comprobada devuelve tres líneas: direct, rag y el POST `/chat` con status 200.
+
+```logql
+{service="fastapi"} | json | request_id="hdu032-b1f2ddff60e54e5cb1cb301cf59a9d76"
+```
+
+Usa el intervalo **28/10/2026 18:05:39–18:07:54 UTC**; los límites exactos y la URL guardada están en [033-explore.json](evidencias/s07/033-explore.json). Para otra petición, toma su id y el intervalo de la evidencia nueva. Una ventana que no cubre la petición puede mostrar cero líneas aunque el evento exista.
+
+La [revisión HDU-033](evidencias/s07/revision.md) también recuperó dos eventos 200/404 de cada API usando las consultas guardadas de HDU-031. Frase para repasarlo: **el request_id une la respuesta HTTP con los logs de sus llamadas al modelo; service distingue qué API los emitió**. Es apoyo para explicarlo, no una explicación personal ya realizada ni revisión de Rui recibida.
 
 ## Revisar el equipo
 

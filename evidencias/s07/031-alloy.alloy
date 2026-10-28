@@ -1,0 +1,51 @@
+discovery.docker "apis" {
+  host = "unix:///var/run/docker.sock"
+  refresh_interval = "5s"
+
+  filter {
+    name = "label"
+    values = ["com.docker.compose.project=genairuiformacion2026"]
+  }
+}
+
+discovery.relabel "apis" {
+  targets = discovery.docker.apis.targets
+
+  // Antes de leer logs, conservar solo las dos APIs de este proyecto.
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    regex = "genairuiformacion2026"
+    action = "keep"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex = "python-api|java-api"
+    action = "keep"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex = "python-api"
+    target_label = "service"
+    replacement = "fastapi"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex = "java-api"
+    target_label = "service"
+    replacement = "springboot"
+  }
+}
+
+loki.source.docker "apis" {
+  host = "unix:///var/run/docker.sock"
+  targets = discovery.relabel.apis.output
+  refresh_interval = "5s"
+  forward_to = [loki.write.local.receiver]
+}
+
+// El contenido JSON original se conserva; request_id no es una etiqueta.
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

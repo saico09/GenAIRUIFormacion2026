@@ -1,0 +1,2 @@
+{"timestamp": "2026-10-28T17:54:06.975170+00:00", "service": "fastapi", "event": "http", "request_id": "hdu030-error-aislado", "method": "GET", "route": "/boom", "status": 500, "duration_ms": 1.177}
+OK 500 conserva request_id sin exponer la excepción
