@@ -1,0 +1,97 @@
+{
+  "checked_at": "2026-10-28T19:44:27.573432+00:00",
+  "scope": "Ensayo de consultas de solo lectura; conserva una réplica. No acredita explicación personal ni revisión de Rui.",
+  "checks": [
+    {
+      "component": "fastapi",
+      "url": "http://localhost:8000/patients/1",
+      "status": 200,
+      "patient": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    {
+      "component": "springboot",
+      "url": "http://localhost:8080/patients/1",
+      "status": 200,
+      "patient": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    {
+      "component": "fastapi-minikube",
+      "url": "http://localhost:8002/patients/1",
+      "status": 200,
+      "patient": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    {
+      "component": "qdrant",
+      "url": "http://localhost:6333/collections/historias",
+      "points": 9
+    },
+    {
+      "component": "prometheus",
+      "url": "http://localhost:9090/api/v1/query?query=up%7Bjob%3D~%22fastapi%7Cspringboot%22%7D",
+      "result": [
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "java-api:8080",
+            "job": "springboot",
+            "service": "springboot"
+          },
+          "value": [
+            1793216657.773,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "python-api:8000",
+            "job": "fastapi",
+            "service": "fastapi"
+          },
+          "value": [
+            1793216657.773,
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "phoenix",
+      "url": "http://localhost:6006/redirects/traces/b19855f8ff27eacdf2c0637d4758d59a",
+      "spans_url": "http://localhost:6006/v1/projects/genai/spans?attribute=request_id%3Ahdu045-1d77ef312e904ee58d4f481ac8fc1f55&limit=100",
+      "request_id": "hdu045-1d77ef312e904ee58d4f481ac8fc1f55",
+      "spans": 5
+    },
+    {
+      "component": "loki",
+      "query": "{service=\"fastapi\"} | json | request_id=\"hdu045-1d77ef312e904ee58d4f481ac8fc1f55\" | event=\"llm\"",
+      "request_id": "hdu045-1d77ef312e904ee58d4f481ac8fc1f55",
+      "events": 2,
+      "url": "http://localhost:3100/loki/api/v1/query_range?query=%7Bservice%3D%22fastapi%22%7D+%7C+json+%7C+request_id%3D%22hdu045-1d77ef312e904ee58d4f481ac8fc1f55%22+%7C+event%3D%22llm%22&start=1793216037646182144&end=1793216055424292096&limit=100"
+    },
+    {
+      "component": "argocd",
+      "commit": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+      "sync": "Synced",
+      "health": "Healthy",
+      "operation": "Succeeded",
+      "replicas": 1,
+      "pod": "fastapi-766cfdc5d5-wbd8l"
+    }
+  ]
+}

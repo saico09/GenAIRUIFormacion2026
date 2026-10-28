@@ -14,6 +14,10 @@ La [repetición HDU-044](evidencias/s10/fallos.md) comprobó el arranque sobre e
 
 La [comprobación HDU-045](evidencias/s10/observabilidad.md) reúne 50 GET, los seis paneles de ambas APIs y una pregunta de Ana con sus dos llamadas LLM en Loki y cinco spans en Phoenix. Las capturas e ids permiten seguir el mismo caso; los valores del dashboard siguen siendo agregados. [Cómo repetirlo](GUIA.md#repetir-la-observabilidad).
 
+El estado inicial de la demo queda en **una réplica FastAPI Ready**, con GET de Ana 200 en Minikube. [HDU-046](evidencias/s10/gitops-preparacion.md) guarda el cambio 2→1, la incidencia recurrente de Argo CD y el reintento correcto, más la secuencia futura 1→2. Para consultar el estado actual usa [la guía](GUIA.md#fastapi-desde-git); los SHA de las evidencias describen ejecuciones históricas.
+
+El [guion final HDU-047](evidencias/s10/guion.md) reúne CRUD, comparación RAG, métricas, logs, nodos Phoenix y el push preparado. El ensayo de consultas pasó y conservó una réplica. Incluye una frase de apoyo por componente; la explicación personal, la demo y la evaluación de Rui siguen pendientes.
+
 El calendario conserva el **receso del 21/12/2026 al 01/01/2027, sin tareas ni recuperación de pendientes dentro de ese período**. La primera acción prevista para el **04/01/2027** es seguir [Arrancar](#arrancar), esperar ambas APIs y comprobar sus health; después consultar a Ana y repetir una pregunta RAG con la [guía de regreso](GUIA.md#retomar-después-del-receso). El ciclo completo desde detenido y la validación humana continúan pendientes; estas fechas son planificación, no una sesión confirmada.
 
 ## Arrancar
@@ -349,7 +353,7 @@ iniciar el perfil genai con 2 CPU, 3072 MiB y Kubernetes 1.36.6:
 
 ## Chart de FastAPI y PostgreSQL
 
-`deploy/helm/fastapi` describe un Deployment de dos réplicas y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. Empezó con una réplica en HDU-040 y pasó a dos desde Git en HDU-043. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
+`deploy/helm/fastapi` describe un Deployment de una réplica y un Service ClusterIP, imagen `genai-fastapi:s09`, puerto 8000 y readiness `GET /health` cada cinco segundos tras una espera inicial de cinco segundos. Pasó a dos desde Git en HDU-043 y volvió a una en HDU-046 para preparar la demo. El alcance Kubernetes es el **CRUD de FastAPI**; el chatbot con sus servicios RAG sigue disponible en [Compose, puerto 8000](http://localhost:8000).
 
 En este equipo, `host.minikube.internal` resolvió a **192.168.65.254**. El chart usa esa IP para PostgreSQL, base `genai`, puerto 5432 y Secret `genai-postgres` en el namespace `genai`. El script de la [guía](GUIA.md#chart-y-conexión-a-postgres) crea o actualiza el Secret desde tu `.env` sin guardar credenciales en el chart. `helm lint` y `helm template` pasaron; un pod temporal ejecutó `SELECT 1` y devolvió 1, y luego se eliminó. Las cuatro filas Python y tres Java se conservaron al cambiar la publicación de PostgreSQL. [Evidencia HDU-040](evidencias/s09/040-helm.md). El despliegue del chart corresponde a HDU-042.
 

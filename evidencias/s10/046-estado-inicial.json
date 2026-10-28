@@ -1,0 +1,197 @@
+{
+    "apiVersion": "argoproj.io/v1alpha1",
+    "kind": "Application",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"argoproj.io/v1alpha1\",\"kind\":\"Application\",\"metadata\":{\"annotations\":{},\"name\":\"fastapi\",\"namespace\":\"argocd\"},\"spec\":{\"destination\":{\"namespace\":\"genai\",\"server\":\"https://kubernetes.default.svc\"},\"project\":\"default\",\"source\":{\"path\":\"deploy/helm/fastapi\",\"repoURL\":\"https://github.com/saico09/GenAIRUIFormacion2026.git\",\"targetRevision\":\"main\"},\"syncPolicy\":{\"automated\":{\"prune\":true,\"selfHeal\":true}}}}\n"
+        },
+        "creationTimestamp": "2026-10-28T19:09:04Z",
+        "generation": 41,
+        "name": "fastapi",
+        "namespace": "argocd",
+        "resourceVersion": "3897",
+        "uid": "ba1e4358-489b-4b1d-ba78-277824668022"
+    },
+    "spec": {
+        "destination": {
+            "namespace": "genai",
+            "server": "https://kubernetes.default.svc"
+        },
+        "project": "default",
+        "source": {
+            "path": "deploy/helm/fastapi",
+            "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+            "targetRevision": "main"
+        },
+        "syncPolicy": {
+            "automated": {
+                "prune": true,
+                "selfHeal": true
+            }
+        }
+    },
+    "status": {
+        "controllerNamespace": "argocd",
+        "health": {
+            "lastTransitionTime": "2026-10-28T19:40:45Z",
+            "status": "Healthy"
+        },
+        "history": [
+            {
+                "deployStartedAt": "2026-10-28T19:09:13Z",
+                "deployedAt": "2026-10-28T19:09:07Z",
+                "id": 0,
+                "initiatedBy": {
+                    "automated": true
+                },
+                "revision": "230a161d585a3106969d57d5103256872f001928",
+                "source": {
+                    "path": "deploy/helm/fastapi",
+                    "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                    "targetRevision": "main"
+                }
+            },
+            {
+                "deployStartedAt": "2026-10-28T19:13:42Z",
+                "deployedAt": "2026-10-28T19:13:43Z",
+                "id": 1,
+                "initiatedBy": {
+                    "username": "admin"
+                },
+                "revision": "230a161d585a3106969d57d5103256872f001928",
+                "source": {
+                    "path": "deploy/helm/fastapi",
+                    "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                    "targetRevision": "main"
+                }
+            },
+            {
+                "deployStartedAt": "2026-10-28T19:20:11Z",
+                "deployedAt": "2026-10-28T19:20:11Z",
+                "id": 2,
+                "initiatedBy": {
+                    "automated": true
+                },
+                "revision": "4844f919647381ee36e27ef0d2cb7f4170408abe",
+                "source": {
+                    "path": "deploy/helm/fastapi",
+                    "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                    "targetRevision": "main"
+                }
+            },
+            {
+                "deployStartedAt": "2026-10-28T19:40:50Z",
+                "deployedAt": "2026-10-28T19:40:45Z",
+                "id": 3,
+                "initiatedBy": {
+                    "automated": true
+                },
+                "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+                "source": {
+                    "path": "deploy/helm/fastapi",
+                    "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                    "targetRevision": "main"
+                }
+            }
+        ],
+        "operationState": {
+            "finishedAt": "2026-10-28T19:40:45Z",
+            "message": "counter cannot decrease in value",
+            "operation": {
+                "initiatedBy": {
+                    "automated": true
+                },
+                "retry": {
+                    "limit": 5
+                },
+                "sync": {
+                    "prune": true,
+                    "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+                    "source": {
+                        "path": "deploy/helm/fastapi",
+                        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                        "targetRevision": "main"
+                    }
+                }
+            },
+            "phase": "Error",
+            "startedAt": "2026-10-28T19:40:50Z",
+            "syncResult": {
+                "resources": [
+                    {
+                        "group": "",
+                        "hookPhase": "Running",
+                        "kind": "Service",
+                        "message": "service/fastapi unchanged",
+                        "name": "fastapi",
+                        "namespace": "genai",
+                        "status": "Synced",
+                        "syncPhase": "Sync",
+                        "version": "v1"
+                    },
+                    {
+                        "group": "apps",
+                        "hookPhase": "Running",
+                        "images": [
+                            "genai-fastapi:s09"
+                        ],
+                        "kind": "Deployment",
+                        "message": "deployment.apps/fastapi configured",
+                        "name": "fastapi",
+                        "namespace": "genai",
+                        "status": "Synced",
+                        "syncPhase": "Sync",
+                        "version": "v1"
+                    }
+                ],
+                "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+                "source": {
+                    "path": "deploy/helm/fastapi",
+                    "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                    "targetRevision": "main"
+                }
+            }
+        },
+        "reconciledAt": "2026-10-28T19:40:43Z",
+        "resourceHealthSource": "appTree",
+        "resources": [
+            {
+                "kind": "Service",
+                "name": "fastapi",
+                "namespace": "genai",
+                "status": "Synced",
+                "version": "v1"
+            },
+            {
+                "group": "apps",
+                "kind": "Deployment",
+                "name": "fastapi",
+                "namespace": "genai",
+                "status": "Synced",
+                "version": "v1"
+            }
+        ],
+        "sourceHydrator": {},
+        "sourceType": "Helm",
+        "summary": {
+            "images": [
+                "genai-fastapi:s09"
+            ]
+        },
+        "sync": {
+            "comparedTo": {
+                "destination": {
+                    "namespace": "genai",
+                    "server": "https://kubernetes.default.svc"
+                },
+                "source": {
+                    "path": "deploy/helm/fastapi",
+                    "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+                    "targetRevision": "main"
+                }
+            },
+            "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+            "status": "Synced"
+        }
+    }
+}

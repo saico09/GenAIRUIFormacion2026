@@ -1,0 +1,21 @@
+{
+  "requested_at": "2026-10-28T19:42:53.7619983Z",
+  "expected_commit": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+  "requested_revision": "main",
+  "method": "Reintento real API Argo CD, mismo commit; sin modificar status",
+  "operation": {
+    "sync": {
+      "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+      "prune": true,
+      "source": {
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "path": "deploy/helm/fastapi",
+        "targetRevision": "main"
+      }
+    },
+    "initiatedBy": {
+      "username": "admin"
+    },
+    "retry": {}
+  }
+}

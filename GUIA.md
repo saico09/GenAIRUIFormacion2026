@@ -864,12 +864,12 @@ registrar el repositorio público en Argo CD:
 .\.local\bin\kubectl.exe --context=genai apply -f deploy/argocd/repositorio.yaml
 ```
 
-comprobar la conexión y el chart en el commit publicado de HDU-040:
+repetir la lectura histórica del chart de HDU-040 (no comprueba el despliegue actual):
 ```powershell
 & 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_repo_argocd.py --commit 1bc6af1235a6d96952334e41685c3acd829b3fed
 ```
 
-El verificador usa la clave inicial en memoria y no la imprime. Comprueba **Successful** y `deploy/helm/fastapi` de tipo Helm; repetirlo regenera `041-repositorio.json`. En la web, ve a **Settings → Repositories**: esa conexión también se comprobó visualmente. [Resultados y captura](evidencias/s09/041-repositorio.md).
+Ese SHA corresponde a la evidencia histórica de conexión; no es una revisión esperada del despliegue actual. El verificador usa la clave inicial en memoria y no la imprime. Comprueba **Successful** y `deploy/helm/fastapi` de tipo Helm; repetirlo regenera `041-repositorio.json`. En la web, ve a **Settings → Repositories**: esa conexión también se comprobó visualmente. [Resultados y captura](evidencias/s09/041-repositorio.md).
 
 El repo es público, así que `repositorio.yaml` no lleva credenciales Git. Los PID/logs del port-forward quedan en `.local`, ignorados por Git. No hay bloqueos activos de lectura Git; el primer error del verificador se corrigió al indicar el proyecto `default`. La Application y el despliegue corresponden a HDU-042.
 
@@ -894,12 +894,19 @@ consultar a Ana en Kubernetes (200):
 curl.exe -i http://localhost:8002/patients/1
 ```
 
-comprobar el commit y las dos réplicas de HDU-043:
+ver el estado actual y la revisión de la última operación de Argo CD:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_gitops.py --commit 4844f919647381ee36e27ef0d2cb7f4170408abe --replicas 2 --output evidencias/s09/043-gitops.json
+.\.local\bin\kubectl.exe --context=genai -n argocd get application fastapi -o 'custom-columns=NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status,REVISION:.status.sync.revision,OPERACION:.status.operationState.phase,REVISION_OPERACION:.status.operationState.syncResult.revision'
 ```
 
-El verificador exige revisión exacta, Synced, Healthy, operación Succeeded y tiempos de inicio/fin coherentes. También exige dos réplicas Ready y la misma Ana en 8002 y 8000. Ojo: regenera `043-gitops.json`; cuando avances a otro commit o número de réplicas, usa sus valores esperados y otro archivo de salida. La prueba histórica de una réplica se conserva en HDU-042.
+ver las réplicas disponibles del Deployment:
+```powershell
+.\.local\bin\kubectl.exe --context=genai -n genai get deployment fastapi
+```
+
+El estado preparado en HDU-046 es **una réplica Ready**. Comprueba Synced/Healthy, pods Ready y el GET de Ana 200. Un push que solo cambia documentación puede actualizar REVISION sin repetir la última operación de escala, por lo que REVISION_OPERACION puede ser anterior. Las [evidencias HDU-043](evidencias/s09/gitops.md) y [HDU-046](evidencias/s10/gitops-preparacion.md) conservan sus SHA históricos; no los uses como expectativas permanentes del estado actual.
+
+`verificar_gitops.py` exige además que la operación Succeeded corresponda al SHA exacto. Úsalo inmediatamente después de un **cambio real de réplicas**, con el SHA nuevo que acabas de publicar, como muestra la [secuencia preparada para la demo](evidencias/s10/gitops-preparacion.md#cambio-preparado-para-la-demo-final). No cambies status ni fuerces una operación solo para hacer coincidir un SHA documental.
 
 Si reaparece **counter cannot decrease in value**:
 
@@ -907,20 +914,20 @@ Si reaparece **counter cannot decrease in value**:
 2. Pulsa **Sync**, selecciona **main** como revisión y confirma la sincronización. En la prueba, pedir el SHA directamente fue rechazado porque auto-sync sigue main.
 3. Espera Synced/Healthy y que la operación indique Succeeded; vuelve a ejecutar el verificador con el commit esperado. No basta con ver el pod funcionando.
 
-Ese reintento pasó para el mismo commit. Se preservaron el error inicial y los tiempos negativos; no se modificaron a mano el status ni los relojes. [Incidencia, reintento y captura final](evidencias/s09/despliegue-inicial.md).
+El error reapareció en HDU-046; el reintento sobre el mismo commit volvió a terminar correctamente. Se preservaron ambos errores y los tiempos negativos, sin modificar status ni relojes. Es una limitación externa recurrente, no una corrección definitiva. [Primer caso](evidencias/s09/despliegue-inicial.md) y [recurrencia, reintento y captura final](evidencias/s10/gitops-preparacion.md).
 
 ## Dos réplicas y reposición
 
-En `deploy/helm/fastapi/values.yaml`, `replicaCount: 2` indica lo que queremos mantener. El commit y push de HDU-043 quedaron sincronizados automáticamente; no se pulsó Sync ni refresh manual para aplicar ese cambio.
+En la prueba histórica HDU-043, `replicaCount: 2` se sincronizó automáticamente desde Git, sin Sync ni refresh manual. HDU-046 lo dejó en **1** para el inicio de la demo; la [secuencia 1→2](evidencias/s10/gitops-preparacion.md#cambio-preparado-para-la-demo-final) queda preparada para ejecutarla después.
 
-ver los pods de FastAPI y comprobar que ambos estén 1/1 Running:
+ver los pods de FastAPI (ahora debe quedar uno, 1/1 Running):
 ```powershell
 .\.local\bin\kubectl.exe --context=genai -n genai get pods -l app=fastapi -o wide
 ```
 
 La prueba eliminó exactamente uno de los dos pods. Kubernetes creó otro con nombre y UID distintos, mantuvo el otro pod y volvió a dejar dos Ready. No hizo falta otro commit: el Deployment ya pedía dos réplicas. El GET final de Ana en 8002 respondió 200. [Cambio desde Git, reposición y captura](evidencias/s09/gitops.md).
 
-Si el túnel estaba ligado al pod eliminado, repite `abrir_fastapi_minikube.ps1` antes de consultar 8002. En el ensayo, el proceso viejo terminó tras fallar la petición y el helper abrió otro; no se probó específicamente su rama Stop-Process. La explicación personal y la revisión de Rui siguen pendientes.
+Si el túnel estaba ligado al pod eliminado, repite `abrir_fastapi_minikube.ps1` antes de consultar 8002. En HDU-043 el proceso viejo había terminado; en HDU-046 sí se ejercitó la recuperación del listener propio sin respuesta y el acceso final volvió a dar 200. La explicación personal y la revisión de Rui siguen pendientes.
 
 ## Repetir la observabilidad
 
@@ -954,6 +961,12 @@ comprobar los ocho accesos locales y guardar el resultado:
 Comprueba FastAPI, Spring Boot, chatbot, Grafana, Phoenix, Argo CD, Loki y Ana en Minikube. Guarda también los fallos y termina con error si alguno no responde correctamente. Ojo: ese comando regenera el JSON; cambia `--output` si quieres conservar la ejecución anterior.
 
 En HDU-044 los ocho accesos devolvieron 200. También pasaron los verificadores CRUD de ambas APIs, conservando cuatro filas Python y tres Java, y la pregunta de Ana mostró ambas respuestas y la fuente de Enfermedad Alfa. [Fallos, correcciones y repeticiones](evidencias/s10/fallos.md). El arranque completo desde detenido continúa sin ejecutar; estas comprobaciones usan el entorno existente.
+
+## Guion final
+
+Abre [el guion de S10](evidencias/s10/guion.md): trae comandos, URLs, resultados esperados y las evidencias HDU-044 a HDU-046. El ensayo de consultas HDU-047 comprobó Ana en los tres accesos, nueve puntos Qdrant, dos targets UP, los eventos LLM, cinco spans y una réplica Ready.
+
+Mantén esa réplica para empezar la demo. El cambio 1→2 queda en un paso separado con commit, push y comprobación del SHA nuevo. Las frases por componente sirven para repasar; explicación propia, sesión y valoración de Rui siguen pendientes.
 
 ## Revisar el equipo
 

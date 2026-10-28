@@ -19,6 +19,8 @@ Se siguió el README sobre el entorno existente, sin detener toda la plataforma.
 
 El túnel Argo anterior ya había terminado al probar la corrección: se comprobaron el arranque nuevo y la reutilización sana, sin reiniciar el clúster para provocar otra interrupción. Los pasos funcionales anteriores quedaron correctos. La [guía](../../GUIA.md#comprobar-el-entorno-completo) deja el verificador de los ocho accesos; estos resultados no cubren las ramas de recuperación que no se ejercitaron.
 
+**Seguimiento HDU-046:** el error del contador de Argo CD reapareció al bajar a una réplica. El reintento real terminó Succeeded y GET 200, pero no elimina el riesgo de recurrencia. El [diagnóstico](046-reloj.md) capturó un retroceso simultáneo de unos 3,3 segundos en el nodo y los componentes de Argo mientras Windows avanzaba; no se identificó el origen del ajuste ni una mitigación preventiva soportada. [Estado inicial, repetición y resultado](gitops-preparacion.md). No se modificaron relojes ni servicios.
+
 ## Pendiente separado del ensayo
 
 El ciclo completo de detener y arrancar toda la plataforma sigue **NO EJECUTADO** por el rechazo automático anterior registrado en HDU-020. Un `compose up` sobre servicios existentes no acredita ese ciclo. Siguiente acción: volver a evaluar ese ensayo solo cuando pueda realizarse con la autorización necesaria; no se vuelve a intentar detener Qdrant como parte de estas comprobaciones. [Registro original](../S05-arranque.md).

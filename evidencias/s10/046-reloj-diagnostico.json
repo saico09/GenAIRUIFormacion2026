@@ -1,0 +1,192 @@
+{
+  "recorded_at": "2026-10-28T19:46:52.182066+00:00",
+  "measurement_origin": "Ocho muestras reales leidas en paralelo mediante subprocess y ThreadPoolExecutor. Se transcriben las salidas capturadas de la medicion de 19:43:50 a 19:44:06 UTC; no son valores simulados.",
+  "scope": "Diagnostico de solo lectura de HDU-046. No se cambian relojes, servicios, configuracion ni imagenes.",
+  "environment": {
+    "docker_os": "Docker Desktop (containerized)",
+    "kernel": "6.18.54.1-microsoft-standard-WSL2",
+    "node": "genai",
+    "controller_pod": "argocd-application-controller-0",
+    "server_pod": "argocd-server-7474bb8f76-2bc46",
+    "controller_count": 1,
+    "controller_restarts": 0,
+    "node_timedatectl": {
+      "CanNTP": "no",
+      "NTP": "no",
+      "NTPSynchronized": "yes"
+    }
+  },
+  "commands": [
+    "kubectl --context=genai -n argocd exec argocd-application-controller-0 -- date -u +%s.%N",
+    "kubectl --context=genai -n argocd exec argocd-server-7474bb8f76-2bc46 -- date -u +%s.%N",
+    "docker exec genai date -u +%s.%N",
+    "minikube --profile=genai ssh -- timedatectl show"
+  ],
+  "measurements": [
+    {
+      "sample": 0,
+      "host_utc_after_measurement": "2026-10-28T19:43:50.875674+00:00",
+      "controller_unix": 1793216625.662667,
+      "server_unix": 1793216625.6626637,
+      "node_unix": 1793216625.5505333
+    },
+    {
+      "sample": 1,
+      "host_utc_after_measurement": "2026-10-28T19:43:53.117488+00:00",
+      "controller_unix": 1793216627.6197133,
+      "server_unix": 1793216627.6251965,
+      "node_unix": 1793216627.5196102,
+      "delta_from_previous_seconds": {
+        "host": 2.242,
+        "controller": 1.957,
+        "server": 1.963,
+        "node": 1.969
+      }
+    },
+    {
+      "sample": 2,
+      "host_utc_after_measurement": "2026-10-28T19:43:55.366162+00:00",
+      "controller_unix": 1793216630.0601945,
+      "server_unix": 1793216630.0823147,
+      "node_unix": 1793216629.967342,
+      "delta_from_previous_seconds": {
+        "host": 2.249,
+        "controller": 2.44,
+        "server": 2.457,
+        "node": 2.448
+      }
+    },
+    {
+      "sample": 3,
+      "host_utc_after_measurement": "2026-10-28T19:43:57.596476+00:00",
+      "controller_unix": 1793216637.5742738,
+      "server_unix": 1793216637.5784266,
+      "node_unix": 1793216637.491477,
+      "delta_from_previous_seconds": {
+        "host": 2.23,
+        "controller": 7.514,
+        "server": 7.496,
+        "node": 7.524
+      }
+    },
+    {
+      "sample": 4,
+      "host_utc_after_measurement": "2026-10-28T19:43:59.817225+00:00",
+      "controller_unix": 1793216634.3072302,
+      "server_unix": 1793216634.3073478,
+      "node_unix": 1793216634.238951,
+      "delta_from_previous_seconds": {
+        "host": 2.221,
+        "controller": -3.267,
+        "server": -3.271,
+        "node": -3.253
+      }
+    },
+    {
+      "sample": 5,
+      "host_utc_after_measurement": "2026-10-28T19:44:02.046752+00:00",
+      "controller_unix": 1793216636.4497173,
+      "server_unix": 1793216636.419628,
+      "node_unix": 1793216636.3225472,
+      "delta_from_previous_seconds": {
+        "host": 2.23,
+        "controller": 2.142,
+        "server": 2.112,
+        "node": 2.084
+      }
+    },
+    {
+      "sample": 6,
+      "host_utc_after_measurement": "2026-10-28T19:44:04.282801+00:00",
+      "controller_unix": 1793216638.9113247,
+      "server_unix": 1793216638.85198,
+      "node_unix": 1793216638.7741463,
+      "delta_from_previous_seconds": {
+        "host": 2.236,
+        "controller": 2.462,
+        "server": 2.432,
+        "node": 2.452
+      }
+    },
+    {
+      "sample": 7,
+      "host_utc_after_measurement": "2026-10-28T19:44:06.503760+00:00",
+      "controller_unix": 1793216640.8104432,
+      "server_unix": 1793216640.8074164,
+      "node_unix": 1793216640.7399902,
+      "delta_from_previous_seconds": {
+        "host": 2.221,
+        "controller": 1.899,
+        "server": 1.955,
+        "node": 1.966
+      }
+    }
+  ],
+  "failed_operation": {
+    "evidence": "046-estado-inicial.json",
+    "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+    "started_at": "2026-10-28T19:40:50Z",
+    "finished_at": "2026-10-28T19:40:45Z",
+    "duration_seconds": -5,
+    "phase": "Error",
+    "message": "counter cannot decrease in value",
+    "retry_limit_already_present": 5
+  },
+  "observed": [
+    "En la muestra 4 Windows avanza 2.221 s mientras controller, servidor y nodo retroceden aproximadamente 3.3 s.",
+    "Controller y servidor estan en el mismo nodo; el controller no se reinicio.",
+    "El log del controller registra exito del sync, panic de IncAppSyncDuration y cambio de estado a Error."
+  ],
+  "inference": "La oscilacion observada del reloj Linux compartido explica la duracion negativa y reproduce el mecanismo del issue oficial 30247. No se identifico el componente que ajusta ese reloj.",
+  "not_established": [
+    "No se atribuye el ajuste a NTP, Docker Desktop o WSL en particular. El kernel WSL2 identifica el entorno, no el proceso causante.",
+    "Una ventana corta sin saltos no demuestra que el reloj haya quedado estable."
+  ],
+  "upstream": {
+    "latest_stable_verified": "v3.5.6",
+    "release_published_at": "2026-10-20T19:26:34Z",
+    "fix_pr_state": "open",
+    "sources": [
+      {
+        "url": "https://github.com/argoproj/argo-cd/issues/30247",
+        "supports": "Mismo fallo: contador de duracion negativa cambia una operacion exitosa a Error."
+      },
+      {
+        "url": "https://github.com/argoproj/argo-cd/pull/30276",
+        "supports": "Correccion propuesta aun abierta; no se instalo codigo no liberado."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/argoproj/argo-cd/v3.5.6/controller/metrics/metrics.go",
+        "supports": "IncAppSyncDuration suma FinishedAt.Unix()-StartedAt.Unix() sin comprobar el signo."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/argoproj/argo-cd/v3.5.6/controller/appcontroller.go",
+        "supports": "El contador se actualiza en setOperationState despues de persistir el resultado; el recover lo convierte a Error. La rama de retry ocurre antes de ese cierre."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/argoproj/argo-cd/v3.5.6/docs/operator-manual/server-commands/argocd-application-controller.md",
+        "supports": "Opciones de metricas revisadas: puerto, etiquetas y expiracion; no hay opcion documentada para proteger esta resta."
+      },
+      {
+        "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/",
+        "supports": "La sincronizacion automatica no vuelve a ejecutar una revision ya Synced o con intento fallido."
+      },
+      {
+        "url": "https://api.github.com/repos/argoproj/argo-cd/releases/latest",
+        "supports": "Ultima version estable v3.5.6 al consultar."
+      }
+    ]
+  },
+  "mitigation": {
+    "supported_operational": "Conservar el fallo, solicitar una sincronizacion real de la misma revision mediante la API normal y verificar Succeeded, tiempos coherentes, replica Ready y GET 200. Root ya ejecuto y comprobo esa recuperacion.",
+    "preventive_configuration": "No se encontro una opcion soportada de Argo CD 3.5.6 que impida este panic sin corregir el reloj o el codigo upstream.",
+    "retry_limits": "No se recomienda subir retry.limit: ya era 5 y el panic sucede fuera de la rama normal de reintentos.",
+    "not_applied": [
+      "Cambios de hora Windows o Docker VM",
+      "Reinicios de Docker o Minikube",
+      "Parche del status de Application",
+      "Imagen de una PR o version inestable",
+      "Delays o hooks artificiales para ocultar la duracion negativa"
+    ]
+  }
+}

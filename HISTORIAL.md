@@ -4,6 +4,23 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## HDU-047 · 28/10/2026 · Guion final y ensayo de consultas
+
+- **Guion en `evidencias/s10/guion.md`**, con comandos, URLs y resultados esperados para CRUD, RAG, métricas, logs, nodos Phoenix y push de réplicas; enlaza HDU-044 a HDU-046.
+- **Consultas ensayadas**: Ana 200 en Python, Java y Minikube; nueve puntos Qdrant; dos targets UP; dos eventos LLM y cinco spans de la misma pregunta. Resultados en `047-ensayo.json`.
+- **Una réplica conservada**, con Argo CD Synced/Healthy y última operación Succeeded. El cambio final 1→2 queda preparado, sin ejecutarlo durante este ensayo.
+- **Una frase de apoyo por componente** para repasar PostgreSQL, Qdrant, Prometheus, Loki, LangGraph, Phoenix y Argo CD.
+- Ojo: esas frases no acreditan una explicación personal. La demo, la evaluación de Rui, el ciclo completo desde detenido y el límite recurrente de Argo CD siguen registrados como pendientes.
+
+## HDU-046 · 28/10/2026 · Una réplica para iniciar la demo
+
+- **Cambio 2→1 publicado desde Git**, commit `f40aefc436a24f427565e00a9a1e54e2ba7ca3b3`; Argo CD lo detectó y aplicó automáticamente.
+- **Error de Argo CD repetido**: contador con duración negativa. Se conservó el estado inicial; un reintento real de main sobre el mismo commit terminó Succeeded, sin modificar status ni relojes.
+- **Estado final comprobado**: Synced/Healthy, un pod Ready y GET de Ana 200 igual a Compose; captura inspeccionada en `evidencias/s10/gitops-preparacion.md`.
+- **Recuperación del túnel FastAPI ejercitada** al escalar: detectó el listener propio sin respuesta, abrió otro y volvió a funcionar.
+- **Cambio futuro 1→2 preparado** con diff, commit, push y comprobación del SHA nuevo. La guía separa esa prueba estricta de las consultas del estado actual y de los SHA históricos.
+- Ojo: se conserva una réplica; la secuencia final no se ejecutó en esta HDU. La incidencia externa puede repetirse; explicación personal y revisión de Rui pendientes.
+
 ## HDU-045 · 28/10/2026 · Reproducir métricas, logs y trazas
 
 - **50 GET en 124,1 segundos**, 20 respuestas 200 y 5 respuestas 404 por API, con hora y duración guardadas; sin modificar pacientes.
