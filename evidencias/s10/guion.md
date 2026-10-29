@@ -10,7 +10,7 @@ Sigue [Arrancar en el README](../../README.md#arrancar) y, si hace falta, los [a
 
 comprobar los ocho accesos y guardar otra ejecución:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_componentes.py --output evidencias/s10/nueva-comprobacion.json
+python scripts/verificar_componentes.py --output evidencias/s10/nueva-comprobacion.json
 ```
 
 Esperado: ocho HTTP 200. [Arranque y correcciones HDU-044](fallos.md). Si falla 8443 o 8002, vuelve a ejecutar su helper según la guía y repite la consulta; conserva el fallo.

@@ -1,6 +1,6 @@
 # GenAI · app de práctica
 
-Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y una comparación de respuestas con y sin RAG. Ollama genera embeddings y respuestas; Qdrant guarda las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para **PowerShell 7** (probados con **7.6.5**), desde esta carpeta `codigo`, con Docker Desktop abierto. El helper de Argo CD usa `-SkipCertificateCheck`, que no está disponible en Windows PowerShell 5.1.
+Por ahora tenemos PostgreSQL, dos servicios de pacientes —FastAPI y Spring Boot— y una comparación de respuestas con y sin RAG. Ollama genera embeddings y respuestas; Qdrant guarda las nueve secciones de las tres historias ficticias. Ambas APIs permiten crear, listar, consultar, editar y borrar pacientes. Los comandos son para **PowerShell 7** (probados con 7.6.5 y 7.6.9; se instala con `winget install --id Microsoft.PowerShell --source winget`) y los `.py` de verificación usan **Python 3** (`python`), desde esta carpeta `codigo`, con Docker Desktop abierto. El helper de Argo CD usa `-SkipCertificateCheck`, que no está disponible en Windows PowerShell 5.1.
 
 [Arrancar](#arrancar) · [Guion final](evidencias/s10/guion.md) · [Resultados y pendientes](evidencias/s10/evaluacion.md) · [Guía de comandos](GUIA.md) · [Qué se ha agregado](HISTORIAL.md) · [Trello](https://trello.com/b/DKjKsa6B/ckd-genairuiformacion2026)
 

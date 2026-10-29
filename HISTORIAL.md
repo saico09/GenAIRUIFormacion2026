@@ -4,6 +4,12 @@ Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos
 
 Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
 
+## Herramientas · 29/10/2026 · PowerShell 7 y Python 3 en tu equipo
+
+- **PowerShell 7.6.9**, instalado con winget (paquete MSIX). Los comandos de la GUIA y de los LEVANTAR van ahí: en Windows PowerShell 5.1 fallaban `preparar_copia.ps1`, `esperar_apis.ps1`, `abrir_argocd.ps1` y las comprobaciones con tildes.
+- **Python 3.15.2**, con Python Install Manager (`python`, `py`). Los `.py` que la GUIA corre en tu equipo usan ahora `python` en vez del Python interno de Codex.
+- Ojo: si ves tildes raras (`├®`) en la salida de un contenedor, pasa la consola a UTF-8 (comando al principio de la GUIA).
+
 ## HDU-048 · 28/10/2026 · Escala final comprobada, evaluación pendiente
 
 - **Preparación técnica comprobada**: ocho accesos HTTP 200, modelos Ollama disponibles, nueve fragmentos Qdrant y una réplica como estado inicial.

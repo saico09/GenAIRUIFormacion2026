@@ -78,7 +78,7 @@ comprobar el acceso local de FastAPI:
 
 esperar ese commit exacto, dos pods Ready y GET de Ana 200:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_gitops.py --commit $revisionDemo --replicas 2 --output evidencias/s10/demo-replicas.json
+python scripts/verificar_gitops.py --commit $revisionDemo --replicas 2 --output evidencias/s10/demo-replicas.json
 ```
 
 ver los dos pods:
@@ -141,7 +141,7 @@ comprobar el acceso local:
 
 verificar el commit nuevo, una réplica Ready y Ana 200:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_gitops.py --commit $revisionPreparacion --replicas 1 --output evidencias/s10/nueva-preparacion.json
+python scripts/verificar_gitops.py --commit $revisionPreparacion --replicas 1 --output evidencias/s10/nueva-preparacion.json
 ```
 
 Con esa comprobación correcta puedes volver al [guion](guion.md) y realizar después el cambio 1→2. Si aparece la incidencia del contador, conserva el resultado y el reintento según la guía; no cambies el status para darlo por terminado.

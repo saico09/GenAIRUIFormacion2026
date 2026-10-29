@@ -1,6 +1,6 @@
 # Guía rápida
 
-Todo se corre desde la carpeta `codigo` (es el repo de Git), en **PowerShell 7**, probado con **7.6.5**. Docker Desktop tiene que estar abierto. La entrada rápida y el contrato HTTP están en [README.md](README.md).
+Todo se corre desde la carpeta `codigo` (es el repo de Git), en **PowerShell 7** (probado con 7.6.5 y 7.6.9; se instala con `winget install --id Microsoft.PowerShell --source winget`). Los `.py` que corren en tu equipo usan **Python 3** con el comando `python` (probado con 3.15.2). Docker Desktop tiene que estar abierto. La entrada rápida y el contrato HTTP están en [README.md](README.md). Ojo: si en la salida de un contenedor ves tildes raras (`├®`), ejecuta una vez en esa terminal `[Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)`.
 
 Para recorrerlo todo usa [el guion final](evidencias/s10/guion.md); [la evaluación](evidencias/s10/evaluacion.md) separa resultados técnicos y revisión humana pendiente. El estado actual de Minikube tiene **dos réplicas**.
 
@@ -475,7 +475,7 @@ probar enfermedad y cirugía desde la página:
 
 cotejar enseguida esos dos casos con los logs recientes de Loki:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_grafo_logs.py evidencias/s08/035-resultados.json --output evidencias/s08/035-correlacion.json
+python scripts/verificar_grafo_logs.py evidencias/s08/035-resultados.json --output evidencias/s08/035-correlacion.json
 ```
 
 El segundo verificador consulta la última hora y exige cuatro eventos `rag_node` en orden, dos eventos `llm` con el mismo modelo y un HTTP 200. Compara la pregunta, las respuestas y las fuentes con el JSON del navegador; todos conservan su request_id. [Resultados y capturas inspeccionadas](evidencias/s08/casos-chatbot.md).
@@ -502,7 +502,7 @@ Desde HDU-037, abre [la traza con los cuatro nodos](http://localhost:6006/redire
 
 enviar una pregunta nueva de Ana y comprobar los cinco spans y siete logs:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_traza.py --prefix hdu037 --output evidencias/s08/037-traza.json
+python scripts/verificar_traza.py --prefix hdu037 --output evidencias/s08/037-traza.json
 ```
 
 El verificador imprime la URL de la nueva traza y compara la cadena de valores: los fragmentos de retrieval entran a prompt, ese prompt entra al LLM y su respuesta llega intacta al último nodo. También comprueba padre, orden, tiempos positivos y coincidencia con Loki. Ojo: reemplaza `037-traza.json`; cambia `--output` para conservar otra ejecución.
@@ -581,7 +581,7 @@ El dashboard vive en `observabilidad/dashboard.json`; Grafana lee sus cambios ca
 
 generar 20 GET válidos y 5 inexistentes por API en unos dos minutos, sin modificar pacientes:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts\generar_trafico.py --output evidencias/s06/nueva-carga.json
+python scripts\generar_trafico.py --output evidencias/s06/nueva-carga.json
 ```
 
 Esa es la ruta Python probada en este equipo; `python` a secas no funciona aquí. El archivo de salida guarda cada petición, status, hora y duración. Cambia `nueva-carga.json` si quieres conservar una ejecución manual anterior.
@@ -670,7 +670,7 @@ docker compose logs --no-log-prefix --since 2m python-api java-api
 
 comprobar GET 200/404 y su request_id en ambos servicios:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_logs.py
+python scripts/verificar_logs.py
 ```
 
 La prueba usa Ana y un id inexistente, conserva los pacientes y exige exactamente un evento por respuesta. Ojo: vuelve a generar `evidencias/s07/logs-apis.txt`. Los resultados y la comprobación aislada de error 500 están en [HDU-030](evidencias/s07/030-logs.md).
@@ -701,7 +701,7 @@ Alloy recoge solo `python-api` y `java-api` de este proyecto y envía sus línea
 
 generar cuatro GET y comprobar sus logs en Loki, sin modificar pacientes:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_loki.py --output evidencias/s07/loki-local.json
+python scripts/verificar_loki.py --output evidencias/s07/loki-local.json
 ```
 
 El verificador espera hasta 60 segundos a que lleguen los logs y guarda consultas, intervalos y eventos. Ojo: repetir ese nombre reemplaza `loki-local.json`; cambia el nombre para conservar una prueba manual anterior. Loki puede necesitar unos segundos para quedar listo al arrancar.
@@ -724,7 +724,7 @@ Con Ollama, la API y Loki encendidos, cada comparación deja dos eventos `llm`, 
 
 preguntar por Ana y cotejar las dos llamadas LLM con la respuesta y los logs:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_llm_logs.py
+python scripts/verificar_llm_logs.py
 ```
 
 Usa `¿Cuál es el diagnóstico de Ana?`, comprueba Alfa con fuente en RAG y compara los prompts, respuestas y duraciones. Ojo: regenera `evidencias/s07/032-llm.json`; ese archivo incluye la consulta LogQL y su intervalo para pegar en Explore, como en el apartado anterior.
@@ -868,7 +868,7 @@ registrar el repositorio público en Argo CD:
 
 repetir la lectura histórica del chart de HDU-040 (no comprueba el despliegue actual):
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_repo_argocd.py --commit 1bc6af1235a6d96952334e41685c3acd829b3fed
+python scripts/verificar_repo_argocd.py --commit 1bc6af1235a6d96952334e41685c3acd829b3fed
 ```
 
 Ese SHA corresponde a la evidencia histórica de conexión; no es una revisión esperada del despliegue actual. El verificador usa la clave inicial en memoria y no la imprime. Comprueba **Successful** y `deploy/helm/fastapi` de tipo Helm; repetirlo regenera `041-repositorio.json`. En la web, ve a **Settings → Repositories**: esa conexión también se comprobó visualmente. [Resultados y captura](evidencias/s09/041-repositorio.md).
@@ -937,14 +937,14 @@ El ensayo HDU-045 hizo 50 GET en 124,1 segundos y comprobó req/s, error % y p95
 
 repetir los 20 GET válidos y 5 inexistentes por API:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/generar_trafico.py --output evidencias/s10/045-peticiones.json
+python scripts/generar_trafico.py --output evidencias/s10/045-peticiones.json
 ```
 
 Al terminar, usa [la comprobación del dashboard](#revisar-el-dashboard) con `EVIDENCE_DIR` en `evidencias/s10` y un prefijo nuevo; revisa el intervalo que contiene tu carga. Los seis paneles deben tener datos numéricos. Sus métricas incluyen health y scrapes; no representan solo tus 50 peticiones.
 
 enviar la pregunta de Ana y comprobar una nueva traza con sus logs:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_traza.py --prefix hdu045 --output evidencias/s10/045-traza.json
+python scripts/verificar_traza.py --prefix hdu045 --output evidencias/s10/045-traza.json
 ```
 
 Abre la URL que imprime el verificador y usa su request_id en Explore, con la fuente Loki. Añade `| event="llm"` al filtro por id para ver las ramas direct y rag con prompt, respuesta y duración. En Phoenix comprueba `retrieval → prompt → llamada_llm → respuesta` bajo `rag`. [Consulta exacta y ejemplo comprobado](evidencias/s10/observabilidad.md#la-misma-pregunta-en-loki-y-phoenix).
@@ -957,7 +957,7 @@ Primero sigue el arranque del README, espera las APIs e inicia Ollama. Para la p
 
 comprobar los ocho accesos locales y guardar el resultado:
 ```powershell
-& 'C:\Users\marco\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' scripts/verificar_componentes.py --output evidencias/s10/044-componentes.json
+python scripts/verificar_componentes.py --output evidencias/s10/044-componentes.json
 ```
 
 Comprueba FastAPI, Spring Boot, chatbot, Grafana, Phoenix, Argo CD, Loki y Ana en Minikube. Guarda también los fallos y termina con error si alguno no responde correctamente. Ojo: ese comando regenera el JSON; cambia `--output` si quieres conservar la ejecución anterior.
