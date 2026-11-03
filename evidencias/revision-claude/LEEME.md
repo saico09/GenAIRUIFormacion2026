@@ -17,8 +17,14 @@ Revisé los archivos reales antes de aplicar las sugerencias. El commit de compa
 
 La escala final comprobada es `3ea28b8d71784e48423a252bb836f661abfc2ee5`. Ambas operaciones pasaron sin el error de duración negativa; esto no identifica ni corrige definitivamente su causa histórica.
 
-Se comprobó un arranque real desde detenido sin ejecutar la parada de Qdrant rechazada anteriormente. La primera consulta de disponibilidad de Loki respondió que aún estaba iniciando; la comprobación posterior pasó. Para el resultado completo, usa `componentes.json` y las pruebas específicas, no el sondeo preliminar `arranque-http.json`.
+Se comprobó un arranque real desde detenido sin ejecutar la parada de Qdrant rechazada anteriormente. La primera consulta de disponibilidad de Loki respondió que aún estaba iniciando; la comprobación posterior pasó. El sondeo preliminar reutilizó por error el estado anterior tras esa respuesta: se corrigió `arranque-http.json` a resultado no válido y se conservó el archivo generado en `arranque-http-original.json`. Para el resultado completo, usa `componentes.json` y las pruebas específicas.
 
 El campo PowerShell de `estado-inicial.json` identifica el host de herramientas 7.6.5. Los helpers se ejecutaron explícitamente con el PowerShell 7.6.9 instalado del usuario. Las capturas de navegador usaron Edge y Playwright del runtime disponible.
 
 La comprensión personal, la demo con Rui y su evaluación siguen pendientes. Estas pruebas técnicas no las reemplazan. Las guías extensas anteriores se conservaron en [documentacion-original](documentacion-original/).
+
+## Al terminar las copias semanales
+
+Se restauraron los nueve servicios principales y Minikube `genai`. FastAPI tuvo un timeout de conexión a PostgreSQL durante el arranque de los pods y el primer túnel falló; se conservó el [error de arranque](fastapi-766cfdc5d5-l5qsj-anterior.txt) y el [error del túnel](restaurar-tunel-primer-error.txt). Una consulta SQL posterior respondió en 20 ms y los dos pods se recuperaron mediante sus reintentos normales, sin cambiar infraestructura ni credenciales. La causa de esa indisponibilidad transitoria no quedó identificada.
+
+La guía ahora espera `rollout status` después de reanudar Minikube y antes de abrir el túnel. Comprobación final: [ocho accesos HTTP 200](estado-final-http.json), [dos pods](estado-final-pods.json), [datos conservados, nueve vectores y dos targets UP](estado-final-datos.json). El chatbot quedó en 8000 y el CRUD de Minikube en 8002.

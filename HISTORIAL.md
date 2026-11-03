@@ -11,6 +11,7 @@ Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describ
 
 - Arranque desde detenido, ambas APIs, datos conservados, RAG y observabilidad comprobados de nuevo; [resultados](evidencias/revision-claude/LEEME.md).
 - GitOps repitió una → dos réplicas por commit/push y auto-sync. Los logs ahora generan una salida nueva por ensayo; `.idea` queda local y fuera de Git.
+- Para reanudar Minikube, la guía espera que FastAPI arranque antes de abrir su túnel.
 
 ## Herramientas · 29/10/2026 · PowerShell y Python
 

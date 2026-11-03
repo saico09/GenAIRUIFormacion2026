@@ -1,0 +1,30 @@
+[
+  {
+    "url": "http://localhost:8000/health",
+    "status": 200
+  },
+  {
+    "url": "http://localhost:8080/health",
+    "status": 200
+  },
+  {
+    "url": "http://localhost:6333/collections",
+    "status": 200
+  },
+  {
+    "url": "http://localhost:9090/-/ready",
+    "status": 200
+  },
+  {
+    "url": "http://localhost:3000/api/health",
+    "status": 200
+  },
+  {
+    "url": "http://localhost:3100/ready",
+    "status": 200
+  },
+  {
+    "url": "http://localhost:6006/",
+    "status": 200
+  }
+]

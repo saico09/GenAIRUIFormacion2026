@@ -1,0 +1,7 @@
+{
+  "sql_select_1": "OK",
+  "elapsed_seconds": 0.02,
+  "checked_at": "2026-11-03T18:17:33.6732791Z",
+  "connection_timeout_seconds": 8,
+  "modifications_before_probe": "ninguna"
+}

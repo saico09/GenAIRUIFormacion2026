@@ -338,6 +338,12 @@ Para reanudar el perfil ya creado:
 .\.local\bin\minikube.exe start -p genai --keep-context --wait=all
 ```
 
+Para esperar que FastAPI termine de arrancar:
+
+```powershell
+.\.local\bin\kubectl.exe --context=genai -n genai rollout status deployment/fastapi --timeout=300s
+```
+
 Para abrir o recuperar Argo CD:
 
 ```powershell

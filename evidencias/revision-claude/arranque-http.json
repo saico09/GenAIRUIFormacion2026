@@ -21,7 +21,11 @@
   },
   {
     "url": "http://localhost:3100/ready",
-    "status": 200
+    "status": null,
+    "original_reported_status": 200,
+    "valid": false,
+    "error_observed": "Ingester not ready: waiting for 15s after being ready",
+    "correction": "El sondeo PowerShell reutilizó la respuesta anterior tras un error no terminante. No se conservó el código HTTP real; 200 no era válido. Loki se comprobó después mediante logs, traza y componentes.json."
   },
   {
     "url": "http://localhost:6006/",
