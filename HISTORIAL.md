@@ -4,7 +4,7 @@ Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describ
 
 ## Conexión directa · 03/11/2026 · PostgreSQL en la red de Minikube
 
-Se reprodujo un fallo del intermediario de Docker Desktop: la misma base respondió por la red Docker y falló por el puerto publicado del host. El chart pasa a `192.168.49.10`; `conectar_postgres_minikube.ps1` conecta solo PostgreSQL a `genai` y `reanudar_minikube.ps1` repite ese paso si hace falta. [Comparación de las dos rutas](evidencias/origen-postgres-2026-11-03/misma-base-rutas-ab.json). El bloqueo del backend de Docker sigue sin corregirse; los helpers nuevos aún requieren su prueba final.
+Se reprodujo el corte en el intermediario de Docker Desktop: la misma base respondió por la red Docker y falló por el puerto publicado del host. Minikube ahora usa `192.168.49.10`; `.\scripts\reanudar_minikube.ps1` asegura esa conexión, incluso si se recrea el contenedor PostgreSQL. Pasaron ocho reemplazos de pods y dos reanudaciones, una con PostgreSQL recreado y su volumen conservado. Docker Desktop se recuperó con el reinicio autorizado; su defecto interno no está identificado. [Pruebas y diagnóstico](evidencias/origen-postgres-2026-11-03/LEEME.md).
 
 ## Reanudación · 03/11/2026 · Minikube y PostgreSQL
 

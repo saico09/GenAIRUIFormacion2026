@@ -1,0 +1,25 @@
+{
+  "observed_at_utc": "2026-11-03T22:15:21Z",
+  "ready": {
+    "url": "http://127.0.0.1:3100/ready",
+    "status": 200,
+    "body": "ready\n"
+  },
+  "ring": {
+    "status": 200,
+    "instance_id": "3d327ea7da24",
+    "state": "ACTIVE",
+    "address": "127.0.0.1:9095",
+    "heartbeat_age_seconds": 9,
+    "tokens": 128,
+    "ownership_percent": 100
+  },
+  "previous_probe": {
+    "file": "componentes-final.json",
+    "checked_at": "2026-11-03T22:14:35.414634+00:00",
+    "reported_error": "HTTP Error 503: Service Unavailable",
+    "body_saved": false
+  },
+  "intervention": "Ninguna: solo GET de readiness/ring y lectura de logs/configuración.",
+  "conclusion": "Loki respondió Ready en la primera comprobación de esta revisión. No se determina la causa exacta del 503 previo porque no se guardó su cuerpo. No se reinició el servicio ni se modificaron configuración o relojes."
+}

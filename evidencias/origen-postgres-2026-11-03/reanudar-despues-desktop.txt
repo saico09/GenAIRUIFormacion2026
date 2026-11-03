@@ -1,0 +1,31 @@
+1/5 Esperando PostgreSQL de Compose...
+ Container genairuiformacion2026-postgres-1  Running
+ Container genairuiformacion2026-postgres-1  Waiting
+ Container genairuiformacion2026-postgres-1  Healthy
+PostgreSQL conectado directamente a Minikube: 192.168.49.10:5432.
+2/5 Reanudando el perfil genai...
+* [genai] minikube v1.39.0 on Microsoft Windows 11 Home Single Language 25H2
+* Kubernetes 1.37.0 is now available. If you would like to upgrade, specify: --kubernetes-version=v1.37.0
+* Using the docker driver based on existing profile
+* Starting "genai" primary control-plane node in "genai" cluster
+* Pulling base image v0.0.51 ...
+* Preparing Kubernetes v1.36.6 on containerd 2.3.4 ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: storage-provisioner, default-storageclass
+* To connect to this cluster, use:  --context=genai
+3/5 Comprobando SQL desde un pod temporal del perfil...
+pod/postgres-reanudar-abc643f7a5094109a36d270a2c32949a created
+pod/postgres-reanudar-abc643f7a5094109a36d270a2c32949a condition met
+SQL desde Minikube: SELECT 1 = 1.
+pod "postgres-reanudar-abc643f7a5094109a36d270a2c32949a" deleted from genai namespace
+4/5 Esperando las replicas deseadas de FastAPI...
+deployment "fastapi" successfully rolled out
+5/5 Abriendo los accesos locales...
+deployment "argocd-server" successfully rolled out
+Argo CD disponible mediante port-forward: https://localhost:8443
+Esperando que FastAPI este disponible antes de abrir el tunel...
+deployment "fastapi" successfully rolled out
+FastAPI disponible mediante port-forward: http://localhost:8002
+OK: 2 replicas Ready y GET /patients = 200.
+CRUD: http://localhost:8002/patients | Argo CD: https://localhost:8443

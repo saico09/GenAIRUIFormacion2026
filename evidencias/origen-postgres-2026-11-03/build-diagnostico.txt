@@ -1,0 +1,36 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 29B 0.0s
+#1 transferring dockerfile: 118B 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/postgres:18.6-alpine
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.2s
+
+#4 [1/2] FROM docker.io/library/postgres:18.6-alpine@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5
+#4 resolve docker.io/library/postgres:18.6-alpine@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5 0.0s done
+#4 DONE 0.3s
+
+#5 [2/2] RUN apk add --no-cache tcpdump
+#5 5.029 (1/2) Installing libpcap (1.10.7-r0)
+#5 5.429 (2/2) Installing tcpdump (4.99.6-r1)
+#5 12.56 Executing busybox-1.37.0-r31.trigger
+#5 12.66 OK: 230.4 MiB in 55 packages
+#5 DONE 12.8s
+
+#6 exporting to image
+#6 exporting layers
+#6 exporting layers 0.2s done
+#6 exporting manifest sha256:56813dd0d087e0a3b7a4d1e0ca3d87300be16b7174f49d3a9c4f5ce612f87074 0.0s done
+#6 exporting config sha256:111abeefb49ad6fbfc179e4606d548f4898979b5eb3528ac7089b9c1b488df68 0.0s done
+#6 exporting attestation manifest sha256:3d674da13072a52a253670facc80407f3c431d0cf1aa0e9c2bcdd9804bb42350 0.0s done
+#6 exporting manifest list sha256:2afa746a2732d37584f068c9133046632740b7510b0b98e5c737b42b5581c147 0.0s done
+#6 naming to docker.io/library/genai-diag-tcp:20261103 done
+#6 unpacking to docker.io/library/genai-diag-tcp:20261103 0.1s done
+#6 DONE 0.5s

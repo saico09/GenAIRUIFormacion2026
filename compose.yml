@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:?falta POSTGRES_USER en .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD en .env}
     ports:
-      # HDU-040: permite conectar los pods de Minikube al PostgreSQL del host.
+      # Acceso desde herramientas del host; Minikube usa la red genai directamente.
       - "5432:5432"
     volumes:
       # Desde PostgreSQL 18 el volumen se monta en /var/lib/postgresql (no en .../data)

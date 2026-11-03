@@ -1,0 +1,182 @@
+{
+  "started_at": "2026-11-03T22:16:25.375167+00:00",
+  "mode": "Solo lectura; sin mutaciones de servicios ni datos.",
+  "canonical_hash": "SHA-256 de UTF-8 JSON de la lista completa ordenada por id; claves ordenadas, ensure_ascii=False, separators=(coma,dos_puntos), allow_nan=False. No se guardan cuerpos de pacientes.",
+  "http": {
+    "python_health": {
+      "url": "http://localhost:8000/health",
+      "read_at": "2026-11-03T22:16:25.376470+00:00",
+      "status": 200,
+      "health_status": "ok",
+      "duration_ms": 2222.98
+    },
+    "python_patients": {
+      "url": "http://localhost:8000/patients",
+      "read_at": "2026-11-03T22:16:25.377651+00:00",
+      "status": 200,
+      "count": 4,
+      "sha256_canonical": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9",
+      "fields": [
+        "birth_date",
+        "email",
+        "id",
+        "name"
+      ],
+      "duration_ms": 2231.05
+    },
+    "java_health": {
+      "url": "http://localhost:8080/health",
+      "read_at": "2026-11-03T22:16:25.378157+00:00",
+      "status": 200,
+      "health_status": "ok",
+      "duration_ms": 2215.23
+    },
+    "java_patients": {
+      "url": "http://localhost:8080/patients",
+      "read_at": "2026-11-03T22:16:25.378719+00:00",
+      "status": 200,
+      "count": 3,
+      "sha256_canonical": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "fields": [
+        "birth_date",
+        "email",
+        "id",
+        "name"
+      ],
+      "duration_ms": 2239.78
+    },
+    "kubernetes_health": {
+      "url": "http://localhost:8002/health",
+      "read_at": "2026-11-03T22:16:25.379188+00:00",
+      "status": 200,
+      "health_status": "ok",
+      "duration_ms": 2222.18
+    },
+    "kubernetes_patients": {
+      "url": "http://localhost:8002/patients",
+      "read_at": "2026-11-03T22:16:25.380285+00:00",
+      "status": 200,
+      "count": 4,
+      "sha256_canonical": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9",
+      "fields": [
+        "birth_date",
+        "email",
+        "id",
+        "name"
+      ],
+      "duration_ms": 2225.48
+    },
+    "qdrant_points": {
+      "url": "http://localhost:6333/collections/historias/points/count",
+      "read_at": "2026-11-03T22:16:25.381466+00:00",
+      "status": 200,
+      "count": 9,
+      "duration_ms": 2298.64
+    }
+  },
+  "kubernetes": {
+    "deployment": {
+      "read_at": "2026-11-03T22:16:25.382450+00:00",
+      "ok": true,
+      "value": {
+        "name": "fastapi",
+        "uid": "8aa075bb-0592-4428-a591-5629223ad57c",
+        "generation": 8,
+        "observedGeneration": 8,
+        "desired": 2,
+        "replicas": 2,
+        "ready": 2,
+        "available": 2,
+        "images": [
+          "genai-fastapi:s09-reanudacion-20261103"
+        ]
+      }
+    },
+    "pods": {
+      "read_at": "2026-11-03T22:16:25.504983+00:00",
+      "ok": true,
+      "value": [
+        {
+          "name": "fastapi-79c45bb9cf-2wxfj",
+          "uid": "f1aceda5-a6e2-456b-8191-7216f32871ef",
+          "node": "genai",
+          "deleting": false,
+          "phase": "Running",
+          "podIP": "10.244.0.5",
+          "ready": true,
+          "containers": [
+            {
+              "name": "fastapi",
+              "image": "docker.io/library/genai-fastapi:s09-reanudacion-20261103",
+              "imageID": "sha256:d4b0698a026463bdee8a9c82d6ece5309167a32c72d7c9b6cf16ab71d11ef905",
+              "ready": true,
+              "restarts": 2,
+              "state": [
+                "running"
+              ],
+              "last_exit_code": 255,
+              "last_reason": "Unknown"
+            }
+          ]
+        },
+        {
+          "name": "fastapi-79c45bb9cf-tpnwx",
+          "uid": "43164805-cd96-4657-bcc2-464ca1dc4248",
+          "node": "genai",
+          "deleting": false,
+          "phase": "Running",
+          "podIP": "10.244.0.2",
+          "ready": true,
+          "containers": [
+            {
+              "name": "fastapi",
+              "image": "docker.io/library/genai-fastapi:s09-reanudacion-20261103",
+              "imageID": "sha256:d4b0698a026463bdee8a9c82d6ece5309167a32c72d7c9b6cf16ab71d11ef905",
+              "ready": true,
+              "restarts": 2,
+              "state": [
+                "running"
+              ],
+              "last_exit_code": 255,
+              "last_reason": "Unknown"
+            }
+          ]
+        }
+      ]
+    },
+    "argocd": {
+      "read_at": "2026-11-03T22:16:25.518612+00:00",
+      "ok": true,
+      "value": {
+        "name": "fastapi",
+        "sync": "Synced",
+        "revision": "07d0ba315a7c76f4816dd0d35e42a76963213b1c",
+        "health": "Healthy",
+        "operation_phase": "Succeeded",
+        "operation_started": "2026-11-03T22:07:10Z",
+        "operation_finished": "2026-11-03T22:07:11Z",
+        "operation_revision": "07d0ba315a7c76f4816dd0d35e42a76963213b1c",
+        "target_revision": "main"
+      }
+    },
+    "service": {
+      "read_at": "2026-11-03T22:16:25.519405+00:00",
+      "ok": true,
+      "value": {
+        "name": "fastapi",
+        "type": "ClusterIP",
+        "clusterIP": "10.103.117.86",
+        "ports": [
+          {
+            "name": "http",
+            "port": 8000,
+            "protocol": "TCP",
+            "targetPort": "http"
+          }
+        ]
+      }
+    }
+  },
+  "finished_at": "2026-11-03T22:16:27.680842+00:00",
+  "patient_hash_matches_python_k8s": true
+}

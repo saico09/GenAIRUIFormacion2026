@@ -1,0 +1,6 @@
+ Container genairuiformacion2026-postgres-1  Recreate
+ Container genairuiformacion2026-postgres-1  Recreated
+ Container genairuiformacion2026-postgres-1  Starting
+ Container genairuiformacion2026-postgres-1  Started
+ Container genairuiformacion2026-postgres-1  Waiting
+ Container genairuiformacion2026-postgres-1  Healthy

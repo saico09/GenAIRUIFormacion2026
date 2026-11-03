@@ -1,0 +1,20 @@
+[
+  {
+    "output": null,
+    "error": null,
+    "completed_in_8s": false,
+    "name": "docker-default"
+  },
+  {
+    "output": null,
+    "error": null,
+    "completed_in_8s": false,
+    "name": "docker-desktop"
+  },
+  {
+    "output": "WSL_OK\n",
+    "error": null,
+    "completed_in_8s": true,
+    "name": "wsl-read"
+  }
+]

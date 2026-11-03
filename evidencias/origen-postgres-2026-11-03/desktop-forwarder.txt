@@ -1,0 +1,647 @@
+# Observacion de Docker Desktop; solo metadatos del forwarder 192.168.65.254:5432.
+# Inicio observador UTC: 2026-11-03T21:34:13.316549+00:00
+[2026-11-03T21:32:05.334467500Z] [21:32:05.324040700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58442: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.334974400Z] [21:32:05.330820600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58398: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.334974400Z] [21:32:05.331362500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58450: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.334974400Z] [21:32:05.332377900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58450: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.334974400Z] [21:32:05.332889500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58394: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.334974400Z] [21:32:05.333457300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58460: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.335598600Z] [21:32:05.334974400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58460: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.408771200Z] [21:32:05.408771200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58464: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.408771200Z] [21:32:05.408771200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58406: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.409963900Z] [21:32:05.409963900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58464: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.412201900Z] [21:32:05.412201900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58426: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.412759100Z] [21:32:05.412759100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58478: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.413848400Z] [21:32:05.413848400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58478: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.416633200Z] [21:32:05.416095000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58414: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.417152000Z] [21:32:05.416633200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58490: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.417688300Z] [21:32:05.417688300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58490: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.418227600Z] [21:32:05.417688300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58430: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.420351500Z] [21:32:05.420351500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58494: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.421844500Z] [21:32:05.421844500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58494: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.431066800Z] [21:32:05.430527200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58504: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.431066800Z] [21:32:05.431066800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58442: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.432189100Z] [21:32:05.432189100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58504: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.433232900Z] [21:32:05.433232900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58440: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.433772100Z] [21:32:05.433232900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58510: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.434319400Z] [21:32:05.434319400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58510: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.500598200Z] [21:32:05.500016500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58450: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.504464400Z] [21:32:05.504464400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58516: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.505780900Z] [21:32:05.505780900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58460: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.505780900Z] [21:32:05.505780900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58516: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:05.506202900Z] [21:32:05.505780900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58522: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.507253000Z] [21:32:05.506712000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58522: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.516645900Z] [21:32:05.516645900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58478: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.517712100Z] [21:32:05.517168500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58530: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.518830400Z] [21:32:05.518229300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58530: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.518830400Z] [21:32:05.518830400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58536: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.519353800Z] [21:32:05.518830400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58464: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.519703700Z] [21:32:05.519703700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58536: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.590912400Z] [21:32:05.590912400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58490: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.592736200Z] [21:32:05.592152500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58546: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.594213100Z] [21:32:05.593703000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58546: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.597906800Z] [21:32:05.597495000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58494: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.599267500Z] [21:32:05.598666300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58558: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.599869900Z] [21:32:05.599869900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58558: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.610931700Z] [21:32:05.610409400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58504: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.610931700Z] [21:32:05.610931700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58560: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.612005800Z] [21:32:05.612005800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58560: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.614186500Z] [21:32:05.613618200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58568: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.614186500Z] [21:32:05.613618200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58516: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.615247200Z] [21:32:05.614727300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58568: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.618212700Z] [21:32:05.617865500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58576: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.618212700Z] [21:32:05.618212700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58522: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.619867800Z] [21:32:05.619867800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58576: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.620996600Z] [21:32:05.620996600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58584: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.623388500Z] [21:32:05.623388500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58584: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:05.623388500Z] [21:32:05.623388500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58536: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.681867000Z] [21:32:05.681867000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58510: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.682915000Z] [21:32:05.682915000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58594: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.684481000Z] [21:32:05.684481000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58594: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.691935600Z] [21:32:05.691413000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58530: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.691935600Z] [21:32:05.691935600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58600: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.692459300Z] [21:32:05.692459300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58604: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.693114500Z] [21:32:05.693114500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58546: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.693620800Z] [21:32:05.693620800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58600: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:05.693620800Z] [21:32:05.693620800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58604: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.704872300Z] [21:32:05.704872300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58560: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.706446500Z] [21:32:05.705928600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58608: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.706961800Z] [21:32:05.706961800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58558: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.706961800Z] [21:32:05.706961800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58608: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:05.706961800Z] [21:32:05.706961800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58616: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.708044000Z] [21:32:05.708044000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58616: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.712824500Z] [21:32:05.712824500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58584: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.712824500Z] [21:32:05.712824500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58630: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.714281500Z] [21:32:05.714281500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58630: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.776394800Z] [21:32:05.775766500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58638: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.777042200Z] [21:32:05.777042200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58576: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.777042200Z] [21:32:05.777042200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58638: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.786097600Z] [21:32:05.786097600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58568: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.786606100Z] [21:32:05.786606100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58646: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.787750000Z] [21:32:05.787750000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58646: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.791999300Z] [21:32:05.791999300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58594: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.866257700Z] [21:32:05.866257700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58656: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.867334600Z] [21:32:05.867334600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58656: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.871980000Z] [21:32:05.871045900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58600: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.871980000Z] [21:32:05.871571900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58664: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.872492500Z] [21:32:05.872492500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58664: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.879999000Z] [21:32:05.879424000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58604: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.883694800Z] [21:32:05.883173100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58666: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.884926100Z] [21:32:05.884926100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58666: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.885447300Z] [21:32:05.885447300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58630: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.885447300Z] [21:32:05.885447300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58672: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.886774800Z] [21:32:05.886774800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58684: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.887298300Z] [21:32:05.887298300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58672: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.887826400Z] [21:32:05.887298300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58684: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:05.887826400Z] [21:32:05.887298300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58608: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.889751100Z] [21:32:05.889751100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58616: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.892469200Z] [21:32:05.891933300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58688: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.893538600Z] [21:32:05.893002700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58688: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.897558300Z] [21:32:05.897230300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58638: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.898100900Z] [21:32:05.897558300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58698: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.898943200Z] [21:32:05.898405300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58698: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.908175800Z] [21:32:05.906894300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58646: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.959997800Z] [21:32:05.959417500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58704: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.962136500Z] [21:32:05.962136500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58716: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.965139200Z] [21:32:05.964538600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58656: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.965660500Z] [21:32:05.965139200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58716: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:05.965660500Z] [21:32:05.965660500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58704: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.973990500Z] [21:32:05.972385700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58730: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.973990500Z] [21:32:05.973150000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58664: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.974991800Z] [21:32:05.974410000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58730: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.980039900Z] [21:32:05.980039900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58666: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.981122200Z] [21:32:05.981122200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58734: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.982258300Z] [21:32:05.982258300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58734: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.053191000Z] [21:32:06.052665000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58736: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.053620000Z] [21:32:06.053620000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58672: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.054125500Z] [21:32:06.054125500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58738: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.054125500Z] [21:32:06.054125500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58736: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.054125500Z] [21:32:06.054125500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58688: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.054658600Z] [21:32:06.054658600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58738: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.063787600Z] [21:32:06.063123400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58684: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.064312400Z] [21:32:06.064312400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58744: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.065934900Z] [21:32:06.065393400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58744: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.070923800Z] [21:32:06.070386100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58746: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.071553800Z] [21:32:06.070923800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58698: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.072110500Z] [21:32:06.072110500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58730: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.072635200Z] [21:32:06.072635200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58746: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:06.072635200Z] [21:32:06.072635200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58756: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.074154500Z] [21:32:06.074154500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58756: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.083479500Z] [21:32:06.082846600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58716: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.143066600Z] [21:32:06.142541500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58762: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.144109900Z] [21:32:06.144109900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58762: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.144661800Z] [21:32:06.144661800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58704: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.146232600Z] [21:32:06.146232600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58766: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.148839500Z] [21:32:06.148322100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58766: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.151111700Z] [21:32:06.150565300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58774: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.153290800Z] [21:32:06.151111700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58734: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.153807800Z] [21:32:06.153807800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58774: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.162760400Z] [21:32:06.162760400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58736: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.163277400Z] [21:32:06.163277400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58788: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.165105000Z] [21:32:06.164263700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58788: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.238792400Z] [21:32:06.237728600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58796: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.238792400Z] [21:32:06.238275300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58738: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.241214700Z] [21:32:06.240205400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58812: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.241214700Z] [21:32:06.240205400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58796: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:06.241214700Z] [21:32:06.240205400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58746: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.242270000Z] [21:32:06.241723100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58812: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.242270000Z] [21:32:06.241723100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58814: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.244630600Z] [21:32:06.243060800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58744: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.244630600Z] [21:32:06.243576800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58814: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.246166000Z] [21:32:06.246166000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58828: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.246166000Z] [21:32:06.246166000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58756: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.246870800Z] [21:32:06.246870800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58828: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.248424900Z] [21:32:06.248424900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58762: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.249478800Z] [21:32:06.248424900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58840: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.250005300Z] [21:32:06.250005300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58840: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.256908100Z] [21:32:06.256390500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58766: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.258013400Z] [21:32:06.257429700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58856: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.259092200Z] [21:32:06.259092200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58856: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.268943400Z] [21:32:06.268943400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58872: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.268943400Z] [21:32:06.268943400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58796: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.269990600Z] [21:32:06.269464600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58872: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.329190600Z] [21:32:06.329190600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58880: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.329190600Z] [21:32:06.329190600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58774: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.330326300Z] [21:32:06.330326300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58880: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.344336800Z] [21:32:06.344336800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58788: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.345478800Z] [21:32:06.345478800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58888: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.346646200Z] [21:32:06.346127300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58888: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.346646200Z] [21:32:06.346646200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58856: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.347167000Z] [21:32:06.346646200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58902: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.347685000Z] [21:32:06.347685000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58902: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.426033400Z] [21:32:06.425310400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58828: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.426033400Z] [21:32:06.425310400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58918: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.427116800Z] [21:32:06.427116800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58918: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.428807600Z] [21:32:06.428210800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58872: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.429313600Z] [21:32:06.428807600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58922: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.430429100Z] [21:32:06.430429100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58840: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.431039100Z] [21:32:06.430729800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58924: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.431947500Z] [21:32:06.431645200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58934: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.432512400Z] [21:32:06.431947500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58922: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:06.432512400Z] [21:32:06.431947500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58938: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.433069400Z] [21:32:06.432512400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58934: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.433069400Z] [21:32:06.433069400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58924: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:06.433069400Z] [21:32:06.433069400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58814: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.433069400Z] [21:32:06.433069400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58940: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.433069400Z] [21:32:06.433069400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58888: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.433069400Z] [21:32:06.433069400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58938: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.433688500Z] [21:32:06.433688500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58812: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.434242600Z] [21:32:06.433688500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58940: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.440321500Z] [21:32:06.440321500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58880: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.440321500Z] [21:32:06.440321500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58946: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.441756900Z] [21:32:06.441756900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58946: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.450620800Z] [21:32:06.450620800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58952: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.450620800Z] [21:32:06.450620800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58902: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.451660500Z] [21:32:06.451660500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58952: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.523763000Z] [21:32:06.522962900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58966: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.523763000Z] [21:32:06.523763000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58922: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.525091100Z] [21:32:06.525091100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58966: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.527794800Z] [21:32:06.527253300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58978: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.527794800Z] [21:32:06.527253300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58934: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.528798500Z] [21:32:06.528798500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58978: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.531534100Z] [21:32:06.531534100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58938: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.531534100Z] [21:32:06.531534100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58980: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.533127900Z] [21:32:06.533127900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58980: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.605542700Z] [21:32:06.605542700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58946: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.606096000Z] [21:32:06.605542700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58986: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.607096100Z] [21:32:06.607096100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58986: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.607096100Z] [21:32:06.607096100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58918: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.607096100Z] [21:32:06.607096100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58994: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.609983400Z] [21:32:06.609983400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58994: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.613465900Z] [21:32:06.613465900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59006: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.614887100Z] [21:32:06.614379300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58924: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.615432000Z] [21:32:06.614887100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59020: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.615432000Z] [21:32:06.615432000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59006: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.615432000Z] [21:32:06.615432000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58940: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.615979500Z] [21:32:06.615979500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59020: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.617058700Z] [21:32:06.617058700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58952: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.619181800Z] [21:32:06.618661400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59036: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.620227200Z] [21:32:06.619706600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59036: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.643377200Z] [21:32:06.643377200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58986: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.643377200Z] [21:32:06.643377200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59044: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.644451100Z] [21:32:06.643919500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59060: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.644451100Z] [21:32:06.644451100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59036: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.644451100Z] [21:32:06.644451100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59044: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:06.644986800Z] [21:32:06.644986800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59060: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.696373700Z] [21:32:06.696373700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58978: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.696890300Z] [21:32:06.696890300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59074: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.697412100Z] [21:32:06.696890300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59088: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.698483900Z] [21:32:06.698483900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59074: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.698840100Z] [21:32:06.698483900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59088: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:06.698840100Z] [21:32:06.698840100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58980: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.712362000Z] [21:32:06.711841800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58966: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.712362000Z] [21:32:06.712362000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59098: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.712884500Z] [21:32:06.712884500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59098: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.713907600Z] [21:32:06.713907600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59006: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.713907600Z] [21:32:06.713907600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59112: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.714934600Z] [21:32:06.714421000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59112: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.716789200Z] [21:32:06.716789200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58994: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.789969700Z] [21:32:06.789453000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59114: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.790506500Z] [21:32:06.790506500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59114: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.791123700Z] [21:32:06.791123700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59020: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.791123700Z] [21:32:06.791123700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59124: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.792136700Z] [21:32:06.792136700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59124: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.800306600Z] [21:32:06.800306600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59044: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.803663500Z] [21:32:06.803126700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59136: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.803663500Z] [21:32:06.803126700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59152: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.803663500Z] [21:32:06.803663500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59136: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.803663500Z] [21:32:06.803663500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59074: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.805177900Z] [21:32:06.804671700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59152: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.809857500Z] [21:32:06.809284900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59060: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.809857500Z] [21:32:06.809284900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59162: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.810903800Z] [21:32:06.810903800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59162: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.817017000Z] [21:32:06.816694400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59088: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.817017000Z] [21:32:06.817017000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59164: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.818057800Z] [21:32:06.818057800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59164: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.819625400Z] [21:32:06.819625400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59098: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.819625400Z] [21:32:06.819625400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59168: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.820742800Z] [21:32:06.820742800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59168: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.884548800Z] [21:32:06.883709300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59112: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.886145600Z] [21:32:06.885609800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59172: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.888838900Z] [21:32:06.887819700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59172: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.892073700Z] [21:32:06.891537200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59124: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.893159900Z] [21:32:06.893159900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59186: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.894215200Z] [21:32:06.894215200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59186: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.977291600Z] [21:32:06.976609500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59190: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.977655700Z] [21:32:06.977655700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59114: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.979359500Z] [21:32:06.978163300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59192: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.979359500Z] [21:32:06.978686100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59190: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.979359500Z] [21:32:06.978686100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59152: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.980686800Z] [21:32:06.979886500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59192: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.983315000Z] [21:32:06.981207200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59206: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.983315000Z] [21:32:06.981726300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59168: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.983315000Z] [21:32:06.983315000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59206: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.983315000Z] [21:32:06.983315000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59136: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.984945500Z] [21:32:06.984360700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59222: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.986089600Z] [21:32:06.985491100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59222: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:06.986089600Z] [21:32:06.986089600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59164: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.987557700Z] [21:32:06.987013800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59238: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.987557700Z] [21:32:06.987557700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59162: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:06.988095600Z] [21:32:06.988095600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59250: dialing 192.168.65.254:5432
+[2026-11-03T21:32:06.988095600Z] [21:32:06.988095600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59238: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:06.989154300Z] [21:32:06.989154300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59250: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.003308200Z] [21:32:07.003308200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59172: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.003308200Z] [21:32:07.003308200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59264: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.004367600Z] [21:32:07.004367600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59264: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.071601000Z] [21:32:07.071082800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59190: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.072849400Z] [21:32:07.072297500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59280: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.073151600Z] [21:32:07.073151600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59280: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.081012700Z] [21:32:07.081012700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59296: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.081546000Z] [21:32:07.081546000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59186: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.082161800Z] [21:32:07.082161800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59296: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.085968800Z] [21:32:07.085443600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59206: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.157678500Z] [21:32:07.157678500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59298: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.158749400Z] [21:32:07.158749400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59298: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.159692800Z] [21:32:07.159692800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59192: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.160343300Z] [21:32:07.160343300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59308: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.161945800Z] [21:32:07.161419600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59308: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.163048900Z] [21:32:07.162523600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59238: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.163048900Z] [21:32:07.163048900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59318: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.164939500Z] [21:32:07.164939500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59318: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.165872900Z] [21:32:07.165872900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59328: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.165872900Z] [21:32:07.165872900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59222: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.167036400Z] [21:32:07.167036400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59328: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.169173300Z] [21:32:07.169173300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59250: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.169709200Z] [21:32:07.169173300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59340: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.172747400Z] [21:32:07.172747400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59356: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.172747400Z] [21:32:07.172747400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59340: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.173254800Z] [21:32:07.172747400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59264: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.173981300Z] [21:32:07.173254800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59356: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.179195800Z] [21:32:07.179195800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59280: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.179728700Z] [21:32:07.179195800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59368: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.180797100Z] [21:32:07.180254600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59368: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.251449700Z] [21:32:07.250918400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59370: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.251844800Z] [21:32:07.251844800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59298: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.252888500Z] [21:32:07.252888500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59370: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.260350200Z] [21:32:07.260350200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59296: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.260886300Z] [21:32:07.260350200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59382: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.261996600Z] [21:32:07.261996600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59382: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.263177500Z] [21:32:07.262648100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59392: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.263706600Z] [21:32:07.263177500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59328: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.264226400Z] [21:32:07.264226400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59392: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.264793000Z] [21:32:07.264793000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59318: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.265336900Z] [21:32:07.265336900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59404: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.266412800Z] [21:32:07.265862500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59404: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.270996500Z] [21:32:07.270996500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59340: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.272070200Z] [21:32:07.272070200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59416: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.273180200Z] [21:32:07.272599600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59416: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.276741000Z] [21:32:07.276164900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59422: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.276741000Z] [21:32:07.276741000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59356: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.277801300Z] [21:32:07.277801300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59422: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.342620200Z] [21:32:07.342093800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59308: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.342620200Z] [21:32:07.342620200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59438: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.343670100Z] [21:32:07.343137600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59438: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.343670100Z] [21:32:07.343670100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59450: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.345806000Z] [21:32:07.343670100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59368: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.347409500Z] [21:32:07.347409500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59450: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.357646600Z] [21:32:07.357120700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59404: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.359419500Z] [21:32:07.357646600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59464: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.359419500Z] [21:32:07.359419500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59464: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.360480400Z] [21:32:07.360480400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59382: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.362597400Z] [21:32:07.362597400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59478: dialing 192.168.65.254:5432
+[2026-11-03T21:32:07.364189100Z] [21:32:07.363653300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59478: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:07.367050400Z] [21:32:07.367050400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59392: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.435377600Z] [21:32:07.434749600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59416: close with 1000 bytes transferred (21 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.440911400Z] [21:32:07.440911400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59450: close with 1000 bytes transferred (20 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.442529800Z] [21:32:07.442006400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59370: close with 1000 bytes transferred (19 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.447780000Z] [21:32:07.446934600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59422: close with 1000 bytes transferred (18 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.451933100Z] [21:32:07.451408500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59438: close with 1000 bytes transferred (17 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.458156700Z] [21:32:07.457638700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59478: close with 1000 bytes transferred (16 remaining in-progress TCP connections)
+[2026-11-03T21:32:07.459935600Z] [21:32:07.459416500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59464: close with 1000 bytes transferred (15 remaining in-progress TCP connections)
+[2026-11-03T21:32:03.878695300Z] [21:32:03.878695300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57602: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.879203300Z] [21:32:03.879203300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57604: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.879203300Z] [21:32:03.879203300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57602: dial succeeded (17 in-progress TCP connections)
+[2026-11-03T21:32:03.879749000Z] [21:32:03.879749000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57604: dial succeeded (18 in-progress TCP connections)
+[2026-11-03T21:32:03.880289000Z] [21:32:03.880289000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57612: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.880811100Z] [21:32:03.880811100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57612: dial succeeded (19 in-progress TCP connections)
+[2026-11-03T21:32:03.882418600Z] [21:32:03.882418600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57626: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.884208600Z] [21:32:03.884208600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57626: dial succeeded (20 in-progress TCP connections)
+[2026-11-03T21:32:03.884208600Z] [21:32:03.884208600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57632: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.885372800Z] [21:32:03.885372800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57632: dial succeeded (21 in-progress TCP connections)
+[2026-11-03T21:32:03.885959000Z] [21:32:03.885959000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57646: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.887331300Z] [21:32:03.887331300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57646: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:32:03.929306700Z] [21:32:03.929306700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57650: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.930376900Z] [21:32:03.930376900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57650: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:03.930376900Z] [21:32:03.930376900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57660: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.931508000Z] [21:32:03.931508000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57660: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:03.936877000Z] [21:32:03.936877000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57662: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.938103900Z] [21:32:03.938103900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57612: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:03.938843100Z] [21:32:03.938843100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57662: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:03.951282900Z] [21:32:03.951282900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57632: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:03.951282900Z] [21:32:03.951282900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57676: dialing 192.168.65.254:5432
+[2026-11-03T21:32:03.954651800Z] [21:32:03.954651800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57676: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.031995600Z] [21:32:04.029736600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57690: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.031995600Z] [21:32:04.031227100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57690: dial succeeded (25 in-progress TCP connections)
+[2026-11-03T21:32:04.031995600Z] [21:32:04.031995600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57602: close with 1000 bytes transferred (24 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.035118200Z] [21:32:04.034817900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57646: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.035118200Z] [21:32:04.035118200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57700: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.036862900Z] [21:32:04.036340000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57700: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.039014600Z] [21:32:04.038479500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57626: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.039555000Z] [21:32:04.039555000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57716: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.040996400Z] [21:32:04.040996400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57716: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.042285300Z] [21:32:04.042285300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57604: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.042285300Z] [21:32:04.042285300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57730: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.044041500Z] [21:32:04.044041500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57730: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.046149600Z] [21:32:04.046149600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57650: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.046669600Z] [21:32:04.046669600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57740: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.048060000Z] [21:32:04.048060000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57740: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.053548600Z] [21:32:04.053031100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57660: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.053548600Z] [21:32:04.053031100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57748: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.054625200Z] [21:32:04.054625200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57748: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.057125700Z] [21:32:04.056099200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57756: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.057125700Z] [21:32:04.056605300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57662: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.058190300Z] [21:32:04.057652100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57756: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.069124500Z] [21:32:04.069124500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57676: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.069762600Z] [21:32:04.069762600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57768: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.071020200Z] [21:32:04.071020200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57768: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.085757400Z] [21:32:04.085757400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57730: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.085757400Z] [21:32:04.085757400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57782: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.086813700Z] [21:32:04.086813700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57782: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.120375000Z] [21:32:04.120375000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57690: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.120375000Z] [21:32:04.120375000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57796: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.123297900Z] [21:32:04.122740000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57796: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.125715400Z] [21:32:04.125208700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57806: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.125715400Z] [21:32:04.125208700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57748: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.125715400Z] [21:32:04.125715400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57716: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.126501900Z] [21:32:04.126501900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57806: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.207688400Z] [21:32:04.207121400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57818: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.209087100Z] [21:32:04.208562800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57818: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.214667700Z] [21:32:04.214667700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57756: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.214667700Z] [21:32:04.214667700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57820: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.215957700Z] [21:32:04.215957700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57822: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.217153900Z] [21:32:04.216646300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57700: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.217153900Z] [21:32:04.216646300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57820: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.217760400Z] [21:32:04.217153900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57834: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.217760400Z] [21:32:04.217153900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57740: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.217760400Z] [21:32:04.217760400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57822: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.218356900Z] [21:32:04.217760400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57834: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.221789400Z] [21:32:04.220573500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57782: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.222405300Z] [21:32:04.221789400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57850: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.223549300Z] [21:32:04.223009400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57850: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.232523600Z] [21:32:04.231994100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57768: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.232523600Z] [21:32:04.231994100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57854: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.233649900Z] [21:32:04.233649900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57864: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.234058700Z] [21:32:04.233649900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57806: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.235087100Z] [21:32:04.234058700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57854: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.235087100Z] [21:32:04.234565700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57864: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.235603700Z] [21:32:04.235603700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57870: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.235907000Z] [21:32:04.235907000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57796: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.236418400Z] [21:32:04.236418400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57870: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.307460200Z] [21:32:04.306914200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57878: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.307460200Z] [21:32:04.307460200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57820: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.307991500Z] [21:32:04.307991500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57878: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.308554900Z] [21:32:04.307991500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57894: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.308554900Z] [21:32:04.308554900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57818: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.309261000Z] [21:32:04.309261000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57894: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.319999800Z] [21:32:04.319476600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57910: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.319999800Z] [21:32:04.319999800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57822: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.320523900Z] [21:32:04.320523900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57910: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.393414900Z] [21:32:04.393414900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57834: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.393414900Z] [21:32:04.393414900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57922: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.394542100Z] [21:32:04.394542100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57922: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.399644200Z] [21:32:04.399135100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57936: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.400560000Z] [21:32:04.400226300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57870: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.401200100Z] [21:32:04.401200100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57936: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.403700300Z] [21:32:04.403156400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57942: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.403700300Z] [21:32:04.403700300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57954: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.403700300Z] [21:32:04.403700300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57864: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.403700300Z] [21:32:04.403700300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57854: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.404718000Z] [21:32:04.404718000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57942: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.404718000Z] [21:32:04.404718000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57954: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.405791600Z] [21:32:04.405791600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57850: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.407677500Z] [21:32:04.407677500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57962: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.409258400Z] [21:32:04.409258400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57962: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.425019600Z] [21:32:04.425019600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57878: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.425556800Z] [21:32:04.425019600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57972: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.426618600Z] [21:32:04.426097100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57972: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.489079000Z] [21:32:04.488557900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57894: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.489079000Z] [21:32:04.488557900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57980: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.489602800Z] [21:32:04.489602800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57980: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.493078700Z] [21:32:04.492122700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57910: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.494127000Z] [21:32:04.493613000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57994: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.494645200Z] [21:32:04.494645200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57994: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.506511400Z] [21:32:04.506167300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57998: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.506511400Z] [21:32:04.506511400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57936: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.508081500Z] [21:32:04.507560000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57998: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.517607800Z] [21:32:04.517607800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57922: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.518136800Z] [21:32:04.518136800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58010: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.519208400Z] [21:32:04.519208400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58010: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.519747300Z] [21:32:04.519747300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57954: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.520278000Z] [21:32:04.520278000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58026: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.521340100Z] [21:32:04.520819500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58026: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.580734000Z] [21:32:04.580206400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57962: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.580734000Z] [21:32:04.580734000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58034: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.581803200Z] [21:32:04.581803200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57972: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.581803200Z] [21:32:04.581803200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58036: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.581803200Z] [21:32:04.581803200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58034: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.582871600Z] [21:32:04.582871600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58036: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.586410800Z] [21:32:04.586085900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57942: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.586918200Z] [21:32:04.586918200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58046: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.588507700Z] [21:32:04.587969100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57994: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.588507700Z] [21:32:04.587969100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58046: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:04.589049600Z] [21:32:04.587969100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58048: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.590622900Z] [21:32:04.590622900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58048: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.595818700Z] [21:32:04.594799900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58064: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.595818700Z] [21:32:04.595356600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57980: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.596483700Z] [21:32:04.596483700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58064: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.605639000Z] [21:32:04.605639000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:57998: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.606176300Z] [21:32:04.606176300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58072: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.607651400Z] [21:32:04.607112200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58072: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.675655900Z] [21:32:04.675090900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58026: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.676177500Z] [21:32:04.676177500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58074: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.677226400Z] [21:32:04.677226400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58074: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.681708900Z] [21:32:04.681165800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58010: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.683298000Z] [21:32:04.683298000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58084: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.684275900Z] [21:32:04.684275900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58084: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.690159900Z] [21:32:04.690159900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58086: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.690690100Z] [21:32:04.690690100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58034: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.691539700Z] [21:32:04.691539700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58086: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.692059100Z] [21:32:04.692059100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58046: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.692059100Z] [21:32:04.692059100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58088: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.693600300Z] [21:32:04.693600300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58088: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.696812100Z] [21:32:04.696812100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58048: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.696812100Z] [21:32:04.696812100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58096: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.698106200Z] [21:32:04.698106200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58096: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.705300400Z] [21:32:04.704727000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58104: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.705300400Z] [21:32:04.705300400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58064: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.706013600Z] [21:32:04.706013600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58104: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.711237400Z] [21:32:04.710719200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58036: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.760518700Z] [21:32:04.760518700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58114: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.762127800Z] [21:32:04.761587300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58114: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.775237700Z] [21:32:04.774719000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58074: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.776294800Z] [21:32:04.775772500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58116: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.776990700Z] [21:32:04.776990700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58116: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.779654800Z] [21:32:04.779111800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58130: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.779654800Z] [21:32:04.779654800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58072: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.780702100Z] [21:32:04.780176500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58130: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.791297300Z] [21:32:04.791297300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58084: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.791883200Z] [21:32:04.791883200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58144: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.793569600Z] [21:32:04.792937700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58144: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.793569600Z] [21:32:04.793569600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58158: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.794109800Z] [21:32:04.793569600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58086: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.795431100Z] [21:32:04.794633800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58158: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.852681400Z] [21:32:04.852158800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58088: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.855005600Z] [21:32:04.854471000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58164: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.856118000Z] [21:32:04.856118000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58164: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.857637400Z] [21:32:04.857637400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58096: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.860291500Z] [21:32:04.859751100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58180: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.861858900Z] [21:32:04.861335500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58180: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.866774800Z] [21:32:04.866250600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58104: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.867302400Z] [21:32:04.866774800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58192: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.868366600Z] [21:32:04.868366600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58192: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.874704800Z] [21:32:04.874173200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58114: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.875229900Z] [21:32:04.875229900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58198: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.876330300Z] [21:32:04.876330300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58198: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.945851300Z] [21:32:04.945303400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58130: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.945851300Z] [21:32:04.945303400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58206: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.947443300Z] [21:32:04.946905300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58206: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.950124800Z] [21:32:04.949566000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58144: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.950937000Z] [21:32:04.950937000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58218: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.953615600Z] [21:32:04.952066200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58218: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.957441900Z] [21:32:04.956704300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58116: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.959258800Z] [21:32:04.957441900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58232: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.960795600Z] [21:32:04.958507300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58232: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.966992700Z] [21:32:04.966444500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58248: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.966992700Z] [21:32:04.966992700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58158: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.968035600Z] [21:32:04.967508900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58248: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.968689200Z] [21:32:04.968689200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58164: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:04.968689200Z] [21:32:04.968689200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58264: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.969773800Z] [21:32:04.969773800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58264: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:04.993586600Z] [21:32:04.993081100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58278: dialing 192.168.65.254:5432
+[2026-11-03T21:32:04.995750300Z] [21:32:04.994602700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58278: dial succeeded (25 in-progress TCP connections)
+[2026-11-03T21:32:05.003238700Z] [21:32:05.000428700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58180: close with 1000 bytes transferred (24 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.011024800Z] [21:32:05.011024800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58192: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.036333100Z] [21:32:05.036333100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58282: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.038135900Z] [21:32:05.036833900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58282: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:05.045258100Z] [21:32:05.045258100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58206: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.045793200Z] [21:32:05.045793200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58288: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.047348400Z] [21:32:05.046324600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58288: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:05.047348400Z] [21:32:05.047348400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58302: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.047348400Z] [21:32:05.047348400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58198: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.048418700Z] [21:32:05.048418700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58302: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:05.057497800Z] [21:32:05.057497800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58218: close with 1000 bytes transferred (23 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.058561600Z] [21:32:05.058024600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58306: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.059685500Z] [21:32:05.059685500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58306: dial succeeded (24 in-progress TCP connections)
+[2026-11-03T21:32:05.131117100Z] [21:32:05.130564300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58322: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.131117100Z] [21:32:05.131117100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58248: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.132194700Z] [21:32:05.132194700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58322: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.137307100Z] [21:32:05.136691900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58338: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.137307100Z] [21:32:05.136691900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58232: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.138369000Z] [21:32:05.137838300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58338: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.139420400Z] [21:32:05.138898100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58354: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.142421900Z] [21:32:05.142005400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58264: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.142421900Z] [21:32:05.142421900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58354: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.151012100Z] [21:32:05.150489000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58278: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.152077600Z] [21:32:05.152077600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58370: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.153133900Z] [21:32:05.153133900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58370: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.159463000Z] [21:32:05.159463000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58288: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.160001300Z] [21:32:05.160001300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58382: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.161069300Z] [21:32:05.161069300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58382: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.227103500Z] [21:32:05.227103500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58282: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.228255100Z] [21:32:05.228255100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58394: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.229292800Z] [21:32:05.228773500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58394: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.230358300Z] [21:32:05.229817100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58398: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.230358300Z] [21:32:05.230358300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58302: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.232007500Z] [21:32:05.232007500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58398: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.235959600Z] [21:32:05.235959600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58306: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.235959600Z] [21:32:05.235959600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58406: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.237631500Z] [21:32:05.237631500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58406: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.243124600Z] [21:32:05.243124600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58322: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.243124600Z] [21:32:05.243124600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58414: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.244562500Z] [21:32:05.244562500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58414: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.247743300Z] [21:32:05.247743300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58338: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.247743300Z] [21:32:05.247743300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58426: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.248810500Z] [21:32:05.248810500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58426: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.313953500Z] [21:32:05.313426400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58430: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.313953500Z] [21:32:05.313953500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58370: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.315037700Z] [21:32:05.314493800Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58430: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.318856300Z] [21:32:05.318336700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58354: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.318856300Z] [21:32:05.318856300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58440: dialing 192.168.65.254:5432
+[2026-11-03T21:32:05.319671000Z] [21:32:05.319671000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58440: dial succeeded (23 in-progress TCP connections)
+[2026-11-03T21:32:05.321965100Z] [21:32:05.321965100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58382: close with 1000 bytes transferred (22 remaining in-progress TCP connections)
+[2026-11-03T21:32:05.323016100Z] [21:32:05.323016100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:58442: dialing 192.168.65.254:5432
+[2026-11-03T21:35:08.477412000Z] [21:35:08.477412000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:34026: close with 2612 bytes transferred (16 remaining in-progress TCP connections)
+[2026-11-03T21:35:08.617986200Z] [21:35:08.617986200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:46802: close with 2612 bytes transferred (15 remaining in-progress TCP connections)
+[2026-11-03T21:37:05.810150900Z] [21:37:05.810150900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:40380: dialing 192.168.65.254:5432
+[2026-11-03T21:37:05.810655000Z] [21:37:05.810655000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:40380: dial succeeded (21 in-progress TCP connections)
+[2026-11-03T21:37:05.823202600Z] [21:37:05.822677100Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:53968: dialing 192.168.65.254:5432
+[2026-11-03T21:37:05.823728000Z] [21:37:05.823728000Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:53968: dial succeeded (22 in-progress TCP connections)
+[2026-11-03T21:38:00.657781100Z] [21:38:00.656771200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:40380: close with 2612 bytes transferred (14 remaining in-progress TCP connections)
+[2026-11-03T21:38:03.744466200Z] [21:38:03.744466200Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:44436: dialing 192.168.65.254:5432
+[2026-11-03T21:38:03.744971300Z] [21:38:03.744971300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:44436: dial succeeded (15 in-progress TCP connections)
+[2026-11-03T21:38:06.862205300Z] [21:38:06.862205300Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:53968: close with 2612 bytes transferred (14 remaining in-progress TCP connections)
+[2026-11-03T21:38:10.127044600Z] [21:38:10.127044600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:45078: dialing 192.168.65.254:5432
+[2026-11-03T21:38:10.127576500Z] [21:38:10.127576500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:45078: dial succeeded (15 in-progress TCP connections)
+[2026-11-03T21:38:13.337686500Z] [21:38:13.337000900Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:44436: close with 2612 bytes transferred (14 remaining in-progress TCP connections)
+[2026-11-03T21:38:16.012712600Z] [21:38:16.012712600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59836: dialing 192.168.65.254:5432
+[2026-11-03T21:38:16.013307600Z] [21:38:16.013307600Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:59836: dial succeeded (15 in-progress TCP connections)
+[2026-11-03T21:38:24.258534900Z] [21:38:24.258003700Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:45078: close with 2612 bytes transferred (14 remaining in-progress TCP connections)
+[2026-11-03T21:38:27.425221500Z] [21:38:27.425221500Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:60510: dialing 192.168.65.254:5432
+[2026-11-03T21:38:27.425725400Z] [21:38:27.425725400Z][main.gvisor/forwarder ] 192.168.65.254:5432 <- 192.168.65.3:60510: dial succeeded (15 in-progress TCP connections)
+# Fin observador UTC: 2026-11-03T21:39:14.823818+00:00
+# Lectura previa: los cinco CloseWrite 21:30:53-21:31:02 coinciden con cierres intencionales de sondas, segun captura TCP; no acreditan causa.
+[2026-11-03T21:30:53.904544900Z] [21:30:53.903996400Z][main.socketforward    ] error CloseWrite to: close tcp 192.168.65.254:5432: endpoint not connected
+[2026-11-03T21:30:56.385065000Z] [21:30:56.384515900Z][main.socketforward    ] error CloseWrite to: close tcp 192.168.65.254:5432: endpoint not connected
+[2026-11-03T21:30:58.376580100Z] [21:30:58.376065000Z][main.socketforward    ] error CloseWrite to: close tcp 192.168.65.254:5432: endpoint not connected
+[2026-11-03T21:31:00.531694500Z] [21:31:00.531694500Z][main.socketforward    ] error CloseWrite to: close tcp 192.168.65.254:5432: endpoint not connected
+[2026-11-03T21:31:02.654125400Z] [21:31:02.654125400Z][main.socketforward    ] error CloseWrite to: close tcp 192.168.65.254:5432: endpoint not connected
+# Extension observador UTC: 2026-11-03T21:39:51.832646+00:00
+# Fin extension UTC: 2026-11-03T21:44:52.259775+00:00
+
+# Control plane read-only snapshot 2026-11-03T21:46:22.776587+00:00
+# monitor.log entero deja de escribir21:38:28.678790; su ausencia de eventos NO demuestra ausencia de recepcion del forwarder.
+# Metadatos {"host/monitor.log": {"bytes": 1048426, "last_write_utc": "2026-11-03T21:38:28.678790+00:00"}, "last_rotation_hook_count": 3355, "last_rotation_components": {"main.wslengine": 1072, "main.apiproxy": 1139, "main.idle": 6, "main.ipc": 6, "main.gvisor/forwarder": 8}, "vm/init.log": {"bytes": 264985, "last_write_utc": "2026-11-03T21:45:43.267742+00:00"}, "vm/dockerd.log": {"bytes": 286664, "last_write_utc": "2026-11-03T21:46:18.980135+00:00"}, "vm/kmsg.log": {"bytes": 18106, "last_write_utc": "2026-11-03T21:42:42.931267+00:00"}, "host/electron-2026-11-03.log": {"bytes": 399550, "last_write_utc": "2026-11-03T21:38:29.996558+00:00"}}
+host/monitor.log [2026-11-03T21:38:28.678790000Z] Failed to fire hook: close <perfil>\AppData\Local\Docker\log\host\com.docker.backend.exe.log: file already closed
+vm/init.log [2026-11-03T21:38:03.735351637Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:07.788697306Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:08.794890401Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:12.256903795Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:16.291935131Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:17.301859053Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:23.109878337Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:38:27.136441296Z][init.apiproxy         ] >> HEAD /_ping
+vm/init.log [2026-11-03T21:43:15.908971359Z][init.time             ][W] backend /time request timed out: Get "http://ipc/time": context deadline exceeded
+vm/init.log [2026-11-03T21:45:01.561333985Z][init.apiproxy         ] >> GET /_ping
+vm/init.log [2026-11-03T21:45:01.561951206Z][init.apiproxy         ] << GET /_ping Internal Server Error: connecting to /var/run/docker.raw.sock: dial unix /var/run/docker.raw.sock: operation was canceled (242.466µs)
+# 30128 errores hook retenidos en9rotaciones desde21:35:44; el inicio real es anterior/ignorado por rotacion. No se acredita causalidad del bloqueo.
+# Diagnostico read-only getstacks: GET /goroutines/stacks desde21:47:00UTC no respondio >90s; no se obtuvo volcado. Se cancelo solo cliente com.docker.diagnosePID42316, sin tocar backend/contenedores.

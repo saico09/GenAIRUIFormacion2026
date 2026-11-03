@@ -1,0 +1,178 @@
+{
+  "started_at": "2026-11-03T22:12:13.358432+00:00",
+  "steps": [
+    {
+      "step": "detener-perfil",
+      "exit_code": 0,
+      "seconds": 7.513,
+      "log": "ciclo-red-conservada-detener-perfil.txt"
+    },
+    {
+      "step": "reanudar",
+      "exit_code": 0,
+      "seconds": 81.317,
+      "log": "ciclo-red-conservada-reanudar.txt"
+    }
+  ],
+  "recreate_postgres": false,
+  "result": "PASS",
+  "postgres_before": {
+    "id": "4d75925996aa64bc1e5abf5cb8749292342993f55ad8899615cb7f06c9b9798a",
+    "started_at": "2026-11-03T22:10:32.828252789Z",
+    "mounts": [
+      {
+        "Type": "volume",
+        "Name": "genairuiformacion2026_pgdata",
+        "Source": "/var/lib/docker/volumes/genairuiformacion2026_pgdata/_data",
+        "Destination": "/var/lib/postgresql",
+        "Driver": "local",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "networks": {
+      "genai": {
+        "IPAMConfig": {
+          "IPv4Address": "192.168.49.10"
+        },
+        "Links": null,
+        "Aliases": [
+          "postgres-genai"
+        ],
+        "MacAddress": "5e:83:43:56:e2:63",
+        "DriverOpts": {},
+        "GwPriority": -1,
+        "NetworkID": "170703af183f9515a71ef36ec60b054152990a2be810f722c4fe1bba6435fc37",
+        "EndpointID": "f92503cf4b64d52e2d7d73caba14f273f4f7d97dd463d5d88bcdec7b11796787",
+        "Gateway": "192.168.49.1",
+        "IPAddress": "192.168.49.10",
+        "IPPrefixLen": 24,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": [
+          "genairuiformacion2026-postgres-1",
+          "postgres-genai",
+          "4d75925996aa"
+        ]
+      },
+      "genairuiformacion2026_default": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": [
+          "genairuiformacion2026-postgres-1",
+          "postgres"
+        ],
+        "MacAddress": "a6:68:e4:70:5b:0c",
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "e9d98afc8c30b4835240f6d6b592bb4873523d24cd78bf52261692d469665ab9",
+        "EndpointID": "f5ad87b144825c0c19c8e8790437446d1b51c76cf0bbc382d2f07427c5f277ec",
+        "Gateway": "172.22.0.1",
+        "IPAddress": "172.22.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": [
+          "genairuiformacion2026-postgres-1",
+          "postgres",
+          "4d75925996aa"
+        ]
+      }
+    }
+  },
+  "postgres_after": {
+    "id": "4d75925996aa64bc1e5abf5cb8749292342993f55ad8899615cb7f06c9b9798a",
+    "started_at": "2026-11-03T22:10:32.828252789Z",
+    "mounts": [
+      {
+        "Type": "volume",
+        "Name": "genairuiformacion2026_pgdata",
+        "Source": "/var/lib/docker/volumes/genairuiformacion2026_pgdata/_data",
+        "Destination": "/var/lib/postgresql",
+        "Driver": "local",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "networks": {
+      "genai": {
+        "IPAMConfig": {
+          "IPv4Address": "192.168.49.10"
+        },
+        "Links": null,
+        "Aliases": [
+          "postgres-genai"
+        ],
+        "MacAddress": "5e:83:43:56:e2:63",
+        "DriverOpts": {},
+        "GwPriority": -1,
+        "NetworkID": "170703af183f9515a71ef36ec60b054152990a2be810f722c4fe1bba6435fc37",
+        "EndpointID": "f92503cf4b64d52e2d7d73caba14f273f4f7d97dd463d5d88bcdec7b11796787",
+        "Gateway": "192.168.49.1",
+        "IPAddress": "192.168.49.10",
+        "IPPrefixLen": 24,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": [
+          "genairuiformacion2026-postgres-1",
+          "postgres-genai",
+          "4d75925996aa"
+        ]
+      },
+      "genairuiformacion2026_default": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": [
+          "genairuiformacion2026-postgres-1",
+          "postgres"
+        ],
+        "MacAddress": "a6:68:e4:70:5b:0c",
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "e9d98afc8c30b4835240f6d6b592bb4873523d24cd78bf52261692d469665ab9",
+        "EndpointID": "f5ad87b144825c0c19c8e8790437446d1b51c76cf0bbc382d2f07427c5f277ec",
+        "Gateway": "172.22.0.1",
+        "IPAddress": "172.22.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": [
+          "genairuiformacion2026-postgres-1",
+          "postgres",
+          "4d75925996aa"
+        ]
+      }
+    }
+  },
+  "node_networks": {
+    "genai": {
+      "IPAMConfig": {
+        "IPv4Address": "192.168.49.2"
+      },
+      "Links": null,
+      "Aliases": null,
+      "MacAddress": "f2:eb:34:92:f9:41",
+      "DriverOpts": null,
+      "GwPriority": 0,
+      "NetworkID": "170703af183f9515a71ef36ec60b054152990a2be810f722c4fe1bba6435fc37",
+      "EndpointID": "b0f127eccda46072ac8b7a6166f6e5c6b9f0423c5c7a5e076cb89b0e035b945a",
+      "Gateway": "192.168.49.1",
+      "IPAddress": "192.168.49.2",
+      "IPPrefixLen": 24,
+      "IPv6Gateway": "",
+      "GlobalIPv6Address": "",
+      "GlobalIPv6PrefixLen": 0,
+      "DNSNames": [
+        "genai",
+        "67ab4890e160"
+      ]
+    }
+  },
+  "finished_at": "2026-11-03T22:13:42.422999+00:00"
+}

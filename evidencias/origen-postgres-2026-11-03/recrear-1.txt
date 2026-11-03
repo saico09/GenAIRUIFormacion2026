@@ -1,0 +1,6 @@
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+{"timestamp": "2026-11-03T21:38:02.860250+00:00", "service": "fastapi", "event": "db_startup", "request_id": null, "status": "ready", "attempts": 1, "elapsed_seconds": 0.057}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+{"timestamp": "2026-11-03T21:38:04.161684+00:00", "service": "fastapi", "event": "http", "request_id": "2c76d7c0-cc11-4c8e-bbb9-19090858d16a", "method": "GET", "route": "/health", "status": 200, "duration_ms": 3.632}

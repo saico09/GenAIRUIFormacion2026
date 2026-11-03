@@ -1,0 +1,12 @@
+{"event": "run_start", "utc": "2026-11-03T21:39:58.552687+00:00", "monotonic": 206448.500572414, "host": "192.168.65.254", "resolved_address": ["192.168.65.254", 5432], "rounds": 1, "timeout_seconds": 5.0, "interval_seconds": 2, "psycopg": "3.3.6", "libpq_runtime": 180006, "libpq_build": 180006, "implementation": "binary"}
+{"event": "probe_start", "utc": "2026-11-03T21:39:58.555083+00:00", "monotonic": 206448.502970201, "round": 1, "probe": "libpq_disable"}
+{"event": "libpq_state", "utc": "2026-11-03T21:39:58.555999+00:00", "monotonic": 206448.503875293, "round": 1, "probe": "libpq_disable", "status": "MADE", "poll": "WRITING", "elapsed_ms": 0.91}
+{"event": "probe_start", "utc": "2026-11-03T21:39:58.556289+00:00", "monotonic": 206448.504778044, "round": 1, "probe": "startup_raw"}
+{"event": "probe_start", "utc": "2026-11-03T21:39:58.557061+00:00", "monotonic": 206448.504946117, "round": 1, "probe": "libpq_default"}
+{"event": "probe_start", "utc": "2026-11-03T21:39:58.557681+00:00", "monotonic": 206448.505556878, "round": 1, "probe": "sslrequest"}
+{"event": "libpq_state", "utc": "2026-11-03T21:39:58.557915+00:00", "monotonic": 206448.505787854, "round": 1, "probe": "libpq_default", "status": "MADE", "poll": "WRITING", "elapsed_ms": 2.13}
+{"event": "probe_result", "utc": "2026-11-03T21:40:03.558263+00:00", "monotonic": 206453.506141981, "round": 1, "probe": "sslrequest", "elapsed_ms": 5002.949, "result": "timeout", "error_type": "TimeoutError"}
+{"event": "probe_result", "utc": "2026-11-03T21:40:03.560392+00:00", "monotonic": 206453.508267482, "round": 1, "probe": "startup_raw", "elapsed_ms": 5005.017, "result": "timeout", "error_type": "TimeoutError"}
+{"event": "probe_result", "utc": "2026-11-03T21:40:03.560653+00:00", "monotonic": 206453.508527165, "round": 1, "probe": "libpq_disable", "elapsed_ms": 5005.567, "states": [{"status": "MADE", "poll": "WRITING", "elapsed_ms": 0.91}], "local_address": ["10.244.0.16", 40638], "result": "timeout"}
+{"event": "probe_result", "utc": "2026-11-03T21:40:03.560998+00:00", "monotonic": 206453.508872899, "round": 1, "probe": "libpq_default", "elapsed_ms": 5005.293, "states": [{"status": "MADE", "poll": "WRITING", "elapsed_ms": 2.13}], "local_address": ["10.244.0.16", 40662], "result": "timeout"}
+{"event": "run_complete", "utc": "2026-11-03T21:40:03.561941+00:00", "monotonic": 206453.509816063, "rounds": 1, "hold": false}

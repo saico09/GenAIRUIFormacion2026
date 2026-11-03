@@ -1,0 +1,182 @@
+[
+  {
+    "Id": "404d25e72667103501ebaa557b74d9af6dc1fb831957d615b8542db30e79d606",
+    "Names": [
+      "/genai-node-capture"
+    ],
+    "Image": "sha256:2afa746a2732d37584f068c9133046632740b7510b0b98e5c737b42b5581c147",
+    "State": "running",
+    "Status": "Up 17 minutes"
+  },
+  {
+    "Id": "9b0e259e08c7b6829655a63ca954fdd4a4dfc0f61f25bb9c13a2e0b647e8a7dd",
+    "Names": [
+      "/genai-pg-capture"
+    ],
+    "Image": "sha256:2afa746a2732d37584f068c9133046632740b7510b0b98e5c737b42b5581c147",
+    "State": "running",
+    "Status": "Up 17 minutes"
+  },
+  {
+    "Id": "42f6f6271ae80195ece11c9954bfa5ede317130a0a55d1b671f998e94162f0b8",
+    "Names": [
+      "/genairuiformacion2026-python-api-1"
+    ],
+    "Image": "sha256:2247cfdf8c3f3bcab4aca3d5b8f301228d6d5fb2bc66d83af84f8a75d04a0faf",
+    "State": "running",
+    "Status": "Up 3 hours"
+  },
+  {
+    "Id": "3c9ce4a939682fbdd3c8bf792bf214dccf2e8454e6e861b891c78143f2249206",
+    "Names": [
+      "/genai-semana-08-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "769ae48931d70e88abc24a92cbf88deabf8c0c29fc8eb3d3e891c4a4fc62d7ae",
+    "Names": [
+      "/genai-semana-10-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "9876659d222603497f1aedf9d581f259d8de0d699bb991d59fba9767aa042e3e",
+    "Names": [
+      "/genai-semana-07-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "9f8ab63bf7c9e407021fb0d687229c1283cad2b92bc9ac043709617796f855c9",
+    "Names": [
+      "/genai-semana-06-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "d2c348470521930a28001fcaf0be7728c70e5d0fbe7b52150a4f47da1a4ea823",
+    "Names": [
+      "/genai-semana-09-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "5c2d9e01f3f869ae9d5d1d36e280ebf63227dbeabc8f02ccd3251dedadeea445",
+    "Names": [
+      "/genai-semana-05-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "5a35956d26dd785eaf8a018efe5d31d4744656e4ff29acec45c65999a12e19a1",
+    "Names": [
+      "/genai-semana-03-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "0615cd1ce8014c9dd612eb505ced0365cf2a0380baabf48c337ef9f774074240",
+    "Names": [
+      "/genai-semana-04-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "f5f59be197516214b5d2ca082a49e3b5e12decf4ac3277d9c636340a2e0e71c6",
+    "Names": [
+      "/genairuiformacion2026-java-api-1"
+    ],
+    "Image": "sha256:6d89d3a7e963557391e3b74781e18276124fabfaae610e1cec011512538a88c1",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "dda2b4941d91ff2e1a25c162d30094b242a34f0a0a2b828770ff4d8512327bde",
+    "Names": [
+      "/genairuiformacion2026-postgres-1"
+    ],
+    "Image": "sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5",
+    "State": "running",
+    "Status": "Up 18 minutes (healthy)"
+  },
+  {
+    "Id": "67ab4890e1607519fd021c8c8ff311f83e8c6b7b3e3d125329f2851e718ce1c1",
+    "Names": [
+      "/genai"
+    ],
+    "Image": "sha256:4a1c825b61479e6c898851ea66f13c620aaeab6002746e95067fc2c4b38a0b24",
+    "State": "running",
+    "Status": "Up 17 minutes"
+  },
+  {
+    "Id": "80898f54c56ae2e033ce74a9a0b4509e476e1a462a86af1007c67e4fa0ebc2c0",
+    "Names": [
+      "/genairuiformacion2026-phoenix-1"
+    ],
+    "Image": "sha256:623813cbf1bbd4811456bb4936f21666ae50a1fbf862cf59ea0e3ca824b6b114",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "1ef0a8286fea3433f1d51827f4136a74a3a92fa67b66fbce63f6eec2c11729af",
+    "Names": [
+      "/genairuiformacion2026-grafana-1"
+    ],
+    "Image": "sha256:488984b716c0862639f91a698adbe2862677a5a07bad42da5f03f3030883b205",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "8d9e369e945b8a47acc46e91e8c5b6ad047b43b896709cffbd9083f8feaa4b01",
+    "Names": [
+      "/genairuiformacion2026-alloy-1"
+    ],
+    "Image": "sha256:89a5a320168387336b9ac3c850609c3ba7757eadd4ae5f1d819deb35e9854b18",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "3d327ea7da24daea857d9e70260c76efccd80c38e2ac96b6604a51103a785550",
+    "Names": [
+      "/genairuiformacion2026-loki-1"
+    ],
+    "Image": "sha256:0db216b630ae1f348a1584c67f3cead8b4c1fc839169a39501db664744158e28",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "95751c0af1c2f7e92c7672144f75bbbdcff58a7cbe2c890fa1dce2360db7884e",
+    "Names": [
+      "/genairuiformacion2026-prometheus-1"
+    ],
+    "Image": "sha256:fa3302279710be2f21a8301ec17a8b4f2301fd829bd113839b3b6b02b6f191a2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  },
+  {
+    "Id": "4048b772794e64e11242d19bd536fce78a9869339adc94546335343f9315dc53",
+    "Names": [
+      "/genairuiformacion2026-qdrant-1"
+    ],
+    "Image": "sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2",
+    "State": "running",
+    "Status": "Up 4 hours"
+  }
+]

@@ -1,0 +1,8 @@
+genai-semana-08-qdrant-1
+genai-semana-10-qdrant-1
+genai-semana-07-qdrant-1
+genai-semana-06-qdrant-1
+genai-semana-09-qdrant-1
+genai-semana-05-qdrant-1
+genai-semana-03-qdrant-1
+genai-semana-04-qdrant-1
