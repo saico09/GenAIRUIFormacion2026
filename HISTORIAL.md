@@ -2,6 +2,10 @@
 
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
+## Reanudación · 03/11/2026 · Minikube y PostgreSQL
+
+FastAPI reintenta las conexiones iniciales transitorias a PostgreSQL. Para retomar, usa `.\scripts\reanudar_minikube.ps1`: espera la base, comprueba SQL desde el perfil y abre los túneles con las réplicas listas. Pasaron dos reanudaciones, una también con PostgreSQL detenido, conservando los datos; [pruebas y detalle del arreglo](evidencias/reanudacion-minikube-2026-11-03/LEEME.md).
+
 ## Guías · 03/11/2026 · Revisión de Claude
 
 - README, GUIA y LEVANTAR recortados a comandos y notas necesarias; se conserva la procedencia aparte.

@@ -1,0 +1,13 @@
+test_deadline_stops_retries_without_another_attempt (__main__.DatabaseStartupTests.test_deadline_stops_retries_without_another_attempt) ... ok
+test_last_connection_can_finish_after_retry_deadline (__main__.DatabaseStartupTests.test_last_connection_can_finish_after_retry_deadline) ... ok
+test_non_operational_error_is_not_retried (__main__.DatabaseStartupTests.test_non_operational_error_is_not_retried) ... ok
+test_non_positive_deadline_is_rejected (__main__.DatabaseStartupTests.test_non_positive_deadline_is_rejected) ... ok
+test_permanent_sqlstate_fails_immediately_without_secrets (__main__.DatabaseStartupTests.test_permanent_sqlstate_fails_immediately_without_secrets) ... ok
+test_recovers_after_two_failed_connections (__main__.DatabaseStartupTests.test_recovers_after_two_failed_connections) ... ok
+test_transaction_is_closed_before_retrying_initialization (__main__.DatabaseStartupTests.test_transaction_is_closed_before_retrying_initialization) ... ok
+test_real_sqlalchemy_engine_passes_five_second_timeout_to_psycopg (__main__.EngineConfigurationTests.test_real_sqlalchemy_engine_passes_five_second_timeout_to_psycopg) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.033s
+
+OK

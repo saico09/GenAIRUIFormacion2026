@@ -1,0 +1,7 @@
+{
+  "elapsed_seconds": 97.6063113,
+  "finished_at": "2026-11-03T18:49:06.4272676Z",
+  "result": "PASS",
+  "started_at": "2026-11-03T18:47:28.8044608Z",
+  "scenario": "Perfil genai y PostgreSQL detenidos; helper los levanta en orden"
+}

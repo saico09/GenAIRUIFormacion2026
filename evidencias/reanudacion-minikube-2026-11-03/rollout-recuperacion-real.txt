@@ -1,0 +1,15 @@
+2026-11-03T18:43:51.303440868Z INFO:     Started server process [1]
+2026-11-03T18:43:51.303770244Z INFO:     Waiting for application startup.
+2026-11-03T18:43:53.970567425Z {"timestamp": "2026-11-03T18:43:53.970120+00:00", "service": "fastapi", "event": "db_startup", "request_id": null, "status": "waiting", "attempts": 1, "elapsed_seconds": 5.002, "error_type": "ConnectionTimeout", "sqlstate": null}
+2026-11-03T18:43:56.048958834Z {"timestamp": "2026-11-03T18:43:56.048609+00:00", "service": "fastapi", "event": "db_startup", "request_id": null, "status": "ready", "attempts": 2, "elapsed_seconds": 7.081}
+2026-11-03T18:43:56.051181367Z INFO:     Application startup complete.
+2026-11-03T18:43:56.051453908Z INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-11-03T18:44:00.784201842Z {"timestamp": "2026-11-03T18:44:00.783849+00:00", "service": "fastapi", "event": "http", "request_id": "d1dd743d-241e-4f29-a9e8-60f2989f93e6", "method": "GET", "route": "/health", "status": 200, "duration_ms": 2.102}
+2026-11-03T18:44:05.766303947Z {"timestamp": "2026-11-03T18:44:05.765824+00:00", "service": "fastapi", "event": "http", "request_id": "5438614e-9322-4c80-ad5b-6abddfc6a6ab", "method": "GET", "route": "/health", "status": 200, "duration_ms": 1.615}
+2026-11-03T18:44:10.766534814Z {"timestamp": "2026-11-03T18:44:10.766053+00:00", "service": "fastapi", "event": "http", "request_id": "1f1d667d-4543-4ddc-be7d-3db48b046843", "method": "GET", "route": "/health", "status": 200, "duration_ms": 1.532}
+2026-11-03T18:44:15.766251576Z {"timestamp": "2026-11-03T18:44:15.765775+00:00", "service": "fastapi", "event": "http", "request_id": "23c1fd59-1ad4-485d-8ea2-8b64bc18ed5e", "method": "GET", "route": "/health", "status": 200, "duration_ms": 2.032}
+2026-11-03T18:44:20.764960250Z {"timestamp": "2026-11-03T18:44:20.764540+00:00", "service": "fastapi", "event": "http", "request_id": "b1d481b4-fbe6-484f-b1e8-d032b7f3cfbc", "method": "GET", "route": "/health", "status": 200, "duration_ms": 1.21}
+2026-11-03T18:44:23.425018445Z {"timestamp": "2026-11-03T18:44:23.424632+00:00", "service": "fastapi", "event": "http", "request_id": "f3d2ee32-bef7-4af3-8f8c-77d01f330c06", "method": "GET", "route": "/health", "status": 200, "duration_ms": 0.902}
+2026-11-03T18:44:28.425898020Z {"timestamp": "2026-11-03T18:44:28.425511+00:00", "service": "fastapi", "event": "http", "request_id": "65a8c69f-a710-4961-8c5a-488c8406a154", "method": "GET", "route": "/health", "status": 200, "duration_ms": 1.016}
+2026-11-03T18:44:33.425992850Z {"timestamp": "2026-11-03T18:44:33.425641+00:00", "service": "fastapi", "event": "http", "request_id": "3fe2688e-f4d6-4c4f-88dc-e8e42754ee9e", "method": "GET", "route": "/health", "status": 200, "duration_ms": 0.797}
+2026-11-03T18:44:38.425785467Z {"timestamp": "2026-11-03T18:44:38.425437+00:00", "service": "fastapi", "event": "http", "request_id": "03f5a733-abc9-4a2c-8cf4-6e7834e046a4", "method": "GET", "route": "/health", "status": 200, "duration_ms": 0.982}

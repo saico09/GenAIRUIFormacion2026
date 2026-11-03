@@ -59,7 +59,13 @@ curl.exe -i http://localhost:8080/health
 | FastAPI en Minikube | [8002/patients](http://localhost:8002/patients) |
 | Argo CD | [8443](https://localhost:8443), certificado local |
 
-Minikube necesita [su arranque y túneles](GUIA.md#fastapi-desde-git). Allí se despliega solo el CRUD FastAPI; el chatbot sigue en Compose, puerto 8000.
+Para reanudar Minikube ya preparado:
+
+```powershell
+.\scripts\reanudar_minikube.ps1
+```
+
+La [guía](GUIA.md#fastapi-desde-git) explica la comprobación de PostgreSQL y los túneles. Allí se despliega solo el CRUD FastAPI; el chatbot sigue en Compose, puerto 8000.
 
 ## Contrato HTTP
 

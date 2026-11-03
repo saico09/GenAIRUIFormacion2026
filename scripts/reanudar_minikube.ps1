@@ -48,7 +48,7 @@ import os
 import time
 import psycopg
 
-deadline = time.monotonic() + 60
+deadline = time.monotonic() + 120
 while True:
     try:
         with psycopg.connect(
@@ -75,12 +75,12 @@ while True:
     $pod = @{
         apiVersion = 'v1'; kind = 'Pod'
         metadata = @{ name = $podName; namespace = 'genai' }
-        spec = @{ restartPolicy = 'Never'; activeDeadlineSeconds = 90; containers = @($sqlContainer) }
+        spec = @{ restartPolicy = 'Never'; activeDeadlineSeconds = 150; containers = @($sqlContainer) }
     }
     try {
         $pod | ConvertTo-Json -Depth 20 -Compress | & $kubectlPath --context=genai -n genai create -f -
         if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear el pod temporal de comprobacion SQL.' }
-        & $kubectlPath --context=genai -n genai wait '--for=jsonpath={.status.phase}=Succeeded' "pod/$podName" --timeout=100s
+        & $kubectlPath --context=genai -n genai wait '--for=jsonpath={.status.phase}=Succeeded' "pod/$podName" --timeout=160s
         if ($LASTEXITCODE -ne 0) {
             throw 'El pod no pudo comprobar SQL; revisar la conexion PostgreSQL del Deployment. No se abrieron tuneles.'
         }

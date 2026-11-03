@@ -1,0 +1,182 @@
+{
+  "started_at": "2026-11-03T18:35:48.126728+00:00",
+  "finished_at": "2026-11-03T18:35:50.968564+00:00",
+  "mode": "Solo lectura. Sin stop/start, cambios de código, contexto, secretos ni commits.",
+  "canonical_hash": "SHA-256 de UTF-8 JSON de la lista completa ordenada por id; claves ordenadas, ensure_ascii=False, separators=(coma,dos_puntos), allow_nan=False. No se guardan cuerpos de pacientes.",
+  "http": {
+    "python_health": {
+      "url": "http://localhost:8000/health",
+      "read_at": "2026-11-03T18:35:48.127720+00:00",
+      "status": 200,
+      "health_status": "ok",
+      "duration_ms": 2137.01
+    },
+    "java_health": {
+      "url": "http://localhost:8080/health",
+      "read_at": "2026-11-03T18:35:48.128818+00:00",
+      "status": 200,
+      "health_status": "ok",
+      "duration_ms": 2137.73
+    },
+    "kubernetes_health": {
+      "url": "http://localhost:8002/health",
+      "read_at": "2026-11-03T18:35:48.129252+00:00",
+      "status": 200,
+      "health_status": "ok",
+      "duration_ms": 2273.36
+    },
+    "python_patients": {
+      "url": "http://localhost:8000/patients",
+      "read_at": "2026-11-03T18:35:48.129715+00:00",
+      "status": 200,
+      "count": 4,
+      "sha256_canonical": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9",
+      "fields": [
+        "birth_date",
+        "email",
+        "id",
+        "name"
+      ],
+      "duration_ms": 2188.1
+    },
+    "java_patients": {
+      "url": "http://localhost:8080/patients",
+      "read_at": "2026-11-03T18:35:48.130108+00:00",
+      "status": 200,
+      "count": 3,
+      "sha256_canonical": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "fields": [
+        "birth_date",
+        "email",
+        "id",
+        "name"
+      ],
+      "duration_ms": 2298.43
+    },
+    "kubernetes_patients": {
+      "url": "http://localhost:8002/patients",
+      "read_at": "2026-11-03T18:35:48.130430+00:00",
+      "status": 200,
+      "count": 4,
+      "sha256_canonical": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9",
+      "fields": [
+        "birth_date",
+        "email",
+        "id",
+        "name"
+      ],
+      "duration_ms": 2837.26
+    },
+    "qdrant_points": {
+      "url": "http://localhost:6333/collections/historias/points/count",
+      "read_at": "2026-11-03T18:35:48.130908+00:00",
+      "status": 200,
+      "count": 9,
+      "duration_ms": 2279.95
+    }
+  },
+  "kubernetes": {
+    "deployment": {
+      "read_at": "2026-11-03T18:35:48.293786+00:00",
+      "ok": true,
+      "value": {
+        "name": "fastapi",
+        "uid": "8aa075bb-0592-4428-a591-5629223ad57c",
+        "generation": 6,
+        "observedGeneration": 6,
+        "desired": 2,
+        "replicas": 2,
+        "ready": 2,
+        "available": 2,
+        "images": [
+          "genai-fastapi:s09"
+        ]
+      }
+    },
+    "pods": {
+      "read_at": "2026-11-03T18:35:48.296991+00:00",
+      "ok": true,
+      "value": [
+        {
+          "name": "fastapi-766cfdc5d5-l5qsj",
+          "uid": "7ca2c5e1-bea3-48bd-b135-8b5c0c703bba",
+          "node": "genai",
+          "deleting": false,
+          "phase": "Running",
+          "podIP": "10.244.0.6",
+          "ready": true,
+          "containers": [
+            {
+              "name": "fastapi",
+              "image": "docker.io/library/genai-fastapi:s09",
+              "imageID": "sha256:a832221c478a6d21635fee51854cfc7bd76a4d7c746787429734069d8c89fd75",
+              "ready": true,
+              "restarts": 2,
+              "state": [
+                "running"
+              ],
+              "last_exit_code": 3,
+              "last_reason": "Error"
+            }
+          ]
+        },
+        {
+          "name": "fastapi-766cfdc5d5-wbd8l",
+          "uid": "9d03d683-2770-4f1f-9f65-8efd8b50926b",
+          "node": "genai",
+          "deleting": false,
+          "phase": "Running",
+          "podIP": "10.244.0.3",
+          "ready": true,
+          "containers": [
+            {
+              "name": "fastapi",
+              "image": "docker.io/library/genai-fastapi:s09",
+              "imageID": "sha256:a832221c478a6d21635fee51854cfc7bd76a4d7c746787429734069d8c89fd75",
+              "ready": true,
+              "restarts": 6,
+              "state": [
+                "running"
+              ],
+              "last_exit_code": 3,
+              "last_reason": "Error"
+            }
+          ]
+        }
+      ]
+    },
+    "argocd": {
+      "read_at": "2026-11-03T18:35:48.293577+00:00",
+      "ok": true,
+      "value": {
+        "name": "fastapi",
+        "sync": "Synced",
+        "revision": "a178187b262dc4970e4983c1d38d2f7d5d3b0482",
+        "health": "Healthy",
+        "operation_phase": "Succeeded",
+        "operation_started": "2026-11-03T17:40:05Z",
+        "operation_finished": "2026-11-03T17:40:07Z",
+        "operation_revision": "3ea28b8d71784e48423a252bb836f661abfc2ee5",
+        "target_revision": "main"
+      }
+    },
+    "service": {
+      "read_at": "2026-11-03T18:35:48.351624+00:00",
+      "ok": true,
+      "value": {
+        "name": "fastapi",
+        "type": "ClusterIP",
+        "clusterIP": "10.103.117.86",
+        "ports": [
+          {
+            "name": "http",
+            "port": 8000,
+            "protocol": "TCP",
+            "targetPort": "http"
+          }
+        ]
+      }
+    }
+  },
+  "patient_hash_matches_python_k8s": true
+}

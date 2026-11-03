@@ -156,6 +156,8 @@ Para descargar el modelo de chat, si falta:
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe usar Alfa y su fuente en la primera y reconocer que falta información en la segunda.
 
+«Con RAG» busca hasta dos fragmentos del paciente en Qdrant y se los entrega al modelo junto con tu pregunta. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Las historias vienen de `datos/paciente-*.md`: si las editas, vuelve a ejecutar `ingestar.py`.
+
 Para comprobar ambos casos por API:
 
 ```powershell
@@ -277,13 +279,13 @@ Para crear el perfil (2 CPU y 3072 MiB):
 Para construir la imagen:
 
 ```powershell
-docker build --tag genai-fastapi:s09 --progress=plain ./python-api
+docker build --tag genai-fastapi:s09-reanudacion-20261103 --progress=plain ./python-api
 ```
 
 Para cargarla en el perfil:
 
 ```powershell
-.\.local\bin\minikube.exe --profile=genai image load genai-fastapi:s09
+.\.local\bin\minikube.exe --profile=genai image load genai-fastapi:s09-reanudacion-20261103
 ```
 
 <a id="chart-y-conexión-a-postgres"></a>
@@ -332,17 +334,13 @@ Argo sigue `main`: revisa los cambios de `deploy/` antes de publicarlos. Solo se
 
 ## FastAPI desde Git
 
-Para reanudar el perfil ya creado:
+Para reanudar el perfil ya creado y abrir sus accesos:
 
 ```powershell
-.\.local\bin\minikube.exe start -p genai --keep-context --wait=all
+.\scripts\reanudar_minikube.ps1
 ```
 
-Para esperar que FastAPI termine de arrancar:
-
-```powershell
-.\.local\bin\kubectl.exe --context=genai -n genai rollout status deployment/fastapi --timeout=300s
-```
+Espera PostgreSQL, comprueba SQL desde Minikube y las réplicas Ready; después abre los túneles. Solo levanta el CRUD de este perfil; el chat sigue en Compose, puerto 8000.
 
 Para abrir o recuperar Argo CD:
 
