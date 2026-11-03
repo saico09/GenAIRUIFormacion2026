@@ -25,6 +25,10 @@ if ($listener) {
     Write-Output 'El tunel anterior no responde; se abre otro hacia un pod disponible.'
 }
 
+Write-Output 'Esperando que FastAPI este disponible antes de abrir el tunel...'
+& $kubectlPath --context=genai --namespace=genai rollout status deployment/fastapi --timeout=300s
+if ($LASTEXITCODE -ne 0) { throw 'FastAPI no quedo disponible; ejecuta scripts/reanudar_minikube.ps1 y revisa su comprobacion SQL.' }
+
 $forward = Start-Process -FilePath $kubectlPath -ArgumentList @(
     '--context=genai', '--namespace=genai', 'port-forward', 'svc/fastapi',
     '8002:8000', '--address=127.0.0.1'

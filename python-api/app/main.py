@@ -8,7 +8,7 @@ from opentelemetry.trace import StatusCode
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.db import Base, engine, get_db
+from app.db import get_db, initialize_database
 from app.models import Patient
 from app.metrics import install_metrics
 from app.observability import install_request_logging
@@ -22,7 +22,7 @@ from grafo import grafo
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Al arrancar crea public.patients si todavía no existe (no borra datos)
-    Base.metadata.create_all(engine)
+    initialize_database()
     tracing_provider = configure_tracing()
     try:
         yield

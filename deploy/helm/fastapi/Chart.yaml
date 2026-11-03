@@ -2,5 +2,5 @@ apiVersion: v2
 name: fastapi
 description: CRUD FastAPI de la formacion, conectado al PostgreSQL local
 type: application
-version: 0.1.0
-appVersion: "s09"
+version: 0.1.1
+appVersion: "s09-reanudacion-20261103"

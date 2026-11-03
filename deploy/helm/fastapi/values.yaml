@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: genai-fastapi
-  tag: s09
+  tag: s09-reanudacion-20261103
   pullPolicy: IfNotPresent
 
 postgres:
