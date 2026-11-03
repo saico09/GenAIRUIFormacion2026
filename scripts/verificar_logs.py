@@ -1,12 +1,22 @@
 """Coteja cuatro respuestas HTTP con sus eventos JSON de Docker Compose."""
 
+import argparse
 import json
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 from uuid import UUID, uuid4
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--output", type=Path,
+                    default=Path("evidencias/s07") / (
+                        f"logs-apis-{datetime.now(timezone.utc):%Y%m%dT%H%M%S}-{uuid4().hex[:8]}.json"),
+                    help="Archivo nuevo; si ya existe, no se sobrescribe.")
+output = parser.parse_args().output
+if output.exists():
+    parser.error(f"La salida ya existe: {output}. Usa otro nombre para conservar la evidencia.")
 
 results = []
 for service, container, port in (("fastapi", "python-api", 8000), ("springboot", "java-api", 8080)):
@@ -52,7 +62,7 @@ for service, container, port in (("fastapi", "python-api", 8000), ("springboot",
         assert datetime.fromisoformat(event["timestamp"].replace("Z", "+00:00")).tzinfo is not None
         results.append({"response": response, "log": event})
 
-output = Path("evidencias/s07/logs-apis.txt")
 output.parent.mkdir(parents=True, exist_ok=True)
-output.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+with output.open("x", encoding="utf-8") as evidence_file:
+    evidence_file.write(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
 print(f"OK cuatro respuestas con su mismo request_id y un evento JSON cada una; {output}")

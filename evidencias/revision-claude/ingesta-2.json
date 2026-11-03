@@ -1,0 +1,19 @@
+{
+  "collection": "historias",
+  "count": 9,
+  "per_patient": {
+    "1": 3,
+    "2": 3,
+    "3": 3
+  },
+  "payloads_match": true,
+  "example": {
+    "id": "449b1dc9-c946-5acc-9c15-9062f2ed5946",
+    "payload": {
+      "patient_id": 1,
+      "source": "paciente-1.md",
+      "section": "Enfermedad",
+      "text": "Ana Demo tiene Enfermedad Alfa."
+    }
+  }
+}

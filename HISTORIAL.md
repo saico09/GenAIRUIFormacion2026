@@ -1,385 +1,258 @@
 # Historial de la app
 
-Qué se ha ido agregando, qué es y cómo se usa. Lo más nuevo arriba. Comandos completos en [GUIA.md](GUIA.md).
+Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
-Cada entrada cuenta lo que había en esa fecha; las limitaciones antiguas pueden estar resueltas en una entrada posterior. El estado actual se resume en [README.md](README.md).
+## Guías · 03/11/2026 · Revisión de Claude
 
-## Herramientas · 29/10/2026 · PowerShell 7 y Python 3 en tu equipo
+- README, GUIA y LEVANTAR recortados a comandos y notas necesarias; se conserva la procedencia aparte.
+- [GUIA original](evidencias/revision-claude/documentacion-original/GUIA.md) e [HISTORIAL original](evidencias/revision-claude/documentacion-original/HISTORIAL.md) archivados completos antes del recorte.
 
-- **PowerShell 7.6.9**, instalado con winget (paquete MSIX). Los comandos de la GUIA y de los LEVANTAR van ahí: en Windows PowerShell 5.1 fallaban `preparar_copia.ps1`, `esperar_apis.ps1`, `abrir_argocd.ps1` y las comprobaciones con tildes.
-- **Python 3.15.2**, con Python Install Manager (`python`, `py`). Los `.py` que la GUIA corre en tu equipo usan ahora `python` en vez del Python interno de Codex.
-- Ojo: si ves tildes raras (`├®`) en la salida de un contenedor, pasa la consola a UTF-8 (comando al principio de la GUIA).
+## Revalidación · 03/11/2026 · Proyecto completo
+
+- Arranque desde detenido, ambas APIs, datos conservados, RAG y observabilidad comprobados de nuevo; [resultados](evidencias/revision-claude/LEEME.md).
+- GitOps repitió una → dos réplicas por commit/push y auto-sync. Los logs ahora generan una salida nueva por ensayo; `.idea` queda local y fuera de Git.
+
+## Herramientas · 29/10/2026 · PowerShell y Python
+
+- PowerShell 7.6.9 y Python 3.15.2 instalados; los comandos locales usan `python`.
+- Usar PowerShell 7; los helpers no están preparados para Windows PowerShell 5.1.
 
 ## HDU-048 · 28/10/2026 · Escala final comprobada, evaluación pendiente
 
-- **Preparación técnica comprobada**: ocho accesos HTTP 200, modelos Ollama disponibles, nueve fragmentos Qdrant y una réplica como estado inicial.
-- **Cambio 1→2 publicado**, commit `0e89a564811e6769c40d70281323cb004b1275a7`; auto-sync Succeeded de 19:49:36 a 19:49:37 UTC, Synced/Healthy, dos pods Ready y GET de Ana 200 igual a Compose.
-- **Captura final inspeccionada** con Sync OK y dos pods. El primer intento agotó la espera del navegador; repetir el mismo script pasó sin cambiar el servidor ni la operación.
-- **Datos conservados**: cuatro pacientes Python, tres Java y nueve puntos Qdrant. Evidencias y pendientes en `evidencias/s10/evaluacion.md`.
-- **Guion y guía actualizados al estado de dos réplicas**, con restablecimiento 2→1 por Git para quien quiera repetir la demo desde el principio.
-- Ojo: explicación personal, demo y evaluación de Rui siguen pendientes. La escala correcta no corrige definitivamente la incidencia externa de Argo CD; el ciclo completo desde detenido sigue sin ejecutarse.
+- Escala 1→2 por Git comprobada, con auto-sync y datos conservados.
+- Demo y evaluación humana pendientes; recorrido en [evaluacion.md](evidencias/s10/evaluacion.md).
 
 ## HDU-047 · 28/10/2026 · Guion final y ensayo de consultas
 
-- **Guion en `evidencias/s10/guion.md`**, con comandos, URLs y resultados esperados para CRUD, RAG, métricas, logs, nodos Phoenix y push de réplicas; enlaza HDU-044 a HDU-046.
-- **Consultas ensayadas**: Ana 200 en Python, Java y Minikube; nueve puntos Qdrant; dos targets UP; dos eventos LLM y cinco spans de la misma pregunta. Resultados en `047-ensayo.json`.
-- **Una réplica conservada**, con Argo CD Synced/Healthy y última operación Succeeded. El cambio final 1→2 queda preparado, sin ejecutarlo durante este ensayo.
-- **Una frase de apoyo por componente** para repasar PostgreSQL, Qdrant, Prometheus, Loki, LangGraph, Phoenix y Argo CD.
-- Ojo: esas frases no acreditan una explicación personal. La demo, la evaluación de Rui, el ciclo completo desde detenido y el límite recurrente de Argo CD siguen registrados como pendientes.
+- Guion final ensayado con una réplica, antes de la escala final.
+- Usar [guion.md](evidencias/s10/guion.md); sus frases son apoyo, no explicación personal recibida.
 
 ## HDU-046 · 28/10/2026 · Una réplica para iniciar la demo
 
-- **Cambio 2→1 publicado desde Git**, commit `f40aefc436a24f427565e00a9a1e54e2ba7ca3b3`; Argo CD lo detectó y aplicó automáticamente.
-- **Error de Argo CD repetido**: contador con duración negativa. Se conservó el estado inicial; un reintento real de main sobre el mismo commit terminó Succeeded, sin modificar status ni relojes.
-- **Estado final comprobado**: Synced/Healthy, un pod Ready y GET de Ana 200 igual a Compose; captura inspeccionada en `evidencias/s10/gitops-preparacion.md`.
-- **Recuperación del túnel FastAPI ejercitada** al escalar: detectó el listener propio sin respuesta, abrió otro y volvió a funcionar.
-- **Cambio futuro 1→2 preparado** con diff, commit, push y comprobación del SHA nuevo. La guía separa esa prueba estricta de las consultas del estado actual y de los SHA históricos.
-- Ojo: se conserva una réplica; la secuencia final no se ejecutó en esta HDU. La incidencia externa puede repetirse; explicación personal y revisión de Rui pendientes.
+- Preparación a una réplica; Argo terminó bien tras un reintento real.
+- Preparar otra demo con [gitops-preparacion.md](evidencias/s10/gitops-preparacion.md); el problema de reloj sigue abierto.
 
 ## HDU-045 · 28/10/2026 · Reproducir métricas, logs y trazas
 
-- **50 GET en 124,1 segundos**, 20 respuestas 200 y 5 respuestas 404 por API, con hora y duración guardadas; sin modificar pacientes.
-- **Seis paneles con valores numéricos**, capturas de FastAPI y Spring Boot inspeccionadas y dashboard exportado con sus consultas de req/s, error % y p95. El verificador fija el mismo intervalo para consultas, captura y enlace.
-- **Pregunta de Ana seguida por request_id**: dos eventos LLM en Loki con mismo modelo, prompt, respuesta y duración; RAG respondió Alfa con fuente y la directa pidió contexto.
-- **Una raíz y cuatro nodos en Phoenix**, en orden y con duraciones positivas; entradas/salidas y siete logs cotejados. Capturas de la traza y del prompt inspeccionadas.
-- **Resultados y enlaces en `evidencias/s10/observabilidad.md`**; comandos para repetir carga y consulta en la guía.
-- Ojo: el p95 del dashboard es agregado, no el tiempo de esa pregunta. Explicación personal y revisión de Rui siguen pendientes.
+- Carga de tráfico, paneles y una pregunta correlacionada en Loki/Phoenix.
+- Repetir desde la guía; [observabilidad.md](evidencias/s10/observabilidad.md) guarda el ensayo original.
 
 ## HDU-044 · 28/10/2026 · Repetir arranque y corregir accesos
 
-- **Arranque repetido sobre el entorno existente**, con ocho accesos HTTP 200. `scripts/verificar_componentes.py` guarda URLs, respuestas y fallos; comando en la guía.
-- **Ambos CRUD y chatbot comprobados**: estados acordados, 28 validaciones 422 por API, cuatro filas Python y tres Java conservadas. La pregunta de Ana mostró dos respuestas, mismo modelo y Alfa con fuente correcta.
-- **Errores de Grafana corregidos**: con tráfico positivo y sin series 4xx/5xx muestra 0 %; cuando faltan también las métricas totales conserva No data. Ambos casos se comprobaron.
-- **Túnel Argo CD comprobado por HTTPS**, consultando api/version antes de reutilizarlo. Un nuevo acceso pasó y la segunda ejecución conservó el mismo PID sano; el túnel original ya había terminado.
-- **Registro de fallos en `evidencias/s10/fallos.md`**, con pasos, esperado, obtenido, corrección y repetición, incluidos los antecedentes de Argo y FastAPI.
-- Ojo: el ciclo completo desde detenido sigue sin ejecutar por el rechazo automático anterior. Explicación personal, demo y revisión de Rui siguen pendientes.
+- CRUD/RAG revalidados; se corrigieron porcentaje de errores sin serie y túnel HTTPS de Argo.
+- Consultar [fallos.md](evidencias/s10/fallos.md) y usar `verificar_componentes.py`.
 
 ## HDU-043 · 28/10/2026 · Dos réplicas y reposición de un pod
 
-- **Réplicas de una a dos desde Git**, mediante `replicaCount: 2` y commit `4844f919647381ee36e27ef0d2cb7f4170408abe`; Argo CD lo sincronizó automáticamente, con operación Succeeded, Synced/Healthy y dos pods Ready.
-- **GET de Ana 200** antes y después de eliminar exactamente un pod. Kubernetes lo repuso con otro nombre y UID, conservando el otro pod y el mismo commit, sin nuevo push ni Sync manual.
-- **Acceso local recuperado**: el port-forward estaba ligado al pod eliminado; abrir otro devolvió el acceso. El helper ahora comprueba health antes de reutilizarlo y se probó con un túnel sano.
-- **Explicación y evidencias** en `evidencias/s09/gitops.md`: Git define el estado, Argo CD lo aplica y Kubernetes mantiene las réplicas; captura inspeccionada y comparación de UID.
-- Ojo: no se ejercitó específicamente la rama Stop-Process del helper porque el proceso viejo ya había terminado. Explicación personal y revisión de Rui pendientes, sin horas ni sesiones atribuidas.
+- Dos réplicas por Git y reposición de un pod comprobadas.
+- Tras reemplazar un pod, recuperar el túnel con `abrir_fastapi_minikube.ps1`; evidencia en [gitops.md](evidencias/s09/gitops.md).
 
 ## HDU-042 · 28/10/2026 · Primer despliegue desde Git
 
-- **Application fastapi con auto-sync, prune y selfHeal**, siguiendo main y el chart hacia namespace genai. Desplegó el commit `230a161d585a3106969d57d5103256872f001928` con una réplica Ready.
-- **CRUD en localhost:8002** mediante `abrir_fastapi_minikube.ps1`; GET de Ana devolvió 200 y los mismos datos que Compose. El chatbot continúa en 8000.
-- **Synced/Healthy y operación Succeeded comprobados** tras un reintento real de main, sin alterar status ni relojes. El intento inicial mostró `counter cannot decrease in value` y tiempos negativos; se conserva su evidencia.
-- **Verificadores reforzados**: revisión exacta, operación Succeeded, tiempos coherentes y captura sin Sync error. Resultados en `evidencias/s09/despliegue-inicial.md`.
-- Ojo: el reintento superó la incidencia local, pero no acredita una corrección definitiva de Argo CD. Explicación personal y revisión de Rui siguen pendientes.
+- Argo desplegó FastAPI; GET devolvió los mismos datos que Compose.
+- Acceso por `abrir_fastapi_minikube.ps1`. El reintento superó el fallo de reloj, sin corregir su causa.
 
 ## HDU-041 · 28/10/2026 · Argo CD conectado al repositorio
 
-- **Argo CD 3.5.6 instalado** mediante `scripts/instalar_argocd.ps1`, con manifiesto oficial verificado por SHA-256, server-side apply y sin forzar conflictos.
-- **Siete pods Ready** en namespace argocd del contexto genai; deployments disponibles y controlador listo. Evidencia en `evidencias/s09/041-instalacion.json`.
-- **Acceso HTTPS 8443 y login comprobados**; `abrir_argocd.ps1` inicia o reutiliza el port-forward local oculto. La captura de Repositories mostró Successful.
-- **Chart leído desde Git**, rama main, commit `1bc6af1235a6d96952334e41685c3acd829b3fed`, ruta `deploy/helm/fastapi` de tipo Helm. Resultados en `evidencias/s09/041-repositorio.md`.
-- **Verificador corregido** para enviar appProject=default y appName=fastapi; la repetición pasó. No quedan bloqueos activos de lectura Git.
-- Ojo: esta HDU conecta el repo; la Application y el despliegue FastAPI corresponden a HDU-042. La revisión humana sigue pendiente.
+- Argo CD instalado y conectado al repositorio; chart descubierto.
+- Abrir con `abrir_argocd.ps1`; la Application se añadió en HDU-042.
 
 ## HDU-040 · 28/10/2026 · Chart y conexión local a PostgreSQL
 
-- **Chart `deploy/helm/fastapi`** con una réplica, Deployment/Service, imagen s09, puerto 8000, recursos acotados y readiness GET `/health`. Lint y render pasaron.
-- **Namespace genai y Secret genai-postgres** creados por `scripts/crear_secret_postgres.ps1`, leyendo `.env` y enviándolo por stdin sin imprimir credenciales ni guardarlas en el chart.
-- **PostgreSQL publicado en 5432:5432** para Minikube; host resuelto a 192.168.65.254. Se conservaron las cuatro filas Python y tres Java.
-- **SELECT 1 desde un pod temporal** devolvió 1 con la imagen s09 y el Secret; el pod quedó eliminado. Comandos y resultados en `evidencias/s09/040-helm.md` y la guía.
-- Ojo: esta HDU prepara el despliegue del CRUD FastAPI; todavía no lo instala. El chatbot y sus dependencias siguen en Compose, puerto 8000.
+- Chart, Secret y conexión desde Minikube a PostgreSQL preparados.
+- [Pasos SQL y Helm](evidencias/s09/040-helm.md). Solo se prepara el CRUD FastAPI; el chatbot queda en Compose.
 
 ## HDU-039 · 28/10/2026 · Minikube e imagen FastAPI preparados
 
-- **Arranque del README repetido**: ambas APIs y Ana responden; la pregunta RAG pasó con cinco spans y siete logs correlacionados. Evidencia en `evidencias/s09/039-chat.json`.
-- **Herramientas verificadas en `.local/bin`**: Minikube 1.39.0, kubectl 1.36.6 y Helm 4.3.1, con SHA-256 oficiales y sin cambiar el PATH.
-- **Nodo genai Ready con Kubernetes 1.36.6**, driver Docker y recursos reales de 2 CPU y 3072 MiB. `--keep-context` conserva el contexto activo; los comandos usan `--context=genai`.
-- **Imagen `genai-fastapi:s09` construida y cargada**, Linux amd64; `minikube image ls` confirmó la etiqueta. Hash y evidencia en `evidencias/s09/039-resumen.md`.
-- Ojo: esta HDU deja la imagen disponible, sin desplegar aún el microservicio. La ejecución es del 28/10; no acredita una actividad en enero ni una revisión humana.
+- Minikube y herramientas locales preparados; imagen FastAPI construida y cargada.
+- Comandos originales en [039-resumen.md](evidencias/s09/039-resumen.md); usar siempre el contexto explícito.
 
 ## HDU-038 · 28/10/2026 · Control y pasos de regreso
 
-- **Una pregunta de Ana comprobada de extremo a extremo**: Alfa con cita, HTTP 200, cinco spans y siete logs con el mismo request_id. El contador POST `/chat` 200 pasó de 1 a 2.
-- **Servicios y observabilidad disponibles**: APIs, nueve puntos Qdrant, modelos Ollama, targets UP, dashboard, Loki y Phoenix. Capturas inspeccionadas y estado por componente en `evidencias/s08/control.md`.
-- **README y guía de regreso** conservan receso 21/12–01/01 sin tareas. Primera acción prevista del 04/01: arrancar, esperar APIs y comprobar health; después Ana y pregunta RAG.
-- Ojo: las métricas del dashboard son agregadas, no la latencia de ese chat. El ciclo completo desde detenido sigue sin ejecutar por rechazo automático; explicación personal y revisión de Rui pendientes, sin horas ni sesiones atribuidas.
+- Control de una pregunta completa: respuestas, métricas, logs y trazas.
+- [control.md](evidencias/s08/control.md) conserva el ensayo y el receso previsto, sin atribuir sesiones realizadas.
 
 ## HDU-037 · 28/10/2026 · Entradas y salidas de cada nodo
 
-- **Cuatro spans hijos de rag** mediante `trace_node`, con request_id, entrada y salida JSON, inicio, fin y estado. Los eventos existentes de Loki se conservan.
-- **`MODEL_OPTIONS` compartido** por la llamada real a Ollama y el span LLM; se mantienen modelo y parámetros entre directa y RAG.
-- **`scripts/verificar_traza.py`** comprobó cinco spans ordenados, relaciones padre/hijo, valores encadenados, tiempos positivos y siete logs coincidentes. Ana volvió a responder Alfa con fuente.
-- **Capturas de la traza y del prompt inspeccionadas**, con fragmentos de entrada y prompt completo visibles. Resultados en `evidencias/s08/037-nodos.md`.
-- Ojo: Phoenix redondea duraciones muy pequeñas a 0 ms; el JSON mantiene el valor positivo. Explicación de Marco y revisión de Rui siguen pendientes.
+- Cuatro spans hijos muestran entradas, salidas y duración de cada nodo.
+- `verificar_traza.py` comprueba raíz, hijos y correlación en Loki; abrir la URL del JSON.
 
 ## HDU-036 · 28/10/2026 · Primera traza RAG en Phoenix
 
-- **Phoenix 20.26.1 en localhost:6006**, proyecto genai y volumen `phoenix_data`. OpenTelemetry 1.45.1 funciona con Python 3.15.2, mediante el exportador HTTP estándar.
-- **Una raíz `rag` alrededor del grafo**, con request_id común al chatbot y Loki; la prueba final devolvió un único span sin padre, estado OK y duración positiva. UI y captura inspeccionadas.
-- **Proveedor global, exportación por lotes y cierre al apagar la API**. Se desactivaron los spans automáticos de FastAPI con `telemetry={"tracing": False, "operation_spans": False}` para conservar la raíz prevista.
-- **Enlaces y comprobaciones en `evidencias/s08/phoenix.md`**. Esta HDU todavía no añade spans hijos a los cuatro nodos; los ensayos anteriores se conservan como históricos.
-- Ojo: explicación de Marco y revisión de Rui pendientes; la prueba técnica no acredita una sesión ni horas reales.
+- Phoenix y OpenTelemetry añadidos; primera raíz `rag` comprobada.
+- Abrir Phoenix en 6006; los hijos de los nodos se incorporan en HDU-037.
 
 ## HDU-035 · 28/10/2026 · Chatbot conectado al StateGraph
 
-- **El POST `/chat` invoca el grafo para RAG** y conserva la rama directa, la pregunta y las columnas de la página. `rag.py` queda como constructor del prompt; se retiró la función anterior sin usos restantes.
-- **Dos preguntas exactas desde el navegador**: enfermedad de Ana → Alfa con cita; cirugía → sin información suficiente. Ambas dieron 200 y las capturas se inspeccionaron.
-- **Cuatro eventos `rag_node` en orden**, dos llamadas LLM y un HTTP por caso, con el mismo request_id. `scripts/verificar_grafo_logs.py` comprobó modelo, pregunta, fuentes y respuestas contra el JSON de la página.
-- **Casos y comandos en `evidencias/s08/casos-chatbot.md` y la guía**. La explicación personal de Marco y la revisión de Rui siguen pendientes.
+- La rama RAG de `/chat` pasó a ejecutar el StateGraph.
+- Probar enfermedad y cirugía de Ana en el chatbot; [casos-chatbot.md](evidencias/s08/casos-chatbot.md) conserva ambos resultados.
 
 ## HDU-034 · 28/10/2026 · RAG como grafo de cuatro nodos
 
-- **LangGraph 1.2.18 en `grafo.py`** conecta retrieval, prompt, llamada_llm y respuesta. Reutiliza búsqueda, construcción del prompt y llamada al mismo modelo.
-- **Estado final guardado por consola** con pregunta exacta del dataset, paciente, request_id, fragmentos, prompt y respuesta. Ana devolvió Alfa con fuente; estado y evento LLM conservaron el mismo id.
-- **Python 3.15.2 y dependencias comprobados**: Docker compila PyYAML/zstandard en una etapa separada; la imagen final no contiene gcc ni las ruedas temporales. `pip check` pasó.
-- **Comandos en la guía y evidencia en `evidencias/s08/034-grafo.md`**. Esta HDU probó el grafo independiente; la integración del endpoint corresponde a HDU-035.
-- Ojo: explicación de Marco y revisión de Rui pendientes; no se acreditan horas ni una sesión realizada.
+- Grafo independiente: retrieval → prompt → llamada_llm → respuesta.
+- `grafo.py` guarda su estado JSON; todavía no estaba integrado al endpoint en esta HDU.
 
 ## HDU-033 · 28/10/2026 · Correlación de logs revisada
 
-- **Consultas guardadas repetidas**: dos eventos 200/404 en FastAPI, dos en Spring Boot y tres del chatbot al incluir HTTP y ambas ramas LLM.
-- **Un request_id común** permite seguir el POST `/chat` y sus llamadas direct/rag. La guía deja la consulta completa, su intervalo y una frase de apoyo para explicarla.
-- **Resultados y capturas inspeccionadas de Explore** en `evidencias/s07/revision.md`. Tras la corrección previa del verificador, se amplió la altura de la captura para leer los tres eventos completos; no hizo falta corregir las APIs.
-- Ojo: siguen pendientes la explicación propia de Marco y la revisión de Rui. No se atribuyen horas de trabajo ni una sesión realizada.
+- Consultas de logs HTTP y LLM repetidas con el mismo request_id.
+- En Grafana Explore filtrar por servicio e id; [revisión](evidencias/s07/revision.md) conserva el resultado.
 
 ## HDU-032 · 28/10/2026 · Prompt y respuesta del LLM en Loki
 
-- **Eventos `llm` para direct y rag** con fecha, modelo, prompt completo, respuesta, duración y estado. Comparten el request_id del POST mediante ContextVar.
-- **Mismo modelo y parámetros** en ambas ramas; solo RAG recibe los fragmentos recuperados. La consulta de Ana respondió Alfa con fuente en RAG y falta de contexto en la directa.
-- **`scripts/verificar_llm_logs.py`** cotejó ambas respuestas con dos eventos LLM y un HTTP 200; Explore mostró las dos líneas con su id común. Resultados y captura inspeccionada en `evidencias/s07/llm.md`.
-- Ojo: estos eventos contienen preguntas y contexto; seguimos usando datos ficticios. Se corrigió una expectativa de nombre de archivo en el verificador y la repetición pasó, sin cambiar la respuesta de la app.
+- Las llamadas direct/rag registran modelo, prompt, respuesta y duración.
+- `verificar_llm_logs.py` coteja ambas ramas; usar datos ficticios porque el log incluye el contexto.
 
 ## HDU-031 · 28/10/2026 · Logs de ambas APIs en Loki
 
-- **Loki 3.7.9 y Alloy 1.21.2** en Compose, con versiones/digests fijados y volúmenes propios. Loki escucha solo en el puerto local 3100.
-- **Alloy recoge solo las dos APIs del proyecto** y las distingue con `service=fastapi/springboot`. Conserva el JSON original; request_id no es una etiqueta almacenada.
-- **Fuente Loki en Grafana** añadida junto a Prometheus. Save & test pasó; Explore mostró dos eventos 200/404 por API con sus request_id visibles y capturas inspeccionadas.
-- **`scripts/verificar_loki.py` y `scripts/capturar_loki.cjs`** comprueban cuatro GET correlacionados y guardan sus consultas/capturas. Evidencia en `evidencias/s07/loki-apis.md`; comandos de uso en la guía.
+- Loki/Alloy recogen los logs de ambas APIs y Grafana los consulta.
+- `verificar_loki.py` genera peticiones y busca sus eventos; no reutilizar ids de evidencias antiguas.
 
 ## HDU-030 · 28/10/2026 · Logs JSON y request_id
 
-- **Un evento JSON por petición** en ambas APIs, con fecha UTC, servicio, método, ruta normalizada, status y duración numérica en milisegundos.
-- **`X-Request-ID`** conserva un id válido enviado por el cliente o genera un UUID; el mismo valor sale en el header y en el log.
-- **`scripts/verificar_logs.py`** cotejó cuatro respuestas 200/404 con sus cuatro eventos. Java comprobó un id inválido y una query excluida; Python comprobó un 500 aislado con id y mensaje genérico.
-- **Sin cuerpos ni queries en los eventos HTTP**; los mensajes de arranque mantienen su formato. Resultados y comandos en `evidencias/s07/030-logs.md` y la guía.
-- Ojo: el verificador vuelve a generar `logs-apis.txt`; estas pruebas no acreditan explicación personal ni revisión de Rui.
+- Logs JSON HTTP y cabecera X-Request-ID en ambas APIs.
+- `verificar_logs.py` coteja respuestas y eventos; desde la revisión del 03/11 crea archivos nuevos.
 
 ## HDU-029 · 28/10/2026 · Métricas revisadas
 
-- **GET 200 y 404 repetidos en ambas APIs**: cada petición sumó exactamente uno en sus contadores; Prometheus recogió los valores nuevos sin modificar pacientes.
-- **Seis paneles comprobados** mediante Grafana, con tráfico, porcentaje de errores y p95 finitos; dashboard exportado y dos capturas inspeccionadas en `evidencias/s06/revision.md`.
-- **`scripts/verificar_dashboard.cjs`** permite repetir la consulta y guardar capturas. La guía incluye sus comandos locales y las frases de apoyo para explicar los cálculos.
-- Ojo: la explicación propia de Marco y la revisión de Rui siguen pendientes. Los resultados son una lectura de esa ventana de cinco minutos, no una garantía de rendimiento.
+- Contadores y seis paneles revalidados tras tráfico correcto y erróneo.
+- Resultados en [revisión de métricas](evidencias/s06/revision.md); explicación propia y revisión de Rui pendientes.
 
 ## HDU-028 · 28/10/2026 · Latencia p95 y carga comprobada
 
-- **Dos paneles p95** completan las filas del dashboard, con unidad segundos y cálculo sobre los buckets de los últimos cinco minutos.
-- **`scripts/generar_trafico.py`** hizo 20 GET 200 y 5 GET 404 por API, distribuidos en unos dos minutos: 50 respuestas esperadas, sin modificar pacientes.
-- **Seis paneles con datos numéricos** y capturas inspeccionadas; últimos p95 observados de 0,004760 s en FastAPI y 0,009647 s en Spring Boot. Resultados en `evidencias/s06/028-latencia.md` y dashboard exportado en esa carpeta.
-- Ojo: p95 es una estimación desde buckets del servidor, no el tiempo de red del script ni una garantía de rendimiento. La guía usa la ruta Python real del equipo.
+- Dashboard ampliado con p95; carga de 50 GET distribuida en unos dos minutos.
+- `generar_trafico.py` llena los paneles sin modificar pacientes. El p95 es agregado, no tiempo de red.
 
 ## HDU-027 · 28/10/2026 · Dashboard de tráfico y errores
 
-- **Dashboard APIs GenAI** provisionado desde `observabilidad/dashboard.json`, con una fila por API y cuatro paneles: tráfico en req/s y errores 4xx/5xx en porcentaje.
-- **Ventana de cinco minutos** y expresión Grafana `100 * $B / $A`, usando B como tasa de errores y A como tasa total. El dashboard muestra inicialmente quince minutos.
-- **Cuatro paneles comprobados** mediante la API de Grafana, incluida su expresión matemática: valores finitos tras GET 200/404 en ambas APIs; captura inspeccionada en `evidencias/s06/consultas.md`.
-- Ojo: sin tráfico puede no haber porcentaje definido. Health y consultas a métricas también cuentan; dos peticiones aisladas no obligan a mostrar 50 %.
+- Dashboard con tráfico y errores, separado por API.
+- Abrir Grafana → APIs GenAI; definición en `observabilidad/dashboard.json`.
 
 ## HDU-026 · 28/10/2026 · Java, Prometheus y Grafana conectados
 
-- **Actuator y Micrometer** exponen `/actuator/prometheus` en Java, con contador e histograma HTTP. GET 200/404 sumaron exactamente uno por status y mantuvieron la ruta normalizada.
-- **Prometheus 3.15.1** recoge ambas APIs cada 15 segundos; targets `fastapi` y `springboot` comprobados UP, con la etiqueta service en las series.
-- **Grafana 13.3.0** tiene la fuente Prometheus provisionada; el clic real en Save & test pasó. Puertos locales 9090 y 3000, volúmenes propios y versiones/digests fijados.
-- **Usuario admin y clave local** en `GRAFANA_ADMIN_PASSWORD` de `.env`; el ejemplo la deja vacía para completar en clones nuevos. No se guarda el secreto en Git ni evidencias.
-- **Evidencia** en `evidencias/s06/026.md`, con targets y captura de Grafana. La comprobación técnica no acredita explicación personal ni revisión experta.
+- Métricas Java, Prometheus y Grafana conectados.
+- Ver targets en 9090 y dashboard en 3000; credenciales de Grafana solo en `.env`.
 
 ## HDU-025 · 28/10/2026 · Métricas HTTP en FastAPI
 
-- **`app/metrics.py` y prometheus-client 0.26.0** exponen `GET /metrics`: contador de peticiones e histograma de duración en segundos.
-- **Etiquetas acotadas**: método, ruta y status. Los pacientes usan `/patients/{id}` y las rutas desconocidas `unmatched`, sin una serie por URL o paciente.
-- **`scripts/verificar_metricas.py`** comprobó GET 200/404 e incremento exacto de uno en contador y count del histograma por status, sin modificar datos. Evidencia en `evidencias/s06/fastapi.md`.
-- Ojo: los contadores se reinician con el proceso e incluyen las consultas a `/metrics`. En esta HDU se comprobó la exposición de métricas; la recolección y el dashboard vienen después.
+- FastAPI expone contador e histograma HTTP con rutas normalizadas.
+- Consultar `/metrics` o ejecutar `verificar_metricas.py`.
 
 ## HDU-024 · 28/10/2026 · Preparación de demo comprobada
 
-- **Comprobación previa repetida**: health y Ana responden 200 en ambas APIs; el chatbot devuelve Alfa con fuente y cirugía sin información.
-- **`evidencias/S05-validacion.md`** enlaza resultados y capturas y deja explícito el estado: Validación pendiente. No hay valoración 1–4 ni correcciones expertas recibidas.
-- Ojo: las frases del ensayo son apoyo; siguen pendientes las frases propias de Marco, la demo/explicación con Rui y el ciclo completo desde detenido. No se acreditan horas ni una sesión realizada.
+- Preparación de la demo comprobada con ambas APIs y dos preguntas.
+- [Validación](evidencias/S05-validacion.md): la demo y la valoración de Rui quedaron pendientes.
 
 ## HDU-023 · 28/10/2026 · Ensayo y espera de disponibilidad
 
-- **`scripts/esperar_apis.ps1`** espera health de ambas APIs hasta 90 segundos. Se añadió tras un `Empty reply from server`: Compose había terminado, pero Python todavía arrancaba.
-- **Arranque repetido con la espera**: health y Ana 200 en ambas APIs, nueve puntos Qdrant y Ollama disponible. README, guía y guion incluyen el paso corregido.
-- **Recorrido ensayado**: ambos CRUD, reinicios de PostgreSQL/APIs, dos búsquedas y cuatro preguntas HTML pasaron; cuatro filas Python y tres Java quedaron intactas.
-- **`evidencias/S05-ensayo.md`** guarda resultados, capturas y seis frases de apoyo ligadas al código. No reemplazan una explicación personal.
-- Ojo: el ciclo completo desde detenido sigue NO EJECUTADO; comprensión de Marco y revisión de Rui continúan pendientes.
+- Se corrigió la consulta demasiado temprana tras Compose con una espera acotada.
+- Ejecutar `esperar_apis.ps1` después del arranque; [ensayo](evidencias/S05-ensayo.md).
 
 ## HDU-022 · 28/10/2026 · Guion de demo de etapa 1
 
-- **`evidencias/S05-guion.md`** ordena arranque, CRUD Python/Java, reinicio de PostgreSQL y APIs sin borrar volúmenes, búsqueda y chatbot.
-- **Comandos y resultados esperados** enlazados con código y evidencia; los CRUD crean, editan y borran su propio Test Demo, conservando a Ana, Bruno y Carla.
-- **Dos preguntas fijas de demo**: enfermedad de Ana → Alfa con fuente; cirugía de Ana → falta de información. Se mantienen pregunta, modelo y parámetros entre ambas ramas.
-- Ojo: el ensayo conjunto corresponde a HDU-023; el ciclo completo desde detenido y la validación humana siguen pendientes. El guion no vuelve a intentar la parada rechazada de Qdrant.
+- Guion de la primera demo: arranque, CRUD, persistencia, búsqueda y chat.
+- Seguir [S05-guion.md](evidencias/S05-guion.md), usando temporales propios para CRUD.
 
 ## HDU-021 · 28/10/2026 · Repetición y pendientes concretos
 
-- **Ambos CRUD repetidos**: códigos correctos, 56 respuestas 422 esperadas y cuatro filas Python / tres Java intactas, sin temporales.
-- **Cuatro preguntas repetidas en HTML**: Alfa, Beta, Gamma y cirugía sin información; se inspeccionaron respuestas, fuentes y capturas. No hizo falta cambiar la aplicación.
-- **`evidencias/S05-pendientes.md`** conserva el resultado de cada repetición y el ciclo completo desde detenido como NO EJECUTADO; no se presenta como fallo de la app ni como corrección realizada.
-- Ojo: siguen pendientes la explicación personal y la revisión de Rui; no se registra una sesión ni valoración recibida.
+- Repetidos ambos CRUD y las cuatro preguntas sin cambiar los datos originales.
+- [S05-pendientes.md](evidencias/S05-pendientes.md) registra lo técnico y lo no acreditado en ese corte.
 
 ## HDU-020 · 28/10/2026 · Arranque y comprobación de etapa 1
 
-- **README seguido en el entorno existente**: Compose y Ollama disponibles, health y Ana correctos en ambas APIs, nueve puntos en Qdrant.
-- **CRUD y dos consultas HTML comprobados**: temporales eliminados, filas anteriores conservadas, Alfa con fuente y cirugía sin información.
-- **`--demo` y carpetas de evidencia** en el verificador UI permiten ensayar los dos casos de Ana sin sobrescribir S04. Resultados en `evidencias/S05-arranque.md`.
-- Ojo: detener todo y arrancar desde detenido quedó NO EJECUTADO por el rechazo automático previo de la parada de Qdrant. Compose lo recreó automáticamente durante `up` y conservó nueve puntos; eso no completa el ciclo pendiente.
+- Arranque y consultas comprobados sobre el entorno existente.
+- El ciclo completo desde detenido no se ejecutó en ese ensayo; detalle histórico en [S05-arranque.md](evidencias/S05-arranque.md).
 
 ## HDU-019 · 28/10/2026 · Cuatro preguntas comprobadas desde HTML
 
-- **Dataset completo en Edge**: cuatro POST exactos y 200. RAG respondió Enfermedad Alfa, Tratamiento Beta, Medicamento Gamma y `No hay información suficiente.` para cirugía; la directa reconoció falta de datos.
-- **Respuestas y fuentes visibles** cotejadas contra el JSON, siempre del paciente elegido. Se conservaron el modelo, parámetros, textos y recuperación.
-- **Campos bloqueados durante la espera** y paciente consultado identificado en el resultado, para evitar confundir una respuesta con otro paciente. Se comprobó también su restauración al terminar.
-- **`scripts/verificar_chat_ui.cjs --dataset`** repite los casos; la guía deja el comando usado en este equipo. Respuestas y cuatro capturas inspeccionadas en S04.
-- Ojo: las frases de apoyo de S04 son para repasar; no acreditan una explicación de Marco ni revisión recibida de Rui. Ambas siguen pendientes.
+- Cuatro preguntas comprobadas en la página, con fuentes del paciente elegido.
+- Casos en `datos/preguntas.json`; los campos se bloquean durante la espera y se restauran al terminar.
 
 ## HDU-018 · 28/10/2026 · Espera y reintento en el chatbot
 
-- **Cargando y botón desactivado** mientras llega la respuesta; `finally` restaura ambos al terminar, también si ocurre un error.
-- **Pregunta vacía** muestra `Escribe una pregunta` y se comprobó que no hace ningún POST `/chat`.
-- **Ollama realmente detenido** produjo 503 `LLM no disponible`, conservando el texto. Tras iniciar Ollama con el script, Consultar funcionó en la misma página: dos respuestas, Alfa y fuente correcta.
-- **Evidencias UI** en `evidencias/S04-ui-018.json` y las capturas de error/reintento. La explicación personal sigue pendiente.
+- El chatbot muestra espera, valida pregunta vacía y permite reintentar errores.
+- Si Ollama no responde, iniciarlo con el helper y repetir la pregunta conservada.
 
 ## HDU-017 · 28/10/2026 · Chatbot en el navegador
 
-- **`python-api/app/static/index.html`** se abre en `http://localhost:8000`: selector de pacientes, pregunta y columnas Sin RAG / Con RAG con fuentes.
-- **Selector conectado a `GET /patients`** y envío a `POST /chat` con el paciente elegido y la pregunta exacta. Las respuestas se muestran como texto.
-- **Prueba real con Ana en Edge**: 200, Enfermedad Alfa en RAG y fuente `paciente-1.md / Enfermedad`; la rama directa reconoció falta de datos.
-- **Captura y respuesta** en `evidencias/S04/comparacion.png` y `S04-ui-017.json`. La comprensión personal sigue pendiente.
+- Página con selector de pacientes y columnas sin/con RAG.
+- Abrir el puerto 8000; la página usa `/patients` y `/chat`.
 
 ## HDU-016 · 28/10/2026 · Comparación directa y RAG
 
-- **`python-api/rag.py`** recupera hasta dos fragmentos del paciente y arma el prompt con texto, archivo y sección. Pide citar la fuente y reconocer los datos ausentes.
-- **`POST /chat`** devuelve `direct_answer`, `rag_answer` y `sources`; conserva la misma pregunta, `llama3.2:3b` y temperatura 0 en ambas ramas.
-- **Dos casos reales comprobados**: Ana → Enfermedad Alfa con `[paciente-1.md/Enfermedad]`; cirugía → `No hay información suficiente.`. La rama directa reconoció falta de datos en ambos casos.
-- **`scripts/verificar_chat.py`** repite esos casos. `evidencias/S04-rag.json` conserva prompts, modelo, parámetros, respuestas y fuentes; la cita y la respuesta salen del modelo.
-- Ojo: el 503 `Qdrant no disponible` se probó con una API aislada y URL inaccesible, sin detener Qdrant real. La comprensión personal del flujo sigue pendiente.
+- Comparación directa/RAG con misma pregunta, modelo y parámetros.
+- `verificar_chat.py` prueba una respuesta documentada y otra ausente. El 503 Qdrant se probó con una API aislada.
 
 ## HDU-015 · 28/10/2026 · Respuesta directa del LLM
 
-- **`llama3.2:3b`** descargado en Ollama y probado con `Responde hola`. Se mantiene separado de `nomic-embed-text`, que genera los vectores.
-- **`app/llm.py`** centraliza la llamada: temperatura 0, contexto 2048, salida máxima de 256 tokens y timeout de 120 segundos; el modelo sale de `CHAT_MODEL` en Compose.
-- **`POST /chat`** recibe paciente y pregunta y devuelve `direct_answer` enviando solo la pregunta. La prueba de Ana respondió 200 y reconoció que no tenía información, sin inventar enfermedad.
-- **Errores comprobados**: pregunta vacía → 422, paciente inexistente → 404 y Ollama realmente detenido → 503 `LLM no disponible`. El script de inicio levantó de nuevo el servidor correctamente.
-- Ojo: en esta HDU la respuesta todavía no usa documentos ni Qdrant. La explicación personal sigue pendiente; las respuestas y parámetros están en `evidencias/S04.md`.
+- Primera respuesta directa con llama3.2:3b; llamada centralizada en `app/llm.py`.
+- `POST /chat` envió solo la pregunta en esta HDU; el contexto se incorporó después.
 
 ## HDU-014 · 28/10/2026 · Recuperación y persistencia Qdrant
 
-- **`scripts/verificar_recuperacion.py`** coteja los nueve payloads y repite las cuatro preguntas: tres respuestas presentes, cirugía ausente y ocho resultados del paciente correcto.
-- **Reinicio de Qdrant comprobado**: antes y después quedaron nueve puntos, tres por paciente, sin repetir la ingesta. Fuentes, textos y scores se conservaron.
-- **Código y evidencias** guardados en el commit `c0c62e5`; S03 incluye los resultados y tres frases para repasar vectores, filtro por paciente y límites de similitud.
-- Ojo: la explicación personal de Marco y la revisión de Rui siguen pendientes; la comprobación técnica no acredita una sesión recibida.
+- Recuperación y persistencia Qdrant comprobadas en el ensayo original.
+- `verificar_recuperacion.py` coteja los documentos y las búsquedas; conservar ese resultado histórico.
 
 ## HDU-013 · 28/10/2026 · Buscar dos fragmentos del paciente
 
-- **`python-api/buscar.py`** recibe id y pregunta; comparte `search_fragments()` de `app/knowledge.py` y el modelo de embeddings usado en la ingesta.
-- **Filtro por `patient_id` y máximo dos resultados**: devuelve score, paciente, archivo, sección y texto. Las cuatro preguntas se comprobaron sin mezclar pacientes.
-- **Tres respuestas conocidas recuperadas**: Enfermedad Alfa, Tratamiento Beta y Medicamento Gamma aparecieron en el primer resultado de su consulta.
-- Ojo: preguntar por cirugía de Ana recuperó Enfermedad y Tratamiento, que no contestan esa pregunta. Similitud no prueba que exista respuesta; todavía no interviene un LLM.
+- Búsqueda limitada a dos fragmentos del paciente solicitado.
+- `buscar.py ID pregunta`; similitud no significa que los textos contengan la respuesta.
 
 ## HDU-012 · 28/10/2026 · Ingesta sin duplicados
 
-- **`python-api/ingestar.py`** lee los tres Markdown, separa las nueve secciones y genera sus embeddings antes de guardarlos en `historias`.
-- **UUID estable por paciente y sección**: repetir la carga actualiza el mismo punto; conserva `patient_id`, `source`, `section` y `text` para reconocer su origen.
-- **Dos ejecuciones comprobadas** terminaron con nueve puntos, tres por paciente, y todos los ids y payloads iguales a los documentos. Los datos quedan en `qdrant_data`.
-- Ojo: no se borran puntos para forzar un resultado correcto; si el cotejo falla, el script avisa. La búsqueda y la prueba tras reiniciar Qdrant vienen en las HDU siguientes.
+- Ingesta de los Markdown con ids estables, sin duplicar puntos al repetirla.
+- `ingestar.py` guarda paciente, archivo, sección y texto en Qdrant.
 
 ## HDU-011 · 28/10/2026 · Embeddings y colección Qdrant
 
-- **Reanudación autorizada por Marco** aunque no se alcance el mínimo documental de RAM. Se arrancó Docker Desktop y las comprobaciones de esta HDU pasaron; el bloqueo de HDU-010 queda como antecedente.
-- **Qdrant 1.20.0** se añadió a Compose en `localhost:6333`, con datos en `qdrant_data`. La consulta de colecciones responde 200.
-- **Ollama 0.40.12 para Windows** quedó instalado desde el ZIP oficial en la carpeta local de programas. `scripts/iniciar_ollama.ps1` lo inicia o reutiliza; no se cambió el PATH global.
-- **`nomic-embed-text`** descargado y probado desde `python-api`: genera vectores de 768 componentes. `EMBEDDING_MODEL` centraliza la elección y `app/knowledge.py` la comparte.
-- **`preparar_vectores.py`** crea `historias` solo si falta y comprueba dimensión 768 y distancia Cosine; una configuración incompatible se informa sin borrar la colección.
-- Ojo: ingesta y búsqueda siguen en las HDU siguientes; todavía no se acredita RAG por disponer de un vector y una colección.
+- Ollama, embeddings de 768 componentes y colección Qdrant preparados tras reanudación autorizada.
+- `preparar_vectores.py` comprueba dimensión/Cosine sin borrar colecciones; el mínimo de RAM no se acreditó.
 
 ## HDU-010 · 28/10/2026 · Historias y preguntas ficticias
 
-- **`datos/paciente-1.md`, `paciente-2.md` y `paciente-3.md`** contienen nueve secciones: Enfermedad, Tratamiento y Medicamento para Ana, Bruno y Carla. Usan valores ficticios Alfa/Beta/Gamma y los ids Python 1, 2 y 3 comprobados por HTTP.
-- **`datos/preguntas.json`** guarda las cuatro preguntas del checklist y sus respuestas esperadas. Tres se responden con los documentos; la última cirugía de Ana no aparece y debe responderse `No hay información suficiente`.
-- **Datos listos para futura ingesta**: la guía permite leer los archivos; las comprobaciones están en `evidencias/S03.md`. Todavía no se implementaron embeddings ni RAG.
-- Ojo en el primer intento: HDU-011 quedó bloqueada antes de instalar Ollama/Qdrant. La medición dio 0,32 GB libres de 13,86 GB, frente al mínimo de 8 GB. Después Marco autorizó continuar; la reanudación y sus pruebas están en HDU-011.
+- Tres historias ficticias, nueve secciones y cuatro preguntas preparadas.
+- Leer `datos/`; el bloqueo inicial por RAM fue superado por la reanudación de HDU-011.
 
 ## HDU-009 · 28/10/2026 · Persistencia Java y repaso de equivalencia
 
-- **Prueba de persistencia con `-Servicio java-api`** reinicia Java y PostgreSQL y compara sus pacientes antes/después. Conservó las tres filas y los cuatro campos originales de Ana, sin borrar `pgdata`.
-- **Python conservado**: tras ese reinicio, la consulta de Ana en FastAPI respondió 200.
-- **Errores después del reinicio**: Java siguió rechazando el email sin arroba con 422 y respondió 404 al consultar el id ausente 999999.
-- **Guía y evidencias S02** dejan el comando reproducible y el resultado, junto con el recorrido controlador → JPA → PostgreSQL para repasar.
-- Ojo: la explicación de Marco y la revisión de Rui están pendientes. No se registra una cita ni una revisión recibida por haber terminado las pruebas técnicas.
+- Persistencia Java comprobada tras reiniciar PostgreSQL y la API.
+- `verificar_persistencia.ps1 -Servicio java-api`; Python conserva su tabla separada.
 
 ## HDU-008 · 28/10/2026 · Comparar el contrato de las dos APIs
 
-- **Verificador ampliado** a 14 entradas inválidas, probadas en POST y PUT: 28 respuestas 422 por API, 56 entre ambas. Cada error conserva las filas anteriores.
-- **Contrato comprobado**: 201 al crear, 200 al listar/consultar/editar, 204 vacío al borrar y 404 para ids ausentes. Los cuatro campos de respuesta coinciden con lo enviado.
-- **Email Java corregido**: aceptaba `ana@localhost` y `ana@com`; ahora los rechaza con 422, como Python, mediante una restricción de dominio completo.
-- **Resultados guardados** en `evidencias/S02.md` y las salidas `S02-crud-python.txt` / `S02-crud-java.txt`. Quedaron intactas las cuatro filas Python y las tres Java, sin temporales.
-- Ojo: la equivalencia comprobada cubre estos casos y el contrato HTTP. Los detalles internos de los errores 422 pueden diferir entre frameworks; no se exige el mismo mensaje.
+- Contrato Python/Java contrastado; dominio de email Java corregido.
+- El verificador común comprueba CRUD y entradas inválidas sin exigir textos 422 idénticos.
 
 ## HDU-007 · 28/10/2026 · Editar y borrar pacientes en Java
 
-- **`PUT /patients/{id}`** actualiza los tres campos y responde 200. `@Transactional` mantiene búsqueda y cambios en la misma transacción; JPA los guarda al confirmar.
-- **`DELETE /patients/{id}`** borra el paciente y responde 204 sin cuerpo. GET, PUT y DELETE comparten `findPatient()` y devuelven 404 si no existe.
-- **Verificador CRUD común** probado contra Java: creó el temporal id 4, cambió sus tres campos, lo borró y comprobó el 404 posterior. Los tres pacientes originales quedaron intactos.
-- **Errores comprobados**: id 999999 devuelve 404 en las tres operaciones y los seis casos inválidos de POST/PUT devuelven 422 sin cambios en las filas.
-- Ojo: la comparación detallada entre las APIs continúa en HDU-008; estos resultados cubren los casos básicos del CRUD.
+- Java añadió PUT y DELETE, con transacciones y 404 compartido.
+- Usar un temporal propio o ejecutar `verificar_crud.py` contra Java.
 
 ## HDU-006 · 28/10/2026 · Crear y consultar pacientes en Java
 
-- **`POST /patients` en Java** guarda los mismos tres campos JSON que Python y responde 201. `PatientRequest` valida la entrada y `PatientResponse` conserva los nombres del contrato, incluido `birth_date`.
-- **`GET /patients` y `GET /patients/{id}`** devuelven 200 con los datos guardados. El listado sale ordenado por id; un id inexistente responde 404.
-- **Ana, Bruno y Carla Demo** se cargaron desde `datos/pacientes.json` y quedaron con ids Java 1–3. Sus tres campos coinciden con Python; los ids se generan por separado en cada tabla.
-- **Validaciones comprobadas**: nombre de espacios, fecha imposible y email sin arroba responden 422 sin modificar las tres filas Java. Python conservó sus cuatro filas.
-- Ojo: en este punto editar y borrar en Java seguía pendiente de HDU-007. Repetir la carga de los tres pacientes crea duplicados.
+- Java añadió POST y GET con los mismos campos JSON que Python.
+- Ana, Bruno y Carla se cargan desde `datos/pacientes.json`; repetir esa carga manual duplica filas.
 
 ## HDU-005 · 28/10/2026 · Spring Boot conectado a PostgreSQL
 
-- **`java-api/`** agrega el segundo servicio: Spring Boot 4.1.2, Maven 3.10.0 y Temurin Java 27. El build en Docker terminó correctamente y el arranque comprobó acceso a PostgreSQL.
-- **`GET /health` en `localhost:8080`** responde 200 con `{"status":"ok"}`. FastAPI sigue disponible en el puerto 8000.
-- **`java.patients`** separa las filas de Java de las de Python, que siguen en `public.patients`. Al comprobar esta HDU, Java tenía cero filas y Python conservaba cuatro.
-- **Contenedor Java** corre con usuario 10001, un límite de 512 MiB y heap de 64–256 MiB; se observó un consumo de unos 263 MiB.
-- Ojo: en esta HDU quedó conexión y health. El CRUD Java todavía no formaba parte de lo verificado; la explicación de Marco continúa pendiente.
+- Spring Boot conectado a PostgreSQL, con health y tabla `java.patients`.
+- Puerto 8080. En este punto aún no había CRUD; se añadió en HDU-006/007.
 
 ## HDU-004 · 28/10/2026 · Persistencia y repaso del CRUD Python
 
-- **`scripts/verificar_persistencia.ps1`** reinicia PostgreSQL y FastAPI y compara las filas antes/después. Se probó con cuatro filas: todas se conservaron y Ana mantuvo sus cuatro campos.
-- **`pool_pre_ping=True`** en `db.py` comprueba la conexión antes de reutilizarla y descarta las que quedan viejas tras reiniciar PostgreSQL.
-- **CRUD repetido después del reinicio**: crear, consultar, editar, borrar, 404 y seis casos 422 correctos; la base volvió a quedar con las cuatro filas previas.
-- **Guía y evidencias** dejan el comando para repetir la prueba y el recorrido del dato para repasar el código.
-- Ojo: la revisión de Rui y la explicación de Marco están pendientes. Registrar ese pendiente no crea una cita ni acredita una demo o revisión recibida.
+- Persistencia Python comprobada; pool_pre_ping descarta conexiones antiguas.
+- `verificar_persistencia.ps1` compara antes/después sin borrar el volumen.
 
 ## HDU-003 · 28/10/2026 · Editar, borrar y responder errores
 
-- **`PUT /patients/{id}`** reemplaza nombre, fecha de nacimiento y email; devuelve 200 con el paciente actualizado. Usa las mismas validaciones que POST.
-- **`DELETE /patients/{id}`** borra el registro y devuelve 204 sin cuerpo. Los comandos de la guía trabajan con un paciente temporal para conservar los anteriores.
-- **`find_patient()`** comparte la búsqueda entre GET, PUT y DELETE; un id inexistente ahora devuelve 404 con `Paciente no encontrado`.
-- **`scripts/verificar_crud.py`** comprueba el ciclo completo, los errores 404/422, el 204 vacío y que los pacientes previos queden intactos. Se ejecuta desde PowerShell con el Python del contenedor.
-- **`README.md`** reúne el arranque, contrato HTTP y un comando por operación. **Python 3.15.2** quedó fijado en Docker y se comprobó el build y `pip check`; PostgreSQL conserva 18.6.
-- Ojo: las comprobaciones técnicas pasaron; la explicación de Marco y la revisión con Rui siguen pendientes. No se da por recibida una revisión ni por completada la formación por tener código funcionando.
+- Python añadió PUT, DELETE y 404; verificador de CRUD y errores.
+- Usar el recorrido temporal del README; Python quedó fijado en 3.15.2.
 
 ## HDU-002 · 27/10/2026 · Crear y consultar pacientes
 
-- **Tabla `public.patients`** (id autogenerado, name, birth_date, email). La crea la API al arrancar si no existe; no borra datos.
-- **`POST /patients`** guarda un paciente y responde 201 con su id. **`GET /patients`** lista todos y **`GET /patients/{id}`** trae uno.
-- **Validaciones** en `app/schemas.py`: name no vacío, birth_date `YYYY-MM-DD` de una fecha real y email válido. Si algo falla, responde 422 y no guarda nada.
-- **Código separado**: `db.py` conexión (variables de entorno), `models.py` la tabla, `schemas.py` validaciones, `main.py` endpoints.
-- **`datos/pacientes.json`**: Ana, Bruno y Carla Demo (ficticios). Ya cargados: ids 1, 2 y 3.
-- Ojo en ese momento: un id que no existía daba 500. Se corrigió a 404 en la HDU-003.
+- Tabla Python, POST/GET y validaciones; tres pacientes ficticios preparados.
+- Código en `db.py`, `models.py`, `schemas.py` y `main.py`; el error 500 por id ausente se corrigió en HDU-003.
 
 ## HDU-001 · 27/10/2026 · PostgreSQL + FastAPI en Docker
 
-- **codigo/** es el repo de Git; todo lo de la app vive ahí, separado de los documentos del programa.
-- **compose.yml**: levanta dos servicios con `docker compose up -d --build`.
-- **postgres** (18.6-alpine): base `genai`. Usuario y clave salen del `.env` (no va a Git). Los datos viven en el volumen `pgdata`, así que sobreviven a un `down`. Tiene healthcheck con `pg_isready`. Publicado en `localhost:5432` (solo este equipo) para entrar con DBeaver.
-- **python-api** (Python 3.15 + FastAPI): por ahora solo `GET /health`, que responde `{"status":"ok"}` en http://localhost:8000. Espera a que postgres esté sano antes de arrancar. Ya trae instaladas SQLAlchemy, psycopg y email-validator para el CRUD de la HDU-002, pero todavía no se conecta a la base.
-- **.env.example**: los nombres de las variables, sin valores. Se copia como `.env`.
-- **datos/** vacía (los pacientes llegan en la HDU-002). **evidencias/S01.md** guarda las pruebas.
-- Ojo: el equipo tiene 1,2 GB de RAM libre y el programa pide 8. Resolverlo antes de S3.
+- PostgreSQL y FastAPI en Docker, `.env` local y volumen `pgdata`.
+- Inicialmente solo `/health`; [S01.md](evidencias/S01.md) conserva las pruebas y el requisito de RAM no satisfecho.
