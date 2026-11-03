@@ -65,7 +65,7 @@ Para reanudar Minikube ya preparado:
 .\scripts\reanudar_minikube.ps1
 ```
 
-La [guía](GUIA.md#fastapi-desde-git) explica la comprobación de PostgreSQL y los túneles. Allí se despliega solo el CRUD FastAPI; el chatbot sigue en Compose, puerto 8000.
+El comando conecta PostgreSQL directamente a la red del perfil y comprueba SQL antes de abrir los túneles. Necesita Docker Desktop respondiendo. [Preparación inicial](GUIA.md#preparar-minikube): solo se despliega el CRUD FastAPI; el chatbot sigue en Compose, puerto 8000.
 
 ## Contrato HTTP
 

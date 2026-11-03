@@ -6,8 +6,8 @@ image:
   pullPolicy: IfNotPresent
 
 postgres:
-  # Obtenida con: minikube --profile=genai ssh -- getent hosts host.minikube.internal
-  host: "192.168.65.254"
+  # Bridge Docker genai; conectar_postgres_minikube.ps1 conecta solo PostgreSQL.
+  host: "192.168.49.10"
   port: 5432
   database: genai
   existingSecret: genai-postgres

@@ -25,6 +25,7 @@ try {
     Write-Output '1/5 Esperando PostgreSQL de Compose...'
     docker compose up -d --wait --wait-timeout 120 postgres
     if ($LASTEXITCODE -ne 0) { throw 'PostgreSQL no quedo saludable; revisar docker compose logs postgres.' }
+    & (Join-Path $PSScriptRoot 'conectar_postgres_minikube.ps1')
 
     Write-Output '2/5 Reanudando el perfil genai...'
     & $minikubePath start --profile=genai --keep-context --wait=all --wait-timeout=6m

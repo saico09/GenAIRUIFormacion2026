@@ -2,6 +2,10 @@
 
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
+## Conexión directa · 03/11/2026 · PostgreSQL en la red de Minikube
+
+Se reprodujo un fallo del intermediario de Docker Desktop: la misma base respondió por la red Docker y falló por el puerto publicado del host. El chart pasa a `192.168.49.10`; `conectar_postgres_minikube.ps1` conecta solo PostgreSQL a `genai` y `reanudar_minikube.ps1` repite ese paso si hace falta. [Comparación de las dos rutas](evidencias/origen-postgres-2026-11-03/misma-base-rutas-ab.json). El bloqueo del backend de Docker sigue sin corregirse; los helpers nuevos aún requieren su prueba final.
+
 ## Reanudación · 03/11/2026 · Minikube y PostgreSQL
 
 FastAPI reintenta las conexiones iniciales transitorias a PostgreSQL. Para retomar, usa `.\scripts\reanudar_minikube.ps1`: espera la base, comprueba SQL desde el perfil y abre los túneles con las réplicas listas. Pasaron dos reanudaciones, una también con PostgreSQL detenido, conservando los datos; [pruebas y detalle del arreglo](evidencias/reanudacion-minikube-2026-11-03/LEEME.md).

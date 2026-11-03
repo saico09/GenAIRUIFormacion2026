@@ -118,7 +118,7 @@ Para contar filas sin mostrar datos personales:
 docker compose exec postgres psql -U genai -d genai -c "SELECT 'python' AS api, count(*) FROM public.patients UNION ALL SELECT 'java', count(*) FROM java.patients;"
 ```
 
-DBeaver: `localhost:5432`, base `genai`, usuario/clave de `.env`. PostgreSQL se publica en el host para recibir conexiones de Minikube.
+DBeaver: `localhost:5432`, base `genai`, usuario/clave de `.env`. Minikube usa la conexión directa por la red Docker `genai`.
 
 ## Embeddings y Qdrant
 
@@ -290,13 +290,19 @@ Para cargarla en el perfil:
 
 <a id="chart-y-conexión-a-postgres"></a>
 
-Para resolver el host de PostgreSQL:
+Para esperar PostgreSQL antes del primer despliegue:
 
 ```powershell
-.\.local\bin\minikube.exe --profile=genai ssh -- getent hosts host.minikube.internal
+docker compose up -d --wait --wait-timeout 120 postgres
 ```
 
-Si cambia la IP, actualiza `postgres.host` en `deploy/helm/fastapi/values.yaml` y `POSTGRES_HOST` en el pod SQL antes de usarlo. [Conectividad](evidencias/s09/040-conectividad.md) tiene los pasos SQL completos.
+Para conectarlo directamente al perfil, antes de aplicar el chart:
+
+```powershell
+.\scripts\conectar_postgres_minikube.ps1
+```
+
+Usa `192.168.49.10:5432` en la red `genai`; conserva la red original de PostgreSQL. El chart ya tiene esa IP. La [prueba SQL antigua](evidencias/s09/040-conectividad.md) conserva el host usado en octubre.
 
 Para preparar el Secret desde `.env`:
 
@@ -340,7 +346,9 @@ Para reanudar el perfil ya creado y abrir sus accesos:
 .\scripts\reanudar_minikube.ps1
 ```
 
-Espera PostgreSQL, comprueba SQL desde Minikube y las réplicas Ready; después abre los túneles. Solo levanta el CRUD de este perfil; el chat sigue en Compose, puerto 8000.
+Espera PostgreSQL, asegura su conexión directa, comprueba SQL desde Minikube y las réplicas Ready; después abre los túneles. Solo levanta el CRUD de este perfil; el chat sigue en Compose, puerto 8000.
+
+Necesita que Docker Desktop responda. La ruta directa evita el puerto publicado de Windows; no repara un backend de Docker bloqueado.
 
 Para abrir o recuperar Argo CD:
 
