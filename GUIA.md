@@ -45,7 +45,7 @@ Para iniciar Ollama:
 Abre [localhost:8000](http://localhost:8000). Arriba tienes cuatro secciones:
 
 1. **Consultas médicas:** elige un paciente Java, describe la consulta o pregunta por sus antecedentes y pulsa **Comparar y guardar**. Abre cada fuente para leer el fragmento y su UUID. Al terminar aparece la confirmación de guardado y el enlace al informe.
-2. **Pacientes:** agrega, busca o edita pacientes. Pulsa su nombre para abrir la historia; **Eliminar** pide confirmación y también elimina su informe.
+2. **Pacientes:** agrega, busca o edita pacientes. Pulsa su nombre para abrir la historia; **Eliminar** pide confirmación y retira su archivo activo, conservando los respaldos SQL.
 3. **API Python:** abre una operación, completa el ID o el JSON y pulsa **Ejecutar petición**.
 4. **API Java:** lo mismo, pero contra Spring Boot. Los colores distinguen GET, POST, PUT y DELETE; el resultado muestra el código HTTP y el detalle del error si lo hay.
 

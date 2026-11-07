@@ -10,6 +10,8 @@ Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describ
 
 Se eligió **Qwen3 4B Instruct 2507** para ambas ramas tras comparar los mismos ocho casos con el mismo prompt y parámetros: Qwen pasó 8/8 y Llama 6/8. La respuesta con contexto ahora diferencia antecedentes documentados y orientación sobre síntomas nuevos, sin confirmar diagnósticos automáticamente. [Comparación local](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json); no acredita precisión clínica general.
 
+Las copias S4–S10 pasaron siete consultas reales y sus reintentos, con datos conservados y sin duplicados. S3 sólo adapta el parser; S1/S2 no cambian. Se actualizaron guías locales y Trello; los guiones y Word anteriores se conservan. [Cierre y alcance](evidencias/consultas-automaticas-2026-11-07/entrega-semanal.json).
+
 Se mantienen las 80 horas previstas, las dos etapas de 40 horas y las fechas del plan. Los apartados siguientes describen cortes anteriores.
 
 ## Historia clínica · 07/11/2026 · Registros confirmados y pacientes Java

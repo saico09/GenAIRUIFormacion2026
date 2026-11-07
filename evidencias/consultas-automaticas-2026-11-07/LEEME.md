@@ -25,6 +25,7 @@ Pruebas y archivos:
 | Quinta consulta temporal: cinco spans Phoenix y siete eventos Loki | [regresion-traza.json](regresion-traza.json) |
 | Eliminar citas de preguntas que no describían síntomas: replay de salida real, sin nueva inferencia | [relevancia-consulta-replay.json](relevancia-consulta-replay.json) |
 | Nueve accesos HTTP 200 y ambos targets UP | [servicios.json](servicios.json) |
+| Cierre del entorno principal: tres consultas únicas, Markdown idéntico a SQL y contenedores ajenos a las APIs conservados | [cierre-runtime.json](cierre-runtime.json) |
 
 La comparación de ocho casos obtuvo 8/8 con Qwen y 5/8 con Llama antes de las comprobaciones adicionales. La revalidación de esas salidas reales con el validador final queda en 8/8 y 6/8, respectivamente; no se volvió a inferir para ese cálculo. Se eligió `qwen3:4b-instruct-2507-q4_K_M`, disponible en la [biblioteca de Ollama](https://ollama.com/library/qwen3:4b-instruct-2507-q4_K_M). Es una muestra funcional local, no una certificación clínica. La [ficha oficial de Qwen](https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507) describe esta variante como Instruct sin modo de razonamiento. Ambas ramas conservan el mismo modelo, pregunta, temperatura 0, contexto 4096 y salida máxima 1024 tokens. [Ollama documenta el uso de esquemas JSON](https://docs.ollama.com/capabilities/structured-outputs).
 
@@ -34,7 +35,7 @@ Para repetir pruebas con un paciente temporal:
 
 ```powershell
 python -X utf8 scripts/verificar_consultas_regresion.py
-python -X utf8 scripts/verificar_auditoria_python.py
+Get-Content -Raw scripts/verificar_auditoria_python.py | docker compose exec -T python-api python -
 ```
 
 Para repetir las tres consultas de Ana con sus UUID originales, sin duplicarlas:
@@ -48,3 +49,7 @@ Los ensayos CRUD eliminan sólo sus pacientes temporales. Sus transacciones y re
 El Markdown admite 1 MiB y 50 registros confirmados. Un archivo ausente se puede reconstruir desde su último respaldo SQL. No se sobreescribe silenciosamente un archivo conflictivo. Archivo y SQL tienen compensación ante errores normales, pero no una transacción distribuida resistente a cualquier cierre forzado entre ambas escrituras. Un conflicto se registra por paciente y no impide arrancar al resto de la API. Los respaldos usan un orden de escritura estable, independiente de saltos del reloj.
 
 Esta es una ampliación solicitada por Marco. No cambia las 48 HDU, las 80 horas previstas, el calendario ni acredita revisiones de Rui. GitOps conserva el microservicio CRUD existente.
+
+Las copias **S4–S10 pasaron 7/7** con Qwen real: una consulta y su reintento por copia, sin duplicación, Markdown igual a SQL y UUID correlacionado entre APIs. S3 sólo adapta el parser; S1/S2 permanecen intactas. Cada ensayo usó PostgreSQL y APIs semanales, más una colección temporal en el Qdrant existente; conservó los datos previos y terminó con los servicios propios detenidos. No se repitieron GitOps ni las pilas semanales completas de observabilidad. [Resumen y límites de la entrega](entrega-semanal.json).
+
+Las guías locales y LEVANTAR están actualizados; los veinte DAILY MD/Word conservan su contenido previo y Drive no cambió en esta entrega. Trello recibió cuatro comentarios verificados en 012/016/017/032, sin mover tarjetas, fechas ni checklists. Postman tuvo una revisión estática de compatibilidad, sin otra importación ni ejecución de Newman.

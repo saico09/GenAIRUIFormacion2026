@@ -1,0 +1,181 @@
+{
+  "closed_at": "2026-11-07T23:55:43.470882+00:00",
+  "result": "PASS",
+  "functional_source_commit": "21260cfabdbc8a465556026e880ae9025e03421f",
+  "scope": "Ampliación solicitada por Marco: consultas automáticas, respaldo Markdown y auditoría SQL; respeta las etapas originales.",
+  "weekly_aggregate_sha256": "1853fa718e522c286ec541c117bf1de5f137f4834742499e661c854327723e21",
+  "weekly_aggregate_local": "dailys/CONSULTAS_VERIFICADAS_2026-11-07.json",
+  "weeks": [
+    {
+      "week": 3,
+      "result": "PASS_STATIC",
+      "scope": "Sólo parser compatible con informes de hasta 1 MiB; sin chat ni auditoría.",
+      "real_consultations": 0
+    },
+    {
+      "week": 4,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    },
+    {
+      "week": 5,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    },
+    {
+      "week": 6,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    },
+    {
+      "week": 7,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    },
+    {
+      "week": 8,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    },
+    {
+      "week": 9,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    },
+    {
+      "week": 10,
+      "result": "PASS",
+      "real_consultations": 1,
+      "retry_same_uuid": true,
+      "contract": {
+        "md_exact_sql_backup": true,
+        "confirmed_entries_unchanged": true,
+        "retry_single_consultation": true,
+        "python_transactions": 2,
+        "java_write_transactions": 1,
+        "same_execution_uuid": true
+      },
+      "previous_patient_rows_and_seed_markdown_hashes_preserved": true,
+      "main_qdrant_preserved": true,
+      "default_config_restored": true,
+      "own_services_stopped": true,
+      "private_collection_deleted": true
+    }
+  ],
+  "real_weekly_consultations": 7,
+  "weekly_same_uuid_retries": 7,
+  "daily_md_docx_preserved": 20,
+  "s1_s2_preserved": true,
+  "weekly_seed_test": "Nueve puntos en cada colección temporal aislada; no se levantaron los Qdrant semanales. La colección principal conservó sus doce puntos y vectores.",
+  "trello": {
+    "read_scope": "4 cards, 6 checklists, 25 unchanged steps; comments only",
+    "cards": [
+      "HDU-012",
+      "HDU-016",
+      "HDU-017",
+      "HDU-032"
+    ],
+    "source_commit": "21260cfabdbc8a465556026e880ae9025e03421f",
+    "state": "published_verified",
+    "full_board_reread": false
+  },
+  "postman": "Static compatibility review only: 10 folders, 98 requests, 59 variables; no new import or Newman run.",
+  "drive": "No changes; daily scripts and Word contents preserved.",
+  "not_run": [
+    "GitOps",
+    "Pilas semanales completas de observabilidad",
+    "Qdrant semanal",
+    "SonarQube"
+  ],
+  "notes": [
+    "No acredita horas, reuniones ni validación humana.",
+    "Las consultas de ensayo conservaron sus respaldos y auditoría SQL; los pacientes temporales se eliminaron.",
+    "Ana runtime Markdown kept local; not committed or copied into weekly seeds.",
+    "Main runtime evidence: cierre-runtime.json.",
+    "No changes to HDU, expected hours, calendar or human review status."
+  ]
+}

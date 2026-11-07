@@ -42,9 +42,10 @@ Para iniciar o reutilizar Ollama:
 .\scripts\iniciar_ollama.ps1
 ```
 
-Para descargar el modelo de chat, si todavía falta:
+Para descargar los modelos de embeddings y chat, si todavía faltan:
 
 ```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull nomic-embed-text
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
 ```
 
