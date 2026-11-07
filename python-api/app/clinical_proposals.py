@@ -7,9 +7,7 @@ from app.clinical import get_clinical_patient
 from app.llm import LLMUnavailable, llamar_llm
 
 FIELDS = ("disease", "treatment", "medication")
-VALUE_SCHEMA = {"type": "object", "properties": {
-    "value": {"type": "string"}, "evidence": {"type": "string"}},
-    "required": ["value", "evidence"], "additionalProperties": False}
+VALUE_SCHEMA = {"type": "string", "maxLength": 2000}
 PROPOSAL_SCHEMA = {"type": "object", "properties": {"entries": {"type": "array", "maxItems": 3,
     "items": {"type": "object", "properties": {field: VALUE_SCHEMA for field in FIELDS},
               "required": list(FIELDS), "additionalProperties": False}}},
@@ -29,6 +27,15 @@ def affirmative_evidence(note: str, evidence: str, value: str) -> bool:
     return False
 
 
+def find_evidence(note: str, value: str) -> str:
+    """La procedencia se copia de la nota; no se pide al modelo que la redacte."""
+    for sentence in re.findall(r"[^\n.!?;]+[.!?;]?", note):
+        sentence = sentence.strip()
+        if affirmative_evidence(note, sentence, value):
+            return sentence
+    return ""
+
+
 def propose_entries(patient_id: int, note: str) -> dict:
     patient = get_clinical_patient(patient_id)
     prompt = (
@@ -38,9 +45,9 @@ def propose_entries(patient_id: int, note: str) -> dict:
         "Si la nota es una pregunta, una lista de síntomas o una petición de consejo, devuelve entries vacío.\n"
         "Sólo extrae enfermedades, tratamientos y medicamentos que la nota AFIRME como registrados.\n"
         "Agrupa los tres campos que pertenezcan al mismo registro. Máximo tres registros.\n"
-        "No completes campos desconocidos: usa value y evidence vacíos. "
-        "Cada value debe copiar literalmente una parte de la nota, sin corregir ni parafrasear. "
-        "Cada evidence debe ser una cita literal de la nota que incluya el value y su relación explícita.\n"
+        "No completes campos desconocidos: usa una cadena vacía. "
+        "Cada campo debe copiar literalmente una parte de la nota, sin corregir ni parafrasear. "
+        "Las etiquetas Enfermedad/Diagnóstico, Tratamiento y Medicamento/Medicación introducen hechos afirmados.\n"
         "Los IDs se asignan al confirmar; no generes IDs. Devuelve sólo el JSON del esquema.\n\n"
         f"NOTA:\n{note}\n\nJSON:"
     )
@@ -54,10 +61,10 @@ def propose_entries(patient_id: int, note: str) -> dict:
             entry = {field: "" for field in FIELDS}
             entry["evidence"] = {field: "" for field in FIELDS}
             for field in FIELDS:
-                value = proposal[field]["value"].strip()
-                evidence = proposal[field]["evidence"].strip()
-                if not isinstance(value, str) or not isinstance(evidence, str) or len(value) > 2000:
+                value = proposal[field].strip()
+                if not isinstance(value, str) or len(value) > 2000:
                     raise ValueError("Campo inválido")
+                evidence = find_evidence(note, value)
                 # Un borrador sin una cita verificable se descarta, no se completa con el LLM.
                 if affirmative_evidence(note, evidence, value):
                     entry[field] = value
