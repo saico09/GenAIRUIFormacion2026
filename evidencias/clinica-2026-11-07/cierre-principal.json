@@ -1,0 +1,118 @@
+{
+  "checked_at": "2026-11-07T22:00:06.587749+00:00",
+  "implementation_commit": "39d979b182f31b065f2400c3a885c59a98ca6b03",
+  "http": [
+    {
+      "service": "FastAPI",
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200
+    },
+    {
+      "service": "Spring Boot",
+      "url": "http://127.0.0.1:8080/health",
+      "status": 200
+    },
+    {
+      "service": "Pagina",
+      "url": "http://127.0.0.1:8000/",
+      "status": 200
+    },
+    {
+      "service": "Qdrant",
+      "url": "http://127.0.0.1:6333/collections",
+      "status": 200
+    },
+    {
+      "service": "Prometheus",
+      "url": "http://127.0.0.1:9090/-/ready",
+      "status": 200
+    },
+    {
+      "service": "Grafana",
+      "url": "http://127.0.0.1:3000/api/health",
+      "status": 200
+    },
+    {
+      "service": "Loki",
+      "url": "http://127.0.0.1:3100/ready",
+      "status": 200
+    },
+    {
+      "service": "Phoenix",
+      "url": "http://127.0.0.1:6006/",
+      "status": 200
+    },
+    {
+      "service": "Ollama",
+      "url": "http://127.0.0.1:11434/api/tags",
+      "status": 200
+    }
+  ],
+  "patients": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    }
+  },
+  "qdrant": {
+    "count": 9,
+    "sha256": "1176c3128bc2b4a27ff1664876c57bd9a90e82022a60499a031fe72167e31729"
+  },
+  "markdown": {
+    "count": 3,
+    "sha256": "eff2fe13087a4e16b0c5143849262c9bbdbd2774c087583e5bf16fb202f010e6"
+  },
+  "compose": [
+    {
+      "Service": "alloy",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "grafana",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "java-api",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "loki",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "phoenix",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "postgres",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "prometheus",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "python-api",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "qdrant",
+      "State": "running",
+      "Health": ""
+    }
+  ],
+  "result": "passed",
+  "patients_preserved_from_start": true
+}

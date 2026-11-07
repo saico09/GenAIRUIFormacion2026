@@ -1,0 +1,67 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 656B 0.1s done
+#1 DONE 0.1s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 821B done
+#2 DONE 0.0s
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/python:3.15.2-slim
+#4 DONE 0.9s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 69B done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 10.56kB 0.0s done
+#6 DONE 0.0s
+
+#7 [dependencies 1/5] FROM docker.io/library/python:3.15.2-slim@sha256:e97b88e416c3c01eb427b21fd8cd3ebf006e6ee38afcfcc3cae1c54ee2ab0a75
+#7 resolve docker.io/library/python:3.15.2-slim@sha256:e97b88e416c3c01eb427b21fd8cd3ebf006e6ee38afcfcc3cae1c54ee2ab0a75 0.0s done
+#7 DONE 0.0s
+
+#8 [stage-1 3/6] COPY requirements.txt .
+#8 CACHED
+
+#9 [dependencies 2/5] WORKDIR /build
+#9 CACHED
+
+#10 [dependencies 3/5] COPY requirements.txt .
+#10 CACHED
+
+#11 [dependencies 4/5] RUN apt-get update && apt-get install -y --no-install-recommends build-essential     && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [dependencies 5/5] RUN pip wheel --no-cache-dir --wheel-dir=/wheels -r requirements.txt
+#12 CACHED
+
+#13 [stage-1 2/6] WORKDIR /code
+#13 CACHED
+
+#14 [stage-1 4/6] RUN --mount=type=bind,from=dependencies,source=/wheels,target=/wheels     pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.txt
+#14 CACHED
+
+#15 [stage-1 5/6] COPY app ./app
+#15 DONE 0.1s
+
+#16 [stage-1 6/6] COPY *.py ./
+#16 DONE 0.1s
+
+#17 exporting to image
+#17 exporting layers 0.1s done
+#17 exporting manifest sha256:cdb79578fc49b242c4bdcf5d778ba1a49a6b54787f67010089ec8bcb06a3647a 0.0s done
+#17 exporting config sha256:e21461f6adf628d7d27fbe7892cf2310f03b4de9b9b4b5169412e8ccad2bcd21 0.0s done
+#17 exporting attestation manifest sha256:333872fc627676e3c3d2a669f4cc9b8a213b3fcb5b2b67fb71c8558f84dc7a6d 0.0s done
+#17 exporting manifest list sha256:2c300d706e28209562082539085e4381f30ab04f8cc3ccb645bb7e12780dd29a
+#17 exporting manifest list sha256:2c300d706e28209562082539085e4381f30ab04f8cc3ccb645bb7e12780dd29a 0.0s done
+#17 naming to docker.io/library/genairuiformacion2026-python-api:latest done
+#17 unpacking to docker.io/library/genairuiformacion2026-python-api:latest 0.1s done
+#17 DONE 0.4s
+
+#18 resolving provenance for metadata file
+#18 DONE 0.0s
+ genairuiformacion2026-python-api  Built

@@ -2,6 +2,17 @@
 
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
+## Historia clínica · 07/11/2026 · Registros confirmados y pacientes Java
+
+Pasaron 19 consultas RAG, el recorrido completo del navegador con IA real, extracción de propuestas sin guardar, ambos CRUD, métricas/logs/trazas y reanudación del despliegue CRUD en Minikube. Se conservaron los cuatro pacientes Python, tres Java y sus informes; las pruebas usan temporales propios. [Resultados y límites](evidencias/clinica-2026-11-07/LEEME.md).
+
+- Pulsa un nombre en **Pacientes** para ver su tabla clínica y el Markdown, descargarlo o editarlo con confirmación. Cada registro tiene UUID y tres campos; los vacíos siguen vacíos.
+- **Nueva consulta** extrae propuestas de una nota ficticia, muestra su evidencia y permite corregirlas o usar un formulario manual. Sólo se guarda tras confirmar; una respuesta del chat no se archiva automáticamente.
+- Java conserva el informe en `datos/historias/`; Python sincroniza Qdrant y usa esa misma identidad en el chat. Guardar, renombrar o eliminar actualiza el índice, con reintento separado si falla. El CRUD Python sigue independiente.
+- Revisión del Markdown para evitar sobrescrituras, TOP3 y selección RAG de citas literales comprobadas contra sus fuentes. Un filtro conservador limita las preguntas a los hechos registrados; no garantiza la interpretación del modelo. [Quince casos RAG comprobados](evidencias/clinica-2026-11-07/rag-clinico-final.json).
+- [Recorrido de pantalla con LLM real](evidencias/clinica-2026-11-07/interfaz.md) correcto: propuesta, confirmación, edición, consulta del cambio y limpieza. Se corrigió una propuesta descartada porque el modelo había reformulado su evidencia; ahora el servidor la copia de la nota. Los datos previos quedaron conservados.
+- Ampliación solicitada por Marco, sin nuevas HDU, horas ni revisión de Rui atribuida. [Uso](GUIA.md#historia-clínica).
+
 ## Revisión RAG · 07/11/2026 · Calidad de respuestas y almacenamiento
 
 Se reprodujeron respuestas y citas sin respaldo en preguntas abiertas. Doce consultas nuevas y un A/B de 24 respuestas separan los límites del corpus, el TOP2 y el prompt. La variante más estricta con tres fragmentos mejoró los seis casos ensayados, pero no se aplicó a la app. PostgreSQL sigue guardando pacientes; los Markdown alimentan Qdrant y no almacenan las preguntas nuevas. [Resultados y propuesta](evidencias/revision-rag-2026-11-07/LEEME.md). La validación anterior cubría casos preparados; no acreditaba calidad general.

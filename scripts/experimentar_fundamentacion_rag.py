@@ -1,4 +1,8 @@
-"""A/B aislado: ejecutar por stdin en python-api; no modifica la aplicación ni sus datos."""
+"""A/B histórico anterior a las historias editables: usar el checkout fab6929 y su corpus.
+
+Los resultados publicados corresponden a ese código y a sus tres documentos
+originales. Para la aplicación actual usar verificar_rag_clinico.py.
+"""
 
 import argparse
 from datetime import datetime, timezone
@@ -76,6 +80,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    if MODEL_OPTIONS != {"temperature": 0, "num_ctx": 2048, "num_predict": 256}:
+        parser.error("Ensayo histórico: requiere el checkout fab6929 y su corpus original; usa verificar_rag_clinico.py para la app actual")
     report = {
         "started_at": datetime.now(timezone.utc).isoformat(),
         "scope": "Experimento ficticio con Ana Demo (ID 1); las formulaciones no se atribuyen a la salud de una persona real.",

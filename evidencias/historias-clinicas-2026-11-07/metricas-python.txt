@@ -1,0 +1,284 @@
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 3648.0
+python_gc_objects_collected_total{generation="1"} 507.0
+python_gc_objects_collected_total{generation="2"} 63.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 145.0
+python_gc_collections_total{generation="1"} 13.0
+python_gc_collections_total{generation="2"} 1.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="15",patchlevel="2",version="3.15.2"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 4.1592832e+08
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 1.31895296e+08
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.79408768106e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 4.31
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 13.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1.048576e+06
+# HELP http_requests_total Peticiones HTTP recibidas
+# TYPE http_requests_total counter
+http_requests_total{method="GET",route="/metrics",status="200"} 10.0
+http_requests_total{method="POST",route="/chat",status="200"} 7.0
+http_requests_total{method="GET",route="/patients",status="200"} 33.0
+http_requests_total{method="GET",route="/patients/{id}",status="404"} 3.0
+http_requests_total{method="PUT",route="/patients/{id}",status="404"} 1.0
+http_requests_total{method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_requests_total{method="POST",route="/patients",status="201"} 1.0
+http_requests_total{method="GET",route="/patients/{id}",status="200"} 3.0
+http_requests_total{method="PUT",route="/patients/{id}",status="200"} 1.0
+http_requests_total{method="POST",route="/patients",status="422"} 14.0
+http_requests_total{method="PUT",route="/patients/{id}",status="422"} 14.0
+http_requests_total{method="DELETE",route="/patients/{id}",status="204"} 1.0
+# HELP http_requests_created Peticiones HTTP recibidas
+# TYPE http_requests_created gauge
+http_requests_created{method="GET",route="/metrics",status="200"} 1.794087685389598e+09
+http_requests_created{method="POST",route="/chat",status="200"} 1.7940877133481476e+09
+http_requests_created{method="GET",route="/patients",status="200"} 1.7940877794065282e+09
+http_requests_created{method="GET",route="/patients/{id}",status="404"} 1.794087779436902e+09
+http_requests_created{method="PUT",route="/patients/{id}",status="404"} 1.7940877795679166e+09
+http_requests_created{method="DELETE",route="/patients/{id}",status="404"} 1.794087779577996e+09
+http_requests_created{method="POST",route="/patients",status="201"} 1.7940877796460018e+09
+http_requests_created{method="GET",route="/patients/{id}",status="200"} 1.794087779660771e+09
+http_requests_created{method="PUT",route="/patients/{id}",status="200"} 1.7940877796856353e+09
+http_requests_created{method="POST",route="/patients",status="422"} 1.7940877797269967e+09
+http_requests_created{method="PUT",route="/patients/{id}",status="422"} 1.794087779740058e+09
+http_requests_created{method="DELETE",route="/patients/{id}",status="204"} 1.794087780254663e+09
+# HELP http_request_duration_seconds Duración HTTP en segundos
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.005",method="GET",route="/metrics",status="200"} 8.0
+http_request_duration_seconds_bucket{le="0.01",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.025",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.05",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.075",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.1",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.25",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.5",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="0.75",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="1.0",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="2.5",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="5.0",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="7.5",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="10.0",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_bucket{le="+Inf",method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_count{method="GET",route="/metrics",status="200"} 10.0
+http_request_duration_seconds_sum{method="GET",route="/metrics",status="200"} 0.03620817199953308
+http_request_duration_seconds_bucket{le="0.005",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.01",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.025",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.05",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.075",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.1",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.25",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.5",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.75",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="1.0",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="2.5",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="5.0",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="7.5",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="10.0",method="POST",route="/chat",status="200"} 0.0
+http_request_duration_seconds_bucket{le="+Inf",method="POST",route="/chat",status="200"} 7.0
+http_request_duration_seconds_count{method="POST",route="/chat",status="200"} 7.0
+http_request_duration_seconds_sum{method="POST",route="/chat",status="200"} 100.822272161
+http_request_duration_seconds_bucket{le="0.005",method="GET",route="/patients",status="200"} 27.0
+http_request_duration_seconds_bucket{le="0.01",method="GET",route="/patients",status="200"} 32.0
+http_request_duration_seconds_bucket{le="0.025",method="GET",route="/patients",status="200"} 32.0
+http_request_duration_seconds_bucket{le="0.05",method="GET",route="/patients",status="200"} 32.0
+http_request_duration_seconds_bucket{le="0.075",method="GET",route="/patients",status="200"} 32.0
+http_request_duration_seconds_bucket{le="0.1",method="GET",route="/patients",status="200"} 32.0
+http_request_duration_seconds_bucket{le="0.25",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="0.5",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="0.75",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="1.0",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="2.5",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="5.0",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="7.5",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="10.0",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_bucket{le="+Inf",method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_count{method="GET",route="/patients",status="200"} 33.0
+http_request_duration_seconds_sum{method="GET",route="/patients",status="200"} 0.36050077700110705
+http_request_duration_seconds_bucket{le="0.005",method="GET",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.01",method="GET",route="/patients/{id}",status="404"} 2.0
+http_request_duration_seconds_bucket{le="0.025",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="0.05",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="0.075",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="0.1",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="0.25",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="0.5",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="0.75",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="1.0",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="2.5",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="5.0",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="7.5",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="10.0",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_bucket{le="+Inf",method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_count{method="GET",route="/patients/{id}",status="404"} 3.0
+http_request_duration_seconds_sum{method="GET",route="/patients/{id}",status="404"} 0.0347205779999058
+http_request_duration_seconds_bucket{le="0.005",method="PUT",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.01",method="PUT",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.025",method="PUT",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.05",method="PUT",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.075",method="PUT",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.1",method="PUT",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.25",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.5",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.75",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="1.0",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="2.5",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="5.0",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="7.5",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="10.0",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="+Inf",method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_count{method="PUT",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_sum{method="PUT",route="/patients/{id}",status="404"} 0.12617851300001348
+http_request_duration_seconds_bucket{le="0.005",method="DELETE",route="/patients/{id}",status="404"} 0.0
+http_request_duration_seconds_bucket{le="0.01",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.025",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.05",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.075",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.1",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.25",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.5",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="0.75",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="1.0",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="2.5",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="5.0",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="7.5",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="10.0",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_bucket{le="+Inf",method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_count{method="DELETE",route="/patients/{id}",status="404"} 1.0
+http_request_duration_seconds_sum{method="DELETE",route="/patients/{id}",status="404"} 0.005096792999211175
+http_request_duration_seconds_bucket{le="0.005",method="POST",route="/patients",status="201"} 0.0
+http_request_duration_seconds_bucket{le="0.01",method="POST",route="/patients",status="201"} 0.0
+http_request_duration_seconds_bucket{le="0.025",method="POST",route="/patients",status="201"} 0.0
+http_request_duration_seconds_bucket{le="0.05",method="POST",route="/patients",status="201"} 0.0
+http_request_duration_seconds_bucket{le="0.075",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="0.1",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="0.25",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="0.5",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="0.75",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="1.0",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="2.5",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="5.0",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="7.5",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="10.0",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_bucket{le="+Inf",method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_count{method="POST",route="/patients",status="201"} 1.0
+http_request_duration_seconds_sum{method="POST",route="/patients",status="201"} 0.05525545699947543
+http_request_duration_seconds_bucket{le="0.005",method="GET",route="/patients/{id}",status="200"} 2.0
+http_request_duration_seconds_bucket{le="0.01",method="GET",route="/patients/{id}",status="200"} 2.0
+http_request_duration_seconds_bucket{le="0.025",method="GET",route="/patients/{id}",status="200"} 2.0
+http_request_duration_seconds_bucket{le="0.05",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="0.075",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="0.1",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="0.25",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="0.5",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="0.75",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="1.0",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="2.5",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="5.0",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="7.5",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="10.0",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_bucket{le="+Inf",method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_count{method="GET",route="/patients/{id}",status="200"} 3.0
+http_request_duration_seconds_sum{method="GET",route="/patients/{id}",status="200"} 0.03580871099984506
+http_request_duration_seconds_bucket{le="0.005",method="PUT",route="/patients/{id}",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.01",method="PUT",route="/patients/{id}",status="200"} 0.0
+http_request_duration_seconds_bucket{le="0.025",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="0.05",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="0.075",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="0.1",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="0.25",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="0.5",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="0.75",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="1.0",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="2.5",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="5.0",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="7.5",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="10.0",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_bucket{le="+Inf",method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_count{method="PUT",route="/patients/{id}",status="200"} 1.0
+http_request_duration_seconds_sum{method="PUT",route="/patients/{id}",status="200"} 0.021244929999738815
+http_request_duration_seconds_bucket{le="0.005",method="POST",route="/patients",status="422"} 12.0
+http_request_duration_seconds_bucket{le="0.01",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.025",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.05",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.075",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.1",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.25",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.5",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.75",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="1.0",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="2.5",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="5.0",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="7.5",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="10.0",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_bucket{le="+Inf",method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_count{method="POST",route="/patients",status="422"} 14.0
+http_request_duration_seconds_sum{method="POST",route="/patients",status="422"} 0.04279010400023253
+http_request_duration_seconds_bucket{le="0.005",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.01",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.025",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.05",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.075",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.1",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.25",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.5",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="0.75",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="1.0",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="2.5",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="5.0",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="7.5",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="10.0",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_bucket{le="+Inf",method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_count{method="PUT",route="/patients/{id}",status="422"} 14.0
+http_request_duration_seconds_sum{method="PUT",route="/patients/{id}",status="422"} 0.030795729001511063
+http_request_duration_seconds_bucket{le="0.005",method="DELETE",route="/patients/{id}",status="204"} 0.0
+http_request_duration_seconds_bucket{le="0.01",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.025",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.05",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.075",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.1",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.25",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.5",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="0.75",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="1.0",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="2.5",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="5.0",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="7.5",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="10.0",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_bucket{le="+Inf",method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_count{method="DELETE",route="/patients/{id}",status="204"} 1.0
+http_request_duration_seconds_sum{method="DELETE",route="/patients/{id}",status="204"} 0.0072993029998542625
+# HELP http_request_duration_seconds_created Duración HTTP en segundos
+# TYPE http_request_duration_seconds_created gauge
+http_request_duration_seconds_created{method="GET",route="/metrics",status="200"} 1.7940876853896234e+09
+http_request_duration_seconds_created{method="POST",route="/chat",status="200"} 1.7940877133481958e+09
+http_request_duration_seconds_created{method="GET",route="/patients",status="200"} 1.7940877794065652e+09
+http_request_duration_seconds_created{method="GET",route="/patients/{id}",status="404"} 1.7940877794369314e+09
+http_request_duration_seconds_created{method="PUT",route="/patients/{id}",status="404"} 1.7940877795679417e+09
+http_request_duration_seconds_created{method="DELETE",route="/patients/{id}",status="404"} 1.79408777957802e+09
+http_request_duration_seconds_created{method="POST",route="/patients",status="201"} 1.7940877796460254e+09
+http_request_duration_seconds_created{method="GET",route="/patients/{id}",status="200"} 1.794087779660797e+09
+http_request_duration_seconds_created{method="PUT",route="/patients/{id}",status="200"} 1.794087779685662e+09
+http_request_duration_seconds_created{method="POST",route="/patients",status="422"} 1.7940877797270224e+09
+http_request_duration_seconds_created{method="PUT",route="/patients/{id}",status="422"} 1.794087779740083e+09
+http_request_duration_seconds_created{method="DELETE",route="/patients/{id}",status="204"} 1.7940877802546916e+09

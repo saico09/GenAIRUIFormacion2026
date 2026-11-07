@@ -1,0 +1,744 @@
+{
+  "started_at": "2026-11-07T21:35:55.229597+00:00",
+  "cases": [
+    {
+      "case": "alfa",
+      "patient_id": 1,
+      "question": "¿Qué enfermedad tiene Ana Demo?",
+      "request_id": "dbfa121d-8544-41c8-9e7a-6f1da193e585",
+      "seconds": 11.36,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de tratar de ayudarte.",
+        "rag_answer": "Respuesta: Enfermedad Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.77614,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.71235865,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.6663017,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "parafrasis",
+      "patient_id": 1,
+      "question": "¿Cuál es el diagnóstico registrado de Ana?",
+      "request_id": "ea313808-da57-4ad9-8cb6-f12464aec0e9",
+      "seconds": 9.89,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "No tengo información sobre un diagnóstico específico de una persona llamada Ana. ¿Puedes proporcionar más contexto o detalles sobre quién es Ana y qué tipo de diagnóstico estás buscando? Estoy aquí para ayudarte con cualquier pregunta o inquietud que tengas.",
+        "rag_answer": "Respuesta: Ana Demo tiene Enfermedad Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.78483486,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.69817996,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.6886977,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "tres_datos",
+      "patient_id": 1,
+      "question": "Resume la enfermedad, el tratamiento y el medicamento de Ana Demo.",
+      "request_id": "31880eca-f073-4890-8b0b-f762ca07f339",
+      "seconds": 11.98,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "No tengo información sobre una persona llamada Ana Demo. ¿Puedes proporcionar más contexto o detalles sobre quién es Ana Demo y qué enfermedad está tratando? Estoy aquí para ayudarte con cualquier pregunta o inquietud que tengas.",
+        "rag_answer": "Respuesta: Ana Demo tiene Enfermedad Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nRespuesta: Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Tratamiento]\n\nRespuesta: Ana Demo recibe Medicamento Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Medicamento]",
+        "sources": [
+          {
+            "score": 0.81339914,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.7876997,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.76287544,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "beta",
+      "patient_id": 2,
+      "question": "¿Qué tratamiento sigue Bruno Demo?",
+      "request_id": "901f7422-2864-4fcd-9b4f-190b036d402b",
+      "seconds": 10.59,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre un personaje llamado Bruno Demo o su tratamiento. Es posible que sea un personaje ficticio o que no sea una figura pública conocida. Si puedes proporcionar más contexto o detalles sobre quién es Bruno Demo, estaré encantado de tratar de ayudarte.",
+        "rag_answer": "Respuesta: sigue Tratamiento Beta\nFuente: [paciente-2-bruno-demo.md/a22c0bf2-4de5-5684-80b1-e5c2910e50b2/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.82065296,
+            "patient_id": 2,
+            "record_id": "a22c0bf2-4de5-5684-80b1-e5c2910e50b2",
+            "source": "paciente-2-bruno-demo.md",
+            "section": "Tratamiento",
+            "text": "Bruno Demo sigue Tratamiento Beta para Enfermedad Beta. El plan ficticio incluye anotar la duración de la rigidez cada mañana y revisar esos registros el 2026-11-13 con el Equipo Beta."
+          },
+          {
+            "score": 0.77421343,
+            "patient_id": 2,
+            "record_id": "a22c0bf2-4de5-5684-80b1-e5c2910e50b2",
+            "source": "paciente-2-bruno-demo.md",
+            "section": "Enfermedad",
+            "text": "Bruno Demo tiene Enfermedad Beta, un diagnóstico ficticio. En la consulta del 2026-10-21 se anotó rigidez leve de las manos al despertar desde el 2026-10-19. El registro corresponde únicamente a ese episodio."
+          },
+          {
+            "score": 0.74503624,
+            "patient_id": 2,
+            "record_id": "a22c0bf2-4de5-5684-80b1-e5c2910e50b2",
+            "source": "paciente-2-bruno-demo.md",
+            "section": "Medicamento",
+            "text": "Bruno Demo recibe Medicamento Beta, una denominación ficticia asociada a Enfermedad Beta en la consulta del 2026-10-21. No se han registrado dosis, cambios de medicamento ni duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "gamma",
+      "patient_id": 3,
+      "question": "¿Qué medicamento toma Carla Demo?",
+      "request_id": "9839f837-4b6d-4e61-a9b5-698268ec4db0",
+      "seconds": 18.82,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "No tengo información sobre una persona llamada Carla Demo o sobre los medicamentos que pueda estar tomando. Si necesitas información sobre medicamentos o consejos sobre la salud, te recomiendo consultar a un profesional de la salud o a una fuente confiable de información médica.",
+        "rag_answer": "Respuesta: Carla Demo recibe Medicamento Gamma\nFuente: [paciente-3-carla-demo.md/34a87963-7e6b-5283-934a-93de012c9c93/Medicamento]",
+        "sources": [
+          {
+            "score": 0.7920006,
+            "patient_id": 3,
+            "record_id": "34a87963-7e6b-5283-934a-93de012c9c93",
+            "source": "paciente-3-carla-demo.md",
+            "section": "Medicamento",
+            "text": "Carla Demo recibe Medicamento Gamma, una denominación ficticia vinculada a Enfermedad Gamma en la consulta del 2026-10-22. No se ha registrado una pauta ni una dosis."
+          },
+          {
+            "score": 0.7825042,
+            "patient_id": 3,
+            "record_id": "34a87963-7e6b-5283-934a-93de012c9c93",
+            "source": "paciente-3-carla-demo.md",
+            "section": "Enfermedad",
+            "text": "Carla Demo tiene Enfermedad Gamma, un diagnóstico ficticio. En la consulta del 2026-10-22 se registró sequedad leve de la piel de las manos desde el 2026-10-20. No constan otros síntomas en este episodio."
+          },
+          {
+            "score": 0.7633482,
+            "patient_id": 3,
+            "record_id": "34a87963-7e6b-5283-934a-93de012c9c93",
+            "source": "paciente-3-carla-demo.md",
+            "section": "Tratamiento",
+            "text": "Carla Demo sigue Tratamiento Gamma para Enfermedad Gamma. El plan ficticio consiste en registrar la evolución de la sequedad y revisarla el 2026-11-14 con el Equipo Gamma."
+          }
+        ]
+      }
+    },
+    {
+      "case": "fecha_registrada",
+      "patient_id": 1,
+      "question": "¿En qué fecha se registró la consulta de Ana Demo?",
+      "request_id": "bc6bd60b-f85c-4ede-8676-82c99f1e08c0",
+      "seconds": 17.97,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su consulta. ¿Puedes proporcionar más contexto o detalles sobre quién es Ana Demo y qué consulta estás refiriéndote? Estoy aquí para ayudarte con cualquier pregunta o tema que tengas.",
+        "rag_answer": "Respuesta: 2026-10-20\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.741714,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.7181016,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.6797665,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "control_registrado",
+      "patient_id": 1,
+      "question": "¿En qué fecha está previsto el control de Ana Demo?",
+      "request_id": "71f72543-3b81-4603-abac-4b79abf98781",
+      "seconds": 20.91,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre un evento o persona llamada \"Ana Demo\" y no puedo proporcionar una fecha prevista para un control que no conozco. ¿Puedes proporcionar más contexto o detalles sobre quién es Ana Demo y qué tipo de control se refiere? Estoy aquí para ayudarte con cualquier otra pregunta o tema que tengas.",
+        "rag_answer": "Respuesta: el 2026-11-12\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.67443407,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.66082966,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.6124847,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "cirugia_ausente",
+      "patient_id": 1,
+      "question": "¿Qué cirugía tiene programada Ana Demo?",
+      "request_id": "d052aa94-54f5-4a43-a85a-ff291858dc42",
+      "seconds": 26.16,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "No tengo información sobre una persona llamada Ana Demo o su programación de cirugía. ¿Puedes proporcionar más contexto o detalles sobre quién es Ana Demo y qué tipo de cirugía está programada? Estoy aquí para ayudarte con cualquier pregunta o inquietud que tengas.",
+        "rag_answer": "Respuesta: El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Tratamiento]\n\nRespuesta: En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nNo hay información suficiente sobre los demás datos solicitados.",
+        "sources": [
+          {
+            "score": 0.6875353,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.6633648,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.60682976,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "dosis_ausente",
+      "patient_id": 1,
+      "question": "¿Qué dosis de su medicamento debe tomar Ana Demo?",
+      "request_id": "43399951-3c20-41f1-8ba6-f1aa9ea620f2",
+      "seconds": 27.15,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "No puedo proporcionar información sobre dosis de medicamentos específicos o consejos de tratamiento para individuos específicos, incluida Ana Demo. La dosis adecuada de un medicamento depende de varios factores, como la condición médica subyacente, la edad, el peso, la función renal y hepática, y otros factores de salud. Si Ana Demo necesita medicamento, la mejor manera de obtener la información correcta sobre su dosis es consultar a un profesional de la salud. ¿Puedo ayudarte con algo más?",
+        "rag_answer": "Respuesta: No se ha registrado una dosis ni una duración.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Medicamento]\n\nNo hay información suficiente sobre los demás datos solicitados.",
+        "sources": [
+          {
+            "score": 0.75827074,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          },
+          {
+            "score": 0.736745,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.7355671,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "cefalea",
+      "patient_id": 1,
+      "question": "Me duele la cabeza. ¿Qué enfermedad tengo?",
+      "request_id": "4fcddae3-553c-4eda-b3d6-2a387fcdc323",
+      "seconds": 19.37,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "Lo siento mucho que estés experimentando dolor de cabeza. Es importante tener en cuenta que no puedo diagnosticar enfermedades específicas sin una evaluación médica completa y personalizada. Sin embargo, puedo ofrecerte algunas posibles causas comunes de dolor de cabeza que podrían ayudarte a entender mejor lo que estás experimentando.\n\n1. **Dolor de tensión**: Es el tipo más común de dolor de cabeza, causado por la tensión muscular en la cabeza y el cuello.\n2. **Dolor de migraña**: Caracterizado por dolor intenso, sensibilidad a la luz y el sonido, y náuseas.\n3. **Dolor de sinusitis**: Causado por la inflamación de los senos paranasales y puede ser acompañado de fiebre, congestión nasal y dolor de cabeza.\n4. **Dolor de mala calidad del sueño**: Puede ser causado por insomnio, falta de sueño o problemas de sueño.\n5. **Dolor de estrés**: Puede ser causado por el estrés emocional y la ansiedad.\n6. **Dolor de menopausia**: Es común en mujeres que han pasado por la menopausia, ya que los cambios hormonales pueden afectar la frecuencia y la intensidad del dolor de cabeza.\n7. **Dolor de migraña con aura**: Caracterizado por una serie de síntomas, como visión borrosa, sensibilidad a la luz y el sonido, y dolor de cabeza.\n\nEs importante recordar que estos son solo algunos ejemplos comunes de causas de dolor de cabeza. Si el dolor de cabeza es severo, persistente o acompañado de otros síntomas, es importante consultar a un médico para una evaluación y tratamiento adecuados.\n\nMientras tanto, aquí hay algunas sugerencias que podrían ayudarte a aliviar el dolor de cabeza:\n\n* Bebe agua: La deshidratación puede empeorar el dolor de cabeza.\n* Descansa: Asegúrate de dormir lo suficiente y descansar cuando sea necesario.\n* Evita estimulantes: Evita el consumo de cafeína, alcohol y otros estimulantes que pueden empeorar el dolor de cabeza.\n* Practica técnicas de relajación: La meditación, el yoga y la respiración profunda pueden ayudar a reducir el estrés y la ansiedad.\n* Aplica calor o frío: Aplicar calor o frío en la frente o en el cuello puede ayudar a aliviar el dolor de cabeza.\n\nRecuerda que si el dolor de cabeza es severo o persistente, es importante consultar a un médico para una evaluación y tratamiento adecuados.",
+        "rag_answer": "Respuesta: Ana Demo tiene Enfermedad Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.66703165,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.60113317,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          },
+          {
+            "score": 0.58909523,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "vision",
+      "patient_id": 1,
+      "question": "Tengo visión borrosa. ¿Qué medicamento debo tomar?",
+      "request_id": "02191bde-670a-4b04-bd24-f1914b8fd37e",
+      "seconds": 16.84,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": true,
+        "abstention": true
+      },
+      "passed": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no puedo recomendar medicamentos específicos. La visión borrosa puede ser causada por una variedad de factores, incluyendo problemas de salud, estilo de vida, o condiciones oculares. Es importante consultar a un profesional de la salud para obtener un diagnóstico y tratamiento adecuados.\n\nAquí hay algunas sugerencias generales que podrían ayudar a mejorar la visión borrosa:\n\n1. **Consulta a un oftalmólogo**: Un especialista en ojos puede evaluar tu visión y determinar la causa subyacente. Pueden recomendar pruebas adicionales, como un examen de reflejos o una escaneo de ultrasonido, si es necesario.\n2. **Mantén una buena salud general**: Una dieta equilibrada, ejercicio regular y evitar el estrés pueden ayudar a mejorar la salud general y, en algunos casos, la visión.\n3. **Evita el uso excesivo de dispositivos electrónicos**: La exposición prolongada a la luz azul de los dispositivos electrónicos puede contribuir a la fatiga visual y la visión borrosa.\n4. **Aplica técnicas de relajación**: La meditación, la respiración profunda y la visualización pueden ayudar a reducir el estrés y mejorar la concentración.\n\nRecuerda que la visión borrosa puede ser un síntoma de una condición más grave, como la miopía, la hipermetropía, la degeneración macular o la retinopatía diabética. Es importante buscar atención médica para obtener un diagnóstico y tratamiento adecuados.\n\n**No te recomiendo tomar medicamentos sin la supervisión de un profesional de la salud.** La automedicación puede ser peligrosa y puede empeorar la condición.",
+        "rag_answer": "No hay información suficiente",
+        "sources": [
+          {
+            "score": 0.6522752,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          },
+          {
+            "score": 0.6199199,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.5977217,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "estomago",
+      "patient_id": 1,
+      "question": "Tengo dolor de estómago. ¿Qué tratamiento me recomiendas?",
+      "request_id": "fb6f79ca-9121-4944-bd25-b1a4c17eba22",
+      "seconds": 20.73,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "Lo siento mucho que estés experimentando dolor de estómago. Aunque no puedo proporcionar un diagnóstico médico, puedo ofrecerte algunas sugerencias generales que pueden ayudarte a aliviar el dolor de estómago. Sin embargo, es importante recordar que si el dolor es severo, persistente o acompañado de otros síntomas como fiebre, náuseas o vómitos, debes consultar a un médico para obtener un diagnóstico y tratamiento adecuados.\n\nAquí hay algunas opciones que podrías considerar:\n\n1. **Hidratación**: Beber suficiente agua puede ayudar a aliviar el dolor de estómago. Asegúrate de beber agua a medida que te sientas sediento.\n2. **Alimentos suaves**: Opta por alimentos suaves y fáciles de digerir, como arroz blanco, pan integral, frutas y verduras cocidas.\n3. **Gaseosas**: Las gaseosas pueden ayudar a aliviar el dolor de estómago, pero asegúrate de elegir una que sea baja en azúcar y sin gas artificial.\n4. **Medicamentos**: Puedes considerar tomar medicamentos como el antácaro (Tums, Rolaids) o el simeticona (Pepto-Bismol) para aliviar el dolor de estómago. Sin embargo, siempre sigue las instrucciones del fabricante y consulta con un médico antes de tomar cualquier medicamento.\n5. **Descanso**: Asegúrate de descansar lo suficiente y evitar actividades físicas intensas.\n6. **Evitar alimentos irritantes**: Algunos alimentos pueden irritar el estómago, como el café, el alcohol, el azúcar refinado y los alimentos picantes. Evita estos alimentos durante un tiempo para ver si pueden ayudar a aliviar el dolor de estómago.\n7. **Practicas de relajación**: La ansiedad y el estrés pueden empeorar el dolor de estómago. Practica técnicas de relajación como la meditación, el yoga o la respiración profunda para ayudar a reducir el estrés.\n\nRecuerda que si el dolor de estómago persiste o empeora, debes consultar a un médico para obtener un diagnóstico y tratamiento adecuados.",
+        "rag_answer": "Respuesta: Tratamiento Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.6605122,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.63632226,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          },
+          {
+            "score": 0.6157776,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          }
+        ]
+      }
+    },
+    {
+      "case": "sintoma_relacion",
+      "patient_id": 1,
+      "question": "¿El Medicamento Alfa sirve para el dolor de cabeza de Ana Demo?",
+      "request_id": "429e8a58-decf-4de3-b684-4789f0554e92",
+      "seconds": 16.19,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "No puedo proporcionar información sobre un personaje específico como Ana Demo. ¿Puedo ayudarte con algo más?",
+        "rag_answer": "Respuesta: Enfermedad Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nRespuesta: Tratamiento Alfa\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Tratamiento]\n\nNo hay información suficiente sobre los demás datos solicitados.",
+        "sources": [
+          {
+            "score": 0.7586505,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          },
+          {
+            "score": 0.7455812,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.7352933,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          }
+        ]
+      }
+    },
+    {
+      "case": "otro_paciente",
+      "patient_id": 1,
+      "question": "¿Qué tratamiento sigue Bruno Demo?",
+      "request_id": "7372d64e-fc56-4088-b6bc-e0fdf9a6c8bc",
+      "seconds": 14.97,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre un personaje llamado Bruno Demo o su tratamiento. Es posible que sea un personaje ficticio o que no sea una figura pública conocida. Si puedes proporcionar más contexto o detalles sobre quién es Bruno Demo, estaré encantado de tratar de ayudarte.",
+        "rag_answer": "Respuesta: Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.6998799,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.6435684,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.6365404,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    },
+    {
+      "case": "sql_no_es_contexto",
+      "patient_id": 1,
+      "question": "¿Cuál es la fecha de nacimiento de Ana Demo?",
+      "request_id": "8fd88352-0e69-4f56-9186-7acf4e3cc760",
+      "seconds": 16.1,
+      "status": 200,
+      "checks": {
+        "http_200": true,
+        "direct_answer": true,
+        "three_sources": true,
+        "patient_isolation": true,
+        "canonical_sources": true,
+        "expected_facts": true,
+        "valid_citations": false,
+        "abstention": false
+      },
+      "passed": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo. Es posible que sea un personaje ficticio o una figura pública que no es ampliamente conocida. Si puedes proporcionar más contexto o detalles sobre quién es Ana Demo, estaré encantado de ayudarte a encontrar la información que buscas.",
+        "rag_answer": "Respuesta: Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nRespuesta: En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nRespuesta: Este registro no describe otros síntomas.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.67035985,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.66431,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.6336329,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          }
+        ]
+      }
+    }
+  ],
+  "scope": "API y modelo reales; cobertura literal, aislamiento y citas cotejadas con Markdown Java",
+  "reports_preserved": true,
+  "finished_at": "2026-11-07T21:40:14.456017+00:00",
+  "passed": false
+}

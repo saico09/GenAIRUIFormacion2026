@@ -1,0 +1,19 @@
+{
+  "base_url": "http://127.0.0.1:8080",
+  "checks": [
+    "Crear paciente crea informe vacío con SHA256 y filename seguro",
+    "Confirmación estricta, tipos, campo vacío, controles, encabezados y 2000 caracteres",
+    "Alta de registro con UUID del servidor y vacíos No registrado",
+    "Dos escrituras con la misma revisión: exactamente una201 y una409, sin pérdida",
+    "Edición conserva UUID; rechaza propietario/estructura/UUID duplicado o nuevo/64KiB y revisión antigua",
+    "Descarga Markdown exacta y Content-Disposition accesible mediante CORS",
+    "Renombrar paciente cambia filename y título, conserva registros y otro paciente",
+    "Límite50: acepta50, rechaza51 sin cambios; edición permite quitar registros existentes",
+    "Borrar paciente elimina solamente su informe; GET posteriores404"
+  ],
+  "previous_patient_count": 3,
+  "result": "passed",
+  "previous_patients_preserved": true,
+  "previous_files_preserved": true,
+  "temporary_patients_remaining": 0
+}

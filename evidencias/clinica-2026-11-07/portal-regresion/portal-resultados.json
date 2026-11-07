@@ -1,0 +1,116 @@
+{
+  "started_at": "2026-11-07T21:39:05.091Z",
+  "chat_url": "http://127.0.0.1:8000/",
+  "java_url": "http://127.0.0.1:8080",
+  "checks": [
+    {
+      "name": "Cuatro secciones, orden de navegacion y salto al contenido sin cambiar seccion",
+      "passed": true
+    },
+    {
+      "name": "CRUD Java real en modal, cancelar DELETE y submit duplicado bloqueado",
+      "passed": true,
+      "temporary_id": 28
+    },
+    {
+      "name": "Explorador python:200/404/422, JSON invalido y cancelacion sin peticion",
+      "passed": true
+    },
+    {
+      "name": "Explorador python: errores simulados, carga, submit unico y recuperacion",
+      "passed": true
+    },
+    {
+      "name": "Explorador java:200/404/422, JSON invalido y cancelacion sin peticion",
+      "passed": true
+    },
+    {
+      "name": "Explorador java: errores simulados, carga, submit unico y recuperacion",
+      "passed": true
+    },
+    {
+      "name": "Actuator Java: health y Prometheus legibles desde el navegador con CORS",
+      "passed": true
+    },
+    {
+      "name": "Comparativa y fuentes RAG con respuesta simulada; carga y submit unico",
+      "passed": true
+    },
+    {
+      "name": "Movil390 consultas sin overflow del documento",
+      "passed": true,
+      "viewport": 390,
+      "document": 390,
+      "body": 390
+    },
+    {
+      "name": "Movil390 pacientes sin overflow del documento",
+      "passed": true,
+      "viewport": 390,
+      "document": 390,
+      "body": 390
+    },
+    {
+      "name": "Movil390 api-python sin overflow del documento",
+      "passed": true,
+      "viewport": 390,
+      "document": 390,
+      "body": 390
+    },
+    {
+      "name": "Movil390 api-java sin overflow del documento",
+      "passed": true,
+      "viewport": 390,
+      "document": 390,
+      "body": 390
+    }
+  ],
+  "mocks": [
+    {
+      "api": "python",
+      "cases": [
+        "network_failure",
+        "http_500"
+      ],
+      "real_services_stopped": false
+    },
+    {
+      "api": "java",
+      "cases": [
+        "network_failure",
+        "http_500"
+      ],
+      "real_services_stopped": false
+    },
+    {
+      "api": "chat",
+      "cases": [
+        "comparison_sources_and_loading"
+      ],
+      "real_inference": false
+    }
+  ],
+  "before": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    }
+  },
+  "result": "passed",
+  "after": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    }
+  },
+  "data_preserved": true,
+  "finished_at": "2026-11-07T21:39:30.490Z"
+}

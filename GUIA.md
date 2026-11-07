@@ -44,12 +44,12 @@ Para iniciar Ollama:
 
 Abre [localhost:8000](http://localhost:8000). Arriba tienes cuatro secciones:
 
-1. **Consultas médicas:** elige un paciente, escribe la pregunta y pulsa **Comparar respuestas**. Verás la respuesta sin RAG, la respuesta con RAG y sus fuentes. Abajo se explica qué es RAG.
-2. **Pacientes:** agrega, busca o edita pacientes de Java en la tabla. Para borrar, pulsa **Eliminar** y confirma.
+1. **Consultas médicas:** elige un paciente Java, escribe la pregunta y pulsa **Comparar respuestas**. Abre cada fuente para leer el fragmento y su UUID de registro.
+2. **Pacientes:** agrega, busca o edita pacientes. Pulsa su nombre para abrir la historia; **Eliminar** pide confirmación y también elimina su informe.
 3. **API Python:** abre una operación, completa el ID o el JSON y pulsa **Ejecutar petición**.
 4. **API Java:** lo mismo, pero contra Spring Boot. Los colores distinguen GET, POST, PUT y DELETE; el resultado muestra el código HTTP y el detalle del error si lo hay.
 
-Los pacientes Java son independientes de los pacientes Python y de las historias RAG. Crear uno en la tabla no lo añade al selector de consultas. Los exploradores modifican datos reales de esta app local; usa un paciente temporal para practicar.
+La tabla y el selector clínico comparten los pacientes Java. El CRUD Python conserva su tabla independiente. Los exploradores modifican datos reales de esta app local; usa un paciente temporal para practicar.
 
 Para actualizar una instalación que ya está funcionando:
 
@@ -58,6 +58,20 @@ docker compose up -d --build --no-deps python-api java-api
 ```
 
 Recarga la página al terminar. En las copias semanales, usa la dirección de su `LEVANTAR.txt`.
+
+## Historia clínica
+
+Para verla: **Pacientes → nombre del paciente**. La tabla muestra ID del registro, enfermedad, tratamiento y medicamento; un guion indica que no hay dato.
+
+Para guardar una consulta: **Nueva consulta → escribir la nota ficticia → Preparar con IA**. Revisa los tres campos y el texto de origen, corrige lo necesario y pulsa **Guardar este registro → Confirmar y guardar**. Si la IA no encuentra hechos o no está disponible, usa **Crear registro manual**. No completa diagnósticos ni datos ausentes.
+
+Para ver o bajar el archivo: **Ver archivo Markdown → Descargar .md**. Para editarlo: **Editar Markdown → Guardar Markdown → Confirmar y guardar**. Conserva los UUID; las altas se hacen desde **Nueva consulta**. Si aparece 409, pulsa **Actualizar historia**, compara tu borrador con la versión actual y confirma de nuevo.
+
+El guardado actualiza el índice RAG. Si falla, el informe queda guardado: pulsa **Reintentar sincronización**. Renombrar o eliminar pacientes también sincroniza; el reintento no repite el cambio en Java.
+
+Para aprovechar una pregunta del chat: **Preparar registro** la lleva como borrador a **Nueva consulta**. Preguntar, preparar y revisar no guardan nada; la respuesta RAG nunca se archiva automáticamente.
+
+Los informes viven en `datos/historias/paciente-ID-nombre.md`, montado con escritura en Java por Compose. El `.md` es la fuente clínica; PostgreSQL guarda nombre, nacimiento y correo, y Qdrant indexa sus fragmentos. Conserva esa carpeta al reiniciar.
 
 ## Pacientes Python
 
@@ -147,7 +161,7 @@ Para descargar embeddings, si falta el modelo:
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull nomic-embed-text
 ```
 
-Para cargar o actualizar los nueve fragmentos sin duplicarlos:
+Para cargar o actualizar los informes confirmados sin duplicar fragmentos:
 
 ```powershell
 docker compose exec -T python-api python ingestar.py
@@ -175,11 +189,15 @@ Para descargar el modelo de chat, si falta:
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe usar Alfa y su fuente en la primera y reconocer que falta información en la segunda.
 
-«Con RAG» busca hasta dos fragmentos del paciente en Qdrant y se los entrega al modelo junto con tu pregunta. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Las historias vienen de `datos/paciente-*.md`: si las editas, vuelve a ejecutar `ingestar.py`.
+«Con RAG» comprueba la historia vigente de Java, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
 
-Hoy cada historia tiene sólo tres hechos ficticios: enfermedad, tratamiento y medicamento. No hay síntomas, dosis ni atenciones anteriores. PostgreSQL guarda los datos básicos del paciente; Qdrant guarda el conocimiento de los Markdown. Preguntar no modifica esos archivos ni crea una consulta médica en la base. Cada pregunta es independiente: los logs no funcionan como memoria del chat.
+Pregunta por enfermedades, tratamientos o medicamentos registrados: el chat no infiere consejos ni diagnósticos nuevos a partir de síntomas.
 
-La revisión del 07/11 detectó respuestas sin respaldo y citas incorrectas fuera de las preguntas preparadas. Por eso, ver un nombre de archivo no basta para validar una respuesta. [Experimentos, límites y propuesta de corrección](evidencias/revision-rag-2026-11-07/LEEME.md); la alternativa probada todavía no está aplicada.
+Cada registro agrupa enfermedad, tratamiento y medicamento bajo un UUID. Puedes tener varios registros por paciente; sólo se usa lo que consta en su informe. Preguntar no modifica esos archivos. Cada pregunta es independiente: los logs no funcionan como memoria del chat.
+
+«Con RAG» selecciona citas literales: antes de mostrarlas, el código comprueba que el texto y la fuente pertenecen a los fragmentos recuperados. Si faltan datos o esa comprobación falla, responde «No hay información suficiente». Esto verifica la procedencia, no garantiza que el modelo haya interpretado bien la pregunta; coteja la respuesta con las fuentes.
+
+La revisión del 07/11 detectó respuestas sin respaldo fuera de los casos preparados. [Experimentos anteriores](evidencias/revision-rag-2026-11-07/LEEME.md). El registro asistido fue solicitado por Marco; no añade requisitos de Rui.
 
 Para comprobar ambos casos por API:
 

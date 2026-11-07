@@ -2,10 +2,14 @@
 
 import argparse
 import json
+import sys
 import time
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import urlopen
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python-api"))
+from rag import source_label, validate_rag_answer
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("input", help="JSON de resultados de verificar_chat_ui.cjs")
@@ -43,11 +47,14 @@ for case in cases:
     assert branches["direct"]["prompt"] == case["question"]
     assert case["question"] in branches["rag"]["prompt"]
     assert all(source["text"] in branches["rag"]["prompt"] for source in case["sources"])
+    assert all(source_label(source) in branches["rag"]["prompt"] for source in case["sources"])
     for branch, event in branches.items():
-        assert event["response"] == case[f"{branch}_answer"] and event["status"] == "ok"
+        displayed = validate_rag_answer(event["response"], case["sources"], case["question"]) if branch == "rag" else event["response"]
+        assert displayed == case[f"{branch}_answer"] and event["status"] == "ok"
     assert any(event["event"] == "http" and event["status"] == 200 for event in events)
     checks.append({"request_id": request_id, "question": case["question"], "query": query,
-                   "nodes": [event["node"] for event in nodes], "logs": events})
+                   "nodes": [event["node"] for event in nodes], "logs": events,
+                   "rag_raw_to_http_checked": True})
 output = Path(args.output)
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps({"checks": checks}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

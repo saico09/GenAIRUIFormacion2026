@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-11-07T21:19:30.575239+00:00",
+  "qdrant_points": 9,
+  "private_backup": ".contexto/backup_clinica_2026-11-07.json",
+  "python": {
+    "count": 4,
+    "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+  },
+  "java": {
+    "count": 3,
+    "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+  }
+}

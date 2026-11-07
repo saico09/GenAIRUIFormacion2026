@@ -1,0 +1,79 @@
+{
+  "checks": [
+    "Paciente temporal existe solo en Java; Markdown vacío y Python404",
+    "Alta confirmada y sync repetido:3puntos UUID estables, mismo propietario",
+    "Editar mismo registro actualiza3puntos; no crea6",
+    "Cancelar y revisión antigua:422/409 sin cambios en Markdown ni índice",
+    "Segundo registro→6puntos; eliminar primero→3 sin puntos huérfanos",
+    "Propuesta real de nota explícita y pregunta de síntomas: evidencia literal, ninguna escritura",
+    "DELETE Java + sync→0puntos; chat/propuesta/historia404 y archivo eliminado"
+  ],
+  "proposals_requested": true,
+  "qdrant_error_requested": false,
+  "before": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    },
+    "qdrant": {
+      "count": 9,
+      "sha256": "1176c3128bc2b4a27ff1664876c57bd9a90e82022a60499a031fe72167e31729"
+    },
+    "markdown": {
+      "count": 3,
+      "sha256": "eff2fe13087a4e16b0c5143849262c9bbdbd2774c087583e5bf16fb202f010e6"
+    }
+  },
+  "proposals": {
+    "explicit_note": {
+      "patient_id": 32,
+      "entries": [
+        {
+          "disease": "Enfermedad Prueba",
+          "treatment": "Tratamiento Prueba",
+          "medication": "Medicamento Prueba",
+          "evidence": {
+            "disease": "Diagnóstico registrado: Enfermedad Prueba.",
+            "treatment": "Tratamiento registrado: Tratamiento Prueba.",
+            "medication": "Medicación registrada: Medicamento Prueba."
+          }
+        }
+      ],
+      "message": "Revisa los datos y confirma antes de guardarlos."
+    },
+    "symptom_question": {
+      "patient_id": 32,
+      "entries": [],
+      "message": "No encontré enfermedad, tratamiento o medicamento afirmados explícitamente. Añade una nota con datos confirmados o registra los campos manualmente."
+    },
+    "wrote_history_or_index": false
+  },
+  "result": "passed",
+  "preserved": {
+    "patients": true,
+    "qdrant_including_vectors": true,
+    "markdown_files": true
+  },
+  "after": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    },
+    "qdrant": {
+      "count": 9,
+      "sha256": "1176c3128bc2b4a27ff1664876c57bd9a90e82022a60499a031fe72167e31729"
+    },
+    "markdown": {
+      "count": 3,
+      "sha256": "eff2fe13087a4e16b0c5143849262c9bbdbd2774c087583e5bf16fb202f010e6"
+    }
+  }
+}

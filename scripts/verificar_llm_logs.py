@@ -2,12 +2,16 @@
 
 import argparse
 import json
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from uuid import uuid4
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python-api"))
+from rag import source_label, validate_rag_answer
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output", default="evidencias/s07/032-llm.json")
@@ -23,7 +27,13 @@ with urlopen(request, timeout=300) as response:
     assert response.status == 200
     assert response.headers["X-Request-ID"] == request_id
     answer = json.load(response)
-assert "Enfermedad Alfa" in answer["rag_answer"] and "[paciente-1.md/Enfermedad]" in answer["rag_answer"]
+with urlopen("http://127.0.0.1:8080/patients/1/history", timeout=15) as response:
+    history = json.load(response)
+assert len(answer["sources"]) == 3
+known_source = next(source for source in answer["sources"] if source["section"] == "Enfermedad" and "Enfermedad Alfa" in source["text"])
+assert known_source["source"] == history["filename"]
+assert any(entry["id"] == known_source["record_id"] and entry["disease"] == known_source["text"] for entry in history["entries"])
+assert "Enfermedad Alfa" in answer["rag_answer"] and source_label(known_source) in answer["rag_answer"]
 query = f'{{service="fastapi"}} | json | request_id="{request_id}"'
 deadline = time.monotonic() + 60
 while True:
@@ -50,10 +60,12 @@ assert branches["direct"]["model"] == branches["rag"]["model"]
 assert all(source["patient_id"] == 1 for source in answer["sources"])
 for source in answer["sources"]:
     assert source["text"] in branches["rag"]["prompt"]
+    assert source_label(source) in branches["rag"]["prompt"]
 assert "CONTEXTO:" in branches["rag"]["prompt"] and question in branches["rag"]["prompt"]
 for branch, event in branches.items():
     assert event["request_id"] == request_id and event["status"] == "ok"
-    assert event["response"] == answer[f"{branch}_answer"]
+    displayed = validate_rag_answer(event["response"], answer["sources"], question) if branch == "rag" else event["response"]
+    assert displayed == answer[f"{branch}_answer"]
     assert isinstance(event["duration_ms"], (int, float)) and event["duration_ms"] > 0
 
 def utc(value):
@@ -63,6 +75,7 @@ output = Path(args.output)
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps({"checked_at": utc(time.time_ns()), "request_id": request_id,
                              "patient_id": 1, "question": question, "answer": answer,
+                             "rag_raw_to_http_checked": True,
                              "http_log": http[0], "checks": [{"name": "llm", "service": "fastapi",
                              "query": query + ' | event="llm"', "start_utc": utc(start),
                              "end_utc": utc(end), "logs": llm}]}, ensure_ascii=False, indent=2) + "\n",

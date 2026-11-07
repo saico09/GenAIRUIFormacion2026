@@ -1,0 +1,139 @@
+{
+  "started_at": "2026-11-07T21:53:29.396Z",
+  "real_services_used": true,
+  "real_llm": true,
+  "mocks": [],
+  "checks": [
+    {
+      "name": "Identidad Java ausente de Python; propuesta revisada, cancelar no guarda y confirmar persiste UUID/Markdown",
+      "passed": true,
+      "record_id": "c4f3e2e7-f370-43fc-9d41-21edc73c5f0a"
+    },
+    {
+      "name": "Descarga idéntica; edición Markdown confirmada conserva UUID y sincroniza nueva revisión",
+      "passed": true
+    },
+    {
+      "name": "RAG real consulta la edición del paciente Java y devuelve su UUID; preguntar no escribe",
+      "passed": true
+    },
+    {
+      "name": "Renombrar actualiza filename; eliminar por UI limpia también el índice del paciente propio",
+      "passed": true
+    }
+  ],
+  "before": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    },
+    "histories": {
+      "count": 3,
+      "sha256": "9293d85e1aeb0895c4068d4451a5dd093973d022cc1b6f05f2464efa8ed73ea0"
+    }
+  },
+  "temporary_patient_id": 31,
+  "proposal": {
+    "note": "Datos sintéticos. Enfermedad: Síndrome ficticio Nube. Tratamiento: Terapia ficticia Clara. Medicamento: Compuesto ficticio Azul.",
+    "status": 200,
+    "request_id": "a21fff12-558f-464c-a710-de1a6c443cb7",
+    "body": {
+      "patient_id": 31,
+      "entries": [
+        {
+          "disease": "Síndrome ficticio Nube",
+          "treatment": "Terapia ficticia Clara",
+          "medication": "Compuesto ficticio Azul",
+          "evidence": {
+            "disease": "Enfermedad: Síndrome ficticio Nube.",
+            "treatment": "Tratamiento: Terapia ficticia Clara.",
+            "medication": "Medicamento: Compuesto ficticio Azul."
+          }
+        }
+      ],
+      "message": "Revisa los datos y confirma antes de guardarlos."
+    }
+  },
+  "proposed_fields": {
+    "disease": "Síndrome ficticio Nube",
+    "treatment": "Terapia ficticia Clara",
+    "medication": "Compuesto ficticio Azul"
+  },
+  "confirmed_entry": {
+    "id": "c4f3e2e7-f370-43fc-9d41-21edc73c5f0a",
+    "disease": "Síndrome ficticio Nube",
+    "treatment": "Terapia ficticia Clara",
+    "medication": "Compuesto ficticio Azul"
+  },
+  "edited_history": {
+    "filename": "paciente-31-historia-ui-89308e46.md",
+    "revision": "90ee6adcb9272876721cbc78153fd94b90ede0822634a983602a290732834203",
+    "entries": [
+      {
+        "id": "c4f3e2e7-f370-43fc-9d41-21edc73c5f0a",
+        "disease": "Síndrome ficticio Cedro",
+        "treatment": "Terapia ficticia Clara",
+        "medication": "Compuesto ficticio Azul"
+      }
+    ]
+  },
+  "chat": {
+    "request_id": "b169189b-6792-46e6-b446-162dd5751cc2",
+    "direct_answer": "Lo siento, pero no tengo acceso a información específica sobre un individuo o una persona con el número de identificación UI 89308e46. Los números de identificación médica, como el UI, suelen ser confidenciales y no están disponibles públicamente para razones de privacidad y seguridad.\n\nSi estás buscando información sobre una enfermedad específica, puedo ofrecerte información general sobre el tema. ¿Podrías proporcionar más contexto o detalles sobre la enfermedad que estás buscando? Estoy aquí para ayudarte con cualquier pregunta o inquietud que tengas.",
+    "rag_answer": "Respuesta: Síndrome ficticio Cedro\nFuente: [paciente-31-historia-ui-89308e46.md/c4f3e2e7-f370-43fc-9d41-21edc73c5f0a/Enfermedad]",
+    "sources": [
+      {
+        "score": 0.58427775,
+        "patient_id": 31,
+        "record_id": "c4f3e2e7-f370-43fc-9d41-21edc73c5f0a",
+        "source": "paciente-31-historia-ui-89308e46.md",
+        "section": "Enfermedad",
+        "text": "Síndrome ficticio Cedro"
+      },
+      {
+        "score": 0.5002913,
+        "patient_id": 31,
+        "record_id": "c4f3e2e7-f370-43fc-9d41-21edc73c5f0a",
+        "source": "paciente-31-historia-ui-89308e46.md",
+        "section": "Medicamento",
+        "text": "Compuesto ficticio Azul"
+      },
+      {
+        "score": 0.48724958,
+        "patient_id": 31,
+        "record_id": "c4f3e2e7-f370-43fc-9d41-21edc73c5f0a",
+        "source": "paciente-31-historia-ui-89308e46.md",
+        "section": "Tratamiento",
+        "text": "Terapia ficticia Clara"
+      }
+    ]
+  },
+  "index_cleanup": {
+    "patient_id": 31,
+    "status": "removed",
+    "records": 0,
+    "fragments": 0
+  },
+  "result": "passed",
+  "cleanup_verified": true,
+  "after": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    },
+    "histories": {
+      "count": 3,
+      "sha256": "9293d85e1aeb0895c4068d4451a5dd093973d022cc1b6f05f2464efa8ed73ea0"
+    }
+  },
+  "data_preserved": true,
+  "finished_at": "2026-11-07T21:54:04.067Z"
+}

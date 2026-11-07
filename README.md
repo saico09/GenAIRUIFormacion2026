@@ -20,6 +20,8 @@ Para levantar los contenedores:
 docker compose up -d --build
 ```
 
+Compose monta `datos/historias/` en Java con escritura: ahí se conservan los informes `.md`. No cambies ese montaje a solo lectura ni borres la carpeta al reiniciar.
+
 Para esperar ambas APIs:
 
 ```powershell
@@ -73,7 +75,9 @@ El comando conecta PostgreSQL directamente a la red del perfil y comprueba SQL a
 
 Python usa `public.patients`; Java, `java.patients`. POST y PUT reciben `name`, `birth_date` (`YYYY-MM-DD`) y `email`. Cada tabla genera sus propios ids.
 
-En la página, **Pacientes** permite buscar, agregar, editar y eliminar usando Spring Boot. Esos cambios no modifican los pacientes Python ni las historias que usa RAG. Los exploradores **API Python** y **API Java** ejecutan peticiones reales: elige una operación, completa su ID o JSON y pulsa **Ejecutar petición**. Verás el código HTTP y la respuesta; eliminar siempre pide confirmación.
+En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enfermedad, tratamiento y medicamento; archivo Markdown visible, descargable y editable. **Nueva consulta → Preparar con IA → revisar campos → confirmar** añade un registro. La IA extrae hechos escritos en tu nota ficticia; también puedes crear el registro manualmente.
+
+**Consultas médicas** usa estos mismos pacientes Java y sus informes. Preguntar no guarda respuestas: **Preparar registro** lleva solo tu pregunta como borrador para revisarla. Python conserva su CRUD de práctica independiente. Los exploradores ejecutan peticiones reales y eliminar pide confirmación.
 
 | Operación | Correcto | Error |
 |---|---|---|
@@ -83,6 +87,14 @@ En la página, **Pacientes** permite buscar, agregar, editar y eliminar usando S
 | `PUT /patients/{id}` | 200, paciente | 404 ausente / 422 inválido |
 | `DELETE /patients/{id}` | 204, vacío | 404 ausente |
 | `POST /chat` (Python) | 200, respuestas directa/RAG y fuentes | 422 entrada / 404 paciente / 503 dependencia |
+| `GET /patients/{id}/history` (Java) | 200, Markdown, revisión y registros | 404 paciente |
+| `GET /patients/{id}/history.md` (Java) | 200, descarga Markdown | 404 paciente |
+| `PUT /patients/{id}/history` (Java) | 200, informe actualizado | 409 revisión antigua / 422 inválido |
+| `POST /patients/{id}/history/entries` (Java) | 201, informe con nuevo registro | 409 revisión antigua / 422 inválido |
+| `POST /clinical/proposals` (Python) | 200, propuestas editables y evidencia | 422 entrada / 404 paciente / 503 dependencia |
+| `POST /clinical/patients/{id}/sync` (Python) | 200, índice sincronizado o retirado | 503 dependencia |
+
+El Markdown es la fuente de los hechos clínicos; PostgreSQL guarda los datos básicos del paciente y Qdrant su índice de búsqueda. Los cambios del informe necesitan revisión vigente y confirmación. Un 409 conserva el borrador: recarga la historia y revísalo antes de guardar. [Uso breve](GUIA.md#historia-clínica).
 
 ## Probar cada operación
 
@@ -135,10 +147,12 @@ Haz la secuencia en la misma terminal. [La guía](GUIA.md#comprobar-el-crud) inc
 | Carpeta | Para qué |
 |---|---|
 | `python-api/`, `java-api/` | APIs y chatbot |
-| `datos/` | Tres historias ficticias y cuatro preguntas |
+| `datos/` | Dataset ficticio y preguntas de prueba; informes vigentes en `historias/` |
 | `observabilidad/` | Prometheus, Grafana, Loki y Alloy |
 | `deploy/` | Chart y Application de FastAPI |
 | `scripts/` | Arranque y comprobaciones repetibles |
 | `evidencias/` | Resultados fechados; no son estado en vivo |
 
 El 07/11 se añadió la navegación, la administración con Java y los exploradores de endpoints: [pruebas de la interfaz](evidencias/ui-2026-11-07/LEEME.md). El [ensayo completo del 03/11](evidencias/revision-claude/LEEME.md) conserva las comprobaciones de observabilidad y GitOps. La explicación personal y la evaluación de Rui siguen pendientes.
+
+La gestión de historias y el registro asistido por IA son una ampliación solicitada por Marco el 07/11; no cambian las HDU ni constituyen una evaluación de Rui. [Recorrido de pantalla comprobado con LLM real](evidencias/clinica-2026-11-07/interfaz.md): propuesta revisada, guardado, edición, consulta RAG y limpieza, conservando los datos previos.

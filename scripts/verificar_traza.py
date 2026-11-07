@@ -2,12 +2,16 @@
 
 import argparse
 import json
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from uuid import uuid4
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python-api"))
+from rag import source_label, validate_rag_answer
 
 
 def get_json(url):
@@ -39,7 +43,12 @@ def main():
         assert response.status == 200 and response.headers["X-Request-ID"] == request_id
         chat = json.load(response)
     assert case["expected"] in chat["rag_answer"]
-    assert "[paciente-1.md/Enfermedad]" in chat["rag_answer"]
+    history = get_json(f"http://localhost:8080/patients/{case['patient_id']}/history")
+    assert len(chat["sources"]) == 3
+    known_source = next(source for source in chat["sources"] if source["section"] == "Enfermedad" and case["expected"] in source["text"])
+    assert known_source["source"] == history["filename"]
+    assert any(entry["id"] == known_source["record_id"] and entry["disease"] == known_source["text"] for entry in history["entries"])
+    assert source_label(known_source) in chat["rag_answer"]
 
     spans_url = "http://localhost:6006/v1/projects/genai/spans?" + urlencode({
         "attribute": f"request_id:{request_id}", "limit": 100,
@@ -85,12 +94,14 @@ def main():
     assert fragments == chat["sources"] and all(fragment["patient_id"] == case["patient_id"] for fragment in fragments)
     assert inputs["prompt"] == {"pregunta": case["question"], "fragmentos": fragments}
     prompt = outputs["prompt"]["prompt"]
-    assert case["question"] in prompt and all(fragment["text"] in prompt for fragment in fragments)
+    assert case["question"] in prompt and all(fragment["text"] in prompt and source_label(fragment) in prompt for fragment in fragments)
     assert inputs["llamada_llm"] == {"prompt": prompt}
-    assert outputs["llamada_llm"] == inputs["respuesta"] == outputs["respuesta"] == {"respuesta": chat["rag_answer"]}
+    assert outputs["llamada_llm"] == inputs["respuesta"]
+    raw_rag = outputs["llamada_llm"]["respuesta"]
+    assert outputs["respuesta"] == {"respuesta": validate_rag_answer(raw_rag, fragments, case["question"])} == {"respuesta": chat["rag_answer"]}
     llm_span = children[2]
     assert llm_span["span_kind"] == "LLM" and children[0]["span_kind"] == "RETRIEVER"
-    assert json.loads(attribute(llm_span, "llm.invocation_parameters")) == {"temperature": 0, "num_ctx": 2048, "num_predict": 256}
+    assert json.loads(attribute(llm_span, "llm.invocation_parameters")) == {"temperature": 0, "num_ctx": 4096, "num_predict": 1024}
 
     query = f'{{service="fastapi"}} | json | request_id="{request_id}"'
     deadline = time.monotonic() + 60
@@ -117,7 +128,8 @@ def main():
     assert branches["direct"]["model"] == branches["rag"]["model"] == attribute(llm_span, "llm.model_name")
     assert branches["direct"]["prompt"] == case["question"] and branches["rag"]["prompt"] == prompt
     for branch, event in branches.items():
-        assert event["status"] == "ok" and event["response"] == chat[f"{branch}_answer"]
+        expected_raw = raw_rag if branch == "rag" else chat["direct_answer"]
+        assert event["status"] == "ok" and event["response"] == expected_raw
     assert any(event["event"] == "http" and event["status"] == 200 for event in events)
 
     result = {
@@ -128,7 +140,8 @@ def main():
         "loki": {"query": query, "logs": events},
         "checks": {"single_root_rag": True, "four_children_in_order": True,
                    "same_request_id": True, "inputs_outputs_match": True,
-                   "loki_matches": True, "durations_positive": True},
+                   "loki_matches": True, "durations_positive": True,
+                   "rag_raw_to_validated_http": True},
     }
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)

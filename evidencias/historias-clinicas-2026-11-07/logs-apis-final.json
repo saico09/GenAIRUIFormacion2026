@@ -1,0 +1,88 @@
+[
+  {
+    "response": {
+      "url": "http://127.0.0.1:8000/patients/1",
+      "status": 200,
+      "X-Request-ID": "hdu030-fastapi-a1ceca98-fad5-4535-b22c-72c3ec6956ff",
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    "log": {
+      "timestamp": "2026-11-07T21:43:31.637533+00:00",
+      "service": "fastapi",
+      "event": "http",
+      "request_id": "hdu030-fastapi-a1ceca98-fad5-4535-b22c-72c3ec6956ff",
+      "method": "GET",
+      "route": "/patients/{id}",
+      "status": 200,
+      "duration_ms": 5.074
+    }
+  },
+  {
+    "response": {
+      "url": "http://127.0.0.1:8000/patients/999999",
+      "status": 404,
+      "X-Request-ID": "0aa0d547-d7cd-46b5-b34c-d6dcfd467e2a",
+      "body": {
+        "detail": "Paciente no encontrado"
+      }
+    },
+    "log": {
+      "timestamp": "2026-11-07T21:43:31.654437+00:00",
+      "service": "fastapi",
+      "event": "http",
+      "request_id": "0aa0d547-d7cd-46b5-b34c-d6dcfd467e2a",
+      "method": "GET",
+      "route": "/patients/{id}",
+      "status": 404,
+      "duration_ms": 6.952
+    }
+  },
+  {
+    "response": {
+      "url": "http://127.0.0.1:8080/patients/1",
+      "status": 200,
+      "X-Request-ID": "hdu030-springboot-504b239d-b03b-4504-a41b-274ff9ca8e58",
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    "log": {
+      "duration_ms": 10.852085,
+      "service": "springboot",
+      "timestamp": "2026-11-07T21:43:32.575086771Z",
+      "route": "/patients/{id}",
+      "event": "http",
+      "request_id": "hdu030-springboot-504b239d-b03b-4504-a41b-274ff9ca8e58",
+      "method": "GET",
+      "status": 200
+    }
+  },
+  {
+    "response": {
+      "url": "http://127.0.0.1:8080/patients/999999",
+      "status": 404,
+      "X-Request-ID": "5a72929c-ed47-4215-aebf-940fe4fda908",
+      "body": {
+        "detail": "Paciente no encontrado"
+      }
+    },
+    "log": {
+      "duration_ms": 6.808748,
+      "service": "springboot",
+      "timestamp": "2026-11-07T21:43:32.594410725Z",
+      "route": "/patients/{id}",
+      "event": "http",
+      "request_id": "5a72929c-ed47-4215-aebf-940fe4fda908",
+      "method": "GET",
+      "status": 404
+    }
+  }
+]

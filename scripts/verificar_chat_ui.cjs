@@ -15,15 +15,34 @@ async function main() {
   const errorMode = process.argv.includes('--error-y-reintento');
   const datasetMode = process.argv.includes('--dataset');
   const demoMode = process.argv.includes('--demo');
-  const dataset = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../datos/preguntas.json'), 'utf8'));
+  const originalDataset = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../datos/preguntas.json'), 'utf8'));
+  const fixtures = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../datos/pacientes.json'), 'utf8'));
+  const chatUrl = process.env.CHAT_URL || 'http://127.0.0.1:8000/';
+  const configResponse = await fetch(new URL('/ui-config', chatUrl), {signal: AbortSignal.timeout(15000)});
+  assert.equal(configResponse.status, 200);
+  const config = await configResponse.json();
+  const javaAddress = new URL(chatUrl); javaAddress.port = String(config.java_api_port);
+  const javaUrl = process.env.JAVA_URL || javaAddress.origin;
+  const patientsResponse = await fetch(javaUrl + '/patients', {signal: AbortSignal.timeout(15000)});
+  assert.equal(patientsResponse.status, 200);
+  const javaPatients = await patientsResponse.json();
+  const dataset = originalDataset.map(question => {
+    const fixture = fixtures.find(row => question.question.includes(row.name));
+    assert.ok(fixture, 'La pregunta debe identificar una persona del dataset ficticio');
+    const matches = javaPatients.filter(row => ['name', 'birth_date', 'email'].every(key => row[key] === fixture[key]));
+    assert.equal(matches.length, 1, `Se requiere un único paciente Java para ${fixture.name}`);
+    return {...question, patient_id: matches[0].id};
+  });
   const browser = await chromium.launch({
     executablePath: process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
     headless: true,
   });
   try {
     const page = await browser.newPage({viewport: {width: 1366, height: 900}});
-    await page.goto(process.env.CHAT_URL || 'http://127.0.0.1:8000/');
-    await page.locator('#patient option[value="1"]').waitFor({state: 'attached'});
+    await page.goto(chatUrl);
+    await page.waitForFunction(() => !document.querySelector('#submit').disabled);
+    assert.deepEqual(await page.locator('#patient option').evaluateAll(nodes => nodes.map(node => ({id: Number(node.value), name: node.textContent}))),
+      javaPatients.map(row => ({id: row.id, name: row.name})), 'El selector corresponde al registro Java');
     let posts = 0;
     let responseRequestId;
     page.on('request', request => { if (request.url().endsWith('/chat') && request.method() === 'POST') posts++; });
@@ -34,7 +53,7 @@ async function main() {
     console.log('OK pregunta vacía: aviso y cero POST');
 
     async function send(question, expectedStatus, checkLoading = false) {
-      const responsePromise = page.waitForResponse(r => r.url().endsWith('/chat'), {timeout: 250000});
+      const responsePromise = page.waitForResponse(r => r.url().endsWith('/chat'), {timeout: 440000});
       await page.click('#submit');
       if (checkLoading) {
         assert.equal(await page.locator('#submit').isDisabled(), true);
@@ -52,6 +71,36 @@ async function main() {
       assert.equal(await page.locator('#loading').isVisible(), false);
       assert.equal(await page.locator('#question').inputValue(), question.question);
       return response.json();
+    }
+
+    async function verifyAnswer(question, result) {
+      const historyResponse = await fetch(`${javaUrl}/patients/${question.patient_id}/history`, {signal: AbortSignal.timeout(15000)});
+      assert.equal(historyResponse.status, 200);
+      const history = await historyResponse.json();
+      const fields = {Enfermedad: 'disease', Tratamiento: 'treatment', Medicamento: 'medication'};
+      assert.ok(result.direct_answer.trim());
+      assert.ok(result.rag_answer.toLowerCase().includes(question.expected.toLowerCase()));
+      assert.equal(result.sources.length, Math.min(3, history.entries.length * 3), 'TOP3 sobre los registros de la historia vigente');
+      assert.ok(result.sources.length > 0, 'El dataset preparado debe tener historia');
+      const seen = new Set();
+      for (const source of result.sources) {
+        assert.equal(source.patient_id, question.patient_id);
+        assert.equal(source.source, history.filename);
+        const entry = history.entries.find(row => row.id === source.record_id);
+        assert.ok(entry, 'UUID recuperado pertenece a la historia Java');
+        assert.ok(Object.hasOwn(fields, source.section));
+        assert.equal(source.text, entry[fields[source.section]] || 'No registrado.');
+        const key = `${source.record_id}/${source.section}`;
+        assert.equal(seen.has(key), false, 'Sin fragmentos duplicados'); seen.add(key);
+      }
+      if (!question.expected.startsWith('No hay')) {
+        assert.ok(result.sources.some(source => source.text.toLowerCase().includes(question.expected.toLowerCase())), 'La respuesta esperada está respaldada por un fragmento');
+        assert.ok(result.sources.some(source => result.rag_answer.includes(source.source) && result.rag_answer.includes(source.record_id)), 'La respuesta cita el archivo y UUID del registro');
+      }
+      assert.equal(await page.locator('#direct').textContent(), result.direct_answer);
+      assert.equal(await page.locator('#rag').textContent(), result.rag_answer);
+      assert.deepEqual(await page.locator('#sources summary').allTextContents(), result.sources.map(source => `${source.source} / ${source.section} · Registro ${source.record_id}`));
+      assert.deepEqual(await page.locator('#sources .source-fragment').allTextContents(), result.sources.map(source => source.text));
     }
 
     if (errorMode) {
@@ -73,7 +122,7 @@ async function main() {
       }
       assert.equal(available, true, 'Ollama no se reinició durante la prueba');
       const result = await send(dataset[0], 200, true);
-      assert.match(result.rag_answer, /Alfa/);
+      await verifyAnswer(dataset[0], result);
       assert.equal(await page.locator('#error').isVisible(), false);
       await page.screenshot({path: evidencePath('reintento.png'), fullPage: true});
       fs.writeFileSync(process.env.EVIDENCE_DIR ? evidencePath('resultados.json') : path.join(outputDir, '../S04-ui-018.json'), JSON.stringify({error: failure, retry: result, question_preserved: true, empty_posts: 0, loading_verified: true}, null, 2));
@@ -84,14 +133,7 @@ async function main() {
         await page.selectOption('#patient', String(question.patient_id));
         await page.fill('#question', question.question);
         const result = await send(question, 200, true);
-        assert.ok(result.direct_answer.trim());
-        assert.ok(result.rag_answer.toLowerCase().includes(question.expected.toLowerCase()));
-        assert.equal(result.sources.length, 2);
-        assert.ok(result.sources.every(source => source.patient_id === question.patient_id));
-        assert.equal(await page.locator('#direct').textContent(), result.direct_answer);
-        assert.equal(await page.locator('#rag').textContent(), result.rag_answer);
-        assert.deepEqual(await page.locator('#sources li').allTextContents(),
-          result.sources.map(source => `${source.source} / ${source.section}`));
+        await verifyAnswer(question, result);
         const patientName = await page.locator('#patient option:checked').textContent();
         assert.equal(await page.locator('#used-question').textContent(),
           `Paciente consultado: ${patientName}. Pregunta enviada: ${question.question}`);

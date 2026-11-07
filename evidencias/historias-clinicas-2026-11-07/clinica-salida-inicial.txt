@@ -1,0 +1,8 @@
+Primer comando: bundled Python -B scripts/verificar_clinica.py --check-qdrant-error --output evidencias/historias-clinicas-2026-11-07/clinica-integracion.json
+
+Las siete comprobaciones y la limpieza terminaron. El JSON quedó guardado con result=passed y hashes anteriores/posteriores iguales.
+El proceso terminó con exit1 después, al imprimir el resultado en la consola Windows cp1252:
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 329: character maps to <undefined>
+
+Corrección del verificador: stdout JSON con ensure_ascii=True; el archivo conserva ensure_ascii=False y encoding=utf-8.
+La repetición se guarda en clinica-integracion-repeticion.json. No se modificó la aplicación por este fallo de salida.

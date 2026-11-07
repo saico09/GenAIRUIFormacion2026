@@ -1,0 +1,41 @@
+{
+  "started_at": "2026-11-07T21:50:09.667Z",
+  "real_services_used": true,
+  "real_llm": true,
+  "mocks": [],
+  "checks": [],
+  "before": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    },
+    "histories": {
+      "count": 3,
+      "sha256": "9293d85e1aeb0895c4068d4451a5dd093973d022cc1b6f05f2464efa8ed73ea0"
+    }
+  },
+  "temporary_patient_id": 30,
+  "result": "failed",
+  "error": "No encontré enfermedad, tratamiento o medicamento afirmados explícitamente. Añade una nota con datos confirmados o registra los campos manualmente.",
+  "cleanup_verified": true,
+  "after": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    },
+    "histories": {
+      "count": 3,
+      "sha256": "9293d85e1aeb0895c4068d4451a5dd093973d022cc1b6f05f2464efa8ed73ea0"
+    }
+  },
+  "data_preserved": true,
+  "finished_at": "2026-11-07T21:50:14.854Z"
+}

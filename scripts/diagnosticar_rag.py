@@ -24,7 +24,7 @@ CASES = [
     ("resumen", "Cuéntame la historia clínica de Ana Demo.",
      ["Enfermedad Alfa", "Tratamiento Alfa", "Medicamento Alfa"]),
     ("dosis_ausente", "¿Qué dosis de su medicamento debe tomar Ana Demo?", []),
-    ("consulta_ausente", "¿Cuándo fue la última consulta médica de Ana Demo?", []),
+    ("consulta_registrada", "¿Cuándo fue la última consulta médica de Ana Demo?", ["2026-10-20"]),
     ("dato_solo_sql", "¿Cuál es la fecha de nacimiento de Ana Demo?", []),
     ("otro_paciente", "¿Qué tratamiento sigue Bruno Demo?", []),
     ("pregunta_corta", "¿Qué tiene?", ["Enfermedad Alfa"]),

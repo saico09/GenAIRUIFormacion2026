@@ -27,7 +27,7 @@ function hash(rows) {
   return crypto.createHash('sha256').update(JSON.stringify(canonical([...rows].sort((a, b) => a.id - b.id)))).digest('hex');
 }
 async function jsonRequest(base, endpoint, options = {}) {
-  const response = await fetch(base + endpoint, { ...options, signal: AbortSignal.timeout(15000) });
+  const response = await fetch(base + endpoint, { ...options, signal: AbortSignal.timeout(endpoint.endsWith('/sync') ? 180000 : 15000) });
   const text = await response.text();
   return { status: response.status, data: text ? JSON.parse(text) : null };
 }
@@ -108,6 +108,8 @@ async function main() {
     await page.goto(chatUrl);
     await page.locator('#explorer-java details').first().waitFor({ state: 'attached' });
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
+    assert.deepEqual(await page.locator('#patient option').evaluateAll(nodes => nodes.map(node => ({id: Number(node.value), name: node.textContent}))),
+      before.java.map(row => ({id: row.id, name: row.name})), 'Selector clínico leído de Java');
     assert.equal(await page.locator('#config-error').isVisible(), false);
     assert.deepEqual(await page.locator('[data-nav]').evaluateAll(nodes => nodes.map(node => node.dataset.nav)), ['consultas', 'pacientes', 'api-python', 'api-java']);
     for (const name of ['consultas', 'pacientes', 'api-python', 'api-java']) await navigate(name);
@@ -166,6 +168,8 @@ async function main() {
     assert.equal((await editResponse).status(), 200);
     await page.locator('#patient-dialog').waitFor({ state: 'hidden' });
     await page.waitForFunction(({ id, name }) => document.querySelector(`#patients-body tr[data-patient-id="${id}"]`)?.textContent.includes(name), { id: patient.id, name: edited.name });
+    await page.waitForFunction(() => !document.querySelector('#new-patient').disabled, null, {timeout: 200000});
+    assert.equal(await page.locator('#patient-index-notices').isVisible(), false, 'Renombrado sincronizado');
     await page.screenshot({ path: path.join(output, 'portal-paciente-temporal.png'), fullPage: true });
     const deleteBefore = count('DELETE', javaUrl, `/patients/${patient.id}`);
     await row.locator('[data-action="delete"]').click();
@@ -182,6 +186,8 @@ async function main() {
     assert.equal(deleted.status(), 204);
     assert.equal(await deleted.text(), '');
     await row.waitFor({ state: 'detached' });
+    await page.waitForFunction(() => !document.querySelector('#new-patient').disabled, null, {timeout: 200000});
+    assert.equal(await page.locator('#patient-index-notices').isVisible(), false, 'Índice eliminado junto al temporal');
     owned.delete(`${javaUrl}/${patient.id}`);
     record('CRUD Java real en modal, cancelar DELETE y submit duplicado bloqueado', { temporary_id: patient.id });
 
@@ -266,20 +272,26 @@ async function main() {
     await navigate('consultas');
     const releaseChat = deferred();
     const chatStarted = deferred();
-    const question = '¿Qué enfermedad tiene Ana Demo?';
+    const clinicalPatient = before.java.find(row => row.name === 'Ana Demo');
+    assert.ok(clinicalPatient, 'Ana Demo debe existir en Java');
+    const history = await jsonRequest(javaUrl, `/patients/${clinicalPatient.id}/history`);
+    assert.equal(history.status, 200);
+    const mockSources = history.data.entries.flatMap(entry => Object.entries({Enfermedad: 'disease', Tratamiento: 'treatment', Medicamento: 'medication'})
+      .map(([section, field]) => ({patient_id: clinicalPatient.id, record_id: entry.id, source: history.data.filename, section, text: entry[field] || 'No registrado.'}))).slice(0, 3);
+    assert.equal(mockSources.length, 3, 'El fixture de Ana tiene al menos un registro');
+    const question = `¿Qué enfermedad tiene ${clinicalPatient.name}?`;
     const mockChat = async route => {
       const data = route.request().postDataJSON();
-      assert.deepEqual(data, { patient_id: 1, question });
+      assert.deepEqual(data, { patient_id: clinicalPatient.id, question });
       chatStarted.resolve(); await releaseChat.promise;
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
         direct_answer: 'Respuesta simulada para comprobar la interfaz.',
-        rag_answer: 'Enfermedad Alfa. [paciente-1.md/Enfermedad]',
-        sources: [{ patient_id: 1, source: 'paciente-1.md', section: 'Enfermedad', text: 'Contenido sintético de prueba' },
-          { patient_id: 1, source: 'paciente-1.md', section: 'Tratamiento', text: 'Contenido sintético de prueba' }],
+        rag_answer: `${mockSources[0].text} [${mockSources[0].source}/${mockSources[0].record_id}/${mockSources[0].section}]`,
+        sources: mockSources,
       }) });
     };
     await page.route(pythonUrl + '/chat', mockChat);
-    await page.locator('#patient').selectOption('1');
+    await page.locator('#patient').selectOption(String(clinicalPatient.id));
     await page.locator('#question').fill(question);
     const chatBefore = count('POST', pythonUrl, '/chat');
     await page.locator('#submit').click();
@@ -293,8 +305,9 @@ async function main() {
     } finally { releaseChat.resolve(); }
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
     assert.match(await page.locator('#direct').textContent(), /simulada/);
-    assert.match(await page.locator('#rag').textContent(), /Enfermedad Alfa/);
-    assert.deepEqual(await page.locator('#sources li').allTextContents(), ['paciente-1.md / Enfermedad', 'paciente-1.md / Tratamiento']);
+    assert.ok((await page.locator('#rag').textContent()).includes(mockSources[0].text));
+    assert.deepEqual(await page.locator('#sources summary').allTextContents(), mockSources.map(source => `${source.source} / ${source.section} · Registro ${source.record_id}`));
+    assert.deepEqual(await page.locator('#sources .source-fragment').allTextContents(), mockSources.map(source => source.text));
     assert.match(await page.locator('#used-question').textContent(), /¿Qué enfermedad tiene Ana Demo\?/);
     assert.equal(await page.locator('#question').inputValue(), question);
     await page.unroute(pythonUrl + '/chat', mockChat);
@@ -320,9 +333,19 @@ async function main() {
     // Solo IDs creados por esta ejecución y aún reconocibles como sus datos ficticios.
     for (const { base, id } of owned.values()) {
       const current = await jsonRequest(base, `/patients/${id}`);
-      if (current.status === 404) continue;
+      if (current.status === 404) {
+        if (base === javaUrl) {
+          const sync = await jsonRequest(pythonUrl, `/clinical/patients/${id}/sync`, {method: 'POST'});
+          assert.equal(sync.status, 200); assert.equal(sync.data.status, 'removed');
+        }
+        continue;
+      }
       assert.ok(current.status === 200 && [original.name, edited.name].includes(current.data.name), 'No se elimina un registro ajeno a esta prueba');
       assert.equal((await jsonRequest(base, `/patients/${id}`, { method: 'DELETE' })).status, 204);
+      if (base === javaUrl) {
+        const sync = await jsonRequest(pythonUrl, `/clinical/patients/${id}/sync`, {method: 'POST'});
+        assert.equal(sync.status, 200); assert.equal(sync.data.status, 'removed');
+      }
     }
     const after = await snapshots();
     report.after = Object.fromEntries(Object.entries(after).map(([name, rows]) => [name, { count: rows.length, sha256: hash(rows) }]));
