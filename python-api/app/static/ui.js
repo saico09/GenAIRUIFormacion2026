@@ -24,7 +24,6 @@ document.querySelector('.skip-link').addEventListener('click', event => {
   document.querySelector('#main').focus();
 });
 navigate();
-initChat();
 
 try {
   const result = await request('/ui-config');
@@ -33,6 +32,7 @@ try {
   const javaUrl = new URL(location.origin);
   javaUrl.port = String(result.data.java_api_port);
   const javaBase = javaUrl.origin;
+  initChat(javaBase);
   patients = initPatients(javaBase);
   initExplorer('python', location.origin, result.data.metrics_enabled);
   initExplorer('java', javaBase, result.data.metrics_enabled);

@@ -3,12 +3,16 @@
 import json
 import math
 import os
+import re
 from urllib.request import Request, urlopen
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-embed-text")
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333").rstrip("/")
-COLLECTION = "historias"
+COLLECTION = os.getenv("QDRANT_COLLECTION", "historias")
+if not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", COLLECTION):
+    raise ValueError("QDRANT_COLLECTION debe ser un nombre simple de colección")
+HISTORY_AUTO_SYNC = os.getenv("HISTORY_AUTO_SYNC", "true").lower() == "true"
 
 
 class EmbeddingUnavailable(OSError):
@@ -63,13 +67,21 @@ def prepare_collection() -> dict:
 
 
 def search_fragments(patient_id: int, question: str) -> list[dict]:
-    """Devuelve como máximo dos fragmentos del paciente, sin generar respuestas."""
+    """Devuelve hasta tres fragmentos del informe confirmado del paciente Java."""
     if patient_id < 1 or not question.strip():
         raise ValueError("Se requieren un patient_id positivo y una pregunta no vacía")
+    revision = None
+    if HISTORY_AUTO_SYNC:
+        from app.clinical import sync_history
+        revision = sync_history(patient_id)["revision"]
+    conditions = [{"key": "patient_id", "match": {"value": patient_id}},
+                  {"key": "registry", "match": {"value": "java"}}]
+    if revision:
+        conditions.append({"key": "revision", "match": {"value": revision}})
     result = qdrant("POST", f"/collections/{COLLECTION}/points/query", {
         "query": embed(question.strip(), query=True),
-        "filter": {"must": [{"key": "patient_id", "match": {"value": patient_id}}]},
-        "limit": 2,
+        "filter": {"must": conditions},
+        "limit": 3,
         "with_payload": True,
         "with_vector": False,
     })["result"]["points"]
@@ -79,6 +91,6 @@ def search_fragments(patient_id: int, question: str) -> list[dict]:
         if payload["patient_id"] != patient_id:
             raise ValueError("Qdrant devolvió un fragmento de otro paciente")
         fragments.append({"score": point["score"], **{
-            key: payload[key] for key in ("patient_id", "source", "section", "text")
+            key: payload[key] for key in ("patient_id", "record_id", "source", "section", "text")
         }})
     return fragments

@@ -9,13 +9,14 @@ from app.knowledge import search_fragments
 from app.llm import CHAT_MODEL, MODEL_OPTIONS, llamar_llm
 from app.observability import log_event, request_id_context
 from app.tracing import trace_node
-from rag import build_rag_prompt
+from rag import RAG_SYSTEM, build_rag_prompt, rag_response_schema, validate_rag_answer
 
 
 class EstadoRag(TypedDict):
     pregunta: str
     patient_id: int
     request_id: str
+    patient_name: NotRequired[str]
     fragmentos: NotRequired[list[dict]]
     prompt: NotRequired[str]
     respuesta: NotRequired[str]
@@ -30,7 +31,7 @@ def retrieval(state: EstadoRag) -> dict:
 @trace_node("pregunta", "fragmentos")
 def prompt(state: EstadoRag) -> dict:
     log_event("rag_node", node="prompt", request_id=state["request_id"])
-    return {"prompt": build_rag_prompt(state["pregunta"], state["fragmentos"])}
+    return {"prompt": build_rag_prompt(state["pregunta"], state["fragmentos"], state.get("patient_name"))}
 
 
 @trace_node("prompt", kind="LLM", attributes={
@@ -42,7 +43,8 @@ def llamada_llm(state: EstadoRag) -> dict:
     # El estado conserva el id incluso si el ejecutor del grafo cambia de hilo.
     token = request_id_context.set(state["request_id"])
     try:
-        return {"respuesta": llamar_llm(state["prompt"], branch="rag")}
+        return {"respuesta": llamar_llm(state["prompt"], branch="rag",
+                                       schema=rag_response_schema(state["fragmentos"]), system=RAG_SYSTEM)}
     finally:
         request_id_context.reset(token)
 
@@ -50,8 +52,8 @@ def llamada_llm(state: EstadoRag) -> dict:
 @trace_node("respuesta")
 def respuesta(state: EstadoRag) -> dict:
     log_event("rag_node", node="respuesta", request_id=state["request_id"])
-    # Último paso explícito: entrega la respuesta del modelo sin inventar ni modificar datos.
-    return {"respuesta": state["respuesta"]}
+    # No atribuir hechos a un documento que el recuperador no entregó.
+    return {"respuesta": validate_rag_answer(state["respuesta"], state["fragmentos"], state["pregunta"])}
 
 
 builder = StateGraph(EstadoRag)
@@ -78,7 +80,9 @@ if __name__ == "__main__":
     parser.add_argument("--request-id", default=str(uuid4()))
     parser.add_argument("--output", required=True, help="Archivo JSON para guardar el estado final")
     args = parser.parse_args()
-    state = grafo.invoke({"pregunta": args.pregunta, "patient_id": args.patient_id,
+    from app.clinical import get_clinical_patient
+    patient = get_clinical_patient(args.patient_id)
+    state = grafo.invoke({"pregunta": args.pregunta, "patient_id": args.patient_id, "patient_name": patient["name"],
                           "request_id": args.request_id})
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)

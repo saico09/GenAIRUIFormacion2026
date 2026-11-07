@@ -44,3 +44,8 @@ class ChatIn(BaseModel):
             raise ValueError("Escribe una pregunta")
         # Conservamos el texto exacto para enviarlo a ambas ramas.
         return value
+
+
+class ClinicalProposalIn(BaseModel):
+    patient_id: Annotated[int, Field(strict=True, gt=0)]
+    note: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=6000)]

@@ -36,15 +36,26 @@ export function notice(element, message, tone = 'error') {
 }
 
 // <dialog> mantiene el foco y permite cancelar con Escape sin enviar DELETE.
-export function confirmDelete(description) {
+export function confirmAction(description, {title = 'Confirmar cambios', label = 'Confirmar', danger = false, hint = ''} = {}) {
   const dialog = document.querySelector('#confirm-dialog');
+  if (dialog.open) return Promise.resolve(false);
+  document.querySelector('#confirm-title').textContent = title;
   document.querySelector('#confirm-description').textContent = description;
+  document.querySelector('#confirm-hint').textContent = hint;
+  const accept = document.querySelector('#confirm-accept');
+  accept.textContent = label;
+  accept.className = `button ${danger ? 'danger' : 'primary'}`;
   dialog.returnValue = 'cancel';
   document.querySelector('#confirm-cancel').onclick = () => dialog.close('cancel');
-  document.querySelector('#confirm-accept').onclick = () => dialog.close('delete');
+  accept.onclick = () => dialog.close('accept');
   return new Promise(resolve => {
-    dialog.addEventListener('close', () => resolve(dialog.returnValue === 'delete'), {once: true});
+    dialog.addEventListener('close', () => resolve(dialog.returnValue === 'accept'), {once: true});
     dialog.showModal();
     document.querySelector('#confirm-cancel').focus();
   });
+}
+
+export function confirmDelete(description) {
+  return confirmAction(description, {title: 'Eliminar paciente', label: 'Eliminar', danger: true,
+    hint: 'Se elimina el paciente y, en Java, también su historia clínica asociada.'});
 }

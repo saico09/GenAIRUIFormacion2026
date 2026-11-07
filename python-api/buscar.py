@@ -1,4 +1,4 @@
-"""Busca hasta dos fragmentos de un paciente con el modelo de embeddings común."""
+"""Busca hasta tres fragmentos del informe Java, con UUID de registro y fuente."""
 
 import argparse
 import json

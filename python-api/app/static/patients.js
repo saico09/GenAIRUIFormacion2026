@@ -1,4 +1,5 @@
 import {request, errorMessage, notice, confirmDelete} from './api.js';
+import {initHistory} from './history.js';
 
 export function initPatients(javaBase) {
   const body = document.querySelector('#patients-body');
@@ -16,10 +17,47 @@ export function initPatients(javaBase) {
   let editingId = null;
   let loading = false;
   let busy = false;
+  const pendingIndex = new Map();
+  const history = initHistory(javaBase, () => {
+    loadPatients({keepNotice: true});
+    document.dispatchEvent(new Event('clinical-patients-changed'));
+  });
 
   function updateButtons() {
-    document.querySelectorAll('#view-pacientes button').forEach(button => { button.disabled = busy || loading; });
+    document.querySelectorAll('#patient-list button').forEach(button => { button.disabled = busy || loading; });
     form.querySelectorAll('button, input').forEach(input => { input.disabled = busy; });
+  }
+
+  function renderIndexNotices() {
+    const container = document.querySelector('#patient-index-notices');
+    container.hidden = pendingIndex.size === 0;
+    container.replaceChildren(...[...pendingIndex.values()].map(item => {
+      const section = document.createElement('div'); section.className = 'sync-state';
+      const text = document.createElement('p'); text.className = 'notice warning'; text.setAttribute('role', 'status');
+      text.textContent = `El paciente ${item.name} ya fue ${item.action === 'delete' ? 'eliminado' : 'actualizado'} en Java, pero falta sincronizar su índice RAG. ${item.error || ''}`;
+      const retry = document.createElement('button'); retry.type = 'button'; retry.className = 'button secondary';
+      retry.textContent = 'Reintentar sincronización'; retry.dataset.syncPatient = item.id;
+      retry.addEventListener('click', async () => {
+        if (busy || loading) return;
+        busy = true; updateButtons();
+        try { await synchronizePatient(item, item.action); }
+        finally { busy = false; updateButtons(); }
+      });
+      section.append(text, retry); return section;
+    }));
+    updateButtons();
+  }
+
+  async function synchronizePatient(row, action) {
+    pendingIndex.set(row.id, {id: row.id, name: row.name, action});
+    try {
+      const result = await request(`/clinical/patients/${row.id}/sync`, {method: 'POST'}, 180000);
+      if (!result.ok) throw new Error(errorMessage(result));
+      pendingIndex.delete(row.id);
+      notice(message, `Paciente ${row.name} ${action === 'delete' ? 'eliminado' : 'actualizado'}. Índice RAG sincronizado.`, 'success');
+    } catch (error) {
+      pendingIndex.get(row.id).error = error.message;
+    } finally { renderIndexNotices(); }
   }
 
   function renderRows() {
@@ -29,8 +67,15 @@ export function initPatients(javaBase) {
       const tr = document.createElement('tr');
       tr.dataset.patientId = row.id;
       const date = row.birth_date.split('-').reverse().join('/');
-      for (const value of [`#${row.id}`, row.name, date, row.email]) {
-        const td = document.createElement('td'); td.textContent = value; tr.append(td);
+      for (const [index, value] of [`#${row.id}`, row.name, date, row.email].entries()) {
+        const td = document.createElement('td');
+        if (index === 1) {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'patient-name-link';
+          button.dataset.action = 'history'; button.textContent = value;
+          button.setAttribute('aria-label', `Abrir historia de ${row.name}`);
+          button.addEventListener('click', () => history.open(row)); td.append(button);
+        } else td.textContent = value;
+        tr.append(td);
       }
       const actionsCell = document.createElement('td');
       const actions = document.createElement('div'); actions.className = 'row-actions';
@@ -93,13 +138,15 @@ export function initPatients(javaBase) {
 
   async function deletePatient(row) {
     if (busy || loading) return;
-    if (!await confirmDelete(`¿Quieres eliminar a ${row.name} (ID ${row.id}) del registro Java?`)) return;
+    if (!await confirmDelete(`¿Quieres eliminar a ${row.name} (ID ${row.id}) y su historia clínica asociada?`)) return;
     busy = true; updateButtons(); notice(message, '');
     try {
       const result = await request(`${javaBase}/patients/${row.id}`, {method: 'DELETE'});
       if (!result.ok) throw new Error(errorMessage(result));
       notice(message, `Paciente ${row.name} eliminado.`, 'success');
       await loadPatients({keepNotice: true});
+      document.dispatchEvent(new Event('clinical-patients-changed'));
+      await synchronizePatient(row, 'delete');
     } catch (failure) { notice(message, failure.message); }
     finally { busy = false; updateButtons(); }
   }
@@ -121,6 +168,8 @@ export function initPatients(javaBase) {
       dialog.close();
       notice(message, `Paciente ${result.data.name} ${isEdit ? 'actualizado' : 'agregado'}.`, 'success');
       await loadPatients({keepNotice: true});
+      document.dispatchEvent(new Event('clinical-patients-changed'));
+      if (isEdit) await synchronizePatient(result.data, 'update');
     } catch (failure) { notice(formError, failure.message); }
     finally { busy = false; updateButtons(); save.textContent = isEdit ? 'Guardar cambios' : 'Guardar paciente'; }
   });
@@ -132,6 +181,15 @@ export function initPatients(javaBase) {
   search.addEventListener('input', renderRows);
   document.addEventListener('java-patients-changed', () => {
     if (!document.querySelector('#view-pacientes').hidden) loadPatients();
+  });
+  document.addEventListener('prepare-clinical-record', async event => {
+    const {patient_id, note} = event.detail;
+    try {
+      const result = await request(`${javaBase}/patients/${patient_id}`);
+      if (!result.ok) throw new Error(errorMessage(result));
+      location.hash = 'pacientes';
+      await history.open(result.data, note);
+    } catch (error) { notice(document.querySelector('#error'), error.message); }
   });
   return {loadPatients};
 }

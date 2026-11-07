@@ -32,9 +32,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       OLLAMA_BASE_URL: http://host.docker.internal:11434
       JAVA_API_PUBLIC_PORT: "8080"
+      JAVA_API_BASE_URL: http://java-api:8080
+      HISTORY_AUTO_SYNC: "true"
       EMBEDDING_MODEL: nomic-embed-text
       CHAT_MODEL: llama3.2:3b
       QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION: historias
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://phoenix:6006/v1/traces
     volumes:
       - ./datos:/datos:ro
@@ -52,6 +55,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       APP_CORS_ALLOWED_ORIGINS: http://localhost:8000,http://127.0.0.1:8000
+      APP_HISTORY_DIR: /historias
+    volumes:
+      - ./datos/historias:/historias
     # El heap tiene un máximo de 256 MiB; queda margen para memoria nativa de Java.
     mem_limit: 512m
     depends_on:

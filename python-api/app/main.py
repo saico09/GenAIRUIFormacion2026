@@ -10,11 +10,13 @@ from app.db import get_db, initialize_database
 from app.models import Patient
 from app.metrics import install_metrics
 from app.observability import install_request_logging
-from app.schemas import ChatIn, PatientIn, PatientOut
+from app.schemas import ChatIn, ClinicalProposalIn, PatientIn, PatientOut
 from app.tracing import configure_tracing, tracer
 from app.llm import LLMUnavailable, llamar_llm
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
 from app.ui import install_ui
+from app.clinical import ClinicalPatientMissing, ClinicalUnavailable, get_clinical_patient, sync_history
+from app.clinical_proposals import propose_entries
 from grafo import grafo
 
 
@@ -46,20 +48,42 @@ def health():
 
 
 @app.post("/chat")
-def chat(body: ChatIn, db: Db, request: Request):
-    find_patient(body.patient_id, db)
+def chat(body: ChatIn, request: Request):
     try:
+        patient = get_clinical_patient(body.patient_id)
         direct_answer = llamar_llm(body.question)
         with tracer.start_as_current_span("rag", attributes={
             "openinference.span.kind": "CHAIN", "request_id": request.state.request_id,
         }) as span:
-            state = grafo.invoke({"pregunta": body.question, "patient_id": body.patient_id,
+            state = grafo.invoke({"pregunta": body.question, "patient_id": body.patient_id, "patient_name": patient["name"],
                                   "request_id": request.state.request_id})
             span.set_status(StatusCode.OK)
         return {"direct_answer": direct_answer, "rag_answer": state["respuesta"],
                 "sources": state["fragmentos"]}
-    except (LLMUnavailable, EmbeddingUnavailable, QdrantUnavailable) as error:
+    except ClinicalPatientMissing as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except (LLMUnavailable, EmbeddingUnavailable, QdrantUnavailable, ClinicalUnavailable, ValueError) as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
+
+
+@app.post("/clinical/proposals")
+def clinical_proposal(body: ClinicalProposalIn):
+    try:
+        return propose_entries(body.patient_id, body.note)
+    except ClinicalPatientMissing as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except (ClinicalUnavailable, LLMUnavailable) as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+
+
+@app.post("/clinical/patients/{patient_id}/sync")
+def sync_clinical_history(patient_id: int):
+    if patient_id < 1:
+        raise HTTPException(status_code=422, detail="El ID debe ser positivo")
+    try:
+        return sync_history(patient_id, allow_missing=True)
+    except (ClinicalUnavailable, EmbeddingUnavailable, QdrantUnavailable, ValueError) as error:
+        raise HTTPException(status_code=503, detail="No se pudo actualizar el índice; la historia confirmada se conserva en Java") from error
 
 
 @app.post("/patients", response_model=PatientOut, status_code=201)
