@@ -7,6 +7,11 @@ from app.clinical import get_clinical_patient
 from app.llm import LLMUnavailable, llamar_llm
 
 FIELDS = ("disease", "treatment", "medication")
+FIELD_CUES = {
+    "disease": r"\b(?:enfermedad|diagn[oó]stic\w*|s[ií]ndrome)\b",
+    "treatment": r"\b(?:tratamiento|terapia|plan|pauta)\b",
+    "medication": r"\b(?:medicamento|medicaci[oó]n|f[aá]rmaco|recibe|toma|prescrit\w*|prescrib\w*)\b",
+}
 VALUE_SCHEMA = {"type": "string", "maxLength": 2000}
 PROPOSAL_SCHEMA = {"type": "object", "properties": {"entries": {"type": "array", "maxItems": 3,
     "items": {"type": "object", "properties": {field: VALUE_SCHEMA for field in FIELDS},
@@ -27,11 +32,11 @@ def affirmative_evidence(note: str, evidence: str, value: str) -> bool:
     return False
 
 
-def find_evidence(note: str, value: str) -> str:
+def find_evidence(note: str, value: str, field: str) -> str:
     """La procedencia se copia de la nota; no se pide al modelo que la redacte."""
     for sentence in re.findall(r"[^\n.!?;]+[.!?;]?", note):
         sentence = sentence.strip()
-        if affirmative_evidence(note, sentence, value):
+        if re.search(FIELD_CUES[field], sentence, re.I) and affirmative_evidence(note, sentence, value):
             return sentence
     return ""
 
@@ -64,7 +69,7 @@ def propose_entries(patient_id: int, note: str) -> dict:
                 value = proposal[field].strip()
                 if not isinstance(value, str) or len(value) > 2000:
                     raise ValueError("Campo inválido")
-                evidence = find_evidence(note, value)
+                evidence = find_evidence(note, value, field)
                 # Un borrador sin una cita verificable se descarta, no se completa con el LLM.
                 if affirmative_evidence(note, evidence, value):
                     entry[field] = value
