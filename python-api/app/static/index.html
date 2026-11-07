@@ -3,104 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Comparar respuestas · GenAI</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; color: #172b3a; background: #f3f6fa; font: 16px/1.6 system-ui, sans-serif; }
-    main { max-width: 1100px; margin: 40px auto; padding: 0 24px 32px; }
-    h1 { font-size: clamp(25px, 4vw, 38px); line-height: 1.2; margin: 6px 0 12px; }
-    h2 { margin-top: 0; font-size: 22px; }
-    .eyebrow { font-size: 13px; color: #315b90; font-weight: 700; letter-spacing: .1em; }
-    .muted { color: #586779; }
-    form, article { background: white; border: 1px solid #d7e0eb; border-radius: 12px; padding: 24px; }
-    form { margin: 24px 0; }
-    label { display: block; font-weight: 600; margin: 12px 0 6px; }
-    select, textarea { width: 100%; font: inherit; color: inherit; padding: 10px 12px; border: 1px solid #8c9eb1; border-radius: 6px; }
-    select { max-width: 380px; }
-    textarea { resize: vertical; min-height: 90px; }
-    button { margin-top: 16px; background: #215d9f; border: 0; border-radius: 6px; color: white; padding: 11px 24px; font: inherit; font-weight: 600; cursor: pointer; }
-    button:disabled { opacity: .55; cursor: wait; }
-    :focus-visible { outline: 3px solid #e59e32; outline-offset: 3px; }
-    .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .answer { white-space: pre-wrap; overflow-wrap: anywhere; }
-    .rag { border-top: 4px solid #278267; }
-    #error { color: #a82424; }
-    #sources { padding-left: 20px; font-size: 14px; }
-    @media (max-width: 680px) { .answers { grid-template-columns: 1fr; } main { margin-top: 24px; } }
-  </style>
+  <meta name="color-scheme" content="light">
+  <title>Consultas médicas · GenAI Clínica</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23133f3b'/%3E%3Cpath d='M20 10v20M10 20h20' stroke='%23c4f2d8' stroke-width='5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script type="module" src="/static/ui.js"></script>
 </head>
 <body>
-<main>
-  <div class="eyebrow">PRÁCTICA GENAI</div>
-  <h1>Una pregunta, dos respuestas</h1>
-  <p class="muted">Compara el mismo modelo con y sin las historias ficticias del paciente.</p>
-  <form id="chat-form" novalidate>
-    <label for="patient">Paciente</label>
-    <select id="patient" required aria-label="Paciente"><option value="">Cargando pacientes…</option></select>
-    <label for="question">Pregunta</label>
-    <textarea id="question" required maxlength="2000" placeholder="¿Qué enfermedad tiene Ana Demo?"></textarea>
-    <button id="submit" type="submit" disabled>Consultar</button>
-    <span id="loading" role="status" hidden> Cargando…</span>
-    <p id="error" role="alert" hidden></p>
-  </form>
-  <p id="used-question" class="muted" hidden></p>
-  <div class="answers">
-    <article><h2>Sin RAG</h2><p class="muted">Solo recibe tu pregunta.</p><div id="direct" class="answer">Aquí aparecerá la respuesta directa.</div></article>
-    <article class="rag"><h2>Con RAG</h2><p class="muted">Recibe la pregunta y hasta dos fragmentos del paciente.</p><div id="rag" class="answer">Aquí aparecerá la respuesta con contexto.</div><h3>Fuentes recuperadas</h3><ul id="sources"></ul></article>
-  </div>
-  <p class="muted">Datos sintéticos para aprender. Una fuente recuperada puede no contener la respuesta.</p>
-</main>
-<script>
-  const patient = document.querySelector('#patient');
-  const question = document.querySelector('#question');
-  const submit = document.querySelector('#submit');
-  const error = document.querySelector('#error');
-  const loading = document.querySelector('#loading');
-  function showError(message) { error.textContent = message; error.hidden = false; }
-
-  async function loadPatients() {
-    try {
-      const response = await fetch('/patients');
-      if (!response.ok) throw new Error('No se pudieron cargar los pacientes');
-      const patients = await response.json();
-      patient.replaceChildren(...patients.map(row => {
-        const option = document.createElement('option');
-        option.value = row.id; option.textContent = row.name; return option;
-      }));
-      if (!patients.length) throw new Error('Primero agrega los pacientes de práctica');
-      submit.disabled = false;
-    } catch (failure) { showError(failure.message); }
-  }
-
-  document.querySelector('#chat-form').addEventListener('submit', async event => {
-    event.preventDefault();
-    const sentQuestion = question.value;
-    const sentPatientName = patient.selectedOptions[0]?.textContent || '';
-    error.hidden = true;
-    if (!sentQuestion.trim()) { showError('Escribe una pregunta'); question.focus(); return; }
-    submit.disabled = true;
-    patient.disabled = true;
-    question.disabled = true;
-    loading.hidden = false;
-    try {
-      const response = await fetch('/chat', {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({patient_id: Number(patient.value), question: sentQuestion})
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Revisa la pregunta y el paciente');
-      document.querySelector('#direct').textContent = result.direct_answer;
-      document.querySelector('#rag').textContent = result.rag_answer;
-      document.querySelector('#used-question').textContent = `Paciente consultado: ${sentPatientName}. Pregunta enviada: ${sentQuestion}`;
-      document.querySelector('#used-question').hidden = false;
-      document.querySelector('#sources').replaceChildren(...result.sources.map(source => {
-        const item = document.createElement('li');
-        item.textContent = `${source.source} / ${source.section}`; return item;
-      }));
-    } catch (failure) { showError(failure.message || 'No se pudo conectar con la API'); }
-    finally { submit.disabled = false; patient.disabled = false; question.disabled = false; loading.hidden = true; }
-  });
-  loadPatients();
-</script>
+  <a class="skip-link" href="#main">Ir al contenido</a>
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="brand" href="#consultas" aria-label="GenAI Clínica, inicio"><span class="brand-mark" aria-hidden="true">+</span><span>GenAI <strong>Clínica</strong><small>CONSULTAS & PACIENTES</small></span></a>
+      <span class="environment"><span aria-hidden="true"></span> Datos sintéticos</span>
+    </div>
+    <nav class="nav-inner" aria-label="Secciones">
+      <a href="#consultas" data-nav="consultas" aria-current="page"><span>01</span> Consultas médicas</a>
+      <a href="#pacientes" data-nav="pacientes"><span>02</span> Pacientes</a>
+      <a href="#api-python" data-nav="api-python"><span>03</span> API Python</a>
+      <a href="#api-java" data-nav="api-java"><span>04</span> API Java</a>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p id="config-error" class="notice error" role="alert" hidden></p>
+    <section id="view-consultas" data-view="consultas" aria-labelledby="title-consultas">
+      <div class="page-heading"><div><p class="eyebrow">CONSULTAS MÉDICAS</p><h1 id="title-consultas">Una pregunta. Dos perspectivas.</h1><p class="lead">Consulta una historia clínica y compara la respuesta del modelo con y sin contexto.</p></div><span class="pill">Mismo modelo · Misma pregunta</span></div>
+      <form id="chat-form" class="panel query-form" novalidate>
+        <div class="query-fields"><div><label for="patient">Paciente de la consulta</label><select id="patient" required><option value="">Cargando pacientes…</option></select><button id="reload-patients" class="text-button" type="button">Actualizar listado</button></div><div><label for="question">¿Qué quieres consultar?</label><textarea id="question" required maxlength="2000" rows="3" placeholder="Por ejemplo: ¿qué enfermedad tiene Ana Demo?"></textarea></div></div>
+        <div class="form-footer"><span class="helper">Las respuestas se muestran juntas para que puedas compararlas.</span><button id="submit" class="button primary" type="submit" disabled>Comparar respuestas <span aria-hidden="true">↗</span></button></div>
+        <p id="loading" class="notice loading" role="status" hidden><span class="spinner" aria-hidden="true"></span> Consultando el modelo y recuperando el contexto…</p>
+        <p id="error" class="notice error" role="alert" hidden></p>
+      </form>
+      <p id="used-question" class="used-question" hidden></p>
+      <div class="answers" aria-live="polite" aria-busy="false">
+        <article class="panel answer-panel"><div class="answer-heading"><div class="answer-symbol direct-symbol" aria-hidden="true">↗</div><div><p class="eyebrow">RESPUESTA DIRECTA</p><h2>Sin RAG</h2></div><span class="small-pill">Solo la pregunta</span></div><div id="direct" class="answer empty-answer">La respuesta directa aparecerá aquí cuando hagas una consulta.</div><div class="answer-note">El modelo responde sin consultar la historia del paciente.</div></article>
+        <article class="panel answer-panel rag-panel"><div class="answer-heading"><div class="answer-symbol rag-symbol" aria-hidden="true">⌕</div><div><p class="eyebrow">RESPUESTA CON CONTEXTO</p><h2>Con RAG</h2></div><span class="small-pill green">Historia del paciente</span></div><div id="rag" class="answer empty-answer">La respuesta con contexto aparecerá aquí cuando hagas una consulta.</div><div class="sources-block"><h3>Fuentes recuperadas</h3><p id="sources-empty" class="helper">Se mostrarán el documento y la sección consultados.</p><ul id="sources"></ul></div></article>
+      </div>
+      <aside class="rag-explainer"><span class="info-symbol" aria-hidden="true">i</span><div><h2>¿Qué es RAG?</h2><p>RAG significa <strong>generación aumentada por recuperación</strong>: antes de responder, se buscan fragmentos relevantes de la historia del paciente y se entregan al modelo como contexto. Si esos documentos no contienen la respuesta, puede indicar que no hay información suficiente.</p></div></aside>
+    </section>
+    <section id="view-pacientes" data-view="pacientes" aria-labelledby="title-pacientes" hidden>
+      <div class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1 id="title-pacientes">Pacientes</h1><p class="lead">Agrega, consulta y actualiza los datos del registro de pacientes.</p></div><span class="pill java-pill">Spring Boot · Java</span></div>
+      <div class="notice neutral">Este registro usa la API Java. Sus pacientes son independientes del listado y las historias de las consultas médicas.</div>
+      <div class="panel patients-panel">
+        <div class="panel-toolbar"><div><h2>Registro de pacientes <span id="patient-count" class="count">—</span></h2><p class="helper">Nombre, fecha de nacimiento y correo electrónico.</p></div><div class="toolbar-actions"><button id="refresh-java" class="button secondary" type="button">Actualizar</button><button id="new-patient" class="button primary" type="button">+ Agregar paciente</button></div></div>
+        <div class="filter-row"><label class="search-label" for="patient-search">Buscar paciente</label><input id="patient-search" type="search" placeholder="Nombre, correo o ID" autocomplete="off"><span id="patient-table-status" role="status" class="helper"></span></div>
+        <p id="patient-notice" class="notice" role="status" hidden></p>
+        <div class="table-scroll"><table id="patients-table"><caption class="sr-only">Pacientes registrados en Java</caption><thead><tr><th scope="col">ID</th><th scope="col">Paciente</th><th scope="col">Fecha de nacimiento</th><th scope="col">Correo electrónico</th><th scope="col" class="actions-heading">Acciones</th></tr></thead><tbody id="patients-body"></tbody></table></div>
+        <div id="patient-empty" class="empty-state" hidden><span aria-hidden="true">☷</span><h3>No hay pacientes para mostrar</h3><p>Agrega un paciente o cambia el texto de búsqueda.</p></div>
+      </div>
+    </section>
+    <section id="view-api-python" data-view="api-python" aria-labelledby="title-api-python" hidden>
+      <div class="page-heading"><div><p class="eyebrow">EXPLORADOR DE ENDPOINTS</p><h1 id="title-api-python">API Python</h1><p class="lead">Prueba las operaciones de FastAPI y revisa cada respuesta.</p></div><a class="button secondary" href="/docs" target="_blank" rel="noopener">Abrir Swagger ↗</a></div>
+      <div id="explorer-python" class="api-explorer" data-api="python"></div>
+    </section>
+    <section id="view-api-java" data-view="api-java" aria-labelledby="title-api-java" hidden>
+      <div class="page-heading"><div><p class="eyebrow">EXPLORADOR DE ENDPOINTS</p><h1 id="title-api-java">API Java</h1><p class="lead">Ejecuta las operaciones de Spring Boot sobre el registro de pacientes.</p></div><span class="pill java-pill">Spring Boot</span></div>
+      <div id="explorer-java" class="api-explorer" data-api="java"></div>
+    </section>
+    <footer class="app-footer"><span>GenAI Clínica</span><span>FastAPI · Spring Boot · PostgreSQL</span></footer>
+  </main>
+  <dialog id="patient-dialog" aria-labelledby="patient-dialog-title">
+    <form id="patient-form"><div class="dialog-heading"><div><p class="eyebrow">REGISTRO JAVA</p><h2 id="patient-dialog-title">Agregar paciente</h2></div><button class="icon-button" type="button" data-close-dialog aria-label="Cerrar formulario">×</button></div>
+      <label for="patient-name">Nombre completo</label><input id="patient-name" name="name" required maxlength="200" autocomplete="off" placeholder="Nombre del paciente">
+      <label for="patient-birth">Fecha de nacimiento</label><input id="patient-birth" name="birth_date" type="date" required>
+      <label for="patient-email">Correo electrónico</label><input id="patient-email" name="email" type="email" required autocomplete="off" placeholder="nombre@ejemplo.com">
+      <p id="patient-form-error" class="notice error" role="alert" hidden></p>
+      <div class="dialog-actions"><button class="button secondary" type="button" data-close-dialog>Cancelar</button><button id="save-patient" class="button primary" type="submit">Guardar paciente</button></div>
+    </form>
+  </dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-heading"><h2 id="confirm-title">Eliminar paciente</h2></div><p id="confirm-description"></p><p class="helper">Esta acción elimina el registro seleccionado.</p><div class="dialog-actions"><button id="confirm-cancel" class="button secondary" type="button">Cancelar</button><button id="confirm-accept" class="button danger" type="button">Eliminar</button></div></dialog>
 </body>
 </html>

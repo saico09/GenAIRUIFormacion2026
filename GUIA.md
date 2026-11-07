@@ -40,6 +40,25 @@ Para iniciar Ollama:
 .\scripts\iniciar_ollama.ps1
 ```
 
+## Usar la página
+
+Abre [localhost:8000](http://localhost:8000). Arriba tienes cuatro secciones:
+
+1. **Consultas médicas:** elige un paciente, escribe la pregunta y pulsa **Comparar respuestas**. Verás la respuesta sin RAG, la respuesta con RAG y sus fuentes. Abajo se explica qué es RAG.
+2. **Pacientes:** agrega, busca o edita pacientes de Java en la tabla. Para borrar, pulsa **Eliminar** y confirma.
+3. **API Python:** abre una operación, completa el ID o el JSON y pulsa **Ejecutar petición**.
+4. **API Java:** lo mismo, pero contra Spring Boot. Los colores distinguen GET, POST, PUT y DELETE; el resultado muestra el código HTTP y el detalle del error si lo hay.
+
+Los pacientes Java son independientes de los pacientes Python y de las historias RAG. Crear uno en la tabla no lo añade al selector de consultas. Los exploradores modifican datos reales de esta app local; usa un paciente temporal para practicar.
+
+Para actualizar una instalación que ya está funcionando:
+
+```powershell
+docker compose up -d --build --no-deps python-api java-api
+```
+
+Recarga la página al terminar. En las copias semanales, usa la dirección de su `LEVANTAR.txt`.
+
 ## Pacientes Python
 
 Para consultar los pacientes antes de cargar datos:

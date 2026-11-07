@@ -1,0 +1,41 @@
+{
+  "result": "passed",
+  "checks": [
+    {
+      "path": "/actuator/health",
+      "origin": "http://localhost:8000",
+      "status": 200,
+      "allow_origin": "http://localhost:8000"
+    },
+    {
+      "path": "/actuator/health",
+      "origin": "http://127.0.0.1:8000",
+      "status": 200,
+      "allow_origin": "http://127.0.0.1:8000"
+    },
+    {
+      "path": "/actuator/health",
+      "origin": "http://example.invalid",
+      "status": 403,
+      "allow_origin": ""
+    },
+    {
+      "path": "/actuator/prometheus",
+      "origin": "http://localhost:8000",
+      "status": 200,
+      "allow_origin": "http://localhost:8000"
+    },
+    {
+      "path": "/actuator/prometheus",
+      "origin": "http://127.0.0.1:8000",
+      "status": 200,
+      "allow_origin": "http://127.0.0.1:8000"
+    },
+    {
+      "path": "/actuator/prometheus",
+      "origin": "http://example.invalid",
+      "status": 403,
+      "allow_origin": ""
+    }
+  ]
+}

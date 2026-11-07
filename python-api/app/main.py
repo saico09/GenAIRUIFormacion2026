@@ -1,9 +1,7 @@
 from contextlib import asynccontextmanager
-from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse
 from opentelemetry.trace import StatusCode
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -16,6 +14,7 @@ from app.schemas import ChatIn, PatientIn, PatientOut
 from app.tracing import configure_tracing, tracer
 from app.llm import LLMUnavailable, llamar_llm
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
+from app.ui import install_ui
 from grafo import grafo
 
 
@@ -35,13 +34,9 @@ app = FastAPI(title="python-api", lifespan=lifespan,
               telemetry={"tracing": False, "operation_spans": False})
 install_metrics(app)
 install_request_logging(app)
+install_ui(app)
 
 Db = Annotated[Session, Depends(get_db)]
-
-
-@app.get("/", include_in_schema=False)
-def chatbot_page():
-    return FileResponse(Path(__file__).parent / "static" / "index.html")
 
 
 @app.get("/health")

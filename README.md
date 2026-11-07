@@ -48,8 +48,10 @@ curl.exe -i http://localhost:8080/health
 
 | Qué | Dónde |
 |---|---|
-| Chatbot / Swagger Python | [8000](http://localhost:8000) / [docs](http://localhost:8000/docs) |
-| Pacientes Java | [8080/patients](http://localhost:8080/patients) |
+| Consultas con y sin RAG | [Consultas médicas](http://localhost:8000/#consultas) |
+| Administrar pacientes Java | [Pacientes](http://localhost:8000/#pacientes) |
+| Probar endpoints | [API Python](http://localhost:8000/#api-python) / [API Java](http://localhost:8000/#api-java) |
+| Swagger Python | [docs](http://localhost:8000/docs) |
 | PostgreSQL | `localhost:5432`, credenciales en `.env` |
 | Qdrant | [6333/dashboard](http://localhost:6333/dashboard) |
 | Prometheus | [9090/targets](http://localhost:9090/targets) |
@@ -70,6 +72,8 @@ El comando conecta PostgreSQL directamente a la red del perfil y comprueba SQL a
 ## Contrato HTTP
 
 Python usa `public.patients`; Java, `java.patients`. POST y PUT reciben `name`, `birth_date` (`YYYY-MM-DD`) y `email`. Cada tabla genera sus propios ids.
+
+En la página, **Pacientes** permite buscar, agregar, editar y eliminar usando Spring Boot. Esos cambios no modifican los pacientes Python ni las historias que usa RAG. Los exploradores **API Python** y **API Java** ejecutan peticiones reales: elige una operación, completa su ID o JSON y pulsa **Ejecutar petición**. Verás el código HTTP y la respuesta; eliminar siempre pide confirmación.
 
 | Operación | Correcto | Error |
 |---|---|---|
@@ -137,4 +141,4 @@ Haz la secuencia en la misma terminal. [La guía](GUIA.md#comprobar-el-crud) inc
 | `scripts/` | Arranque y comprobaciones repetibles |
 | `evidencias/` | Resultados fechados; no son estado en vivo |
 
-El 03/11 se repitieron arranque, CRUD, persistencia, RAG, observabilidad y escala GitOps: [resultados nuevos](evidencias/revision-claude/LEEME.md). La explicación personal y la evaluación de Rui siguen pendientes.
+El 07/11 se añadió la navegación, la administración con Java y los exploradores de endpoints: [pruebas de la interfaz](evidencias/ui-2026-11-07/LEEME.md). El [ensayo completo del 03/11](evidencias/revision-claude/LEEME.md) conserva las comprobaciones de observabilidad y GitOps. La explicación personal y la evaluación de Rui siguen pendientes.

@@ -1,0 +1,177 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.21kB 0.0s done
+#1 DONE 0.0s
+
+#2 [java-api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 659B 0.0s done
+#2 DONE 0.0s
+
+#3 [python-api internal] load build definition from Dockerfile
+#3 transferring dockerfile: 821B 0.0s done
+#3 DONE 0.0s
+
+#4 [java-api internal] load metadata for docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e
+#4 ...
+
+#5 [auth] library/python:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#6 [auth] library/eclipse-temurin:pull token for registry-1.docker.io
+#6 DONE 0.0s
+
+#7 [auth] library/maven:pull token for registry-1.docker.io
+#7 DONE 0.0s
+
+#8 [java-api internal] load metadata for docker.io/library/maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58
+#8 DONE 1.5s
+
+#9 [python-api internal] load metadata for docker.io/library/python:3.15.2-slim
+#9 DONE 1.5s
+
+#4 [java-api internal] load metadata for docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e
+#4 DONE 1.5s
+
+#10 [python-api internal] load .dockerignore
+#10 transferring context: 69B done
+#10 DONE 0.0s
+
+#11 [java-api internal] load .dockerignore
+#11 transferring context: 63B done
+#11 DONE 0.0s
+
+#12 [python-api internal] load build context
+#12 transferring context: 52.98kB 0.0s done
+#12 DONE 0.0s
+
+#13 [python-api dependencies 1/5] FROM docker.io/library/python:3.15.2-slim@sha256:e97b88e416c3c01eb427b21fd8cd3ebf006e6ee38afcfcc3cae1c54ee2ab0a75
+#13 resolve docker.io/library/python:3.15.2-slim@sha256:e97b88e416c3c01eb427b21fd8cd3ebf006e6ee38afcfcc3cae1c54ee2ab0a75 0.0s done
+#13 DONE 0.0s
+
+#14 [java-api build 1/5] FROM docker.io/library/maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58
+#14 resolve docker.io/library/maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58 0.0s done
+#14 DONE 0.0s
+
+#15 [java-api stage-1 1/3] FROM docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e
+#15 resolve docker.io/library/eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e 0.0s done
+#15 DONE 0.1s
+
+#16 [python-api dependencies 2/5] WORKDIR /build
+#16 CACHED
+
+#17 [python-api dependencies 3/5] COPY requirements.txt .
+#17 CACHED
+
+#18 [python-api dependencies 5/5] RUN pip wheel --no-cache-dir --wheel-dir=/wheels -r requirements.txt
+#18 CACHED
+
+#19 [python-api stage-1 3/6] COPY requirements.txt .
+#19 CACHED
+
+#20 [python-api stage-1 2/6] WORKDIR /code
+#20 CACHED
+
+#21 [python-api dependencies 4/5] RUN apt-get update && apt-get install -y --no-install-recommends build-essential     && rm -rf /var/lib/apt/lists/*
+#21 CACHED
+
+#22 [python-api stage-1 4/6] RUN --mount=type=bind,from=dependencies,source=/wheels,target=/wheels     pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.txt
+#22 CACHED
+
+#23 [java-api internal] load build context
+#23 transferring context: 10.96kB 0.0s done
+#23 DONE 0.0s
+
+#24 [java-api build 2/5] WORKDIR /build
+#24 CACHED
+
+#25 [java-api build 3/5] COPY pom.xml .
+#25 CACHED
+
+#26 [python-api stage-1 5/6] COPY app ./app
+#26 DONE 0.1s
+
+#27 [java-api build 4/5] COPY src ./src
+#27 DONE 0.1s
+
+#28 [python-api stage-1 6/6] COPY *.py ./
+#28 DONE 0.1s
+
+#29 [java-api build 5/5] RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp package
+#29 ...
+
+#30 [python-api] exporting to image
+#30 exporting layers 0.1s done
+#30 exporting manifest sha256:8ccc4a6f3e578cb1e4fa05507ee979790e7849c8ed85fe72107024933f804a2b 0.0s done
+#30 exporting config sha256:cfb40b5f4ba1507d4341ce8c4c1f71295b2d6ea4f896fea11dad9c6917d410a4 0.0s done
+#30 exporting attestation manifest sha256:01146a15c325a8c03b06c8dcb5ef9c50f62d3d7c64b75678f8a73f48e72e81c0 0.0s done
+#30 exporting manifest list sha256:f25ec04944e93d71926fe32b12bd825bd51979c32d523d59bbb73cc4e6eb8d69 0.0s done
+#30 naming to docker.io/library/genairuiformacion2026-python-api:latest done
+#30 unpacking to docker.io/library/genairuiformacion2026-python-api:latest 0.1s done
+#30 DONE 0.4s
+
+#31 [python-api] resolving provenance for metadata file
+#31 DONE 0.0s
+
+#29 [java-api build 5/5] RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp package
+#29 2.426 [INFO] Scanning for projects...
+#29 3.839 [INFO] Loaded 24406 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+#29 4.625 [INFO]
+#29 4.625 [INFO] ---------------------< com.conkord.genai:java-api >---------------------
+#29 4.626 [INFO] Building JavaApi 0.1.0
+#29 4.626 [INFO]   from pom.xml
+#29 4.626 [INFO] --------------------------------[ jar ]---------------------------------
+#29 5.047 [INFO]
+#29 5.047 [INFO] --- resources:3.5.0:resources (default-resources) @ java-api ---
+#29 5.224 [INFO] Copying 1 resource from src/main/resources to target/classes
+#29 5.249 [INFO] Copying 2 resources from src/main/resources to target/classes
+#29 5.255 [INFO]
+#29 5.256 [INFO] --- compiler:3.15.0:compile (default-compile) @ java-api ---
+#29 6.198 [INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+#29 6.590 [INFO] Recompiling the module because of changed source code.
+#29 6.604 [INFO] Compiling 12 source files with javac [debug parameters release 27] to target/classes
+#29 9.150 [INFO]
+#29 9.150 [INFO] --- resources:3.5.0:testResources (default-testResources) @ java-api ---
+#29 9.163 [INFO] skip non existing resourceDirectory /build/src/test/resources
+#29 9.163 [INFO]
+#29 9.164 [INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ java-api ---
+#29 9.177 [INFO] No sources to compile
+#29 9.177 [INFO]
+#29 9.177 [INFO] --- surefire:3.5.6:test (default-test) @ java-api ---
+#29 9.394 [INFO] No tests to run.
+#29 9.406 [INFO]
+#29 9.406 [INFO] --- jar:3.5.1:jar (default-jar) @ java-api ---
+#29 9.696 [INFO] Building jar: /build/target/java-api.jar
+#29 9.778 [INFO]
+#29 9.778 [INFO] --- spring-boot:4.1.2:repackage (repackage) @ java-api ---
+#29 11.04 [INFO] Loaded 50 auto-discovered prefixes for remote repository ow2-snapshot (prefixes-ow2-snapshot.txt)
+#29 12.30 [INFO] Replacing main artifact /build/target/java-api.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+#29 12.30 [INFO] The original artifact has been renamed to /build/target/java-api.jar.original
+#29 12.30 [INFO] ------------------------------------------------------------------------
+#29 12.30 [INFO] BUILD SUCCESS
+#29 12.30 [INFO] ------------------------------------------------------------------------
+#29 12.30 [INFO] Total time:  9.929 s
+#29 12.32 [INFO] Finished at: 2026-11-07T19:59:20Z
+#29 12.32 [INFO] ------------------------------------------------------------------------
+#29 DONE 12.6s
+
+#32 [java-api stage-1 2/3] WORKDIR /app
+#32 CACHED
+
+#33 [java-api stage-1 3/3] COPY --from=build /build/target/java-api.jar ./app.jar
+#33 DONE 0.3s
+
+#34 [java-api] exporting to image
+#34 exporting layers
+#34 exporting layers 1.8s done
+#34 exporting manifest sha256:be30dbe9d3c8a87e45d5da846e9f7330f99691547dfcdc41ab3989a0ebfdc877 0.0s done
+#34 exporting config sha256:eb450f6c6529ed5c72f7e481f252f6e3d6479efa93f6fe66d1aac9344a37cbfa 0.0s done
+#34 exporting attestation manifest sha256:ac35edf6874f053a30287e1aa30eec5f3c96305ce924bac915634c788c3b1f56 0.0s done
+#34 exporting manifest list sha256:3d13d3202b940b231d98d6b687e0577ac4db7172133fc960a8b86a1bf3c7fabe 0.0s done
+#34 naming to docker.io/library/genairuiformacion2026-java-api:latest done
+#34 unpacking to docker.io/library/genairuiformacion2026-java-api:latest
+#34 unpacking to docker.io/library/genairuiformacion2026-java-api:latest 0.4s done
+#34 DONE 2.4s
+
+#35 [java-api] resolving provenance for metadata file
+#35 DONE 0.0s
+ genairuiformacion2026-python-api  Built
+ genairuiformacion2026-java-api  Built

@@ -2,6 +2,10 @@
 
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
+## Interfaz · 07/11/2026 · Consultas, pacientes y APIs
+
+Cuatro secciones en [la página](http://localhost:8000): comparación con/sin RAG, tabla de pacientes conectada a Spring Boot y exploradores de Python y Java con verbos, respuestas y errores por color. La tabla permite agregar, editar, buscar y borrar con confirmación; Java y Python mantienen sus registros separados. Sigue siendo HTML, CSS y JavaScript, sin un framework nuevo. Mejora solicitada por Marco sobre las APIs existentes; no agrega HDU ni cambia el calendario de Rui. Uso en [GUIA](GUIA.md#usar-la-página) y [pruebas](evidencias/ui-2026-11-07/LEEME.md).
+
 ## Conexión directa · 03/11/2026 · PostgreSQL en la red de Minikube
 
 Se reprodujo el corte en el intermediario de Docker Desktop: la misma base respondió por la red Docker y falló por el puerto publicado del host. Minikube ahora usa `192.168.49.10`; `.\scripts\reanudar_minikube.ps1` asegura esa conexión, incluso si se recrea el contenedor PostgreSQL. Pasaron ocho reemplazos de pods y dos reanudaciones, una con PostgreSQL recreado y su volumen conservado. Docker Desktop se recuperó con el reinicio autorizado; su defecto interno no está identificado. [Pruebas y diagnóstico](evidencias/origen-postgres-2026-11-03/LEEME.md).
