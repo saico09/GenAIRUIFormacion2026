@@ -1,0 +1,181 @@
+{
+  "result": "PASS",
+  "scope": "Java HTTP y PostgreSQL reales; respuestas de contrato fijas, sin ejecutar modelo",
+  "checks": [
+    "Creación con respaldo Markdown exacto en SQL",
+    "Consulta se anexa al MD y SQL; respuestas no alteran diagnósticos confirmados",
+    "UUID idempotente; reuso distinto o en otro paciente rechazado sin cambios",
+    "Editor conserva consultas, respeta revisión y respalda la edición confirmada",
+    "Reversión A → B → A conserva A como última copia, aunque su hash ya existía",
+    "Renombrar paciente conserva consultas y respalda nuevo nombre del MD",
+    "Informe ausente recuperado desde SQL con bytes/revisión idénticos",
+    "Auditoría verifica UUID, verbo, operación, cuerpo y HTTP de 200/201/409/422/404",
+    "Limpieza de pacientes propios; respaldo y auditoría conservados al borrar"
+  ],
+  "events": [
+    {
+      "execution_id": "f52d261d-2e6b-4184-9f13-c7dec7adb6df",
+      "status": 201,
+      "operation": "POST /patients"
+    },
+    {
+      "execution_id": "d034ad28-b7f2-40f6-b72e-2dff7adf5f94",
+      "status": 201,
+      "operation": "POST /patients"
+    },
+    {
+      "execution_id": "7e791d4d-b3c4-4604-8f58-9235ae6cff96",
+      "status": 200,
+      "operation": "GET /patients/{id}/history"
+    },
+    {
+      "execution_id": "5b4fe808-3426-4b53-978c-f24ee966a94b",
+      "status": 201,
+      "operation": "POST /patients/{id}/history/entries"
+    },
+    {
+      "execution_id": "f0f27bdc-f9a8-40a4-a0b3-e89d7509e96f",
+      "status": 201,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "301bc51a-e1f0-41d2-a0db-93428c538029",
+      "status": 200,
+      "operation": "GET /patients/{id}/history"
+    },
+    {
+      "execution_id": "6e8a18b8-8099-423b-8cd4-a4e6f50c95fa",
+      "status": 200,
+      "operation": "GET /patients/{id}/consultations/{consultationId}"
+    },
+    {
+      "execution_id": "ef3e9d6a-451b-4c12-b08b-f56d51c4c403",
+      "status": 404,
+      "operation": "GET /patients/{id}/consultations/{consultationId}"
+    },
+    {
+      "execution_id": "f0f27bdc-f9a8-40a4-a0b3-e89d7509e96f",
+      "status": 200,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "cae52a20-57cf-4f5d-bc03-dd8204016628",
+      "status": 409,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "b6f373b3-d75b-4f28-852b-f347d0bd7beb",
+      "status": 409,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "39e6d936-959d-4007-bbd8-fc16cf3fc166",
+      "status": 200,
+      "operation": "GET /patients/{id}/history"
+    },
+    {
+      "execution_id": "f2b35264-155b-43fe-8ebc-af3091b6543b",
+      "status": 409,
+      "operation": "PUT /patients/{id}/history"
+    },
+    {
+      "execution_id": "cadc8ad4-4c24-4a97-99e1-53eb8a09a429",
+      "status": 422,
+      "operation": "PUT /patients/{id}/history"
+    },
+    {
+      "execution_id": "20b2b308-bd9b-4e5b-8f4f-e27a116298fb",
+      "status": 200,
+      "operation": "PUT /patients/{id}/history"
+    },
+    {
+      "execution_id": "e39f663f-4935-4fb7-9c39-f4b9106d7476",
+      "status": 200,
+      "operation": "GET /patients/{id}/history"
+    },
+    {
+      "execution_id": "104d7643-c17b-404f-aaa9-6703861237e0",
+      "status": 200,
+      "operation": "PUT /patients/{id}/history"
+    },
+    {
+      "execution_id": "f42a99db-029b-44e7-8ea3-6c0084805672",
+      "status": 200,
+      "operation": "PUT /patients/{id}"
+    },
+    {
+      "execution_id": "85600359-c2c6-4ae3-a93c-d944474e2696",
+      "status": 200,
+      "operation": "GET /patients/{id}/history"
+    },
+    {
+      "execution_id": "98c03f04-ae8c-4fcb-9ccb-38e8add430a1",
+      "status": 200,
+      "operation": "GET /patients/{id}/history"
+    },
+    {
+      "execution_id": "064d7c64-f1b2-4fad-9798-07af635e9557",
+      "status": 422,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "86781fbb-2d81-4bff-8d7d-7aadc1a18d98",
+      "status": 422,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "eb79f0d8-5aea-49be-9714-e300f83556e1",
+      "status": 422,
+      "operation": "POST /patients/{id}/consultations"
+    },
+    {
+      "execution_id": "084b73df-962b-42eb-af7a-c8979226bf09",
+      "status": 404,
+      "operation": "GET /patients/{id}"
+    },
+    {
+      "execution_id": "507cd347-9688-4c76-b6d4-c59a1d873686",
+      "status": 404,
+      "operation": "POST /**"
+    },
+    {
+      "execution_id": "9f899ca9-3fa6-4e14-a879-23daea326e57",
+      "status": 405,
+      "operation": "PATCH unmatched"
+    },
+    {
+      "execution_id": "4cf6abd7-06cd-4b6e-b3a6-aa7e35bed1dc",
+      "status": 200,
+      "operation": "GET /patients/{id}"
+    },
+    {
+      "execution_id": "b5d0003d-b400-466f-a116-11ec24c7209d",
+      "status": 204,
+      "operation": "DELETE /patients/{id}"
+    },
+    {
+      "execution_id": "a89adf83-dd0f-401b-a8aa-bc6b091ad46d",
+      "status": 404,
+      "operation": "GET /patients/{id}"
+    },
+    {
+      "execution_id": "a5fcb3f6-49a7-4942-ad61-2d5f126058f0",
+      "status": 200,
+      "operation": "GET /patients/{id}"
+    },
+    {
+      "execution_id": "45c1d709-07e8-4597-a45f-8a1faf074282",
+      "status": 204,
+      "operation": "DELETE /patients/{id}"
+    },
+    {
+      "execution_id": "12ecf086-b187-4fbb-8d7f-5eb739023e06",
+      "status": 404,
+      "operation": "GET /patients/{id}"
+    }
+  ],
+  "temporary_patient_ids": [
+    35,
+    36
+  ]
+}

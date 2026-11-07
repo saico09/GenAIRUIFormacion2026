@@ -2,6 +2,16 @@
 
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
+## Consultas persistentes · 07/11/2026 · Informe y respaldo SQL
+
+**Comparar y guardar** conserva la consulta y las dos respuestas en el informe del paciente y en `java.medical_consultations`. La página Pacientes muestra esas consultas por fecha, separadas de la tabla de enfermedad, tratamiento y medicamento confirmados. El reintento de la misma consulta conserva su UUID para no duplicarla; actualizar el índice RAG tiene su propio reintento.
+
+`public.transaction_logs` registra las ejecuciones de Python y Java, con cuerpos, verbo, operación y código HTTP. Los nombres están en inglés y `snake_case`. Las ediciones de los registros siguen pidiendo confirmación; el historial original de consultas se conserva. Esta ampliación fue solicitada por Marco y no se presenta como requisito original de Rui.
+
+Se eligió **Qwen3 4B Instruct 2507** para ambas ramas tras comparar los mismos ocho casos con el mismo prompt y parámetros: Qwen pasó 8/8 y Llama 6/8. La respuesta con contexto ahora diferencia antecedentes documentados y orientación sobre síntomas nuevos, sin confirmar diagnósticos automáticamente. [Comparación local](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json); no acredita precisión clínica general.
+
+Se mantienen las 80 horas previstas, las dos etapas de 40 horas y las fechas del plan. Los apartados siguientes describen cortes anteriores.
+
 ## Historia clínica · 07/11/2026 · Registros confirmados y pacientes Java
 
 Entrega semanal cerrada: ocho copias actualizadas y comprobadas, 14 consultas RAG y cuatro casos de propuesta reales; siete Word reemplazados en Drive y texto remoto verificado. S1/S2 y aviso S6 se conservan, con S6 unida a S7. Postman mantiene diez carpetas, 98 peticiones, 59 variables y las cinco peticiones originales; se corrigieron sus comprobaciones de fuentes y trazas en la colección existente. Trello quedó en 48 Testing y 233/241 pasos, con los mismos ocho pendientes humanos/documentales. [Resumen de la entrega y alcance de las pruebas](evidencias/clinica-2026-11-07/entrega-semanal.json).

@@ -11,6 +11,7 @@ export async function request(url, options = {}, timeout = 20000) {
     return {ok: response.ok, status: response.status, text, data,
       duration: Math.round(performance.now() - start),
       requestId: response.headers.get('x-request-id'),
+      executionId: response.headers.get('x-execution-id'),
       contentType: response.headers.get('content-type')};
   } catch (error) {
     throw new Error(error.name === 'AbortError'
@@ -57,5 +58,5 @@ export function confirmAction(description, {title = 'Confirmar cambios', label =
 
 export function confirmDelete(description) {
   return confirmAction(description, {title: 'Eliminar paciente', label: 'Eliminar', danger: true,
-    hint: 'Se elimina el paciente y, en Java, también su historia clínica asociada.'});
+    hint: 'Se elimina el paciente y, en Java, su archivo clínico activo. Los respaldos SQL y el historial de transacciones se conservan.'});
 }

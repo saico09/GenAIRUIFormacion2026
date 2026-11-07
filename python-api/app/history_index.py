@@ -4,12 +4,12 @@ from app.history_documents import fragments_from_history
 from app.knowledge import COLLECTION, embed, prepare_collection, qdrant
 
 
-def patient_points(patient_id: int) -> list[dict]:
+def patient_points(patient_id: int, *, with_vectors: bool = False) -> list[dict]:
     points = []
     offset = None
     while True:
         body = {"filter": {"must": [{"key": "patient_id", "match": {"value": patient_id}}]},
-                "limit": 100, "with_payload": True, "with_vector": False}
+                "limit": 100, "with_payload": True, "with_vector": with_vectors}
         if offset is not None:
             body["offset"] = offset
         result = qdrant("POST", f"/collections/{COLLECTION}/points/scroll", body)["result"]
@@ -23,14 +23,19 @@ def patient_points(patient_id: int) -> list[dict]:
 def index_history(history: dict) -> dict:
     config = prepare_collection()
     expected = fragments_from_history(history)
-    previous = patient_points(history["patient_id"])
+    previous = patient_points(history["patient_id"], with_vectors=True)
     old = {point["id"]: point["payload"] for point in previous}
+    old_vectors = {point["id"]: point.get("vector") for point in previous}
     wanted = {point["id"]: point["payload"] for point in expected}
     if old != wanted:
         changed = []
         for point in expected:
             if old.get(point["id"]) != point["payload"]:
-                vector = embed(f"{point['payload']['section']}: {point['payload']['text']}")
+                previous_payload = old.get(point["id"], {})
+                vector = old_vectors.get(point["id"])
+                if (not isinstance(vector, list) or previous_payload.get("text") != point["payload"]["text"]
+                        or previous_payload.get("section") != point["payload"]["section"]):
+                    vector = embed(f"{point['payload']['section']}: {point['payload']['text']}")
                 if len(vector) != config["size"]:
                     raise ValueError("Dimensión de embedding distinta de la colección")
                 changed.append({**point, "vector": vector})
@@ -45,6 +50,7 @@ def index_history(history: dict) -> dict:
         raise ValueError("El índice no coincide con la revisión confirmada del informe")
     return {"patient_id": history["patient_id"], "filename": history["filename"],
             "revision": history["revision"], "records": len(history["entries"]),
+            "consultations": len(history.get("consultations", [])),
             "fragments": len(expected), "status": "synced"}
 
 

@@ -1,7 +1,9 @@
-"""Regresión real del corpus ficticio: hechos, abstención y fuentes del informe vigente.
+"""Regresión del corpus ficticio: documentos, orientación y guardado de consultas.
 
-No guarda registros clínicos. La validación literal se complementa con la revisión
-humana de las respuestas guardadas; no mide calidad clínica general.
+Cada POST /chat guarda una consulta. Conserva los diagnósticos confirmados, pero
+añade el ensayo al diario de los pacientes seleccionados. Para una prueba con
+paciente temporal y limpieza usa verificar_consultas_regresion.py. No mide calidad
+clínica general; la revisión semántica de las respuestas se hace por separado.
 """
 
 import argparse
@@ -36,6 +38,9 @@ CASES = [
     ("sintomas_original_3", 1, "dolor de estómago", [], True),
     ("sintomas_original_4", 1, "dolor de cabeza fuerte", [], True),
 ]
+
+GUIDANCE_CASES = {"cefalea", "vision", "estomago", "sintoma_relacion",
+                  "sintomas_original_1", "sintomas_original_2", "sintomas_original_3", "sintomas_original_4"}
 
 
 def fetch(base, path, payload=None):
@@ -73,16 +78,24 @@ def main():
 
     try:
         for name, pid, question, expected, abstention in cases:
+            current = fetch(args.java_url, f"/patients/{pid}/history")[1]
             started = perf_counter()
             status, response, request_id = fetch(args.base_url, "/chat", {"patient_id": pid, "question": question})
             answer = response.get("rag_answer", "")
             sources = response.get("sources", [])
             allowed = {}
-            history = before[pid]
+            history = current
             for entry in history["entries"]:
                 for section, field in {"Enfermedad": "disease", "Tratamiento": "treatment", "Medicamento": "medication"}.items():
                     label = f"[{history['filename']}/{entry['id']}/{section}]"
                     allowed[label] = entry[field] or "No registrado."
+            for consultation in history.get("consultations", []):
+                label = f"[{history['filename']}/{consultation['id']}/Consulta]"
+                allowed[label] = (f"Consulta registrada el {consultation['created_at']}. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\n"
+                                  + consultation['question'])
+            guidance = name in GUIDANCE_CASES
+            if guidance:
+                abstention = False
             labels = [f"[{source['source']}/{source.get('record_id', '')}/{source['section']}]" for source in sources]
             cited = re.findall(r"\[[^\]\n]+\]", answer)
             checks = {"http_200": status == 200,
@@ -92,8 +105,10 @@ def main():
                       "canonical_sources": all(label in allowed and source["text"] == allowed[label]
                                                for label, source in zip(labels, sources)),
                       "expected_facts": all(fact.casefold() in answer.casefold() for fact in expected),
-                      "valid_citations": bool(cited) and all(cite in labels for cite in cited) if not abstention else not cited,
-                      "abstention": answer.rstrip(". \n") == "No hay información suficiente" if abstention else True}
+                      "valid_citations": all(cite in labels for cite in cited) and (guidance or bool(cited)) if not abstention else not cited,
+                      "abstention": answer.rstrip(". \n") == "No hay información suficiente" if abstention else True,
+                      "orientation": "Orientación general (no es un diagnóstico)" in answer if guidance else True,
+                      "consultation_saved": response.get("consultation", {}).get("saved") is True}
             row = {"case": name, "patient_id": pid, "question": question, "request_id": request_id,
                    "seconds": round(perf_counter() - started, 2), "status": status,
                    "checks": checks, "passed": all(checks.values()), "response": response}
@@ -102,10 +117,10 @@ def main():
             print(json.dumps({"case": name, "passed": row["passed"], "rag": answer,
                               "failed_checks": [key for key, ok in checks.items() if not ok]}, ensure_ascii=False), flush=True)
     finally:
-        report["reports_preserved"] = all(fetch(args.java_url, f"/patients/{pid}/history")[1] == history
+        report["confirmed_entries_preserved"] = all(fetch(args.java_url, f"/patients/{pid}/history")[1]["entries"] == history["entries"]
                                           for pid, history in before.items())
         report["finished_at"] = datetime.now(timezone.utc).isoformat()
-        report["passed"] = report["reports_preserved"] and len(report["cases"]) == len(cases) and all(row["passed"] for row in report["cases"])
+        report["passed"] = report["confirmed_entries_preserved"] and len(report["cases"]) == len(cases) and all(row["passed"] for row in report["cases"])
         save()
     assert report["passed"], "Revisar los casos fallidos y sus respuestas completas"
 

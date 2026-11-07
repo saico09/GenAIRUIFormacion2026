@@ -180,6 +180,19 @@ dialog label:not(:first-child) { margin-top: 17px; }
 .sync-state .notice { margin-bottom: 10px; }
 .record-actions { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 0 20px; }
 .record-actions .helper { max-width: 730px; }
+.record-actions .toolbar-actions { flex-wrap: wrap; }
+.record-actions .notice { margin-top: 0; }
+.execution-id { overflow-wrap: anywhere; font-size: 11px; }
+#consultations-table { table-layout: fixed; min-width: 500px; }
+#consultations-table th:first-child { width: 150px; }
+#consultations-table td { vertical-align: top; }
+#consultations-table td:nth-child(2) { font-weight: 400; }
+.consultation-question, .saved-answer { white-space: pre-wrap; overflow-wrap: anywhere; }
+.consultation-question { margin-top: 0; }
+.saved-consultation { margin-top: 12px; }
+.saved-consultation summary { cursor: pointer; color: var(--green); font-weight: 600; }
+.saved-consultation h3 { margin-top: 18px; }
+.saved-answer { padding: 14px; background: var(--soft); border-radius: 7px; }
 #sources details { margin: 8px 0; }
 #sources summary { cursor: pointer; font-size: 12px; }
 .source-fragment { white-space: pre-wrap; color: var(--ink); background: var(--soft); padding: 12px; margin-top: 8px; border-radius: 6px; }
@@ -220,6 +233,8 @@ dialog label:not(:first-child) { margin-top: 17px; }
   .history-content, .consultation-panel, .entry-draft { padding: 18px; }
   .history-heading .toolbar-actions, .history-content .toolbar-actions { flex-wrap: wrap; }
   .record-actions { flex-wrap: wrap; }
+  #consultations-table { min-width: 0; }
+  #consultations-table th:first-child { width: 112px; }
   .markdown-panel > summary { padding: 18px; }
 }
 @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }

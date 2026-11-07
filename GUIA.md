@@ -44,7 +44,7 @@ Para iniciar Ollama:
 
 Abre [localhost:8000](http://localhost:8000). Arriba tienes cuatro secciones:
 
-1. **Consultas médicas:** elige un paciente Java, escribe la pregunta y pulsa **Comparar respuestas**. Abre cada fuente para leer el fragmento y su UUID de registro.
+1. **Consultas médicas:** elige un paciente Java, describe la consulta o pregunta por sus antecedentes y pulsa **Comparar y guardar**. Abre cada fuente para leer el fragmento y su UUID. Al terminar aparece la confirmación de guardado y el enlace al informe.
 2. **Pacientes:** agrega, busca o edita pacientes. Pulsa su nombre para abrir la historia; **Eliminar** pide confirmación y también elimina su informe.
 3. **API Python:** abre una operación, completa el ID o el JSON y pulsa **Ejecutar petición**.
 4. **API Java:** lo mismo, pero contra Spring Boot. Los colores distinguen GET, POST, PUT y DELETE; el resultado muestra el código HTTP y el detalle del error si lo hay.
@@ -61,17 +61,41 @@ Recarga la página al terminar. En las copias semanales, usa la dirección de su
 
 ## Historia clínica
 
-Para verla: **Pacientes → nombre del paciente**. La tabla muestra ID del registro, enfermedad, tratamiento y medicamento; un guion indica que no hay dato.
+Para verla: **Pacientes → nombre del paciente**. La primera tabla muestra registros confirmados: ID, enfermedad, tratamiento y medicamento. Debajo, **Consultas guardadas** muestra fecha, lo que escribiste y las dos respuestas de IA.
 
-Para guardar una consulta: **Nueva consulta → escribir la nota ficticia → Preparar con IA**. Revisa los tres campos y el texto de origen, corrige lo necesario y pulsa **Guardar este registro → Confirmar y guardar**. Si la IA no encuentra hechos o no está disponible, usa **Crear registro manual**. No completa diagnósticos ni datos ausentes.
+Para guardar una consulta: usa **Consultas médicas → Comparar y guardar**. Se guarda automáticamente el texto y las respuestas en el `.md` y en PostgreSQL. Los síntomas que escribes y la orientación del modelo no se convierten por eso en diagnósticos confirmados.
 
-Para ver o bajar el archivo: **Ver archivo Markdown → Descargar .md**. Para editarlo: **Editar Markdown → Guardar Markdown → Confirmar y guardar**. Conserva los UUID; las altas se hacen desde **Nueva consulta**. Si aparece 409, pulsa **Actualizar historia**, compara tu borrador con la versión actual y confirma de nuevo.
+Para añadir enfermedad, tratamiento o medicamento confirmados: **Registro confirmado → escribir la nota ficticia → Preparar con IA → revisar los campos → Guardar este registro → Confirmar y guardar**. Si no encuentra hechos o la IA no está disponible, usa **Crear registro manual**.
+
+Para ver o bajar el archivo: **Ver archivo Markdown → Descargar .md**. Para editar los registros confirmados: **Editar Markdown → Guardar Markdown → Confirmar y guardar**. Conserva sus UUID y la sección **Consultas registradas**, que mantiene el historial original. Si aparece 409, pulsa **Actualizar historia**, compara tu borrador con la versión actual y confirma de nuevo.
 
 El guardado actualiza el índice RAG. Si falla, el informe queda guardado: pulsa **Reintentar sincronización**. Renombrar o eliminar pacientes también sincroniza; el reintento no repite el cambio en Java.
 
-Para aprovechar una pregunta del chat: **Preparar registro** la lleva como borrador a **Nueva consulta**. Preguntar, preparar y revisar no guardan nada; la respuesta RAG nunca se archiva automáticamente.
+Si al terminar el chat aparece **Falta actualizar el índice RAG**, la consulta ya quedó guardada: pulsa **Reintentar índice RAG**. No vuelve a generar ni a guardar la consulta. Si se cortó la conexión, reintenta el mismo texto con el mismo paciente sin recargar la página: el navegador conserva su UUID para evitar duplicarlo.
 
-Los informes viven en `datos/historias/paciente-ID-nombre.md`, montado con escritura en Java por Compose. El `.md` es la fuente clínica; PostgreSQL guarda nombre, nacimiento y correo, y Qdrant indexa sus fragmentos. Conserva esa carpeta al reiniciar.
+Los informes viven en `datos/historias/paciente-ID-nombre.md`, montado con escritura en Java. `java.medical_consultations` conserva consultas y versiones completas del Markdown; `public.transaction_logs` registra el UUID de ejecución, API, operación, verbo, código HTTP y cuerpos de entrada/salida. Conserva tanto la carpeta como el volumen PostgreSQL. Las consultas de uso modifican los Markdown locales; las semillas versionadas y las copias semanales se mantienen sin ese diario personal.
+
+Para ver las últimas consultas guardadas:
+
+```powershell
+'SELECT id, patient_id, created_at, question, model FROM java.medical_consultations WHERE kind = ''consultation'' ORDER BY created_at DESC LIMIT 10;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+
+Para ver las últimas transacciones de las APIs:
+
+```powershell
+'SELECT execution_id, service, method, operation, http_status, created_at FROM public.transaction_logs ORDER BY created_at DESC LIMIT 20;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+
+En `medical_consultations`, `kind = 'consultation'` identifica una consulta; `snapshot` guarda una versión del informe y `deleted` respalda su última versión al borrar el paciente. `markdown_content` contiene el Markdown completo. Eliminar el paciente retira el archivo activo, pero conserva los respaldos y las transacciones.
+
+Para leer el último respaldo del Markdown de Ana:
+
+```powershell
+'SELECT filename, revision, markdown_content FROM java.medical_consultations WHERE patient_id = 1 ORDER BY storage_order DESC LIMIT 1;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+
+El registro HTTP cubre las rutas de pacientes, chat y clínica, incluidos sus errores; omite las sondas y archivos de la página. Guarda hasta 128 KiB de cada cuerpo e indica cualquier recorte en `request_truncated` y `response_truncated`. No guarda las cabeceras. Si falla la escritura del log SQL, se registra el error en los logs de la API; no se deshace una operación de negocio ya completada.
 
 ## Pacientes Python
 
@@ -186,18 +210,20 @@ Get-Content -Raw scripts/verificar_recuperacion.py | docker compose exec -T pyth
 Para descargar el modelo de chat, si falta:
 
 ```powershell
-& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull llama3.2:3b
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
 ```
+
+Se usa **Qwen3 4B Instruct 2507** en ambas ramas. En los ocho casos del [ensayo local](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 frente a 6/8 de Llama; es evidencia de esta muestra, no una garantía para cualquier consulta.
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe usar Alfa y su fuente en la primera y reconocer que falta información en la segunda.
 
 «Con RAG» comprueba la historia vigente de Java, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
 
-Pregunta por enfermedades, tratamientos o medicamentos registrados: el chat no infiere consejos ni diagnósticos nuevos a partir de síntomas.
+Puedes preguntar por datos registrados o describir síntomas de una consulta ficticia. La respuesta contextual separa los antecedentes del informe de la orientación general y explica qué información falta. No convierte síntomas nuevos en una enfermedad confirmada ni prescribe medicamentos.
 
-Cada registro agrupa enfermedad, tratamiento y medicamento bajo un UUID. Puedes tener varios registros por paciente; sólo se usa lo que consta en su informe. Preguntar no modifica esos archivos. Cada pregunta es independiente: los logs no funcionan como memoria del chat.
+Cada consulta terminada se añade al Markdown y a PostgreSQL con un UUID. Los registros confirmados de enfermedad, tratamiento y medicamento siguen siendo distintos: se guardan después de revisar sus campos. Las respuestas anteriores de IA no se reutilizan como hechos confirmados del paciente.
 
-«Con RAG» selecciona citas literales: antes de mostrarlas, el código comprueba que el texto y la fuente pertenecen a los fragmentos recuperados. Si faltan datos o esa comprobación falla, responde «No hay información suficiente». Esto verifica la procedencia, no garantiza que el modelo haya interpretado bien la pregunta; coteja la respuesta con las fuentes.
+Las citas de antecedentes se comprueban contra los fragmentos recuperados. Si falta un dato del historial, se indica; la orientación de la consulta se presenta por separado. Una cita válida demuestra de dónde viene el texto, no la exactitud de cualquier interpretación del modelo: puedes cotejarla abriendo sus fuentes.
 
 La revisión del 07/11 detectó respuestas sin respaldo fuera de los casos preparados. [Experimentos anteriores](evidencias/revision-rag-2026-11-07/LEEME.md). El registro asistido fue solicitado por Marco; no añade requisitos de Rui.
 

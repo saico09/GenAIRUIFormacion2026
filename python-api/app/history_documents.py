@@ -11,10 +11,11 @@ UNRECORDED = "No registrado."
 
 def parse_history(markdown: str, filename: str) -> dict:
     """Parser para la ingesta por consola; Java valida las ediciones de la interfaz."""
-    if len(markdown.encode("utf-8")) > 65536:
-        raise ValueError("El informe supera 64 KiB")
+    if len(markdown.encode("utf-8")) > 1048576:
+        raise ValueError("El informe supera 1 MiB")
     normalized = markdown.replace("\r\n", "\n")
-    parts = re.split(r"^## Registro (.+)$", normalized, flags=re.M)
+    clinical, _, journal = normalized.partition("\n## Consultas registradas\n")
+    parts = re.split(r"^## Registro (.+)$", clinical, flags=re.M)
     ids = re.findall(r"^patient_id: ([1-9][0-9]*)$", parts[0], re.M)
     if len(ids) != 1:
         raise ValueError(f"{filename}: se requiere un único patient_id positivo")
@@ -46,8 +47,22 @@ def parse_history(markdown: str, filename: str) -> dict:
         entries.append(entry)
     if len(entries) > 50:
         raise ValueError("Máximo 50 registros por informe")
+    consultations = []
+    # El journal automático contiene texto citado: sólo se ingiere la nota del usuario.
+    # Las respuestas de IA nunca vuelven al índice como si fueran evidencia clínica.
+    if journal:
+        for match in re.finditer(r"^### Consulta ([0-9a-f-]{36})\n\nFecha UTC: ([^\n]+)\n\nModelo: [^\n]+\n\n"
+                                 r"#### Nota reportada\n(.*?)\n\n#### Respuesta sin RAG\n", journal, re.M | re.S):
+            identifier, created, quoted = match.groups()
+            if str(UUID(identifier)) != identifier or any(not line.startswith("> ") for line in quoted.split("\n")):
+                raise ValueError("Consulta automática inválida")
+            consultations.append({"id": identifier, "created_at": created,
+                                  "question": "\n".join(line[2:] for line in quoted.split("\n"))})
+        if len(consultations) != len(re.findall(r"^### Consulta ", journal, re.M)):
+            raise ValueError("No se pudieron leer todas las consultas automáticas")
     return {"patient_id": patient_id, "filename": filename, "markdown": markdown,
-            "revision": hashlib.sha256(markdown.encode("utf-8")).hexdigest(), "entries": entries}
+            "revision": hashlib.sha256(markdown.encode("utf-8")).hexdigest(), "entries": entries,
+            "consultations": consultations}
 
 
 def fragments_from_history(history: dict) -> list[dict]:
@@ -58,9 +73,18 @@ def fragments_from_history(history: dict) -> list[dict]:
             identifier = str(uuid5(NAMESPACE_URL, f"genai:java:historia:{patient_id}:{entry['id']}:{section}"))
             fragments.append({"id": identifier, "payload": {
                 "patient_id": patient_id, "registry": "java", "record_id": entry["id"],
+                "kind": "confirmed_record",
                 "source": history["filename"], "section": section,
                 "text": entry[field] or UNRECORDED, "revision": history["revision"],
             }})
+    for consultation in history.get("consultations", []):
+        identifier = str(uuid5(NAMESPACE_URL, f"genai:java:consulta:{patient_id}:{consultation['id']}"))
+        fragments.append({"id": identifier, "payload": {
+            "patient_id": patient_id, "registry": "java", "record_id": consultation["id"],
+            "kind": "reported_consultation", "source": history["filename"], "section": "Consulta",
+            "text": f"Consulta registrada el {consultation['created_at']}. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\n{consultation['question']}",
+            "revision": history["revision"],
+        }})
     return fragments
 
 

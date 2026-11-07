@@ -23,9 +23,10 @@ class QdrantUnavailable(OSError):
     """No se pudo consultar la base vectorial."""
 
 
-def request_json(method: str, url: str, data: dict | None = None, timeout: int = 120) -> dict:
+def request_json(method: str, url: str, data: dict | None = None, timeout: int = 120,
+                 headers: dict | None = None) -> dict:
     body = None if data is None else json.dumps(data, ensure_ascii=False).encode("utf-8")
-    request = Request(url, data=body, headers={"Content-Type": "application/json"}, method=method)
+    request = Request(url, data=body, headers={"Content-Type": "application/json", **(headers or {})}, method=method)
     with urlopen(request, timeout=timeout) as response:
         return json.load(response)
 
@@ -78,13 +79,27 @@ def search_fragments(patient_id: int, question: str) -> list[dict]:
                   {"key": "registry", "match": {"value": "java"}}]
     if revision:
         conditions.append({"key": "revision", "match": {"value": revision}})
-    result = qdrant("POST", f"/collections/{COLLECTION}/points/query", {
-        "query": embed(question.strip(), query=True),
-        "filter": {"must": conditions},
-        "limit": 3,
-        "with_payload": True,
-        "with_vector": False,
-    })["result"]["points"]
+    vector = embed(question.strip(), query=True)
+
+    def query(extra_conditions: list[dict], limit: int = 3) -> list[dict]:
+        return qdrant("POST", f"/collections/{COLLECTION}/points/query", {
+            "query": vector, "filter": {"must": conditions + extra_conditions},
+            "limit": limit, "with_payload": True, "with_vector": False,
+        })["result"]["points"]
+
+    # Las preguntas repetidas no deben desplazar los tres hechos clínicos confirmados.
+    # Para síntomas o consultas anteriores se reserva un fragmento a lo relatado por el usuario.
+    from rag import asks_about_reported_history, explicitly_asks_for_consultations, is_record_lookup
+    include_reported = not is_record_lookup(question) or asks_about_reported_history(question)
+    confirmed = query([{"key": "section", "match": {"any": ["Enfermedad", "Tratamiento", "Medicamento"]}}])
+    journal_lookup = explicitly_asks_for_consultations(question)
+    reported = query([{"key": "section", "match": {"value": "Consulta"}}], 3 if journal_lookup else 1) if include_reported else []
+    result = reported if journal_lookup and reported else confirmed[:2] + reported if reported else confirmed
+    if len(result) < 3:
+        # Sin registros confirmados, se pueden recuperar hasta tres notas del usuario.
+        used = {point["id"] for point in result}
+        result.extend(point for point in query([]) if point["id"] not in used)
+        result = result[:3]
     fragments = []
     for point in result:
         payload = point["payload"]

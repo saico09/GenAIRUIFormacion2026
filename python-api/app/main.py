@@ -12,12 +12,14 @@ from app.metrics import install_metrics
 from app.observability import install_request_logging
 from app.schemas import ChatIn, ClinicalProposalIn, PatientIn, PatientOut
 from app.tracing import configure_tracing, tracer
-from app.llm import LLMUnavailable, llamar_llm
+from app.llm import CHAT_MODEL, LLMUnavailable, llamar_llm
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
 from app.ui import install_ui
-from app.clinical import ClinicalPatientMissing, ClinicalUnavailable, get_clinical_patient, sync_history
+from app.clinical import (ClinicalPatientMissing, ClinicalUnavailable, ConsultationConflict,
+                          get_clinical_patient, get_consultation, save_consultation, sync_history)
 from app.clinical_proposals import propose_entries
 from grafo import grafo
+from rag import DIRECT_SYSTEM
 
 
 @asynccontextmanager
@@ -51,19 +53,39 @@ def health():
 def chat(body: ChatIn, request: Request):
     try:
         patient = get_clinical_patient(body.patient_id)
-        direct_answer = llamar_llm(body.question)
+        execution_id = request.state.execution_id
+        existing = get_consultation(body.patient_id, execution_id, body.question)
+        if existing is not None:
+            return consultation_result(body.patient_id, existing)
+        direct_answer = llamar_llm(body.question, system=DIRECT_SYSTEM)
         with tracer.start_as_current_span("rag", attributes={
             "openinference.span.kind": "CHAIN", "request_id": request.state.request_id,
         }) as span:
             state = grafo.invoke({"pregunta": body.question, "patient_id": body.patient_id, "patient_name": patient["name"],
                                   "request_id": request.state.request_id})
             span.set_status(StatusCode.OK)
-        return {"direct_answer": direct_answer, "rag_answer": state["respuesta"],
-                "sources": state["fragmentos"]}
+        result = {"direct_answer": direct_answer, "rag_answer": state["respuesta"], "sources": state["fragmentos"]}
+        saved = save_consultation(body.patient_id, execution_id, body.question, result, CHAT_MODEL)
+        return consultation_result(body.patient_id, saved)
+    except ConsultationConflict as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
     except ClinicalPatientMissing as error:
         raise HTTPException(status_code=404, detail=str(error)) from error
     except (LLMUnavailable, EmbeddingUnavailable, QdrantUnavailable, ClinicalUnavailable, ValueError) as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
+
+
+def consultation_result(patient_id: int, saved: dict) -> dict:
+    result = {key: saved[key] for key in ("direct_answer", "rag_answer", "sources", "model")}
+    result["consultation"] = {"id": saved["id"], "patient_id": patient_id,
+                              "created_at": saved["created_at"], "saved": True}
+    try:
+        sync_history(patient_id)
+        result["index_synced"] = True
+    except (ClinicalUnavailable, ClinicalPatientMissing, EmbeddingUnavailable, QdrantUnavailable, ValueError):
+        result["index_synced"] = False
+        result["warning"] = "La consulta quedó guardada en el informe y PostgreSQL. El índice RAG está pendiente; puedes reintentar su sincronización."
+    return result
 
 
 @app.post("/clinical/proposals")

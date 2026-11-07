@@ -35,7 +35,7 @@ services:
       JAVA_API_BASE_URL: http://java-api:8080
       HISTORY_AUTO_SYNC: "true"
       EMBEDDING_MODEL: nomic-embed-text
-      CHAT_MODEL: llama3.2:3b
+      CHAT_MODEL: ${CHAT_MODEL:-qwen3:4b-instruct-2507-q4_K_M}
       QDRANT_URL: http://qdrant:6333
       QDRANT_COLLECTION: historias
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://phoenix:6006/v1/traces

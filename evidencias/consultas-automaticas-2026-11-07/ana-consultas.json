@@ -1,0 +1,453 @@
+{
+  "scope": "APIs/SQL/LLM reales en Compose principal; reejecución de las tres consultas del usuario.",
+  "cases": [
+    {
+      "id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "question": "tiene indigestión aguda y le duele la cabeza",
+      "http": 200,
+      "result": {
+        "direct_answer": "No tengo acceso a antecedentes ni historial clínico del paciente. No puedo evaluar ni diagnosticar síntomas como indigestión aguda o dolor de cabeza.\n\nPara ayudar, sería útil saber:\n\n- ¿Cuánto tiempo dura el dolor de cabeza?  \n- ¿Es intenso, localizado o generalizado?  \n- ¿Hay náuseas, vómitos, fiebre o cambios en el estado de ánimo?  \n- ¿La indigestión es repentina o se repite?  \n- ¿Ha consumido algo específico (alcohol, comida pesada, etc.) antes de los síntomas?\n\nLa indigestión y el dolor de cabeza pueden tener causas diversas, como estrés, deshidratación o problemas gastrointestinales. Sin una evaluación personalizada, no se puede establecer una causa.\n\n⚠️ Esta orientación no reemplaza una consulta médica. Si los síntomas persisten o empeoran, debe acudir a un profesional de salud.",
+        "rag_answer": "Antecedentes disponibles\nNo hay un antecedente verificable que explique lo que describes.\n\nOrientación general (no es un diagnóstico)\nLa indigestión aguda y la dolor de cabeza no están documentados en el historial de Ana Demo. Para evaluar estos síntomas, es necesario conocer su duración, intensidad, factores desencadenantes y si aparecen en contexto de otros síntomas. No se puede descartar una relación con el tratamiento actual, aunque no haya evidencia directa. Se recomienda una evaluación profesional para descartar causas médicas, especialmente si los síntomas persisten o empeoran. No se prescriben medicamentos ni se ajustan dosis sin evaluación clínica.\n\nPara aclarar la consulta\n• ¿Cuánto tiempo dura la indigestión aguda?\n• ¿Cuándo comenzó el dolor de cabeza y cómo ha evolucionado?\n• ¿Ha ocurrido alguna vez junto con otros síntomas como náuseas o vértigo?\n\nLa orientación de IA no sustituye una evaluación profesional. No se han confirmado diagnósticos ni recetas.",
+        "sources": [
+          {
+            "score": 0.5831584,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.5491223,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa, una denominación ficticia vinculada a Enfermedad Alfa en la consulta del 2026-10-20. No se ha registrado una dosis ni una duración."
+          },
+          {
+            "score": 0.54608107,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          }
+        ],
+        "model": "qwen3:4b-instruct-2507-q4_K_M",
+        "consultation": {
+          "id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+          "patient_id": 1,
+          "created_at": "2026-11-07T23:18:49.935110Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "seconds": 39.69,
+      "checks": {
+        "http_200": true,
+        "execution_header": true,
+        "useful_orientation": true,
+        "saved_once": true,
+        "md_contains_input": true,
+        "md_contains_answers": true,
+        "confirmed_entries_unchanged": true,
+        "rag_synced": true,
+        "chosen_model": true
+      },
+      "passed": true
+    },
+    {
+      "id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "question": "tiene dolor estomacal y diarrea",
+      "http": 200,
+      "result": {
+        "direct_answer": "El dolor estomacal y la diarrea pueden estar relacionados con infecciones gastrointestinales, estrés o cambios en la dieta. Sin antecedentes personales, no puedo determinar la causa exacta.\n\nPara aclarar mejor el caso, pregúntate:  \n- ¿Cuánto tiempo dura el dolor y la diarrea?  \n- ¿Hay fiebre, náuseas o vómitos?  \n- ¿Ha consumido alimentos nuevos o peligrosos?  \n- ¿Tiene antecedentes de enfermedades gastrointestinales o alergias?\n\nEs importante no tomar medicamentos sin evaluación médica, especialmente si los síntomas persisten más de 48 horas o empeoran.\n\nEsta orientación no reemplaza una evaluación clínica. Si los síntomas son intensos o persisten, debes consultar a un médico.  \n\nRecuerda: no todos los casos de dolor estomacal y diarrea son graves, pero es clave descartar condiciones como infecciones o enfermedades crónicas.",
+        "rag_answer": "Antecedentes disponibles\nRespuesta: Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nOrientación general (no es un diagnóstico)\nLos síntomas de indigestión aguda y dolor de cabeza no están documentados en el historial. Para evaluarlos, se requiere información sobre su duración, intensidad, empeoramiento o asociaciones con otras condiciones. No se puede descartar una causa médica sin más datos. Se recomienda una evaluación profesional para determinar la causa y adecuar el manejo. No se prescriben tratamientos ni se hacen diagnósticos basados en esta información.\n\nPara aclarar la consulta\n• ¿Cuánto tiempo dura el dolor estomacal?\n• ¿Aparece la diarrea después de comer algo en particular?\n• ¿Ha tenido estos síntomas antes o son nuevos?\n\nLa orientación de IA no sustituye una evaluación profesional. No se han confirmado diagnósticos ni recetas.",
+        "sources": [
+          {
+            "score": 0.5933418,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.5913747,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.55426216,
+            "patient_id": 1,
+            "record_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Consulta",
+            "text": "Consulta registrada el 2026-11-07T23:18:49.935110Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\ntiene indigestión aguda y le duele la cabeza"
+          }
+        ],
+        "model": "qwen3:4b-instruct-2507-q4_K_M",
+        "consultation": {
+          "id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+          "patient_id": 1,
+          "created_at": "2026-11-07T23:19:19.290011Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "seconds": 26.92,
+      "checks": {
+        "http_200": true,
+        "execution_header": true,
+        "useful_orientation": true,
+        "saved_once": true,
+        "md_contains_input": true,
+        "md_contains_answers": true,
+        "confirmed_entries_unchanged": true,
+        "rag_synced": true,
+        "chosen_model": true
+      },
+      "passed": true
+    },
+    {
+      "id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "question": "aprieta los dientes en la noche y tiene temblores en las manos",
+      "http": 200,
+      "result": {
+        "direct_answer": "No tengo acceso a antecedentes ni historial clínico del paciente. No puedo evaluar ni diagnosticar síntomas como apretar los dientes por la noche (bruxismo) o temblores en las manos.\n\nPara aclarar mejor el caso, sería útil saber:\n\n- ¿Cuánto tiempo dura el apretón de dientes?\n- ¿Los temblores ocurren en todo momento o solo en ciertas actividades?\n- ¿Hay otros síntomas (dolor de cabeza, fatiga, alteraciones del sueño)?\n- ¿Ha tenido cambios recientes en el estado de salud o en el uso de medicamentos?\n\nEl bruxismo puede estar relacionado con estrés o sueño, y los temblores pueden tener diversas causas, desde nerviosos hasta neurológicas. Sin una evaluación personalizada, no se puede establecer una causa.\n\n⚠️ Esta orientación no reemplaza una consulta médica. Se recomienda consultar a un médico o especialista para una evaluación adecuada.",
+        "rag_answer": "Antecedentes disponibles\nNo hay un antecedente verificable que explique lo que describes.\n\nOrientación general (no es un diagnóstico)\nLos síntomas de dolor estomacal y diarrea no están documentados en el historial. Para evaluarlos, es necesario conocer su duración, intensidad, frecuencia, si empeoran o mejoran con el tiempo, y si hay factores desencadenantes. Además, es importante saber si hay otros síntomas asociados, como fiebre o náuseas. La presencia de temblores en las manos requiere evaluación, ya que pueden estar relacionados con condiciones como hipoglucemia o ansiedad. Se recomienda una valoración profesional para descartar causas médicas. No se puede establecer una relación entre estos síntomas y la Enfermedad Alfa sin más datos.\n\nPara aclarar la consulta\n• ¿Cuánto tiempo dura el dolor estomacal y la diarrea?\n• ¿Empeora o mejora con el tiempo?\n• ¿Hay factores que desencadenan estos síntomas (por ejemplo, alimentos, estrés)?\n\nLa orientación de IA no sustituye una evaluación profesional. No se han confirmado diagnósticos ni recetas.",
+        "sources": [
+          {
+            "score": 0.5370248,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa, un diagnóstico ficticio de esta práctica. En la consulta del 2026-10-20 se registró cansancio leve por las tardes desde el 2026-10-18. Este registro no describe otros síntomas."
+          },
+          {
+            "score": 0.5334537,
+            "patient_id": 1,
+            "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa para Enfermedad Alfa. El plan ficticio consiste en llevar un registro diario del cansancio y revisar su evolución el 2026-11-12. El responsable registrado es el Equipo Alfa."
+          },
+          {
+            "score": 0.55813885,
+            "patient_id": 1,
+            "record_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+            "source": "paciente-1-ana-demo.md",
+            "section": "Consulta",
+            "text": "Consulta registrada el 2026-11-07T23:19:19.290011Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\ntiene dolor estomacal y diarrea"
+          }
+        ],
+        "model": "qwen3:4b-instruct-2507-q4_K_M",
+        "consultation": {
+          "id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+          "patient_id": 1,
+          "created_at": "2026-11-07T23:19:48.193140Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "seconds": 26.92,
+      "checks": {
+        "http_200": true,
+        "execution_header": true,
+        "useful_orientation": true,
+        "saved_once": true,
+        "md_contains_input": true,
+        "md_contains_answers": true,
+        "confirmed_entries_unchanged": true,
+        "rag_synced": true,
+        "chosen_model": true
+      },
+      "passed": true
+    }
+  ],
+  "retry_cached": true,
+  "different_input_409": true,
+  "all_three_unique": true,
+  "md_sha256": "11c8776798eafbfca2fffc015d19c23f5cda989dd0dfc98e4768ff7c61ac603a",
+  "revision_matches_file": true,
+  "sql_consultations": [
+    {
+      "id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "revision": "8b204ecfbca5fcf3be481fb10425f5a09d4ff6414968cc5c2d2c01ef79e652f7"
+    },
+    {
+      "id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "revision": "80335f0ba6b4cef15c71f7a997fdbe252c1ddc0941f75362d5c80e9855f21e62"
+    },
+    {
+      "id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "revision": "11c8776798eafbfca2fffc015d19c23f5cda989dd0dfc98e4768ff7c61ac603a"
+    }
+  ],
+  "sql_matches_latest_md": true,
+  "correlated_logs": [
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "aac69259-a232-4d86-be8a-58c50228f4fe",
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4",
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "execution_id": "c5a3b358-1e9d-468f-b29f-0bbe49cd4496",
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 409,
+      "request_truncated": false,
+      "response_truncated": false
+    }
+  ],
+  "both_services_per_consultation": true,
+  "passed": true
+}

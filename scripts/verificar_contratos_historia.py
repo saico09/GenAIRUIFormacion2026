@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import patch
 from uuid import UUID
 
-from app import clinical_proposals, history_index
+from app import clinical_proposals, history_index, knowledge
 from app.history_documents import fragments_from_history, load_histories, parse_history
 from rag import is_record_lookup, rag_response_schema, source_label, validate_rag_answer
 
@@ -115,6 +115,45 @@ class OfflineContracts(unittest.TestCase):
                 history_index.index_history(history)
         transport.assert_not_called()
 
+    def test_new_consultation_reuses_previous_vectors_when_only_revision_changes(self):
+        history = parse_history(document(), FILENAME)
+        old = [{**p, "vector": [0.1, 0.2, 0.3]} for p in fragments_from_history(history)]
+        history["revision"] = "b" * 64
+        history["consultations"] = [{"id": OTHER, "created_at": "2026-11-07T20:00:00Z", "question": "dolor desde ayer"}]
+        expected = fragments_from_history(history)
+        with patch.object(history_index, "prepare_collection", return_value={"size": 3}), \
+             patch.object(history_index, "patient_points", side_effect=[old, expected]), \
+             patch.object(history_index, "embed", return_value=[0.4, 0.5, 0.6]) as embed, \
+             patch.object(history_index, "qdrant") as transport:
+            result = history_index.index_history(history)
+        self.assertEqual(result["fragments"], 4)
+        embed.assert_called_once()
+        sent = transport.call_args.args[2]["points"]
+        self.assertEqual([p["vector"] for p in sent[:3]], [[0.1, 0.2, 0.3]] * 3)
+        self.assertEqual(sent[-1]["vector"], [0.4, 0.5, 0.6])
+        self.assertTrue(all(p["payload"]["revision"] == history["revision"] for p in sent))
+
+    def test_explicit_journal_lookup_can_retrieve_symptoms_among_previous_questions(self):
+        confirmed = [{**p, "score": 0.8} for p in fragments_from_history(parse_history(document(), FILENAME))]
+        notes = [{"id": str(UUID(int=n)), "score": 0.9-n/100, "payload": {
+            "patient_id": 71, "record_id": str(UUID(int=n)), "source": FILENAME,
+            "section": "Consulta", "text": text}} for n, text in enumerate([
+                "Resume la enfermedad", "Qué cirugía tiene", "dolor estomacal y diarrea"], 1)]
+
+        def query(method, path, payload):
+            condition = payload["filter"]["must"][-1]
+            data = notes if condition.get("match", {}).get("value") == "Consulta" else confirmed
+            return {"result": {"points": data[:payload["limit"]]}}
+
+        with patch.object(knowledge, "HISTORY_AUTO_SYNC", False), \
+             patch.object(knowledge, "embed", return_value=[1.0]), patch.object(knowledge, "qdrant", side_effect=query):
+            journal = knowledge.search_fragments(71, "¿Qué síntomas relató el paciente en consultas anteriores?")
+            medical = knowledge.search_fragments(71, "¿Qué enfermedad tiene?")
+        self.assertEqual(len(journal), 3)
+        self.assertIn("dolor estomacal y diarrea", [item["text"] for item in journal])
+        self.assertTrue(all(item["section"] == "Consulta" for item in journal))
+        self.assertTrue(all(item["section"] != "Consulta" for item in medical))
+
     def test_evidence_rejects_question_negation_and_invented_quotes(self):
         value = "Enfermedad Prueba"
         self.assertTrue(clinical_proposals.affirmative_evidence("Diagnóstico registrado: Enfermedad Prueba.", value, value))
@@ -220,20 +259,80 @@ class OfflineContracts(unittest.TestCase):
                 self.assertTrue(is_record_lookup(question))
                 self.assertIn("Fuente: " + source_label(sources[0]), validate_rag_answer(raw, sources, question))
 
-    def test_scope_guard_abstains_despite_a_literal_but_irrelevant_model_quote(self):
+    def test_missing_documentary_information_does_not_turn_into_general_guidance(self):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
         raw = json.dumps({"facts": [{"source": source_label(sources[0]), "quote": sources[0]["text"]}],
-                          "missing_information": False})
-        questions = ("Me duele la cabeza. ¿Qué enfermedad tengo?",
-                     "Tengo visión borrosa. ¿Qué medicamento debo tomar?",
-                     "Tengo dolor de estómago. ¿Qué tratamiento me recomiendas?",
-                     "¿Este medicamento sirve para el dolor de cabeza?",
-                     "¿Cuál es la fecha de nacimiento del paciente?",
+                          "mode": "record_lookup", "missing_information": True,
+                          "guidance": "Un texto general no responde el dato ausente", "questions": []})
+        questions = ("¿Cuál es la fecha de nacimiento del paciente?",
                      "¿Qué cirugía tiene programada?")
         for question in questions:
             with self.subTest(question=question):
-                self.assertFalse(is_record_lookup(question))
+                self.assertTrue(is_record_lookup(question))
                 self.assertEqual(validate_rag_answer(raw, sources, question), "No hay información suficiente")
+
+    def test_symptom_guidance_does_not_require_a_preexisting_diagnosis(self):
+        raw = json.dumps({"mode": "symptom_guidance", "missing_information": True, "facts": [],
+                          "guidance": "Falta conocer la duración de lo que describes.",
+                          "questions": ["¿Cuándo comenzó?"]})
+        rendered = validate_rag_answer(raw, [], "dolor de estómago desde ayer")
+        self.assertIn("Orientación general (no es un diagnóstico)", rendered)
+        self.assertIn("¿Cuándo comenzó?", rendered)
+        self.assertNotIn("Fuente:", rendered)
+
+    def test_existing_treatment_quote_is_not_evidence_of_surgery(self):
+        sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
+        raw = json.dumps({"mode": "record_lookup", "missing_information": False,
+                          "facts": [{"source": source_label(sources[1]), "quote": sources[1]["text"]}],
+                          "guidance": "", "questions": []})
+        self.assertEqual(validate_rag_answer(raw, sources, "¿Cuál fue la última cirugía registrada?"),
+                         "No hay información suficiente")
+        self.assertIn("Tratamiento Prueba", validate_rag_answer(raw, sources, "¿Qué tratamiento sigue?"))
+
+    def test_guidance_never_presents_a_fabricated_quote_as_background(self):
+        sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
+        raw = json.dumps({"mode": "symptom_guidance", "missing_information": True,
+                          "facts": [{"source": source_label(sources[0]), "quote": "Diagnóstico inventado"}],
+                          "guidance": "Conviene aclarar lo que describes [archivo-inventado.md].", "questions": []})
+        rendered = validate_rag_answer(raw, sources, "dolor de cabeza")
+        self.assertIn("Orientación general", rendered)
+        self.assertNotIn("Diagnóstico inventado", rendered)
+        self.assertNotIn("archivo-inventado", rendered)
+        self.assertNotIn("Fuente:", rendered)
+
+    def test_symptom_history_does_not_quote_prior_documentary_questions(self):
+        notes = ["Resume la enfermedad y el tratamiento", "¿Qué cirugía tiene?", "dolor de cabeza desde ayer"]
+        sources = [{"source": FILENAME, "record_id": str(UUID(int=n)), "section": "Consulta",
+                    "text": f"Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\n{note}"}
+                   for n, note in enumerate(notes, 1)]
+        raw = json.dumps({"mode": "record_lookup", "missing_information": False,
+                          "facts": [{"source": source_label(source), "quote": note} for source, note in zip(sources, notes)],
+                          "guidance": "", "questions": []})
+        answer = validate_rag_answer(raw, sources, "¿Qué síntomas relató en consultas anteriores?")
+        self.assertIn("dolor de cabeza desde ayer", answer)
+        self.assertNotIn("Resume la enfermedad", answer)
+        self.assertNotIn("¿Qué cirugía tiene?", answer)
+
+    def test_journal_indexes_only_reported_note_not_model_answers(self):
+        journal = (f"\n## Consultas registradas\n\nConversaciones guardadas automáticamente.\n"
+                   f"\n### Consulta {OTHER}\n\nFecha UTC: 2026-11-07T20:00:00Z\n\nModelo: ejemplo\n\n"
+                   "#### Nota reportada\n> dolor de estómago\n> desde ayer\n\n"
+                   "#### Respuesta sin RAG\n> Texto de IA nunca indexable\n\n"
+                   "#### Respuesta con RAG\n> Otro texto IA no confirmado\n")
+        parsed = parse_history(document() + journal, FILENAME)
+        points = fragments_from_history(parsed)
+        self.assertEqual(len(parsed["entries"]), 1)
+        self.assertEqual(len(parsed["consultations"]), 1)
+        self.assertEqual(len(points), 4)
+        self.assertEqual(points[-1]["payload"]["section"], "Consulta")
+        self.assertIn("dolor de estómago\ndesde ayer", points[-1]["payload"]["text"])
+        self.assertNotIn("Texto de IA", json.dumps(points))
+        self.assertNotIn("Otro texto IA", json.dumps(points))
+        self.assertEqual(points[-1]["payload"]["record_id"], OTHER)
+
+    def test_malformed_journal_is_not_silently_ignored(self):
+        with self.assertRaises(ValueError):
+            parse_history(document() + f"\n## Consultas registradas\n\n### Consulta {OTHER}\nIncompleta", FILENAME)
 
 
 if __name__ == "__main__":

@@ -42,6 +42,14 @@ Para iniciar o reutilizar Ollama:
 .\scripts\iniciar_ollama.ps1
 ```
 
+Para descargar el modelo de chat, si todavía falta:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
+```
+
+Ambas respuestas usan Qwen3 4B Instruct 2507, con los mismos parámetros. La [comparación local de ocho casos](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 con Qwen y 6/8 con Llama; no es una medida de precisión clínica general.
+
 Para comprobar Python:
 
 ```powershell
@@ -83,9 +91,9 @@ El comando conecta PostgreSQL directamente a la red del perfil y comprueba SQL a
 
 Python usa `public.patients`; Java, `java.patients`. POST y PUT reciben `name`, `birth_date` (`YYYY-MM-DD`) y `email`. Cada tabla genera sus propios ids.
 
-En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enfermedad, tratamiento y medicamento; archivo Markdown visible, descargable y editable. **Nueva consulta → Preparar con IA → revisar campos → confirmar** añade un registro. La IA extrae hechos escritos en tu nota ficticia; también puedes crear el registro manualmente.
+En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enfermedad, tratamiento y medicamento, consultas guardadas y archivo Markdown. **Registro confirmado → Preparar con IA → revisar campos → confirmar** añade hechos clínicos. También puedes crear el registro manualmente.
 
-**Consultas médicas** usa estos mismos pacientes Java y sus informes. Preguntar no guarda respuestas: **Preparar registro** lleva solo tu pregunta como borrador para revisarla. Python conserva su CRUD de práctica independiente. Los exploradores ejecutan peticiones reales y eliminar pide confirmación.
+**Consultas médicas → Comparar y guardar** guarda automáticamente tu consulta y ambas respuestas en el informe y en PostgreSQL. El mensaje de guardado muestra su UUID y permite abrir el informe. Las respuestas quedan como orientación de IA, separadas de los diagnósticos confirmados. Python conserva su CRUD de práctica independiente.
 
 | Operación | Correcto | Error |
 |---|---|---|
@@ -94,15 +102,19 @@ En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enferm
 | `GET /patients/{id}` | 200, paciente | 404 ausente |
 | `PUT /patients/{id}` | 200, paciente | 404 ausente / 422 inválido |
 | `DELETE /patients/{id}` | 204, vacío | 404 ausente |
-| `POST /chat` (Python) | 200, respuestas directa/RAG y fuentes | 422 entrada / 404 paciente / 503 dependencia |
-| `GET /patients/{id}/history` (Java) | 200, Markdown, revisión y registros | 404 paciente |
+| `POST /chat` (Python) | 200, respuestas, fuentes y consulta guardada | 422 entrada / 404 paciente / 409 ID reutilizado / 503 dependencia o guardado |
+| `GET /patients/{id}/history` (Java) | 200, Markdown, revisión, registros y consultas | 404 paciente |
 | `GET /patients/{id}/history.md` (Java) | 200, descarga Markdown | 404 paciente |
 | `PUT /patients/{id}/history` (Java) | 200, informe actualizado | 409 revisión antigua / 422 inválido |
 | `POST /patients/{id}/history/entries` (Java) | 201, informe con nuevo registro | 409 revisión antigua / 422 inválido |
+| `POST /patients/{id}/consultations` (Java) | 201, consulta guardada; 200 si ya existía idéntica | 409 UUID reutilizado / 422 inválido |
+| `GET /patients/{id}/consultations/{uuid}` (Java) | 200, consulta guardada | 404 ausente |
 | `POST /clinical/proposals` (Python) | 200, propuestas editables y evidencia | 422 entrada / 404 paciente / 503 dependencia |
 | `POST /clinical/patients/{id}/sync` (Python) | 200, índice sincronizado o retirado | 503 dependencia |
 
-El Markdown es la fuente de los hechos clínicos; PostgreSQL guarda los datos básicos del paciente y Qdrant su índice de búsqueda. Los cambios del informe necesitan revisión vigente y confirmación. Un 409 conserva el borrador: recarga la historia y revísalo antes de guardar. [Uso breve](GUIA.md#historia-clínica).
+El Markdown reúne los registros confirmados y las consultas. `java.medical_consultations` conserva las consultas y el contenido del informe como respaldo; `public.transaction_logs` registra las ejecuciones HTTP de ambas APIs. Los nombres están en inglés y `snake_case`. Qdrant mantiene el índice de búsqueda. [Uso y consultas SQL](GUIA.md#historia-clínica).
+
+Editar los registros del Markdown requiere revisión vigente y confirmación; el historial de consultas conserva su texto original. Un 409 conserva el borrador: recarga la historia y revísalo antes de guardar. El navegador reutiliza `X-Execution-ID` si reintentas la misma consulta tras un fallo de conexión sin recargar la página, para no duplicarla.
 
 ## Probar cada operación
 

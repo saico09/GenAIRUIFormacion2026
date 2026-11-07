@@ -82,6 +82,18 @@ public class PatientController {
         return histories.append(id, input);
     }
 
+    @PostMapping("/{id}/consultations")
+    public ResponseEntity<HistoryResponse> addConsultation(@PathVariable Integer id,
+            @Valid @RequestBody ConsultationRequest input) {
+        var saved = histories.consult(id, input);
+        return ResponseEntity.status(saved.created() ? HttpStatus.CREATED : HttpStatus.OK).body(saved.history());
+    }
+
+    @GetMapping("/{id}/consultations/{consultationId}")
+    public HistoryResponse.Consultation consultation(@PathVariable Integer id, @PathVariable String consultationId) {
+        return histories.getConsultation(id, consultationId);
+    }
+
     private Patient findPatient(Integer id) {
         return patients.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));

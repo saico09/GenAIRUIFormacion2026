@@ -6,3 +6,52 @@ CREATE TABLE IF NOT EXISTS java.patients (
     birth_date DATE NOT NULL,
     email VARCHAR(320) NOT NULL
 );
+
+-- Copia completa del informe en cada consulta o edición. Se conserva al borrar
+-- un paciente: es un respaldo histórico, no una relación con borrado en cascada.
+CREATE TABLE IF NOT EXISTS java.medical_consultations (
+    id UUID PRIMARY KEY,
+    execution_id UUID NOT NULL,
+    patient_id INTEGER NOT NULL,
+    kind TEXT NOT NULL CHECK (kind IN ('consultation', 'snapshot', 'deleted')),
+    question TEXT,
+    direct_answer TEXT,
+    rag_answer TEXT,
+    model TEXT,
+    sources JSONB NOT NULL DEFAULT '[]'::jsonb,
+    filename TEXT NOT NULL,
+    markdown_content TEXT NOT NULL,
+    revision VARCHAR(64) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+-- Orden de escritura independiente del reloj y del UUID, también para restaurar.
+ALTER TABLE java.medical_consultations
+    ADD COLUMN IF NOT EXISTS storage_order BIGINT GENERATED ALWAYS AS IDENTITY;
+CREATE INDEX IF NOT EXISTS medical_consultations_patient_created
+    ON java.medical_consultations (patient_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS medical_consultations_patient_order
+    ON java.medical_consultations (patient_id, storage_order DESC);
+
+-- Compartida por las dos APIs. Los cuerpos son texto para conservar también
+-- JSON inválido y respuestas Markdown; los recortes se indican explícitamente.
+BEGIN;
+SELECT pg_advisory_xact_lock(71420261107);
+CREATE TABLE IF NOT EXISTS public.transaction_logs (
+    id UUID PRIMARY KEY,
+    execution_id UUID NOT NULL,
+    request_id TEXT NOT NULL,
+    service TEXT NOT NULL CHECK (service IN ('python', 'java')),
+    operation TEXT NOT NULL,
+    method TEXT NOT NULL,
+    path TEXT NOT NULL,
+    http_status INTEGER NOT NULL,
+    request_body TEXT NOT NULL DEFAULT '',
+    response_body TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    duration_ms DOUBLE PRECISION NOT NULL,
+    request_truncated BOOLEAN NOT NULL DEFAULT FALSE,
+    response_truncated BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE INDEX IF NOT EXISTS transaction_logs_execution_id
+    ON public.transaction_logs (execution_id);
+COMMIT;

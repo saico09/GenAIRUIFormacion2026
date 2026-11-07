@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.ErrorResponse;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -36,5 +37,13 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String, String>> httpError(ResponseStatusException error) {
         String detail = error.getReason() == null ? "No se pudo completar la operación" : error.getReason();
         return ResponseEntity.status(error.getStatusCode()).body(Map.of("detail", detail));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> internalError(Exception error) {
+        if (error instanceof ErrorResponse response) {
+            return ResponseEntity.status(response.getStatusCode()).body(Map.of("detail", "Petición no disponible"));
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("detail", "Error interno"));
     }
 }

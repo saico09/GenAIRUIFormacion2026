@@ -12,7 +12,7 @@ public final class HistoryRequest {
     public record Replace(
             @NotNull @Pattern(regexp = "[0-9a-f]{64}")
             @JsonDeserialize(using = StrictTextDeserializer.class) String revision,
-            @NotNull @Size(max = 65536)
+            @NotNull @Size(max = 1048576)
             @JsonDeserialize(using = StrictTextDeserializer.class) String markdown,
             @NotNull @AssertTrue @JsonDeserialize(using = StrictBooleanDeserializer.class) Boolean confirmed) {}
 

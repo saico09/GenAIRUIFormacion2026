@@ -9,6 +9,8 @@ import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HexFormat;
@@ -23,25 +25,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Un bloqueo local serializa el CRUD y las revisiones de los informes de esta instancia. */
 @Service
 public class PatientHistoryService {
-    private static final int MAX_BYTES = 65536;
+    private static final Logger log = LoggerFactory.getLogger(PatientHistoryService.class);
+    private static final int MAX_BYTES = 1048576;
     private static final int MAX_ENTRIES = 50;
     private static final String EMPTY = "No registrado.";
+    private static final String JOURNAL_HEADING = "\n## Consultas registradas\n";
     private static final String UUID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
     private static final Pattern ENTRY = Pattern.compile(
             "\\n## Registro (" + UUID_PATTERN + ")\\n\\n### Enfermedad\\n(.*?)"
             + "\\n\\n### Tratamiento\\n(.*?)\\n\\n### Medicamento\\n(.*?)(?=\\n## Registro |\\z)", Pattern.DOTALL);
     private static final Pattern HEADING = Pattern.compile("(?m)^#{1,6}(?:\\s|$)");
     private final PatientRepository patients;
+    private final MedicalConsultationRepository consultations;
     private final TransactionTemplate transactions;
     private final Path directory;
 
-    public PatientHistoryService(PatientRepository patients, PlatformTransactionManager manager,
+    public PatientHistoryService(PatientRepository patients, MedicalConsultationRepository consultations, PlatformTransactionManager manager,
             @Value("${app.history.dir}") String directory) {
         this.patients = patients;
+        this.consultations = consultations;
         this.transactions = new TransactionTemplate(manager);
         this.directory = Path.of(directory).toAbsolutePath().normalize();
     }
@@ -54,8 +62,10 @@ public class PatientHistoryService {
                 Patient patient = patients.saveAndFlush(new Patient(input.name(), input.birthDate(), input.email()));
                 if (findFile(patient.getId()) != null) throw conflict("Ya existe un informe para este ID");
                 Path path = filename(patient);
-                write(path, render(patient, List.of()));
+                String markdown = render(patient, List.of(), List.of());
+                write(path, markdown);
                 created[0] = path;
+                snapshot(patient, path.getFileName().toString(), markdown, "snapshot");
                 return PatientResponse.from(patient);
             });
         } catch (RuntimeException error) {
@@ -76,8 +86,10 @@ public class PatientHistoryService {
                 patient.updateDetails(input.name(), input.birthDate(), input.email());
                 patients.saveAndFlush(patient);
                 newPath[0] = filename(patient);
-                write(oldPath, render(patient, history.entries()));
+                String markdown = render(patient, history.entries(), history.consultations());
+                write(oldPath, markdown);
                 if (!oldPath.equals(newPath[0])) move(oldPath, newPath[0]);
+                snapshot(patient, newPath[0].getFileName().toString(), markdown, "snapshot");
                 return PatientResponse.from(patient);
             });
         } catch (RuntimeException error) {
@@ -92,6 +104,7 @@ public class PatientHistoryService {
         String before = path == null ? null : read(path);
         try {
             transactions.executeWithoutResult(status -> {
+                if (before != null) snapshot(patient, path.getFileName().toString(), before, "deleted");
                 patients.delete(patient);
                 patients.flush();
                 if (path != null) io(() -> { Files.delete(path); return null; });
@@ -106,16 +119,74 @@ public class PatientHistoryService {
         return load(findPatient(id));
     }
 
+    public synchronized void backupExisting() {
+        for (Patient patient : patients.findAll()) {
+            try {
+                load(patient);
+            } catch (RuntimeException error) {
+                // No se sobrescribe un archivo conflictivo ni se impide usar otros pacientes.
+                log.error("No se pudo respaldar el informe del paciente {}; tipo={}", patient.getId(), error.getClass().getSimpleName());
+            }
+        }
+    }
+
+    public synchronized HistoryResponse.Consultation getConsultation(Integer id, String consultationId) {
+        findPatient(id);
+        return consultations.list(id).stream().filter(item -> item.id().equals(consultationId)).findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Consulta no encontrada"));
+    }
+
+    public synchronized ConsultationSaved consult(Integer id, ConsultationRequest input) {
+        Patient patient = findPatient(id);
+        UUID consultationId = UUID.fromString(input.id());
+        var existing = consultations.find(consultationId);
+        if (existing != null) {
+            if (!existing.matches(id, input)) throw conflict("El UUID ya pertenece a otra consulta; no se sobrescribió");
+            return new ConsultationSaved(load(patient), false);
+        }
+        checkConsultationText(input.question());
+        checkConsultationText(input.directAnswer());
+        checkConsultationText(input.ragAnswer());
+        if (input.model().codePoints().anyMatch(Character::isISOControl)) throw invalid("El nombre del modelo no admite caracteres de control");
+        if (input.sources().stream().anyMatch(source -> source == null
+                || !(source.get("patient_id") instanceof Integer owner) || owner.intValue() != id)) {
+            throw invalid("Cada fuente debe pertenecer al paciente de la consulta");
+        }
+        if (consultations.serializeSources(input.sources()).getBytes(StandardCharsets.UTF_8).length > 50000) {
+            throw invalid("Las fuentes de la consulta exceden 50 KiB");
+        }
+        HistoryResponse current = load(patient);
+        var journal = new ArrayList<>(current.consultations());
+        var consultation = new HistoryResponse.Consultation(input.id(), input.question(), input.directAnswer(),
+                input.ragAnswer(), input.model(), Instant.now().truncatedTo(ChronoUnit.MICROS).toString(), input.sources());
+        journal.add(consultation);
+        String markdown = render(patient, current.entries(), journal);
+        checkSize(markdown);
+        Path path = directory.resolve(current.filename());
+        try {
+            transactions.executeWithoutResult(status -> {
+                consultations.consultation(id, consultation, current.filename(), markdown, revision(markdown));
+                write(path, markdown);
+            });
+        } catch (RuntimeException error) {
+            restore(error, path, current.markdown(), path);
+            throw error;
+        }
+        return new ConsultationSaved(response(patient, current.filename(), markdown, current.entries(), journal), true);
+    }
+
+    public record ConsultationSaved(HistoryResponse history, boolean created) {}
+
     public synchronized HistoryResponse replace(Integer id, HistoryRequest.Replace input) {
         Patient patient = findPatient(id);
         HistoryResponse current = load(patient);
         checkRevision(input.revision(), current);
-        List<HistoryResponse.Entry> entries = parse(patient, input.markdown());
+        List<HistoryResponse.Entry> entries = parse(patient, input.markdown(), current.consultations());
         var existing = new HashSet<>(current.entries().stream().map(HistoryResponse.Entry::id).toList());
         if (entries.stream().anyMatch(entry -> !existing.contains(entry.id()))) {
             throw invalid("Los UUID existentes no se cambian; crea nuevos registros desde Agregar registro");
         }
-        return save(patient, current.filename(), entries);
+        return save(patient, current, entries);
     }
 
     public synchronized HistoryResponse append(Integer id, HistoryRequest.Append input) {
@@ -125,14 +196,23 @@ public class PatientHistoryService {
         var entries = new ArrayList<>(current.entries());
         entries.add(entry(UUID.randomUUID().toString(), input.disease(), input.treatment(), input.medication()));
         if (entries.size() > MAX_ENTRIES) throw invalid("La historia admite como máximo 50 registros");
-        return save(patient, current.filename(), entries);
+        return save(patient, current, entries);
     }
 
-    private HistoryResponse save(Patient patient, String filename, List<HistoryResponse.Entry> entries) {
-        String markdown = render(patient, entries);
+    private HistoryResponse save(Patient patient, HistoryResponse previous, List<HistoryResponse.Entry> entries) {
+        String markdown = render(patient, entries, previous.consultations());
         checkSize(markdown);
-        write(directory.resolve(filename), markdown);
-        return response(patient, filename, markdown, entries);
+        Path path = directory.resolve(previous.filename());
+        try {
+            transactions.executeWithoutResult(status -> {
+                write(path, markdown);
+                snapshot(patient, previous.filename(), markdown, "snapshot");
+            });
+        } catch (RuntimeException error) {
+            restore(error, path, previous.markdown(), path);
+            throw error;
+        }
+        return response(patient, previous.filename(), markdown, entries, previous.consultations());
     }
 
     private HistoryResponse load(Patient patient) {
@@ -140,28 +220,54 @@ public class PatientHistoryService {
         Path path = findFile(patient.getId());
         if (path == null) {
             path = filename(patient);
-            write(path, render(patient, List.of()));
+            var backup = consultations.latest(patient.getId());
+            if (backup != null) {
+                if (!backup.revision().equals(revision(backup.markdown()))) throw conflict("El respaldo del informe no supera la comprobación de integridad");
+                parse(patient, backup.markdown(), consultations.list(patient.getId()));
+                write(path, backup.markdown());
+            } else {
+                write(path, render(patient, List.of(), List.of()));
+            }
         }
         String markdown = read(path);
-        return response(patient, path.getFileName().toString(), markdown, parse(patient, markdown));
+        var journal = consultations.list(patient.getId());
+        var entries = parse(patient, markdown, journal);
+        snapshot(patient, path.getFileName().toString(), markdown, "snapshot");
+        return response(patient, path.getFileName().toString(), markdown, entries, journal);
     }
 
-    private HistoryResponse response(Patient patient, String filename, String markdown, List<HistoryResponse.Entry> entries) {
+    private void snapshot(Patient patient, String filename, String markdown, String kind) {
+        consultations.snapshot(patient.getId(), filename, markdown, revision(markdown), kind);
+    }
+
+    private HistoryResponse response(Patient patient, String filename, String markdown, List<HistoryResponse.Entry> entries,
+            List<HistoryResponse.Consultation> journal) {
+        return new HistoryResponse(patient.getId(), filename, revision(markdown), markdown, List.copyOf(entries), List.copyOf(journal));
+    }
+
+    private String revision(String markdown) {
         try {
-            String revision = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
                     .digest(markdown.getBytes(StandardCharsets.UTF_8)));
-            return new HistoryResponse(patient.getId(), filename, revision, markdown, List.copyOf(entries));
         } catch (NoSuchAlgorithmException impossible) {
             throw new IllegalStateException("SHA-256 no disponible", impossible);
         }
     }
 
-    private List<HistoryResponse.Entry> parse(Patient patient, String markdown) {
+    private List<HistoryResponse.Entry> parse(Patient patient, String markdown, List<HistoryResponse.Consultation> journal) {
         checkSize(markdown);
         String normalized = markdown.replace("\r\n", "\n");
         String header = header(patient);
         if (!normalized.startsWith(header)) throw invalid("El título y patient_id deben conservar el propietario del informe");
         String body = normalized.substring(header.length());
+        String journalText = renderJournal(journal);
+        int journalStart = body.indexOf(JOURNAL_HEADING);
+        if (journalStart >= 0) {
+            if (!body.substring(journalStart).equals(journalText)) throw invalid("Las consultas automáticas son históricas; edita sólo los registros confirmados antes de Consultas registradas");
+            body = body.substring(0, journalStart);
+        } else if (!journal.isEmpty()) {
+            throw invalid("Conserva la sección Consultas registradas sin cambios");
+        }
         var entries = new ArrayList<HistoryResponse.Entry>();
         var ids = new HashSet<String>();
         var matcher = ENTRY.matcher(body);
@@ -194,7 +300,7 @@ public class PatientHistoryService {
         return text.equals(EMPTY) ? "" : text;
     }
 
-    private String render(Patient patient, List<HistoryResponse.Entry> entries) {
+    private String render(Patient patient, List<HistoryResponse.Entry> entries, List<HistoryResponse.Consultation> journal) {
         StringBuilder text = new StringBuilder(header(patient));
         for (var entry : entries) {
             text.append("\n## Registro ").append(entry.id()).append("\n\n### Enfermedad\n")
@@ -202,7 +308,29 @@ public class PatientHistoryService {
                     .append(shown(entry.treatment())).append("\n\n### Medicamento\n")
                     .append(shown(entry.medication())).append('\n');
         }
+        return text.append(renderJournal(journal)).toString();
+    }
+
+    private String renderJournal(List<HistoryResponse.Consultation> journal) {
+        if (journal.isEmpty()) return "";
+        StringBuilder text = new StringBuilder(JOURNAL_HEADING)
+                .append("\nConversaciones guardadas automáticamente. La nota describe lo reportado; las respuestas de IA no son diagnósticos confirmados.\n");
+        for (var item : journal) {
+            text.append("\n### Consulta ").append(item.id()).append("\n\nFecha UTC: ").append(item.createdAt())
+                    .append("\n\nModelo: ").append(item.model()).append("\n\n#### Nota reportada\n")
+                    .append(quoted(item.question())).append("\n\n#### Respuesta sin RAG\n")
+                    .append(quoted(item.directAnswer())).append("\n\n#### Respuesta con RAG\n")
+                    .append(quoted(item.ragAnswer())).append('\n');
+        }
         return text.toString();
+    }
+
+    private String quoted(String text) { return "> " + text.replace("\r\n", "\n").replace('\r', '\n').replace("\n", "\n> "); }
+
+    private void checkConsultationText(String text) {
+        if (text.codePoints().anyMatch(c -> Character.isISOControl(c) && c != '\n' && c != '\r' && c != '\t')) {
+            throw invalid("La consulta no admite caracteres de control");
+        }
     }
 
     private String shown(String value) { return value.isEmpty() ? EMPTY : value; }
@@ -238,7 +366,7 @@ public class PatientHistoryService {
 
     private String read(Path path) {
         return io(() -> {
-            if (Files.size(path) > MAX_BYTES) throw invalid("El Markdown admite como máximo 64 KiB UTF-8");
+            if (Files.size(path) > MAX_BYTES) throw invalid("El Markdown admite como máximo 1 MiB UTF-8");
             return Files.readString(path, StandardCharsets.UTF_8);
         });
     }
@@ -272,7 +400,7 @@ public class PatientHistoryService {
     }
 
     private void checkSize(String text) {
-        if (text == null || text.getBytes(StandardCharsets.UTF_8).length > MAX_BYTES) throw invalid("El Markdown admite como máximo 64 KiB UTF-8");
+        if (text == null || text.getBytes(StandardCharsets.UTF_8).length > MAX_BYTES) throw invalid("El Markdown admite como máximo 1 MiB UTF-8");
     }
 
     private void checkName(String name) {

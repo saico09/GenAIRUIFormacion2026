@@ -48,6 +48,36 @@ export function initHistory(javaBase, onChanged) {
     document.querySelector('#history-empty').hidden = data.entries.length > 0;
     document.querySelector('#history-markdown-text').textContent = data.markdown;
     document.querySelector('#history-filename').textContent = data.filename;
+    const consultations = [...(data.consultations || [])].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+    document.querySelector('#consultations-count').textContent = consultations.length;
+    document.querySelector('#consultations-empty').hidden = consultations.length > 0;
+    document.querySelector('#consultations-body').replaceChildren(...consultations.map(consultation => {
+      const row = document.createElement('tr');
+      const dateCell = document.createElement('td');
+      const date = new Date(consultation.created_at);
+      const time = document.createElement('time');
+      if (Number.isNaN(date.getTime())) time.textContent = 'Fecha no disponible';
+      else {
+        time.dateTime = date.toISOString();
+        time.textContent = date.toLocaleString('es-CL', {dateStyle: 'short', timeStyle: 'short'});
+        time.title = date.toISOString();
+      }
+      dateCell.append(time);
+      const content = document.createElement('td');
+      const question = document.createElement('p'); question.className = 'consultation-question'; question.textContent = consultation.question;
+      const identifier = document.createElement('p'); identifier.className = 'helper execution-id'; identifier.textContent = `ID: ${consultation.id}`;
+      const details = document.createElement('details'); details.className = 'saved-consultation';
+      const summary = document.createElement('summary'); summary.textContent = 'Ver las dos respuestas'; details.append(summary);
+      if (consultation.model) {
+        const model = document.createElement('p'); model.className = 'helper'; model.textContent = `Modelo: ${consultation.model}`; details.append(model);
+      }
+      for (const [title, answer] of [['Sin RAG', consultation.direct_answer], ['Con RAG', consultation.rag_answer]]) {
+        const heading = document.createElement('h3'); heading.textContent = title;
+        const text = document.createElement('p'); text.className = 'saved-answer'; text.textContent = answer || 'Sin respuesta registrada.';
+        details.append(heading, text);
+      }
+      content.append(question, identifier, details); row.append(dateCell, content); return row;
+    }));
     syncStatus();
   }
 
@@ -92,6 +122,7 @@ export function initHistory(javaBase, onChanged) {
       if (!result.ok) throw new Error(errorMessage(result));
       renderHistory(result.data);
       afterSave();
+      document.querySelector('#history-patient-name').focus({preventScroll: true});
       notice(message, 'Historia guardada. Actualizando el índice RAG…', 'loading');
       onChanged();
       await synchronize();
@@ -150,6 +181,9 @@ export function initHistory(javaBase, onChanged) {
     document.querySelector('#history-count').textContent = '—';
     document.querySelector('#history-filename').textContent = '';
     document.querySelector('#history-empty').hidden = true;
+    document.querySelector('#consultations-body').replaceChildren();
+    document.querySelector('#consultations-count').textContent = '—';
+    document.querySelector('#consultations-empty').hidden = true;
     document.querySelector('#history-patient-name').textContent = row.name;
     document.querySelector('#history-patient-info').textContent = `Paciente #${row.id} · ${row.email || ''}`;
     document.querySelector('#history-patient-name').focus(); syncStatus();
@@ -165,6 +199,9 @@ export function initHistory(javaBase, onChanged) {
   });
   document.querySelector('#refresh-history').addEventListener('click', loadHistory);
   document.querySelector('#new-consultation').addEventListener('click', () => showConsultation());
+  document.querySelector('#consult-patient').addEventListener('click', () => {
+    if (patient) document.dispatchEvent(new CustomEvent('select-clinical-patient', {detail: {patient_id: patient.id}}));
+  });
   document.querySelector('#close-consultation').addEventListener('click', () => { editor.hidden = true; });
   document.querySelector('#manual-entry').addEventListener('click', () => {
     addDraft({}, true); notice(proposalNotice, 'Completa únicamente la información que quieras registrar y confirma antes de guardar.', 'neutral');
@@ -191,7 +228,7 @@ export function initHistory(javaBase, onChanged) {
   document.querySelector('#cancel-markdown').addEventListener('click', () => { markdownForm.hidden = true; });
   markdownForm.addEventListener('submit', event => {
     event.preventDefault();
-    if (new TextEncoder().encode(markdownInput.value).length > 65536) { notice(message, 'El Markdown supera el límite de 64 KiB.'); return; }
+    if (new TextEncoder().encode(markdownInput.value).length > 1048576) { notice(message, 'El Markdown supera el límite de 1 MiB.'); return; }
     saveHistory('PUT', '', {markdown: markdownInput.value}, `¿Reemplazar el Markdown de ${patient.name} con el contenido editado? Los cambios pueden modificar o eliminar registros existentes.`, () => { markdownForm.hidden = true; });
   });
   document.querySelector('#download-history').addEventListener('click', async () => {
@@ -211,6 +248,16 @@ export function initHistory(javaBase, onChanged) {
     busy = true; updateControls();
     try { await synchronize(); }
     finally { busy = false; updateControls(); }
+  });
+  document.addEventListener('clinical-history-changed', event => {
+    if (patient?.id === event.detail.patient_id && history) {
+      // La consulta puede haberse guardado mientras había un borrador de Markdown.
+      // Conservamos ese borrador y pedimos recargar antes de sobrescribir su revisión.
+      if (!markdownForm.hidden || proposals.children.length) {
+        conflict = true; updateControls();
+        notice(message, 'Se guardó una consulta nueva para este paciente. Actualiza la historia antes de guardar tu borrador.', 'warning');
+      } else loadHistory();
+    }
   });
   return {open};
 }

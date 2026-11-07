@@ -24,7 +24,7 @@ export function initExplorer(api, baseUrl, metricsEnabled) {
   root.append(base, node('p', 'api-intro', 'Las peticiones se ejecutan sobre datos reales de este entorno local. POST agrega, PUT modifica y DELETE elimina el paciente indicado.'));
   const entries = [...operations];
   if (api === 'python') entries.push(
-    {method: 'POST', path: '/chat', title: 'Comparar respuestas con y sin RAG', timeout: 420000,
+    {method: 'POST', path: '/chat', title: 'Comparar respuestas y guardar la consulta en el informe', timeout: 420000,
       body: {patient_id: 1, question: '¿Qué enfermedad tiene Ana Demo?'}},
     {method: 'POST', path: '/clinical/proposals', title: 'Preparar un borrador clínico sin guardarlo', timeout: 420000,
       body: {patient_id: 1, note: 'Enfermedad: Enfermedad ficticia de prueba. Tratamiento: Tratamiento ficticio de prueba.'}},
@@ -33,6 +33,10 @@ export function initExplorer(api, baseUrl, metricsEnabled) {
   else entries.push(
     {method: 'GET', path: '/patients/{id}/history', title: 'Leer informe, registros y revisión vigente'},
     {method: 'GET', path: '/patients/{id}/history.md', title: 'Leer el archivo Markdown'},
+    {method: 'GET', path: '/patients/{id}/consultations/{uuid}', title: 'Consultar una ejecución guardada por UUID'},
+    {method: 'POST', path: '/patients/{id}/consultations', title: 'Guardar una comparación en el informe', confirmHistory: true,
+      body: {id: crypto.randomUUID(), question: 'Consulta ficticia de prueba', direct_answer: 'Respuesta directa ficticia',
+        rag_answer: 'Respuesta contextual ficticia', model: 'prueba-manual', sources: []}},
     {method: 'PUT', path: '/patients/{id}/history', title: 'Reemplazar el Markdown con revisión y confirmación', confirmHistory: true,
       body: {revision: 'COPIA_LA_REVISION_DEL_GET', markdown: 'PEGA_EL_MARKDOWN_DEL_GET_Y_EDITA_SUS_CAMPOS', confirmed: true}},
     {method: 'POST', path: '/patients/{id}/history/entries', title: 'Añadir un registro con UUID asignado por Java', confirmHistory: true,
@@ -60,13 +64,24 @@ function endpoint(api, base, operation, index) {
   const urlDisplay = node('code', 'endpoint-url', `${base}${path}`);
   form.append(requestTitle, urlDisplay);
   let idInput = null;
+  let uuidInput = null;
+  function resolvedPath() {
+    return path.replace('{id}', idInput?.value || '{id}').replace('{uuid}', uuidInput?.value || '{uuid}');
+  }
   if (path.includes('{id}')) {
     const label = node('label', '', 'ID del paciente'); label.htmlFor = `${prefix}-id`;
     idInput = node('input', 'id-input');
     idInput.id = label.htmlFor; idInput.name = 'id'; idInput.type = 'number'; idInput.min = '1'; idInput.step = '1'; idInput.required = true;
     idInput.placeholder = 'Indica un ID';
-    idInput.addEventListener('input', () => { urlDisplay.textContent = `${base}${path.replace('{id}', idInput.value || '{id}')}`; });
+    idInput.addEventListener('input', () => { urlDisplay.textContent = `${base}${resolvedPath()}`; });
     form.append(label, idInput);
+  }
+  if (path.includes('{uuid}')) {
+    const label = node('label', '', 'UUID de la consulta'); label.htmlFor = `${prefix}-uuid`;
+    uuidInput = node('input'); uuidInput.id = label.htmlFor; uuidInput.name = 'uuid'; uuidInput.required = true;
+    uuidInput.placeholder = 'Copia el ID de una consulta guardada';
+    uuidInput.addEventListener('input', () => { urlDisplay.textContent = `${base}${resolvedPath()}`; });
+    form.append(label, uuidInput);
   }
   let bodyInput = null;
   if (operation.body) {
@@ -74,7 +89,9 @@ function endpoint(api, base, operation, index) {
     bodyInput = node('textarea'); bodyInput.id = label.htmlFor; bodyInput.name = 'body'; bodyInput.spellcheck = false;
     bodyInput.value = JSON.stringify(operation.body, null, 2); bodyInput.required = true;
     form.append(label, bodyInput);
-    if (operation.confirmHistory) form.append(node('p', 'helper', 'Copia la revisión de GET history. Para editar Markdown conserva los UUID existentes; las altas usan POST entries. Confirmarás antes de enviar.'));
+    if (operation.confirmHistory) form.append(node('p', 'helper', path.endsWith('/consultations')
+      ? 'Guarda estos textos como una consulta, sin ejecutar un modelo. Reutiliza el mismo UUID sólo para reintentar el mismo contenido. Confirmarás antes de enviar.'
+      : 'Copia la revisión de GET history. Para editar Markdown conserva los UUID existentes y el historial de consultas. Las altas usan POST entries. Confirmarás antes de enviar.'));
   } else form.append(node('p', 'helper', 'Esta operación no necesita un cuerpo JSON.'));
   const run = node('button', 'button primary', 'Ejecutar petición'); run.type = 'submit';
   const formNotice = node('p', 'notice error'); formNotice.hidden = true; formNotice.setAttribute('role', 'alert');
@@ -111,7 +128,7 @@ function endpoint(api, base, operation, index) {
     output.textContent = 'Ejecuta esta petición para ver su respuesta.';
   }
   // Una respuesta anterior no debe parecer el resultado del cuerpo o ID recién editado.
-  for (const input of [bodyInput, idInput].filter(Boolean)) input.addEventListener('input', clearResponse);
+  for (const input of [bodyInput, idInput, uuidInput].filter(Boolean)) input.addEventListener('input', clearResponse);
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (busy || pendingSyncId !== null) return;
@@ -123,13 +140,17 @@ function endpoint(api, base, operation, index) {
     if (idInput && (!Number.isSafeInteger(Number(idInput.value)) || Number(idInput.value) < 1)) {
       notice(formNotice, 'El ID debe ser un número entero positivo.'); return;
     }
-    const endpointPath = idInput ? path.replace('{id}', encodeURIComponent(idInput.value)) : path;
+    if (uuidInput && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuidInput.value)) {
+      notice(formNotice, 'El ID de la consulta debe tener formato UUID.'); return;
+    }
+    const endpointPath = resolvedPath();
     if (method === 'DELETE' && !await confirmDelete(`¿Quieres ejecutar DELETE ${endpointPath} en la API ${api === 'java' ? 'Java' : 'Python'}?`)) return;
     if (operation.confirmHistory && !await confirmAction(`¿Enviar ${method} ${endpointPath} y guardar estos cambios en la historia clínica?`,
       {title: 'Guardar historia clínica', label: 'Confirmar y enviar', hint: 'Revisa el JSON, los datos y la revisión vigente. Esta operación modifica el informe del paciente.'})) return;
     busy = true; run.disabled = true; run.textContent = 'Ejecutando…';
     if (bodyInput) bodyInput.disabled = true;
     if (idInput) idInput.disabled = true;
+    if (uuidInput) uuidInput.disabled = true;
     status.hidden = true; duration.textContent = ''; metadata.textContent = '';
     output.textContent = 'Esperando respuesta…'; response.setAttribute('aria-busy', 'true');
     try {
@@ -142,7 +163,7 @@ function endpoint(api, base, operation, index) {
       duration.textContent = `${result.duration} ms`;
       output.textContent = result.status === 204 ? 'Sin contenido (204). El registro fue eliminado.'
         : result.data !== null ? JSON.stringify(result.data, null, 2) : result.text || '(Respuesta vacía)';
-      metadata.textContent = [result.contentType, result.requestId && `Request ID: ${result.requestId}`].filter(Boolean).join(' · ');
+      metadata.textContent = [result.contentType, result.requestId && `Request ID: ${result.requestId}`, result.executionId && `Ejecución: ${result.executionId}`].filter(Boolean).join(' · ');
       if (result.ok && path.startsWith('/patients') && method !== 'GET') {
         document.dispatchEvent(new Event(`${api}-patients-changed`));
         if (api === 'java' && (['PUT', 'DELETE'].includes(method) || operation.confirmHistory)) {
@@ -157,6 +178,7 @@ function endpoint(api, base, operation, index) {
       busy = false; run.disabled = pendingSyncId !== null; run.textContent = 'Ejecutar petición';
       if (bodyInput) bodyInput.disabled = false;
       if (idInput) idInput.disabled = false;
+      if (uuidInput) uuidInput.disabled = false;
       response.setAttribute('aria-busy', 'false');
     }
   });

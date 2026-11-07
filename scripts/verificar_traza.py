@@ -32,9 +32,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="evidencias/s08/037-traza.json")
     parser.add_argument("--prefix", default="hdu037")
+    parser.add_argument("--patient-id", type=int, help="Paciente temporal ya creado, en lugar de Ana")
+    parser.add_argument("--question")
+    parser.add_argument("--expected")
     args = parser.parse_args()
     dataset = Path(__file__).resolve().parents[1] / "datos" / "preguntas.json"
     case = json.loads(dataset.read_text(encoding="utf-8"))[0]
+    if args.patient_id is not None:
+        if not args.question or not args.expected:
+            parser.error("--patient-id requiere --question y --expected")
+        case = {"patient_id": args.patient_id, "question": args.question, "expected": args.expected}
     request_id = f"{args.prefix}-{uuid4().hex}"
     request = Request("http://localhost:8000/chat", method="POST", headers={
         "Content-Type": "application/json", "X-Request-ID": request_id,

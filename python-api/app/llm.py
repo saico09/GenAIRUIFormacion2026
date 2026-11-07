@@ -6,7 +6,7 @@ from time import perf_counter
 from app.knowledge import OLLAMA_BASE_URL, request_json
 from app.observability import log_event
 
-CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.2:3b")
+CHAT_MODEL = os.getenv("CHAT_MODEL", "qwen3:4b-instruct-2507-q4_K_M")
 TEMPERATURE = 0
 MODEL_OPTIONS = {"temperature": TEMPERATURE, "num_ctx": 4096, "num_predict": 1024}
 TIMEOUT_SECONDS = 120

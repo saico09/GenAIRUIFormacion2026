@@ -182,14 +182,16 @@ export function initPatients(javaBase) {
   document.addEventListener('java-patients-changed', () => {
     if (!document.querySelector('#view-pacientes').hidden) loadPatients();
   });
-  document.addEventListener('prepare-clinical-record', async event => {
+  async function openFromChat(event, prepare) {
     const {patient_id, note} = event.detail;
     try {
       const result = await request(`${javaBase}/patients/${patient_id}`);
       if (!result.ok) throw new Error(errorMessage(result));
       location.hash = 'pacientes';
-      await history.open(result.data, note);
+      await history.open(result.data, prepare ? note : null);
     } catch (error) { notice(document.querySelector('#error'), error.message); }
-  });
+  }
+  document.addEventListener('prepare-clinical-record', event => openFromChat(event, true));
+  document.addEventListener('open-clinical-history', event => openFromChat(event, false));
   return {loadPatients};
 }
