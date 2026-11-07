@@ -2,6 +2,10 @@
 
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
+## Revisión RAG · 07/11/2026 · Calidad de respuestas y almacenamiento
+
+Se reprodujeron respuestas y citas sin respaldo en preguntas abiertas. Doce consultas nuevas y un A/B de 24 respuestas separan los límites del corpus, el TOP2 y el prompt. La variante más estricta con tres fragmentos mejoró los seis casos ensayados, pero no se aplicó a la app. PostgreSQL sigue guardando pacientes; los Markdown alimentan Qdrant y no almacenan las preguntas nuevas. [Resultados y propuesta](evidencias/revision-rag-2026-11-07/LEEME.md). La validación anterior cubría casos preparados; no acreditaba calidad general.
+
 ## Interfaz · 07/11/2026 · Consultas, pacientes y APIs
 
 Cuatro secciones en [la página](http://localhost:8000): comparación con/sin RAG, tabla de pacientes conectada a Spring Boot y exploradores de Python y Java con verbos, respuestas y errores por color. La tabla permite agregar, editar, buscar y borrar con confirmación; Java y Python mantienen sus registros separados. Sigue siendo HTML, CSS y JavaScript, sin un framework nuevo. Mejora solicitada por Marco sobre las APIs existentes; no agrega HDU ni cambia el calendario de Rui. Uso en [GUIA](GUIA.md#usar-la-página) y [pruebas](evidencias/ui-2026-11-07/LEEME.md).

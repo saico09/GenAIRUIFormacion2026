@@ -177,6 +177,10 @@ Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermed
 
 «Con RAG» busca hasta dos fragmentos del paciente en Qdrant y se los entrega al modelo junto con tu pregunta. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Las historias vienen de `datos/paciente-*.md`: si las editas, vuelve a ejecutar `ingestar.py`.
 
+Hoy cada historia tiene sólo tres hechos ficticios: enfermedad, tratamiento y medicamento. No hay síntomas, dosis ni atenciones anteriores. PostgreSQL guarda los datos básicos del paciente; Qdrant guarda el conocimiento de los Markdown. Preguntar no modifica esos archivos ni crea una consulta médica en la base. Cada pregunta es independiente: los logs no funcionan como memoria del chat.
+
+La revisión del 07/11 detectó respuestas sin respaldo y citas incorrectas fuera de las preguntas preparadas. Por eso, ver un nombre de archivo no basta para validar una respuesta. [Experimentos, límites y propuesta de corrección](evidencias/revision-rag-2026-11-07/LEEME.md); la alternativa probada todavía no está aplicada.
+
 Para comprobar ambos casos por API:
 
 ```powershell

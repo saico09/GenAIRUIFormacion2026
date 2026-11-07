@@ -1,0 +1,445 @@
+{
+  "started_at": "2026-11-07T20:43:08.475272+00:00",
+  "patient_id": 1,
+  "before": {
+    "count": 4,
+    "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+  },
+  "cases": [
+    {
+      "case": "literal",
+      "question": "¿Qué enfermedad tiene Ana Demo?",
+      "status": 200,
+      "seconds": 12.89,
+      "request_id": "0e49b998-856a-4295-85e4-5cd1308eb569",
+      "expected_known_facts": [
+        "Enfermedad Alfa"
+      ],
+      "facts_retrieved": [
+        "Enfermedad Alfa"
+      ],
+      "facts_answered": [
+        "Enfermedad Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de tratar de ayudarte.",
+        "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.8387875,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.727611,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "parafrasis",
+      "question": "¿Cuál es el diagnóstico de Ana?",
+      "status": 200,
+      "seconds": 8.32,
+      "request_id": "6af697df-85c9-4e78-8822-599f0a93975d",
+      "expected_known_facts": [
+        "Enfermedad Alfa"
+      ],
+      "facts_retrieved": [
+        "Enfermedad Alfa"
+      ],
+      "facts_answered": [
+        "Enfermedad Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "No tengo información sobre un personaje llamado Ana. ¿Puedes proporcionar más contexto o detalles sobre quién es Ana y qué diagnóstico estás refiriéndote? Estoy aquí para ayudarte con cualquier pregunta o tema que necesites.",
+        "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.70308673,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.6676787,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "tratamiento",
+      "question": "¿Cómo se está tratando a Ana Demo?",
+      "status": 200,
+      "seconds": 8.14,
+      "request_id": "a627ce8a-f5b8-4bc7-85ec-ec0a360b1c6c",
+      "expected_known_facts": [
+        "Tratamiento Alfa"
+      ],
+      "facts_retrieved": [
+        "Tratamiento Alfa"
+      ],
+      "facts_answered": [
+        "Tratamiento Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo. Es posible que sea una persona privada o que no haya sido objeto de atención pública. Si puedes proporcionar más contexto o detalles sobre quién es Ana Demo, estaré encantado de tratar de ayudarte a encontrar información.",
+        "rag_answer": "Respuesta: Tratamiento Alfa.\nFuente: [paciente-1.md/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.8060329,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          },
+          {
+            "score": 0.7751578,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "sin_nombre",
+      "question": "¿Qué medicamento toma?",
+      "status": 200,
+      "seconds": 8.03,
+      "request_id": "2aa8d66d-02bc-4115-ac14-f21584f119a5",
+      "expected_known_facts": [
+        "Medicamento Alfa"
+      ],
+      "facts_retrieved": [
+        "Medicamento Alfa"
+      ],
+      "facts_answered": [
+        "Medicamento Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "No tengo información personal sobre tu salud o medicamentos que tomes. ¿En qué puedo ayudarte?",
+        "rag_answer": "Respuesta: Medicamento Alfa.\nFuente: [paciente-1.md/Medicamento]",
+        "sources": [
+          {
+            "score": 0.6946924,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa."
+          },
+          {
+            "score": 0.64065397,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "tres_datos",
+      "question": "Resume la enfermedad, el tratamiento y el medicamento de Ana Demo.",
+      "status": 200,
+      "seconds": 9.43,
+      "request_id": "fcc654e8-d6ff-473e-a99d-6b8ba1ebd9ce",
+      "expected_known_facts": [
+        "Enfermedad Alfa",
+        "Tratamiento Alfa",
+        "Medicamento Alfa"
+      ],
+      "facts_retrieved": [
+        "Enfermedad Alfa",
+        "Medicamento Alfa"
+      ],
+      "facts_answered": [
+        "Enfermedad Alfa",
+        "Medicamento Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo. Es posible que sea un nombre falso o que no sea una figura pública conocida. Si puedes proporcionar más contexto o detalles sobre quién es Ana Demo, estaré encantado de ayudarte a encontrar la información que necesitas.\n\nSi Ana Demo es una persona real y tienes su nombre completo, edad, género y condición médica, puedo intentar encontrar información general sobre enfermedades, tratamientos y medicamentos relacionados. Sin embargo, es importante tener en cuenta que la información médica es confidencial y personal, y no puedo proporcionar detalles específicos sobre individuos sin su consentimiento.\n\nSi tienes alguna otra pregunta o necesitas ayuda con algo más, por favor no dudes en preguntar. Estoy aquí para ayudarte.",
+        "rag_answer": "Respuesta: Enfermedad Alfa, Medicamento Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.8076824,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.77325845,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "resumen",
+      "question": "Cuéntame la historia clínica de Ana Demo.",
+      "status": 200,
+      "seconds": 9.46,
+      "request_id": "379b20a8-1c68-458a-bb80-4bb3de5c8be1",
+      "expected_known_facts": [
+        "Enfermedad Alfa",
+        "Tratamiento Alfa",
+        "Medicamento Alfa"
+      ],
+      "facts_retrieved": [
+        "Enfermedad Alfa",
+        "Medicamento Alfa"
+      ],
+      "facts_answered": [
+        "Enfermedad Alfa",
+        "Medicamento Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo. Es posible que sea un nombre ficticio o que no sea una figura pública conocida. Si puedes proporcionar más contexto o detalles sobre quién es Ana Demo, estaré encantado de ayudarte a encontrar información sobre ella.\n\nSi Ana Demo es una persona real, pero no es una figura pública conocida, es posible que no haya registros o información disponible sobre su historia clínica. En ese caso, no puedo proporcionarte una respuesta.\n\nSi tienes alguna otra pregunta o necesitas ayuda con algo más, no dudes en preguntar. Estoy aquí para ayudarte.",
+        "rag_answer": "Respuesta: Ana Demo tiene Enfermedad Alfa y recibe Medicamento Alfa.\nFuente: [paciente-1.md/Enfermedad] y [paciente-1.md/Medicamento]",
+        "sources": [
+          {
+            "score": 0.7758191,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.74436444,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "dosis_ausente",
+      "question": "¿Qué dosis de su medicamento debe tomar Ana Demo?",
+      "status": 200,
+      "seconds": 8.44,
+      "request_id": "315909bf-4013-42e6-b549-78102eb3ee83",
+      "expected_known_facts": [],
+      "facts_retrieved": [],
+      "facts_answered": [],
+      "abstention": true,
+      "response": {
+        "direct_answer": "No puedo proporcionar información sobre dosis de medicamentos específicos o consejos de tratamiento para individuos específicos, incluida Ana Demo. La dosis adecuada de un medicamento depende de varios factores, como la condición médica subyacente, la edad, el peso, la función renal y hepática, y otros factores individuales. Si Ana Demo necesita tratamiento con un medicamento, la mejor manera de obtener la información correcta y personalizada es consultar a un profesional de la salud. ¿Puedo ayudarte con algo más?",
+        "rag_answer": "No hay información suficiente.",
+        "sources": [
+          {
+            "score": 0.77176255,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa."
+          },
+          {
+            "score": 0.74126935,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "consulta_ausente",
+      "question": "¿Cuándo fue la última consulta médica de Ana Demo?",
+      "status": 200,
+      "seconds": 6.84,
+      "request_id": "dca1edb7-fb13-4ea0-b2b0-8782694ce5ed",
+      "expected_known_facts": [],
+      "facts_retrieved": [],
+      "facts_answered": [],
+      "abstention": true,
+      "response": {
+        "direct_answer": "No tengo información sobre una persona llamada Ana Demo o su última consulta médica. ¿Puedo ayudarte con algo más?",
+        "rag_answer": "No hay información suficiente.",
+        "sources": [
+          {
+            "score": 0.7395712,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.72543377,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Medicamento",
+            "text": "Ana Demo recibe Medicamento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "dato_solo_sql",
+      "question": "¿Cuál es la fecha de nacimiento de Ana Demo?",
+      "status": 200,
+      "seconds": 7.39,
+      "request_id": "1c227fb9-ec63-4456-a71c-d20d6c9c63ca",
+      "expected_known_facts": [],
+      "facts_retrieved": [],
+      "facts_answered": [],
+      "abstention": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo. Es posible que sea un personaje ficticio o una figura pública que no es ampliamente conocida. Si puedes proporcionar más contexto o detalles sobre quién es Ana Demo, estaré encantado de ayudarte a encontrar la información que buscas.",
+        "rag_answer": "No hay información suficiente.",
+        "sources": [
+          {
+            "score": 0.73814994,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.712377,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "otro_paciente",
+      "question": "¿Qué tratamiento sigue Bruno Demo?",
+      "status": 200,
+      "seconds": 7.85,
+      "request_id": "fbe397f7-01dd-4bbe-9c41-1e3481f84fc4",
+      "expected_known_facts": [],
+      "facts_retrieved": [],
+      "facts_answered": [],
+      "abstention": true,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre un personaje llamado Bruno Demo o su tratamiento. Es posible que sea un personaje ficticio o que no sea una figura pública conocida. Si puedes proporcionar más contexto o detalles sobre quién es Bruno Demo, estaré encantado de tratar de ayudarte.",
+        "rag_answer": "Respuesta: No hay información suficiente\nFuente: [paciente-1.md/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.75901634,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          },
+          {
+            "score": 0.68771505,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "pregunta_corta",
+      "question": "¿Qué tiene?",
+      "status": 200,
+      "seconds": 7.73,
+      "request_id": "b8e4a249-6f3a-48d2-8913-d384c7158cac",
+      "expected_known_facts": [
+        "Enfermedad Alfa"
+      ],
+      "facts_retrieved": [
+        "Enfermedad Alfa"
+      ],
+      "facts_answered": [
+        "Enfermedad Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "Soy un modelo de lenguaje grande. Cuando me haces una pregunta o me das una solicitud, yo analizo lo que dices y genero una respuesta que es relevante y precisa. Estoy constantemente aprendiendo y mejorando, así que con el tiempo seré aún mejor en ayudarte. ¿Hay algo en lo que te pueda ayudar?",
+        "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.60674226,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.5670836,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          }
+        ]
+      }
+    },
+    {
+      "case": "control_repetido",
+      "question": "¿Qué enfermedad tiene Ana Demo?",
+      "status": 200,
+      "seconds": 7.29,
+      "request_id": "852deac6-101e-46cf-ae9e-7100649328ae",
+      "expected_known_facts": [
+        "Enfermedad Alfa"
+      ],
+      "facts_retrieved": [
+        "Enfermedad Alfa"
+      ],
+      "facts_answered": [
+        "Enfermedad Alfa"
+      ],
+      "abstention": false,
+      "response": {
+        "direct_answer": "Lo siento, pero no tengo información sobre una persona llamada Ana Demo o su enfermedad. Es posible que la persona en cuestión sea una figura pública o un personaje de ficción que no tengo información sobre. Si puedes proporcionar más contexto o detalles, estaré encantado de ayudarte a encontrar la información que buscas.",
+        "rag_answer": "Respuesta: Enfermedad Alfa.\nFuente: [paciente-1.md/Enfermedad]",
+        "sources": [
+          {
+            "score": 0.8387875,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Enfermedad",
+            "text": "Ana Demo tiene Enfermedad Alfa."
+          },
+          {
+            "score": 0.727611,
+            "patient_id": 1,
+            "source": "paciente-1.md",
+            "section": "Tratamiento",
+            "text": "Ana Demo sigue Tratamiento Alfa."
+          }
+        ]
+      }
+    }
+  ],
+  "evaluation": "Cobertura literal orientativa; revisar respuestas y fuentes manualmente.",
+  "after": {
+    "count": 4,
+    "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+  },
+  "patients_preserved": true,
+  "finished_at": "2026-11-07T20:44:50.308622+00:00"
+}

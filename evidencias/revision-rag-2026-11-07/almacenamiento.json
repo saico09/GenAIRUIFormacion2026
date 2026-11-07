@@ -1,0 +1,86 @@
+{
+  "checked_at": "2026-11-07T20:47:57.327522+00:00",
+  "postgres_columns": [
+    {
+      "table_schema": "java",
+      "table_name": "patients",
+      "column_name": "id",
+      "data_type": "integer"
+    },
+    {
+      "table_schema": "java",
+      "table_name": "patients",
+      "column_name": "name",
+      "data_type": "character varying"
+    },
+    {
+      "table_schema": "java",
+      "table_name": "patients",
+      "column_name": "birth_date",
+      "data_type": "date"
+    },
+    {
+      "table_schema": "java",
+      "table_name": "patients",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "patients",
+      "column_name": "id",
+      "data_type": "integer"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "patients",
+      "column_name": "name",
+      "data_type": "character varying"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "patients",
+      "column_name": "birth_date",
+      "data_type": "date"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "patients",
+      "column_name": "email",
+      "data_type": "character varying"
+    }
+  ],
+  "documents": [
+    {
+      "file": "paciente-1.md",
+      "sha256": "341f4eb0c7a490e1421111f49cbc0bf37b64f6a7f7d8e8d7daf1b0544953802d"
+    },
+    {
+      "file": "paciente-2.md",
+      "sha256": "f5fd114bc7b5da33658d63b0333506f3d716d39538a812c39ed75b235c0e3a82"
+    },
+    {
+      "file": "paciente-3.md",
+      "sha256": "cdd020fc48995c7075d9c0ba731b9de2bf26a758f12588b5e2a8e0185a81acb6"
+    }
+  ],
+  "qdrant": {
+    "collection": "historias",
+    "count": 9,
+    "per_patient": {
+      "1": 3,
+      "2": 3,
+      "3": 3
+    },
+    "payloads_match": true,
+    "example": {
+      "id": "449b1dc9-c946-5acc-9c15-9062f2ed5946",
+      "payload": {
+        "patient_id": 1,
+        "source": "paciente-1.md",
+        "section": "Enfermedad",
+        "text": "Ana Demo tiene Enfermedad Alfa."
+      }
+    }
+  }
+}
