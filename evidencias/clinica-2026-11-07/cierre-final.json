@@ -1,0 +1,98 @@
+{
+  "checked_at": "2026-11-07T22:37:12.247230+00:00",
+  "implementation_commit": "eefccfb65b0f1e7426637412abb14548b42926e4",
+  "patients": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    }
+  },
+  "http": [
+    {
+      "service": "FastAPI",
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200
+    },
+    {
+      "service": "Spring Boot",
+      "url": "http://127.0.0.1:8080/health",
+      "status": 200
+    },
+    {
+      "service": "Pagina",
+      "url": "http://127.0.0.1:8000/",
+      "status": 200
+    },
+    {
+      "service": "Qdrant",
+      "url": "http://127.0.0.1:6333/collections",
+      "status": 200
+    },
+    {
+      "service": "Prometheus",
+      "url": "http://127.0.0.1:9090/-/ready",
+      "status": 200
+    },
+    {
+      "service": "Grafana",
+      "url": "http://127.0.0.1:3000/api/health",
+      "status": 200
+    },
+    {
+      "service": "Loki",
+      "url": "http://127.0.0.1:3100/ready",
+      "status": 200
+    },
+    {
+      "service": "Phoenix",
+      "url": "http://127.0.0.1:6006/",
+      "status": 200
+    },
+    {
+      "service": "Ollama",
+      "url": "http://127.0.0.1:11434/api/tags",
+      "status": 200
+    }
+  ],
+  "qdrant": {
+    "count": 9,
+    "sha256": "1176c3128bc2b4a27ff1664876c57bd9a90e82022a60499a031fe72167e31729"
+  },
+  "markdown": {
+    "count": 3,
+    "sha256": "eff2fe13087a4e16b0c5143849262c9bbdbd2774c087583e5bf16fb202f010e6"
+  },
+  "main_running_containers": [
+    "genairuiformacion2026-python-api-1",
+    "genairuiformacion2026-java-api-1",
+    "genairuiformacion2026-postgres-1",
+    "genairuiformacion2026-phoenix-1",
+    "genairuiformacion2026-grafana-1",
+    "genairuiformacion2026-alloy-1",
+    "genairuiformacion2026-loki-1",
+    "genairuiformacion2026-prometheus-1",
+    "genairuiformacion2026-qdrant-1"
+  ],
+  "unrelated_running_count": 2,
+  "unrelated_services_left_untouched": true,
+  "minikube_profiles": [
+    {
+      "name": "genai",
+      "status": "Stopped"
+    },
+    {
+      "name": "genai-semana-09",
+      "status": "Stopped"
+    },
+    {
+      "name": "genai-semana-10",
+      "status": "Stopped"
+    }
+  ],
+  "result": "PASS",
+  "data_preserved": true
+}

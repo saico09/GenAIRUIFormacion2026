@@ -1,0 +1,109 @@
+{
+  "implementation_commit": "eefccfb65b0f1e7426637412abb14548b42926e4",
+  "weekly_result": "PASS",
+  "weekly_scope": "S3 ingesta manual; S4–S10 historia Java, confirmación, sincronización y RAG TOP3. No reensayo de toda la observabilidad ni GitOps.",
+  "weeks": [
+    {
+      "week": 3,
+      "result": "PASS",
+      "real_rag_cases": 0,
+      "real_proposal_cases": 0,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 4,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 2,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 5,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 0,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 6,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 0,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 7,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 0,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 8,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 0,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 9,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 0,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    },
+    {
+      "week": 10,
+      "result": "PASS",
+      "real_rag_cases": 2,
+      "real_proposal_cases": 2,
+      "sql_and_markdown_preserved": true,
+      "default_config_restored": true,
+      "not_running": true
+    }
+  ],
+  "bootstrap_existing_copies": 7,
+  "bootstrap_new_isolated_environment_checks": 10,
+  "protected_local_files_verified": 74,
+  "drive": {
+    "documents_updated": 7,
+    "result": "PASS",
+    "verification": "Lectura remota completa normalizada frente a párrafos y tablas OOXML; ID, nombre, MIME, tamaño, carpeta y estado de compartición cotejados. Sin checksum remoto disponible."
+  },
+  "postman": {
+    "requests": 98,
+    "weekly_folders": 10,
+    "original_requests_unchanged": 5,
+    "variables_unchanged": 59,
+    "edited_internal_request_ids_preserved": 14,
+    "passed": true,
+    "runtime_scope": "21 escenarios Newman con fixtures locales; no se reejecutaron aquí las diez pilas semanales ni se llamó al LLM."
+  },
+  "trello": {
+    "cards": 48,
+    "status": "Testing",
+    "checklists": 52,
+    "items": 241,
+    "complete": 233,
+    "human_documentary_pending": 8
+  },
+  "notes": [
+    "S1/S2 y aviso S6 conservados; guion S6 unido con S7.",
+    "Los artefactos semanales, las exportaciones de Postman y los originales del plan permanecen fuera del repositorio.",
+    "No se reensayó toda la observabilidad/GitOps de cada copia; sí los cambios clínicos y RAG de su etapa."
+  ]
+}

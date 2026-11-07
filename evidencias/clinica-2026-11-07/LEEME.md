@@ -14,6 +14,8 @@ Cada informe se llama `paciente-ID-nombre.md`, pertenece al paciente Java y cons
 
 ## Comprobaciones
 
+También se cerraron las copias S3–S10, los siete Word de Drive y la compatibilidad de la colección instalada en Postman, conservando las peticiones originales. [Resumen de entrega, preservación y alcance](entrega-semanal.json). Los detalles semanales y exportaciones quedan en la carpeta local `dailys/`.
+
 | Ensayo | Evidencia |
 |---|---|
 | Java: confirmación, revisión 409, validación 422, UUID, concurrencia, límites, descarga, renombrado y borrado | [9 bloques correctos](../historias-clinicas-2026-11-07/historias-java.json) |

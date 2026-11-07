@@ -4,6 +4,8 @@ Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describ
 
 ## Historia clínica · 07/11/2026 · Registros confirmados y pacientes Java
 
+Entrega semanal cerrada: ocho copias actualizadas y comprobadas, 14 consultas RAG y cuatro casos de propuesta reales; siete Word reemplazados en Drive y texto remoto verificado. S1/S2 y aviso S6 se conservan, con S6 unida a S7. Postman mantiene diez carpetas, 98 peticiones, 59 variables y las cinco peticiones originales; se corrigieron sus comprobaciones de fuentes y trazas en la colección existente. Trello quedó en 48 Testing y 233/241 pasos, con los mismos ocho pendientes humanos/documentales. [Resumen de la entrega y alcance de las pruebas](evidencias/clinica-2026-11-07/entrega-semanal.json).
+
 Para la primera carga Java se añadió `inicializar_java.py`: asocia los tres informes a los IDs del dataset sólo con tabla vacía y conserva los datos existentes. Diez comprobaciones reales pasaron sobre PostgreSQL y Java nuevos y aislados. [Arranque limpio comprobado](evidencias/clinica-2026-11-07/bootstrap-java.md).
 
 Pasaron 19 consultas RAG, el recorrido completo del navegador con IA real, extracción de propuestas sin guardar, ambos CRUD, métricas/logs/trazas y reanudación del despliegue CRUD en Minikube. Se conservaron los cuatro pacientes Python, tres Java y sus informes; las pruebas usan temporales propios. [Resultados y límites](evidencias/clinica-2026-11-07/LEEME.md).
