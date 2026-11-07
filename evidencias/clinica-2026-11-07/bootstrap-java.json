@@ -1,0 +1,119 @@
+{
+  "started_at": "2026-11-07T22:21:19.317586+00:00",
+  "result": "passed",
+  "isolation": {
+    "name": "genai-bootstrap-d599fe96b1",
+    "network": "genai-bootstrap-d599fe96b1",
+    "volume": "genai-bootstrap-d599fe96b1-data",
+    "original_data_mounted": false,
+    "java_url": "http://127.0.0.1:58039"
+  },
+  "checks": [
+    {
+      "check": "primer_arranque_tabla_vacia",
+      "passed": true,
+      "sequence": [
+        1,
+        false
+      ]
+    },
+    {
+      "check": "rechazo_sin_escrituras_nombre",
+      "passed": true,
+      "error_type": "ValueError"
+    },
+    {
+      "check": "rechazo_sin_escrituras_propietario",
+      "passed": true,
+      "error_type": "ValueError"
+    },
+    {
+      "check": "rechazo_sin_escrituras_uuid",
+      "passed": true,
+      "error_type": "ValueError"
+    },
+    {
+      "check": "rollback_filas_y_restart_secuencia",
+      "passed": true,
+      "sqlstate": "23514"
+    },
+    {
+      "check": "post_no_adopta_informes_y_consume_ids",
+      "passed": true,
+      "sequence": [
+        3,
+        true
+      ]
+    },
+    {
+      "check": "dos_inicializadores_serializados_y_md_preservados",
+      "passed": true,
+      "results": [
+        {
+          "status": "inicializados",
+          "patients": 3,
+          "inserted": 3,
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "next_id": 4
+        },
+        {
+          "status": "conservados",
+          "patients": 3,
+          "inserted": 0
+        }
+      ]
+    },
+    {
+      "check": "siguiente_paciente_api_id4_y_limpieza",
+      "passed": true
+    },
+    {
+      "check": "repeticion_con_datos_no_lee_ni_toca_demo_o_secuencia",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "check": "secuencia_avanzada_no_retrocede",
+      "passed": true,
+      "next_id": 21
+    }
+  ],
+  "images": {
+    "genai-bootstrap-d599fe96b1-pg": "sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5",
+    "genai-bootstrap-d599fe96b1-python": "sha256:94885f3b694103d115b360a28f0219962a54ade0eb0e52622a9b77f3ddb235e6",
+    "genai-bootstrap-d599fe96b1-java": "sha256:29aba9933ea6cd0e1790e592104f4ca20fc90eb918fb35096516ecb81dcaf91f"
+  },
+  "final": {
+    "count": 3,
+    "ids": [
+      1,
+      2,
+      3
+    ],
+    "rows_sha256": "996d31a11bf3dcfa17dee94b56dc76bfbd7777dd24c4453d5d45ec38c5bd5698",
+    "sequence": [
+      21,
+      true
+    ]
+  },
+  "markdown_sha256": {
+    "paciente-1-ana-demo.md": "70e4666900f5e419a56f354332278ffaee82409d1a16acd91ac2eeaf31f76cfd",
+    "paciente-2-bruno-demo.md": "54eb8b1e8844f41d9bc7a4294df26d5ee4f488b358f631a833682c75ceffb0f5",
+    "paciente-3-carla-demo.md": "99783f977c225ae3f7ee4f8d5691fb165b3051889a106e9b1762ee4d8b9b91f0"
+  },
+  "cleanup": {
+    "removed_owned_resources": [
+      "genai-bootstrap-d599fe96b1-java",
+      "genai-bootstrap-d599fe96b1-python",
+      "genai-bootstrap-d599fe96b1-pg",
+      "genai-bootstrap-d599fe96b1-data",
+      "genai-bootstrap-d599fe96b1"
+    ],
+    "temporary_files_removed": true
+  },
+  "finished_at": "2026-11-07T22:22:08.661765+00:00"
+}

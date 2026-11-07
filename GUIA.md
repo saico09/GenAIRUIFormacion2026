@@ -97,13 +97,15 @@ Para consultar Java:
 curl.exe -i http://localhost:8080/patients
 ```
 
-Para cargar los ficticios **solo si faltan en Java**:
+Para inicializar los tres pacientes Java de la demo, después de levantar ambas APIs:
 
 ```powershell
-(Get-Content datos/pacientes.json -Raw | ConvertFrom-Json) | ForEach-Object { Invoke-RestMethod -Method Post -Uri http://localhost:8080/patients -ContentType 'application/json' -Body ($_ | ConvertTo-Json) }
+docker compose exec -T python-api python inicializar_java.py
 ```
 
-Repetirlo también duplica filas. Los ids de Java y Python son independientes.
+El comando valida `datos/pacientes.json` y los tres informes de `datos/historias/` antes de asociar los IDs 1–3. Solo escribe si `java.patients` está completamente vacía; si tiene cualquier paciente, responde `conservados` y no modifica filas, informes ni secuencia. No completa una carga parcial ni sobrescribe historias. La secuencia continúa desde al menos 4, sin retroceder si ya consumió IDs. Los ids de Java y Python son independientes.
+
+Los POST habituales siguen sirviendo para pacientes nuevos. No sustituyen esta carga inicial: si el ID reservado ya tiene un informe, Java responde 409 para protegerlo.
 
 ## Comprobar el CRUD
 
@@ -173,7 +175,7 @@ Para buscar solo dentro de Ana:
 docker compose exec -T python-api python buscar.py 1 "¿Qué enfermedad tiene Ana Demo?"
 ```
 
-Para cotejar documentos, puntos y cuatro búsquedas:
+Para cotejar el corpus inicial y sus cuatro búsquedas (tres informes, un registro por paciente y nueve puntos, antes de añadir o editar registros):
 
 ```powershell
 Get-Content -Raw scripts/verificar_recuperacion.py | docker compose exec -T python-api python
@@ -199,7 +201,7 @@ Cada registro agrupa enfermedad, tratamiento y medicamento bajo un UUID. Puedes 
 
 La revisión del 07/11 detectó respuestas sin respaldo fuera de los casos preparados. [Experimentos anteriores](evidencias/revision-rag-2026-11-07/LEEME.md). El registro asistido fue solicitado por Marco; no añade requisitos de Rui.
 
-Para comprobar ambos casos por API:
+Para comprobar ambos casos del dataset inicial por API:
 
 ```powershell
 Get-Content -Raw scripts/verificar_chat.py | docker compose exec -T python-api python

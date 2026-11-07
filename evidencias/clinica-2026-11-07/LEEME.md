@@ -17,6 +17,7 @@ Cada informe se llama `paciente-ID-nombre.md`, pertenece al paciente Java y cons
 | Ensayo | Evidencia |
 |---|---|
 | Java: confirmación, revisión 409, validación 422, UUID, concurrencia, límites, descarga, renombrado y borrado | [9 bloques correctos](../historias-clinicas-2026-11-07/historias-java.json) |
+| Primera carga con PostgreSQL/Java nuevos: informes conservados, IDs 1–3, concurrencia, rollback y secuencia | [10 comprobaciones correctas](bootstrap-java.json) · [uso y reproducción](bootstrap-java.md) |
 | Java → Markdown → Qdrant: 3 → 3 → 6 → 3 → 0 puntos, aislamiento y fallo de transporte controlado | [Integración correcta y datos previos conservados](../historias-clinicas-2026-11-07/clinica-integracion-final.json) |
 | RAG: hechos de los tres pacientes, tres datos juntos, fechas, dosis ausente, síntomas, otro paciente y fecha de nacimiento fuera del corpus | [15/15 casos reales](rag-clinico-final.json) |
 | Las cuatro formulaciones breves de síntomas del experimento original | [4/4 abstenciones correctas](rag-sintomas-originales.json) |

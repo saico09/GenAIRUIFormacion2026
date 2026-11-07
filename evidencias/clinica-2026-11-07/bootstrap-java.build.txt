@@ -1,0 +1,60 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 821B 0.0s done
+#1 DONE 0.0s
+
+#2 [auth] library/python:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.15.2-slim
+#3 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 69B 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 141.38kB 0.0s done
+#5 DONE 0.0s
+
+#6 [dependencies 1/5] FROM docker.io/library/python:3.15.2-slim@sha256:e97b88e416c3c01eb427b21fd8cd3ebf006e6ee38afcfcc3cae1c54ee2ab0a75
+#6 resolve docker.io/library/python:3.15.2-slim@sha256:e97b88e416c3c01eb427b21fd8cd3ebf006e6ee38afcfcc3cae1c54ee2ab0a75 0.0s done
+#6 DONE 0.0s
+
+#7 [stage-1 3/6] COPY requirements.txt .
+#7 CACHED
+
+#8 [dependencies 2/5] WORKDIR /build
+#8 CACHED
+
+#9 [dependencies 3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [stage-1 2/6] WORKDIR /code
+#10 CACHED
+
+#11 [dependencies 4/5] RUN apt-get update && apt-get install -y --no-install-recommends build-essential     && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [dependencies 5/5] RUN pip wheel --no-cache-dir --wheel-dir=/wheels -r requirements.txt
+#12 CACHED
+
+#13 [stage-1 4/6] RUN --mount=type=bind,from=dependencies,source=/wheels,target=/wheels     pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.txt
+#13 CACHED
+
+#14 [stage-1 5/6] COPY app ./app
+#14 CACHED
+
+#15 [stage-1 6/6] COPY *.py ./
+#15 DONE 0.0s
+
+#16 exporting to image
+#16 exporting layers 0.1s done
+#16 exporting manifest sha256:09cc09ef4822e1cdd4e02cf9b57a8b024f7ca21a428ebc44c535ef2b0aae311c 0.0s done
+#16 exporting config sha256:1285ba8c7099b69e2910176018f235ff09e20905819884739bb47426da78e0fc 0.0s done
+#16 exporting attestation manifest sha256:8a14200196658db46e6726fab3b6a39753d448f9350fc8cae05cae7f8d9c69dd 0.0s done
+#16 exporting manifest list sha256:94885f3b694103d115b360a28f0219962a54ade0eb0e52622a9b77f3ddb235e6 0.0s done
+#16 naming to docker.io/library/genai-bootstrap-d599fe96b1:test done
+#16 unpacking to docker.io/library/genai-bootstrap-d599fe96b1:test 0.0s done
+#16 DONE 0.3s

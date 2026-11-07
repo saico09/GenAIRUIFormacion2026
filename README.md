@@ -28,6 +28,14 @@ Para esperar ambas APIs:
 .\scripts\esperar_apis.ps1
 ```
 
+Para cargar los tres pacientes Java de la demo y asociarlos a sus informes:
+
+```powershell
+docker compose exec -T python-api python inicializar_java.py
+```
+
+Solo carga una tabla Java vacía, con los IDs 1–3 del dataset. Si ya hay pacientes, responde `conservados` y no modifica filas, informes ni secuencia. No uses los POST individuales para esta primera asociación: Java protege los informes que ya existen.
+
 Para iniciar o reutilizar Ollama:
 
 ```powershell
