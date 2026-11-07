@@ -1,0 +1,97 @@
+{
+  "checked_at": "2026-11-07T20:13:43.869080+00:00",
+  "http": [
+    {
+      "url": "http://127.0.0.1:8000/",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8080/health",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:6333/healthz",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:9090/-/ready",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:3000/api/health",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:3100/ready",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:6006/",
+      "status": 200
+    }
+  ],
+  "patients": {
+    "python": {
+      "count": 4,
+      "sha256": "2911ba885766104d8b1fe3c4e7c088dded63c909294f859dd99ea9c2cf5b6ee9"
+    },
+    "java": {
+      "count": 3,
+      "sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0"
+    }
+  },
+  "transient_readiness": {
+    "service": "loki",
+    "initial_status": 503,
+    "detail": "Ingester not ready: waiting for 15s after being ready",
+    "recovered_without_restart": true
+  },
+  "qdrant_points": 9,
+  "main_containers": [
+    {
+      "name": "genairuiformacion2026-python-api-1",
+      "status": "Up 3 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-java-api-1",
+      "status": "Up 5 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-postgres-1",
+      "status": "Up 34 minutes (healthy)"
+    },
+    {
+      "name": "genairuiformacion2026-phoenix-1",
+      "status": "Up 34 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-grafana-1",
+      "status": "Up 34 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-alloy-1",
+      "status": "Up 34 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-loki-1",
+      "status": "Up 34 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-prometheus-1",
+      "status": "Up 34 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-qdrant-1",
+      "status": "Up 34 minutes"
+    }
+  ],
+  "result": "passed"
+}

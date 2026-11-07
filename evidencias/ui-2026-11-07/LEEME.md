@@ -13,6 +13,7 @@ La página tiene cuatro secciones: **Consultas médicas**, **Pacientes**, **API 
 | CORS de Actuator: health y Prometheus permiten los dos orígenes locales y rechazan el origen ajeno | [Actuator](cors-actuator.json) |
 | Cuatro preguntas reales desde el navegador: Alfa, Beta, Gamma y cirugía sin información; texto y fuentes coinciden con la API | [Resultados RAG](chat/resultados.json) · [Salida del ensayo](chat-real.txt) |
 | Construcción de ambas APIs | [Build inicial](build-apis.txt) · [Ajuste UI](build-ui-final.txt) · [CORS Actuator](build-java-actuator.txt) |
+| Cierre: nueve accesos HTTP, nueve servicios principales, mismos pacientes y nueve puntos Qdrant | [Estado comprobado](main-verificacion-final.json) |
 
 Los errores de red/500 y la prueba rápida de carga del chat del verificador del portal son **simulados en el navegador**. El ensayo RAG separado sí ejecuta el modelo y Qdrant reales. El primer intento obtuvo 503 porque Ollama estaba apagado; se inició con `scripts/iniciar_ollama.ps1` y después pasaron las cuatro preguntas.
 
@@ -45,5 +46,9 @@ Las pruebas CRUD crean y eliminan solo sus temporales y comparan los registros a
 ## Entregas
 
 La adaptación corresponde a S4–S10, desde la aparición del chatbot HTML. S1–S3 conservan su cierre original. Las métricas se ofrecen desde S6; no se añaden servicios de semanas posteriores. Los puertos, comandos y resultados de cada copia se guardan fuera del repo, en `dailys/`, junto con sus guiones y procedencia. S6 sigue sin daily y se presenta junto con S7.
+
+Pasaron **las siete copias**: 140 comprobaciones CORS, 82 bloques del portal y siete comprobaciones finales de archivos servidos y foco. Cada una conservó tres pacientes Python y tres Java; quedaron detenidas. En esas copias solo se iniciaron PostgreSQL y ambas APIs: el chat del ensayo es simulado, no se repitió el RAG real semanal ni Minikube. [Resumen de las copias](semanas-resumen.json); el detalle local está en `dailys/UI_VERIFICADA_2026-11-07.json`.
+
+Se actualizaron seis Word existentes en Drive (S4, S5, S7–S10), conservando sus IDs y verificando el texto remoto. Los guiones de S1–S3 y el aviso de S6 permanecen iguales. Las notas de Trello en 008, 017 y 018 enlazan la implementación `0c690ef`; no modifican criterios, fechas ni estado.
 
 La revisión personal y la evaluación de Rui siguen pendientes. Estas pruebas acreditan funcionamiento técnico, no reuniones ni horas realizadas.
