@@ -82,8 +82,9 @@ class TransactionLogTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(headers[b"x-execution-id"].decode(), ident)
         self.assertEqual(json.loads(body)["execution_id"], ident)
         row, = self.rows
-        self.assertEqual(str(row["execution_id"]), ident)
-        self.assertEqual(row["request_id"], "custom-log-id")
+        self.assertNotIn("execution_id", row)
+        self.assertNotIn("request_id", row)
+        self.assertIsNone(row["patient_id"])
         self.assertEqual(row["request_body"], request_body.decode())
         self.assertEqual(row["response_body"], body.decode())
         self.assertEqual(row["operation"], "POST /patients")
@@ -107,6 +108,7 @@ class TransactionLogTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(status, 404)
         self.assertEqual(self.rows[0]["operation"], "GET /patients/{id}")
         self.assertEqual(self.rows[0]["path"], "/patients/12")
+        self.assertEqual(self.rows[0]["patient_id"], 12)
         self.assertEqual(self.rows[0]["response_body"], body.decode())
 
     async def test_unread_body_is_captured_on_unknown_api_route(self):
@@ -120,7 +122,8 @@ class TransactionLogTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(body, b'{"detail":"Error interno"}')
         self.assertEqual(self.rows[0]["response_body"], body.decode())
         self.assertEqual(self.rows[0]["http_status"], 500)
-        self.assertEqual(str(self.rows[0]["execution_id"]), headers[b"x-execution-id"].decode())
+        self.assertEqual(self.rows[0]["patient_id"], 500)
+        UUID(headers[b"x-execution-id"].decode())
         self.assertNotIn("secret-never", repr(self.log.call_args_list))
 
     async def test_streaming_is_preserved_while_both_captures_are_bounded(self):
@@ -159,9 +162,11 @@ class TransactionLogTests(unittest.IsolatedAsyncioTestCase):
         identifiers = [str(uuid4()), str(uuid4())]
         responses = await asyncio.gather(*(call_asgi(self.app, body=b"{}",
             headers=[(b"x-execution-id", ident.encode())]) for ident in identifiers))
-        self.assertEqual({str(row["execution_id"]) for row in self.rows}, set(identifiers))
+        self.assertEqual(len(self.rows), len(identifiers))
+        self.assertTrue(all("execution_id" not in row and "request_id" not in row for row in self.rows))
         for response, ident in zip(responses, identifiers):
             self.assertEqual(json.loads(response[2])["execution_id"], ident)
+            self.assertEqual(response[1][b"x-execution-id"].decode(), ident)
         self.assertIsNone(observability.execution_id_context.get())
 
     async def test_headers_are_not_persisted(self):
