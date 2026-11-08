@@ -1,0 +1,120 @@
+{
+  "checked_at": "2026-11-08T03:11:01.319729+00:00",
+  "commit": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+  "replicas": 2,
+  "sync": {
+    "comparedTo": {
+      "destination": {
+        "namespace": "genai",
+        "server": "https://kubernetes.default.svc"
+      },
+      "source": {
+        "path": "deploy/helm/fastapi",
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "targetRevision": "main"
+      }
+    },
+    "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+    "status": "Synced"
+  },
+  "health": {
+    "lastTransitionTime": "2026-11-08T03:10:48Z",
+    "status": "Healthy"
+  },
+  "operation": {
+    "finishedAt": "2026-11-08T02:57:10Z",
+    "message": "successfully synced (all tasks run)",
+    "operation": {
+      "initiatedBy": {
+        "automated": true
+      },
+      "retry": {
+        "limit": 5
+      },
+      "sync": {
+        "prune": true,
+        "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      }
+    },
+    "phase": "Succeeded",
+    "startedAt": "2026-11-08T02:57:08Z",
+    "syncResult": {
+      "resources": [
+        {
+          "group": "",
+          "hookPhase": "Running",
+          "kind": "Service",
+          "message": "service/fastapi unchanged",
+          "name": "fastapi",
+          "namespace": "genai",
+          "status": "Synced",
+          "syncPhase": "Sync",
+          "version": "v1"
+        },
+        {
+          "group": "apps",
+          "hookPhase": "Running",
+          "images": [
+            "genai-fastapi:s09-pacientes-compartidos-20261107"
+          ],
+          "kind": "Deployment",
+          "message": "deployment.apps/fastapi configured",
+          "name": "fastapi",
+          "namespace": "genai",
+          "status": "Synced",
+          "syncPhase": "Sync",
+          "version": "v1"
+        }
+      ],
+      "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+      "source": {
+        "path": "deploy/helm/fastapi",
+        "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+        "targetRevision": "main"
+      }
+    }
+  },
+  "pods": [
+    {
+      "name": "fastapi-76cdb874-66rkc",
+      "uid": "2e7d9a35-5bde-49cf-bf6f-adc928d2b4f0",
+      "ready": true,
+      "node": "genai",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107"
+    },
+    {
+      "name": "fastapi-76cdb874-7x9z2",
+      "uid": "3234cdca-98c4-4b1d-a74f-85505b118099",
+      "ready": true,
+      "node": "genai",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107"
+    }
+  ],
+  "responses": {
+    "minikube": {
+      "url": "http://localhost:8002/patients/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    },
+    "compose": {
+      "url": "http://localhost:8000/patients/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      }
+    }
+  }
+}

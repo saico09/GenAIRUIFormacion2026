@@ -1,0 +1,63 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.01kB 0.0s done
+#1 DONE 0.0s
+
+#2 [auth] library/python:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.15.2-slim
+#3 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 69B done
+#4 DONE 0.0s
+
+#5 [dependencies 1/5] FROM docker.io/library/python:3.15.2-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928
+#5 resolve docker.io/library/python:3.15.2-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 339.07kB 0.0s done
+#6 DONE 0.0s
+
+#7 [dependencies 4/5] RUN apt-get update && apt-get install -y --no-install-recommends build-essential     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [dependencies 5/5] RUN pip wheel --no-cache-dir --wheel-dir=/wheels -r requirements.txt
+#8 CACHED
+
+#9 [stage-1 3/7] COPY requirements.txt .
+#9 CACHED
+
+#10 [dependencies 3/5] COPY requirements.txt .
+#10 CACHED
+
+#11 [stage-1 2/7] WORKDIR /code
+#11 CACHED
+
+#12 [dependencies 2/5] WORKDIR /build
+#12 CACHED
+
+#13 [stage-1 4/7] RUN --mount=type=bind,from=dependencies,source=/wheels,target=/wheels     pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.txt
+#13 CACHED
+
+#14 [stage-1 5/7] COPY app ./app
+#14 DONE 0.1s
+
+#15 [stage-1 6/7] COPY *.py ./
+#15 DONE 0.1s
+
+#16 [stage-1 7/7] RUN mkdir -p /datos/historias && chown 10001:10001 /datos/historias
+#16 DONE 0.4s
+
+#17 exporting to image
+#17 exporting layers 0.1s done
+#17 exporting manifest sha256:dc49e2f80f55e86c4fc2a8799d59649a4e8d71ccb0604aab57f47cba54ea9f9d 0.0s done
+#17 exporting config sha256:9dd28e9ec75becfcdc4774c525e6e53169c431ba8188350c39d79e9b9e3c4687 0.0s done
+#17 exporting attestation manifest sha256:1a1187de4715a9f4933be98c822d05857f81692a4e8fec0be2bc377fae7ffa72 0.0s done
+#17 exporting manifest list sha256:87306952271be1de32e4d7b608e1c66850c6732ec256e5d157f25013e31cee40 0.0s done
+#17 naming to docker.io/library/genai-bootstrap-022731e74c:test done
+#17 unpacking to docker.io/library/genai-bootstrap-022731e74c:test 0.1s done
+#17 DONE 0.4s

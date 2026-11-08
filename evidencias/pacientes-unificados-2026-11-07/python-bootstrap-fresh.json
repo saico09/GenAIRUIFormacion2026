@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "checks": [
+    "dataset_invalido_sin_filas_ni_secuencia",
+    "carga_tres_md_vacios_snapshot",
+    "repeticion_cero_escrituras_md",
+    "base_existente_conserva_secuencia_y_no_lee_dataset",
+    "no_reutilizar_identidades_con_historial"
+  ],
+  "first": {
+    "status": "inicializados",
+    "patients": 3,
+    "inserted": 3,
+    "ids": [
+      1,
+      2,
+      3
+    ],
+    "next_id": 4
+  },
+  "second": {
+    "status": "conservados",
+    "patients": 3,
+    "inserted": 0
+  },
+  "markdown_sha256": {
+    "paciente-2-bruno-demo.md": "e04611eeb8ad095c690499fd709701084daad6473f913f953832159471e58dcb",
+    "paciente-3-carla-demo.md": "873d387d76b3d148216c408964120318d7aacb3cb200056b4f399dbfd41e0c62",
+    "paciente-1-ana-demo.md": "0602365208bfe4a19f6c54ef57e6562b314ede305a6f8a1f5189e94837425543"
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "at": "2026-11-08T02:50:44.895170+00:00",
+  "result": "PASS",
+  "source_commit": "089c56a3373fd1259e9fd21ca7825677a7ccbd86",
+  "scope": "Diez Compose completos, uno a la vez; Minikube/Argo semanales no ejecutados.",
+  "python_requests": 170,
+  "postman_requests": 91,
+  "collection_sha256": "1cd0467e6b5cfba1b6e54afcf52a57b97e165b16302bea19a04ca1fa1b0be993",
+  "chat_comparisons": 14,
+  "ui_weeks": 7,
+  "postman_scripts": false,
+  "hosts": {
+    "python": "http://localhost:8000",
+    "java": "http://localhost:8080"
+  },
+  "id_handling": "El verificador externo copia en memoria los IDs de sus POST; la colección no lleva scripts.",
+  "main_restored_and_sonarqube_unchanged": true,
+  "all_weekly_stacks_stopped": true,
+  "main_restoration": {
+    "services": [
+      "alloy",
+      "grafana",
+      "java-api",
+      "loki",
+      "phoenix",
+      "postgres",
+      "prometheus",
+      "python-api",
+      "qdrant"
+    ],
+    "same_container_ids": true,
+    "patients_count": 5,
+    "patients_sha256": "9a47fabaa2d3b94034c55e60db4543d0b858e41bb9947d60460141d52ad7430a",
+    "markdown_count": 5,
+    "markdown_hash_map_sha256": "292f23df195fa207d0973b7586d2b2f2fc96ad3ff022c9f912f76056e5fdc326",
+    "qdrant": {
+      "historias": {
+        "count": 13,
+        "payloads_vectors_sha256": "db2c174fb3baa8df6e212ec5c3284a9fff795e7d2c25655f69f24a3078cc405e"
+      }
+    }
+  },
+  "weeks": [
+    {
+      "week": 1,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 12,
+      "chat_comparisons": 0,
+      "services": [
+        "postgres",
+        "python-api"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "86f0852e16db623d4797c58b5b22430749a8f9ca6d9140ebf8b92b8e8a09083a",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": null,
+      "qdrant": null,
+      "observability": {},
+      "ui_readonly": null,
+      "stopped": true
+    },
+    {
+      "week": 2,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 13,
+      "chat_comparisons": 0,
+      "services": [
+        "java-api",
+        "postgres",
+        "python-api"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "86f0852e16db623d4797c58b5b22430749a8f9ca6d9140ebf8b92b8e8a09083a",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": null,
+      "qdrant": null,
+      "observability": {},
+      "ui_readonly": null,
+      "stopped": true
+    },
+    {
+      "week": 3,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 4,
+      "chat_comparisons": 0,
+      "services": [
+        "java-api",
+        "postgres",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {},
+      "ui_readonly": null,
+      "stopped": true
+    },
+    {
+      "week": 4,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 6,
+      "chat_comparisons": 4,
+      "services": [
+        "java-api",
+        "postgres",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {},
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "39da38505c77d6ca810671657498f785afaf66d33feb65ab344c48c5c364f4c8",
+        "writes": [],
+        "execution": "verificador externo durante S4"
+      },
+      "stopped": true
+    },
+    {
+      "week": 5,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 6,
+      "chat_comparisons": 2,
+      "services": [
+        "java-api",
+        "postgres",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {},
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "2ef16d82a7df4081b1c062ae97713d5586e02b9bc17771ea72bbf86766772f8d",
+        "writes": [],
+        "execution": "integrado al verificador Postman"
+      },
+      "stopped": true
+    },
+    {
+      "week": 6,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 5,
+      "chat_comparisons": 1,
+      "services": [
+        "grafana",
+        "java-api",
+        "postgres",
+        "prometheus",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {
+        "prometheus_targets_up": 2,
+        "grafana_database_ok": true
+      },
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "b4a398bd8f0ca140a3b2e9851974caef7ba34afa3a6cffc154c70dd1f5b8ebc9",
+        "writes": [],
+        "execution": "integrado al verificador Postman"
+      },
+      "stopped": true
+    },
+    {
+      "week": 7,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 5,
+      "chat_comparisons": 1,
+      "services": [
+        "alloy",
+        "grafana",
+        "java-api",
+        "loki",
+        "postgres",
+        "prometheus",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {
+        "prometheus_targets_up": 2,
+        "grafana_database_ok": true,
+        "loki_ready": true
+      },
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "b46760a5403fa07aad1e46055a9c370ba909054ae65ac10e47c2e3041179f346",
+        "writes": [],
+        "execution": "integrado al verificador Postman"
+      },
+      "stopped": true
+    },
+    {
+      "week": 8,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 4,
+      "chat_comparisons": 2,
+      "services": [
+        "alloy",
+        "grafana",
+        "java-api",
+        "loki",
+        "phoenix",
+        "postgres",
+        "prometheus",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {
+        "prometheus_targets_up": 2,
+        "grafana_database_ok": true,
+        "loki_ready": true,
+        "phoenix_http_ok": true
+      },
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "44793fdc7b9f2ba683abd7a4ba935d97a3c8e41e8bc818baecee0f70c95734a3",
+        "writes": [],
+        "execution": "integrado al verificador Postman"
+      },
+      "stopped": true
+    },
+    {
+      "week": 9,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 3,
+      "chat_comparisons": 0,
+      "services": [
+        "alloy",
+        "grafana",
+        "java-api",
+        "loki",
+        "phoenix",
+        "postgres",
+        "prometheus",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {
+        "prometheus_targets_up": 2,
+        "grafana_database_ok": true,
+        "loki_ready": true,
+        "phoenix_http_ok": true
+      },
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "d9651170b700507c5c89244990749b80694579fff90db31871711f195b520272",
+        "writes": [],
+        "execution": "integrado al verificador Postman"
+      },
+      "stopped": true
+    },
+    {
+      "week": 10,
+      "result": "PASS",
+      "python_requests": 17,
+      "postman_requests": 33,
+      "chat_comparisons": 4,
+      "services": [
+        "alloy",
+        "grafana",
+        "java-api",
+        "loki",
+        "phoenix",
+        "postgres",
+        "prometheus",
+        "python-api",
+        "qdrant"
+      ],
+      "patients_count": 3,
+      "patients_sha256": "d560952b1e72088d77f9df58f35322aff46f3d8f70c4490951bb3ed7d89e15b0",
+      "markdown_count": 3,
+      "markdown_hash_map_sha256": "5b2c3b25fb636dcefe2b373979c21e72212bb5514d0f490c93476495a45a5e42",
+      "patients_markdown_preserved": true,
+      "normalized_records_and_sql_backup_verified": true,
+      "audit_uuid_columns": [
+        "id"
+      ],
+      "qdrant_preserved_after_ingest": true,
+      "qdrant": {
+        "historias": {
+          "count": 9,
+          "payloads_vectors_sha256": "3d724b5c614cf8c3d0dafdb2b80e1a8a69811209532ef3d33243de548ce89319"
+        }
+      },
+      "observability": {
+        "prometheus_targets_up": 2,
+        "grafana_database_ok": true,
+        "loki_ready": true,
+        "phoenix_http_ok": true
+      },
+      "ui_readonly": {
+        "passed": true,
+        "evidence": "proyecto/ejecuciones/semanas-20261107/ui-readonly/resultados.json",
+        "sha256": "ed643e571577f77ea43596d78a5fd6a7567fa12c91146e26adecd8e4f6a7eb48",
+        "writes": [],
+        "execution": "integrado al verificador Postman"
+      },
+      "stopped": true
+    }
+  ],
+  "local_evidence": "../../../dailys/PACIENTES_UNIFICADOS_VERIFICADOS_2026-11-07.json",
+  "private_execution_reports": [
+    "../../../.contexto/pacientes-unificados-2026-11-07/semanas-20261107/resumen.json"
+  ]
+}

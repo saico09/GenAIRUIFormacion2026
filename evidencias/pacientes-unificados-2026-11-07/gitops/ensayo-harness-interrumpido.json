@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-08T03:07:10.26539Z",
+  "temporary_patient": 50,
+  "reason": "El verificador seguía esperando la salida aunque reanudar ya había terminado y ambas réplicas estaban Ready; comportamiento compatible con handles heredados por servidores de fondo, sin inspección individual de handles.",
+  "existing_patients": [
+    1,
+    2,
+    3,
+    4,
+    24
+  ],
+  "result": "HARNESS_INTERRUPTED",
+  "fix": "Salida del subproceso a archivos temporales, sin esperar handles de servidores",
+  "temporary_removed": true,
+  "deployment_commit": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068"
+}

@@ -1,0 +1,185 @@
+{
+  "checked_at": "2026-11-08T03:13:29.775045+00:00",
+  "result": "PASS",
+  "mode": "read_only",
+  "scope": "Lecturas HTTP/SQL/archivos e inventario; no acredita otro arranque ni otra inferencia LLM.",
+  "note": "GET /patients puede generar auditoría normal. POST de scroll Qdrant es una lectura de puntos, sin escritura.",
+  "baseline": "semanas.json:main_restoration",
+  "baseline_file_sha256": "dd933994924d867d5d85f4b7d767010ff65b998829814174697687776f0d5434",
+  "checks": [
+    {
+      "check": "containers_and_source",
+      "details": {
+        "services": [
+          "alloy",
+          "grafana",
+          "java-api",
+          "loki",
+          "phoenix",
+          "postgres",
+          "prometheus",
+          "python-api",
+          "qdrant"
+        ],
+        "other_eight_container_ids_unchanged": true,
+        "sonarqube_container_ids_unchanged": true,
+        "python": {
+          "container_id_before": "96a9680fddc6b6a5130c44c27a63762e6b63688f7536c48175fe394639974b64",
+          "container_id_after": "8782733ba3b9ddc160c5148a2cecaffc8d1202a716fc700710fb44aeea2f47dd",
+          "changed": true,
+          "runtime_image_id": "sha256:24f37d7611dea6bb98e254b75df3bb97411e6000b861749bc61e70666f28eb2c",
+          "documented_gitops_image_id": "sha256:3bf8217a03412a6e0d5c413f694e14d5f5c007e4e125f2cd12df2965d1d7bee7",
+          "same_image_id": false,
+          "source_proof": {
+            "source_commit": "7d591cefbeb8354d8c65bb3cc87adb461addb435",
+            "files_checked": 33,
+            "normalized_lf_source_sha256": "559f0d4783b0db70acf8668527c7c699444510eead5d59882f45f5d74858eff5",
+            "matches_source": true,
+            "normalization": "CRLF a LF; no se modifican archivos"
+          },
+          "explanation": "Python fue recreado expresamente para incluir el guard del montaje; se comprueba su código contra la fuente documentada."
+        }
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "weekly_and_minikube_stopped",
+      "details": {
+        "weekly_compose_stacks_stopped": 10,
+        "active_weekly_compose": [],
+        "minikube_genai_state": "exited"
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "shared_patients",
+      "details": {
+        "ids": [
+          1,
+          2,
+          3,
+          4,
+          24
+        ],
+        "count": 5,
+        "rows_sha256": "9a47fabaa2d3b94034c55e60db4543d0b858e41bb9947d60460141d52ad7430a",
+        "both_apis_equal": true
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "markdown_preserved",
+      "details": {
+        "count": 5,
+        "all_five_preserved": true,
+        "markdown_hash_map_sha256": "292f23df195fa207d0973b7586d2b2f2fc96ad3ff022c9f912f76056e5fdc326"
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "qdrant_preserved",
+      "details": {
+        "historias": {
+          "count": 13,
+          "payloads_vectors_sha256": "db2c174fb3baa8df6e212ec5c3284a9fff795e7d2c25655f69f24a3078cc405e"
+        }
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "schema_and_sql_backup",
+      "details": {
+        "clinical_tables": [
+          "public.patients",
+          "public.patient_diseases",
+          "public.medical_consultations"
+        ],
+        "audit_table": "public.transaction_logs",
+        "audit_uuid_columns": [
+          "id"
+        ],
+        "patient_id_type": "integer",
+        "markdown_sql_consistency": {
+          "result": "PASS",
+          "patients": [
+            {
+              "patient_id": 1,
+              "records": 1,
+              "markdown_sql_match": true
+            },
+            {
+              "patient_id": 2,
+              "records": 1,
+              "markdown_sql_match": true
+            },
+            {
+              "patient_id": 3,
+              "records": 1,
+              "markdown_sql_match": true
+            },
+            {
+              "patient_id": 4,
+              "records": 0,
+              "markdown_sql_match": true
+            },
+            {
+              "patient_id": 24,
+              "records": 0,
+              "markdown_sql_match": true
+            }
+          ],
+          "audit_uuid_columns": [
+            "id"
+          ]
+        }
+      },
+      "result": "PASS"
+    },
+    {
+      "check": "http_health",
+      "details": {
+        "urls": [
+          {
+            "url": "http://localhost:8000/",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:8000/health",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:8080/health",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:6333/healthz",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:9090/-/ready",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:3000/api/health",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:3100/ready",
+            "status": 200
+          },
+          {
+            "url": "http://localhost:6006/",
+            "status": 200
+          }
+        ],
+        "observability": {
+          "prometheus_targets_up": 2,
+          "grafana_database_ok": true,
+          "loki_ready": true,
+          "phoenix_http_ok": true
+        }
+      },
+      "result": "PASS"
+    }
+  ]
+}

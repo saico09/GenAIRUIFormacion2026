@@ -1,0 +1,22 @@
+{
+  "started_at": "2026-11-08T01:59:40.124404+00:00",
+  "run": "f7d13445ac2d457786c53985c070aee4",
+  "checks": [
+    "Ambas APIs crean el mismo paciente compartido y su MD/SQL automáticamente",
+    "CRUD cruzado conserva UUID; valida propietario, campos y límites",
+    "Diez escrituras concurrentes Java/Python sin pérdida; diario y reintento conservados",
+    "Renombrar por ambas APIs conserva un solo archivo, UUID y diario",
+    "Fallo real de COMMIT revierte SQL y MD al agregar, renombrar y borrar por ambas APIs",
+    "Borrado compartido elimina MD y filas activas, conservando respaldo e historial",
+    "Una fila auditada por cada operación (66), un UUID y patient_id conservado"
+  ],
+  "status": "PASS",
+  "patient_ids": [
+    45,
+    46
+  ],
+  "http_requests": 66,
+  "audit_rows": 66,
+  "cleanup_errors": [],
+  "finished_at": "2026-11-08T02:01:49.230452+00:00"
+}

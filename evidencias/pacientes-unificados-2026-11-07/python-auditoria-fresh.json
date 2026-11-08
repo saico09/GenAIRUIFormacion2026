@@ -1,0 +1,164 @@
+{
+  "run_id": "671e1ecf-4c7a-48f7-ade7-ed31add586cf",
+  "result": "PASS",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/patients",
+      "status": 200,
+      "execution_id": "8b68b675-d1da-48a9-a4ec-c376916009b7",
+      "transaction_id": "0453e067-bea2-4932-a446-fde3523ef78a",
+      "operation": "GET /patients",
+      "body_match": true,
+      "patient_id": null,
+      "truncated": false
+    },
+    {
+      "method": "POST",
+      "path": "/patients",
+      "status": 201,
+      "execution_id": "4ff6c41a-f9d6-42b7-8083-9c3464869b8e",
+      "transaction_id": "5ca049d6-4add-4e25-8377-2394f0786fec",
+      "operation": "POST /patients",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "GET",
+      "path": "/patients/5",
+      "status": 200,
+      "execution_id": "076e7158-7396-4ce6-880f-2aa45c8d5e50",
+      "transaction_id": "9bf16a3c-6045-4d9f-b209-3723b2ce1c5e",
+      "operation": "GET /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "PUT",
+      "path": "/patients/5",
+      "status": 422,
+      "execution_id": "6c826d53-581f-435a-8400-1d0679e31e79",
+      "transaction_id": "9027d903-ead9-4d63-81b3-45e4676150a7",
+      "operation": "PUT /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "GET",
+      "path": "/patients/5",
+      "status": 200,
+      "execution_id": "08ea2caf-22d6-421f-b145-4ffe33126d00",
+      "transaction_id": "216be7a2-2d1a-49a5-8581-d9b4cd8f606d",
+      "operation": "GET /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "PUT",
+      "path": "/patients/5",
+      "status": 200,
+      "execution_id": "e19224e4-8b1b-4c68-b91f-fb6e43cd7c02",
+      "transaction_id": "a52313c3-ebfd-4ed8-bcfe-fe243543afd4",
+      "operation": "PUT /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "GET",
+      "path": "/patients/2147483647",
+      "status": 404,
+      "execution_id": "4ed3a257-704b-4ff1-b53e-5a19e7758da3",
+      "transaction_id": "217cf59b-9125-4a7e-9768-51118b7e078c",
+      "operation": "GET /patients/{id}",
+      "body_match": true,
+      "patient_id": 2147483647,
+      "truncated": false
+    },
+    {
+      "method": "POST",
+      "path": "/clinical/audit-absent-671e1ecf-4c7a-48f7-ade7-ed31add586cf",
+      "status": 404,
+      "execution_id": "c713ba83-749e-4f8b-84ec-362c4f0eb7e6",
+      "transaction_id": "b991fc93-9655-4fae-86c4-127e77504bba",
+      "operation": "POST unmatched",
+      "body_match": true,
+      "patient_id": null,
+      "truncated": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/patients",
+      "status": 405,
+      "execution_id": "90a01858-378f-4fb8-ba8d-a09ec3726add",
+      "transaction_id": "4c0ce56d-9135-4756-a881-a87f7f17c3af",
+      "operation": "PATCH /patients",
+      "body_match": true,
+      "patient_id": null,
+      "truncated": false
+    },
+    {
+      "method": "POST",
+      "path": "/patients",
+      "status": 422,
+      "execution_id": "9468aa65-ddf3-4834-86e4-1545fc3d7ee0",
+      "transaction_id": "3125ba5b-a4e2-48c7-8b3a-4119be2acf64",
+      "operation": "POST /patients",
+      "body_match": true,
+      "patient_id": null,
+      "truncated": false
+    },
+    {
+      "method": "GET",
+      "path": "/patients/5",
+      "status": 200,
+      "execution_id": "f72d21fc-cdcd-4b92-a7e2-8d0718d561af",
+      "transaction_id": "f6b20fd0-089b-4e38-a9df-876783e4fab0",
+      "operation": "GET /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/patients/5",
+      "status": 204,
+      "execution_id": "eec0ba88-a52a-4790-a0f4-85afce53b106",
+      "transaction_id": "7f5c123e-27ab-41e9-aace-423f801a8398",
+      "operation": "DELETE /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "GET",
+      "path": "/patients/5",
+      "status": 404,
+      "execution_id": "c28a8b3b-e138-4034-b44a-6f460c605ed1",
+      "transaction_id": "61c40107-3131-4c03-ab11-8d5b9bdd4863",
+      "operation": "GET /patients/{id}",
+      "body_match": true,
+      "patient_id": 5,
+      "truncated": false
+    },
+    {
+      "method": "GET",
+      "path": "/patients",
+      "status": 200,
+      "execution_id": "f31e644e-2bec-46d1-9d32-c7f1121f3643",
+      "transaction_id": "a70e5ccb-e273-4297-b306-e62c2a51a8ad",
+      "operation": "GET /patients",
+      "body_match": true,
+      "patient_id": null,
+      "truncated": false
+    }
+  ],
+  "original_patients_preserved": true,
+  "original_patient_ids": [],
+  "original_patients_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "temporary_patient_deleted": 5
+}

@@ -22,7 +22,7 @@ Para levantar los contenedores:
 docker compose up -d --build
 ```
 
-Compose monta `datos/historias/` en Java con escritura: ahí se conservan los informes `.md`. No cambies ese montaje a solo lectura ni borres la carpeta al reiniciar.
+Compose monta `datos/historias/` en ambas APIs con escritura: ahí se conservan los informes `.md`. No cambies ese montaje a solo lectura ni borres la carpeta al reiniciar.
 
 Para esperar ambas APIs:
 
@@ -30,13 +30,13 @@ Para esperar ambas APIs:
 .\scripts\esperar_apis.ps1
 ```
 
-Para cargar los tres pacientes Java de la demo y asociarlos a sus informes:
+Para cargar los tres pacientes de la demo y asociarlos a sus informes:
 
 ```powershell
-docker compose exec -T python-api python inicializar_java.py
+docker compose exec -T python-api python inicializar_datos.py
 ```
 
-Solo carga una tabla Java vacía, con los IDs 1–3 del dataset. Si ya hay pacientes, responde `conservados` y no modifica filas, informes ni secuencia. No uses los POST individuales para esta primera asociación: Java protege los informes que ya existen.
+La carga inicial conserva los IDs 1–3 de la demo y protege los datos existentes. Después crea tus pacientes desde la página o cualquiera de las dos APIs: cada alta genera su Markdown automáticamente.
 
 Para iniciar o reutilizar Ollama:
 
@@ -70,7 +70,7 @@ curl.exe -i http://localhost:8080/health
 | Qué | Dónde |
 |---|---|
 | Consultas con y sin RAG | [Consultas médicas](http://localhost:8000/#consultas) |
-| Administrar pacientes Java | [Pacientes](http://localhost:8000/#pacientes) |
+| Administrar pacientes y registros | [Pacientes](http://localhost:8000/#pacientes) |
 | Probar endpoints | [API Python](http://localhost:8000/#api-python) / [API Java](http://localhost:8000/#api-java) |
 | Swagger Python | [docs](http://localhost:8000/docs) |
 | PostgreSQL | `localhost:5432`, credenciales en `.env` |
@@ -82,21 +82,29 @@ curl.exe -i http://localhost:8080/health
 | FastAPI en Minikube | [8002/patients](http://localhost:8002/patients) |
 | Argo CD | [8443](https://localhost:8443), certificado local |
 
-Para reanudar Minikube ya preparado:
+Minikube y Argo CD son opcionales para practicar GitOps: `docker compose up` no los inicia. Postman usa las APIs de Compose. Para reanudar Minikube ya preparado:
 
 ```powershell
 .\scripts\reanudar_minikube.ps1
 ```
 
-El comando conecta PostgreSQL directamente a la red del perfil y comprueba SQL antes de abrir los túneles. Necesita Docker Desktop respondiendo. [Preparación inicial](GUIA.md#preparar-minikube): solo se despliega el CRUD FastAPI; el chatbot sigue en Compose, puerto 8000.
+El comando conecta PostgreSQL, comparte `datos/historias` con las dos réplicas y comprueba lectura, escritura y SQL antes de abrir los túneles. Recupera el montaje si se perdió. Necesita Docker Desktop respondiendo. [Preparación inicial](GUIA.md#preparar-minikube): se despliega el CRUD FastAPI; el chatbot sigue en Compose, puerto 8000.
+
+Para detener ese perfil antes de cambiar de semana:
+
+```powershell
+.\.local\bin\minikube.exe stop --profile=genai
+```
+
+La versión principal y las diez copias semanales usan estos mismos puertos. Ejecuta una sola a la vez; cada semana conserva sus propios volúmenes.
 
 ## Contrato HTTP
 
-Python usa `public.patients`; Java, `java.patients`. POST y PUT reciben `name`, `birth_date` (`YYYY-MM-DD`) y `email`. Cada tabla genera sus propios ids.
+Python y Java usan el mismo registro `public.patients`: un paciente creado en una API aparece en la otra y en la página. POST y PUT reciben `name`, `birth_date` (`YYYY-MM-DD`) y `email`. El ID del paciente se conserva al editarlo.
 
-En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enfermedad, tratamiento y medicamento, consultas guardadas y archivo Markdown. **Registro confirmado → Preparar con IA → revisar campos → confirmar** añade hechos clínicos. También puedes crear el registro manualmente.
+En **Pacientes**, pulsa un nombre para abrir su historia. **Registros confirmados → Agregar registro** permite completar enfermedad, tratamiento y medicamento; cada fila tiene **Editar** y **Eliminar**. Los cambios actualizan `patient_diseases` y el Markdown, con el mismo UUID. **Preparar desde una nota** conserva la opción de extraer una propuesta con IA y revisarla antes de guardar.
 
-**Consultas médicas → Comparar y guardar** guarda automáticamente tu consulta y ambas respuestas en el informe y en PostgreSQL. El mensaje de guardado muestra su UUID y permite abrir el informe. Las respuestas quedan como orientación de IA, separadas de los diagnósticos confirmados. Python conserva su CRUD de práctica independiente.
+**Consultas médicas → Comparar y guardar** guarda automáticamente tu consulta y ambas respuestas en el informe y en PostgreSQL. El mensaje de guardado muestra su UUID y permite abrir el informe. Las respuestas quedan como orientación de IA, separadas de los diagnósticos confirmados.
 
 | Operación | Correcto | Error |
 |---|---|---|
@@ -105,6 +113,11 @@ En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enferm
 | `GET /patients/{id}` | 200, paciente | 404 ausente |
 | `PUT /patients/{id}` | 200, paciente | 404 ausente / 422 inválido |
 | `DELETE /patients/{id}` | 204, vacío | 404 ausente |
+| `GET /patients/{id}/diseases` (ambas) | 200, registros del paciente | 404 paciente |
+| `POST /patients/{id}/diseases` (ambas) | 201, registro con UUID | 404 paciente / 422 inválido |
+| `GET /patients/{id}/diseases/{uuid}` (ambas) | 200, registro | 404 ausente o de otro paciente |
+| `PUT /patients/{id}/diseases/{uuid}` (ambas) | 200, registro actualizado | 404 ausente / 422 inválido |
+| `DELETE /patients/{id}/diseases/{uuid}` (ambas) | 204, vacío | 404 ausente |
 | `POST /chat` (Python) | 200, respuestas, fuentes y consulta guardada | 422 entrada / 404 paciente / 409 ID reutilizado / 503 dependencia o guardado |
 | `GET /patients/{id}/history` (Java) | 200, Markdown, revisión, registros y consultas | 404 paciente |
 | `GET /patients/{id}/history.md` (Java) | 200, descarga Markdown | 404 paciente |
@@ -115,7 +128,7 @@ En **Pacientes**, pulsa el nombre para abrir su historia: tabla con UUID, enferm
 | `POST /clinical/proposals` (Python) | 200, propuestas editables y evidencia | 422 entrada / 404 paciente / 503 dependencia |
 | `POST /clinical/patients/{id}/sync` (Python) | 200, índice sincronizado o retirado | 503 dependencia |
 
-El Markdown reúne los registros confirmados y las consultas. `java.medical_consultations` conserva las consultas y el contenido del informe como respaldo; `public.transaction_logs` registra las ejecuciones HTTP de ambas APIs. Los nombres están en inglés y `snake_case`. Qdrant mantiene el índice de búsqueda. [Uso y consultas SQL](GUIA.md#historia-clínica).
+El Markdown reúne los registros confirmados y las consultas. `public.patient_diseases` guarda sus tres campos por UUID y `patient_id`; `public.medical_consultations` conserva las consultas y versiones completas del informe. `public.transaction_logs` guarda una fila por operación HTTP, con un único UUID `id` y el `patient_id` cuando corresponde. Los nombres están en inglés y `snake_case`. Qdrant mantiene el índice de búsqueda. [Uso y consultas SQL](GUIA.md#historia-clínica).
 
 Editar los registros del Markdown requiere revisión vigente y confirmación; el historial de consultas conserva su texto original. Un 409 conserva el borrador: recarga la historia y revísalo antes de guardar. El navegador reutiliza `X-Execution-ID` si reintentas la misma consulta tras un fallo de conexión sin recargar la página, para no duplicarla.
 

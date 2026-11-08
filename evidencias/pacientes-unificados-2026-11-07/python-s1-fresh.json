@@ -1,0 +1,98 @@
+{
+  "result": "PASS",
+  "run_id": "3515db4c-09a1-4aa9-afb2-99be338e0807",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/patients",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/patients",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/patients/4/diseases",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/patients/4/diseases",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/patients/4/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/patients",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/patients/5/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 404
+    },
+    {
+      "method": "PUT",
+      "path": "/patients/5/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 404
+    },
+    {
+      "method": "DELETE",
+      "path": "/patients/5/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/patients/4/diseases",
+      "status": 422
+    },
+    {
+      "method": "PUT",
+      "path": "/patients/4/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/patients/4",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/patients/4/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/patients/4/diseases/0efcb1bb-f6f4-47f5-b7d6-818cf8912462",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/patients/4/diseases",
+      "status": 201
+    },
+    {
+      "method": "DELETE",
+      "path": "/patients/4",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/patients",
+      "status": 200
+    }
+  ],
+  "count": 17,
+  "temporary_patients_deleted": [
+    4,
+    5
+  ],
+  "original_patients_preserved": true,
+  "markdown_sql_uuid_cascade_and_audit": true
+}

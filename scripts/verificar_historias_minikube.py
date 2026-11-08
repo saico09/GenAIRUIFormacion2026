@@ -17,6 +17,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import tempfile
 import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -37,11 +38,18 @@ def digest(value) -> str:
 
 
 def run(command, *, data=None, timeout=600):
-    result = subprocess.run([str(part) for part in command], input=data, text=True, encoding="utf-8",
-                            capture_output=True, cwd=ROOT, timeout=timeout)
+    # Los servidores ocultos lanzados por PowerShell pueden heredar handles de
+    # salida. Archivos temporales permiten esperar al comando, no al EOF de esos servidores.
+    with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
+        result = subprocess.run([str(part) for part in command], input=data, text=True, encoding="utf-8",
+                                stdout=stdout, stderr=stderr, cwd=ROOT, timeout=timeout)
+        stdout.seek(0)
+        stderr.seek(0)
+        output = stdout.read().decode("utf-8", errors="replace")
+        errors = stderr.read().decode("utf-8", errors="replace")
     if result.returncode:
-        raise RuntimeError(f"{Path(str(command[0])).name} terminó con {result.returncode}: {result.stderr[-1800:]} {result.stdout[-1800:]}")
-    return result.stdout
+        raise RuntimeError(f"{Path(str(command[0])).name} terminó con {result.returncode}: {errors[-1800:]} {output[-1800:]}")
+    return output
 
 
 def ps(code):

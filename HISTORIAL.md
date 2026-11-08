@@ -1,5 +1,25 @@
 # Historial de la app
 
+## Informes compartidos con Minikube · 08/11/2026
+
+El CRUD de Minikube usa los mismos pacientes e informes que Compose. `scripts/reanudar_minikube.ps1` recupera la carpeta compartida, comprueba escritura y SQL, y abre los accesos cuando las réplicas están disponibles. Si falta el marcador del montaje, la API impide escribir en una carpeta alternativa.
+
+El [ensayo integral](evidencias/pacientes-unificados-2026-11-07/gitops/montaje-real.json) pasó seis bloques: CRUD cruzado, coincidencia MD/SQL, bloqueo sin marcador, pérdida del proceso de montaje, reanudación y conservación de datos. [Argo](evidencias/pacientes-unificados-2026-11-07/gitops/despliegue.json) quedó Synced/Healthy con dos réplicas durante el ensayo. Al cerrar, Minikube volvió a detenido; Compose sigue siendo el acceso habitual.
+
+S9/S10 incorporan el chart y el montaje con sus perfiles propios y una guía `GITOPS.md`. Su GitOps se validó estáticamente; los diez entornos semanales sí se probaron con Compose. No se añadieron HDU ni horas al plan.
+
+## Pacientes compartidos y registros editables · 07/11/2026
+
+Python y Java comparten `public.patients`: los pacientes creados desde cualquiera de las APIs aparecen también en la página. Cada alta genera su Markdown. `public.patient_diseases` guarda enfermedad, tratamiento y medicamento con el mismo UUID que aparece en el informe y con `patient_id` como relación.
+
+En **Pacientes → nombre → Registros confirmados** se puede agregar, editar y eliminar cada fila, con los cambios reflejados en el Markdown. Ambas APIs ofrecen el CRUD `/patients/{id}/diseases`. Los informes y sus consultas siguen respaldados en `public.medical_consultations`.
+
+`public.transaction_logs` conserva un solo UUID `id` por operación y añade `patient_id`. Las semanas usan los mismos puertos de la versión principal; se ejecuta una por vez, con sus volúmenes propios. Postman pasa a peticiones manuales con URLs explícitas y sin scripts.
+
+El [recorrido de navegador real](evidencias/pacientes-unificados-2026-11-07/ui-real/resultados.json) pasó alta desde Python, tabla y CRUD desde la página, edición/descarga Markdown, rechazo de una revisión antigua y conservación del diario. El paciente temporal se retiró y las historias anteriores conservaron su hash. Los nueve guiones Word se revisaron visualmente y se reemplazaron en Drive con texto remoto comprobado; S6 sigue unida a S7.
+
+Esta es una ampliación solicitada por Marco. Las HDU, las 80 horas previstas y las fechas de Rui no cambian. Los apartados siguientes conservan la arquitectura y los resultados de cada corte histórico.
+
 Qué se agregó y cómo usarlo. Comandos en [GUIA.md](GUIA.md). Cada HDU describe su momento; los ensayos no acreditan explicación personal ni revisión de Rui.
 
 ## Casos realistas · 07/11/2026

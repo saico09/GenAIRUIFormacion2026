@@ -1,0 +1,76 @@
+{
+  "backup_sha256": "4920b3ea219d13c52ace738989dea7c0f13e628c3e7f718cd9a417b7b54f43dc",
+  "tables": [
+    {
+      "from": "public.patients",
+      "to": "public.patients",
+      "original_rows": 5,
+      "current_rows": 7,
+      "columns_compared": [
+        "id",
+        "name",
+        "birth_date",
+        "email"
+      ],
+      "original_rows_preserved": true
+    },
+    {
+      "from": "java.patients",
+      "to": "public.patients",
+      "original_rows": 3,
+      "current_rows": 7,
+      "columns_compared": [
+        "id",
+        "name",
+        "birth_date",
+        "email"
+      ],
+      "original_rows_preserved": true
+    },
+    {
+      "from": "java.medical_consultations",
+      "to": "public.medical_consultations",
+      "original_rows": 65,
+      "current_rows": 94,
+      "columns_compared": [
+        "id",
+        "execution_id",
+        "patient_id",
+        "kind",
+        "question",
+        "direct_answer",
+        "rag_answer",
+        "model",
+        "sources",
+        "filename",
+        "markdown_content",
+        "revision",
+        "created_at",
+        "storage_order"
+      ],
+      "original_rows_preserved": true
+    },
+    {
+      "from": "public.transaction_logs",
+      "to": "public.transaction_logs",
+      "original_rows": 474,
+      "current_rows": 561,
+      "columns_compared": [
+        "id",
+        "service",
+        "operation",
+        "method",
+        "path",
+        "http_status",
+        "request_body",
+        "response_body",
+        "created_at",
+        "duration_ms",
+        "request_truncated",
+        "response_truncated"
+      ],
+      "original_rows_preserved": true
+    }
+  ],
+  "passed": true
+}

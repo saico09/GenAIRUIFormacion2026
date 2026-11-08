@@ -1,0 +1,11 @@
+{
+  "started_at": "2026-11-08T01:59:24.907399+00:00",
+  "run": "f2e748f4ef3640b2840299c1f713e8af",
+  "checks": [],
+  "status": "FAIL",
+  "error": "AssertionError(('python', 'POST', '/patients', 422, {'detail': [{'type': 'value_error', 'loc': ['body', 'email'], 'msg': 'value is not a valid email address: The part after the @-sign is a special-use or reserved name that cannot be used with email.', 'input': 'python-f2e748f4ef3640b2840299c1f713e8af@example.invalid', 'ctx': {'reason': 'The part after the @-sign is a special-use or reserved name that cannot be used with email.'}}]}))",
+  "patient_ids": [],
+  "http_requests": 1,
+  "cleanup_errors": [],
+  "finished_at": "2026-11-08T01:59:26.980138+00:00"
+}

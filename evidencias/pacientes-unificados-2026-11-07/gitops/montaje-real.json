@@ -1,0 +1,665 @@
+{
+  "started_at": "2026-11-08T03:07:15.986168+00:00",
+  "run": "280a6bcbed0d4e1981e3f49ed752d282",
+  "checks": [
+    "Dos ejecuciones del helper reutilizan proceso y montaje comprobados",
+    "CRUD Minikube/Java/Compose comparte UUID, archivo Windows, respaldo SQL y diario; ambas réplicas leen el mismo contenido",
+    "Marcador ausente: salud y escritura503; SQL/MD sin cambios; recuperación al restaurarlo",
+    "Pérdida del proceso9p propio: API no disponible; reanudar recupera montaje, pods y contenido",
+    "Stop/start conserva paciente, registros, diario y MD/SQL compartidos",
+    "Borrar registros por ambas APIs conserva el diario"
+  ],
+  "calls": [
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/health",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/health",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/health",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "POST",
+      "path": "/patients",
+      "status": 201
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "POST",
+      "path": "/patients/51/diseases",
+      "status": 201
+    },
+    {
+      "service": "java",
+      "method": "POST",
+      "path": "/patients/51/diseases",
+      "status": 201
+    },
+    {
+      "service": "java",
+      "method": "PUT",
+      "path": "/patients/51/diseases/fab7e587-93f0-4d92-9182-ef78897254b9",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "PUT",
+      "path": "/patients/51/diseases/dea3ea72-3422-4bb2-8087-3cb067325bc5",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "POST",
+      "path": "/patients/51/consultations",
+      "status": 201
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "PUT",
+      "path": "/patients/51",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/health",
+      "status": 503
+    },
+    {
+      "service": "minikube",
+      "method": "POST",
+      "path": "/patients/51/diseases",
+      "status": 503
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/health",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/health",
+      "status": 503
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "DELETE",
+      "path": "/patients/51/diseases/fab7e587-93f0-4d92-9182-ef78897254b9",
+      "status": 204
+    },
+    {
+      "service": "java",
+      "method": "DELETE",
+      "path": "/patients/51/diseases/dea3ea72-3422-4bb2-8087-3cb067325bc5",
+      "status": 204
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/history",
+      "status": 200
+    },
+    {
+      "service": "minikube",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/51/diseases",
+      "status": 200
+    },
+    {
+      "service": "java",
+      "method": "DELETE",
+      "path": "/patients/51",
+      "status": 204
+    }
+  ],
+  "baseline": {
+    "patient_ids": [
+      1,
+      2,
+      3,
+      4,
+      24
+    ],
+    "patients": "36b0042e7397f58dd89a1db6e9145e7d5afd761eab241198b34e244bfee20359",
+    "diseases": "2815c9eba967f6b821afafd791efecb5751a66a336c21c70d861bbb96432b471",
+    "consultations": "bbd70e2d0a1b43120e3457bc51017288a5dcc19b17c617ca09e7cc462e4e6b1c",
+    "files": {
+      "paciente-1-ana-demo.md": "0bc3024890423931828124d4949ed071f513c1a7c471c78394e059eb075738f9",
+      "paciente-2-bruno-demo.md": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+      "paciente-24-paciente-de-prueba.md": "20a2088040dcc456800bbd5abf271793cfdc5a655a8ded670c7539252a49f02d",
+      "paciente-3-carla-demo.md": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+      "paciente-4-marco-contreras.md": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de"
+    }
+  },
+  "mount_reused": {
+    "Reused": true,
+    "NodeId": "67ab4890e1607519fd021c8c8ff311f83e8c6b7b3e3d125329f2851e718ce1c1",
+    "ProcessId": 15320,
+    "Source": "C:\\Users\\marco\\Documents\\CONKORD\\GenAIRUIFormacion2026\\codigo\\datos\\historias",
+    "Target": "/mnt/genai-historias"
+  },
+  "temporary_patient": 51,
+  "pods_before": [
+    {
+      "name": "fastapi-76bc7f7bcb-7fl64",
+      "pod_uid": "b3037847-df7f-4b37-8d0e-f5524b2e0436",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107",
+      "uid": 10001,
+      "gid": 10001,
+      "marker": "genai-historias-v1",
+      "sha256": "33dad4c966450440b66251173cf93b32b785309beaf0f03cd8479860ea3d29e6"
+    },
+    {
+      "name": "fastapi-76bc7f7bcb-d7j84",
+      "pod_uid": "291879e6-0763-4593-a8fb-ed06cd946fda",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107",
+      "uid": 10001,
+      "gid": 10001,
+      "marker": "genai-historias-v1",
+      "sha256": "33dad4c966450440b66251173cf93b32b785309beaf0f03cd8479860ea3d29e6"
+    }
+  ],
+  "lost_mount_health": 503,
+  "resume_after_mount_loss": "1/5 Esperando PostgreSQL de Compose...\r\nPostgreSQL conectado directamente a Minikube: 192.168.49.10:5432.\r\n2/5 Reanudando el perfil genai...\r\n* [genai] minikube v1.39.0 on Microsoft Windows 11 Home Single Language 25H2\n* Kubernetes 1.37.0 is now available. If you would like to upgrade, specify: --kubernetes-version=v1.37.0\n* Using the docker driver based on existing profile\n* Starting \"genai\" primary control-plane node in \"genai\" cluster\n* Pulling base image v0.0.51 ...\n* Preparing Kubernetes v1.36.6 on containerd 2.3.4 ...\n* Verifying Kubernetes components...\n  - Using image gcr.io/k8s-minikube/storage-provisioner:v5\n* Enabled addons: storage-provisioner, default-storageclass\n* To connect to this cluster, use:  --context=genai\nHistorias compartidas con genai; lectura y escritura UID10001 comprobadas.\r\n3/5 Comprobando SQL desde un pod temporal del perfil...\r\npod/postgres-reanudar-10b65c6dfcce4fd28db5c738848967db created\npod/postgres-reanudar-10b65c6dfcce4fd28db5c738848967db condition met\nSQL desde Minikube: SELECT 1 = 1.\r\npod \"postgres-reanudar-10b65c6dfcce4fd28db5c738848967db\" deleted from genai namespace\n4/5 Esperando las replicas deseadas de FastAPI...\r\ndeployment.apps/fastapi restarted\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\ndeployment \"fastapi\" successfully rolled out\n5/5 Abriendo los accesos locales...\r\ndeployment \"argocd-server\" successfully rolled out\nArgo CD disponible mediante port-forward: https://localhost:8443\r\nEsperando que FastAPI este disponible antes de abrir el tunel...\r\ndeployment \"fastapi\" successfully rolled out\nFastAPI disponible mediante port-forward: http://localhost:8002\r\nOK: 2 replicas Ready y GET /patients = 200.\r\nCRUD: http://localhost:8002/patients | Argo CD: https://localhost:8443\r\n",
+  "pods_after_mount_loss": [
+    {
+      "name": "fastapi-69d7d475d8-62zlq",
+      "pod_uid": "49e857d3-e67d-497e-8e91-3b51803d3c92",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107",
+      "uid": 10001,
+      "gid": 10001,
+      "marker": "genai-historias-v1",
+      "sha256": "33dad4c966450440b66251173cf93b32b785309beaf0f03cd8479860ea3d29e6"
+    },
+    {
+      "name": "fastapi-69d7d475d8-75sfl",
+      "pod_uid": "609439d7-8883-485b-8e5b-5b3f46e298b8",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107",
+      "uid": 10001,
+      "gid": 10001,
+      "marker": "genai-historias-v1",
+      "sha256": "33dad4c966450440b66251173cf93b32b785309beaf0f03cd8479860ea3d29e6"
+    }
+  ],
+  "stop": "X Multiple errors encountered:\n* Stopping node \"genai\"  ...\n* Powering off \"genai\" via SSH ...\n* 1 node stopped.\n",
+  "resume_after_stop": "1/5 Esperando PostgreSQL de Compose...\r\nPostgreSQL conectado directamente a Minikube: 192.168.49.10:5432.\r\n2/5 Reanudando el perfil genai...\r\n* [genai] minikube v1.39.0 on Microsoft Windows 11 Home Single Language 25H2\n* Kubernetes 1.37.0 is now available. If you would like to upgrade, specify: --kubernetes-version=v1.37.0\n* Using the docker driver based on existing profile\n* Starting \"genai\" primary control-plane node in \"genai\" cluster\n* Pulling base image v0.0.51 ...\n* Preparing Kubernetes v1.36.6 on containerd 2.3.4 ...\n* Verifying Kubernetes components...\n  - Using image gcr.io/k8s-minikube/storage-provisioner:v5\n* Enabled addons: default-storageclass, storage-provisioner\n* To connect to this cluster, use:  --context=genai\nHistorias compartidas con genai; lectura y escritura UID10001 comprobadas.\r\n3/5 Comprobando SQL desde un pod temporal del perfil...\r\npod/postgres-reanudar-287de8ca60f8417383e09220db720dbc created\npod/postgres-reanudar-287de8ca60f8417383e09220db720dbc condition met\nSQL desde Minikube: SELECT 1 = 1.\r\npod \"postgres-reanudar-287de8ca60f8417383e09220db720dbc\" deleted from genai namespace\n4/5 Esperando las replicas deseadas de FastAPI...\r\ndeployment.apps/fastapi restarted\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"fastapi\" rollout to finish: 1 old replicas are pending termination...\ndeployment \"fastapi\" successfully rolled out\n5/5 Abriendo los accesos locales...\r\ndeployment \"argocd-server\" successfully rolled out\nArgo CD disponible mediante port-forward: https://localhost:8443\r\nEsperando que FastAPI este disponible antes de abrir el tunel...\r\ndeployment \"fastapi\" successfully rolled out\nFastAPI disponible mediante port-forward: http://localhost:8002\r\nOK: 2 replicas Ready y GET /patients = 200.\r\nCRUD: http://localhost:8002/patients | Argo CD: https://localhost:8443\r\n",
+  "pods_after_restart": [
+    {
+      "name": "fastapi-76cdb874-66rkc",
+      "pod_uid": "2e7d9a35-5bde-49cf-bf6f-adc928d2b4f0",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107",
+      "uid": 10001,
+      "gid": 10001,
+      "marker": "genai-historias-v1",
+      "sha256": "33dad4c966450440b66251173cf93b32b785309beaf0f03cd8479860ea3d29e6"
+    },
+    {
+      "name": "fastapi-76cdb874-7x9z2",
+      "pod_uid": "3234cdca-98c4-4b1d-a74f-85505b118099",
+      "image": "genai-fastapi:s09-pacientes-compartidos-20261107",
+      "uid": 10001,
+      "gid": 10001,
+      "marker": "genai-historias-v1",
+      "sha256": "33dad4c966450440b66251173cf93b32b785309beaf0f03cd8479860ea3d29e6"
+    }
+  ],
+  "argo_verification": "OK c66a595c0b3b21e95ac7e3a8e0a511988b4ae068: Synced/Healthy, operación Succeeded, 2 pods Ready y paciente HTTP 200\r\n",
+  "argo": {
+    "controllerNamespace": "argocd",
+    "health": {
+      "lastTransitionTime": "2026-11-08T03:10:48Z",
+      "status": "Healthy"
+    },
+    "history": [
+      {
+        "deployStartedAt": "2026-10-28T19:09:13Z",
+        "deployedAt": "2026-10-28T19:09:07Z",
+        "id": 0,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "230a161d585a3106969d57d5103256872f001928",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-10-28T19:13:42Z",
+        "deployedAt": "2026-10-28T19:13:43Z",
+        "id": 1,
+        "initiatedBy": {
+          "username": "admin"
+        },
+        "revision": "230a161d585a3106969d57d5103256872f001928",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-10-28T19:20:11Z",
+        "deployedAt": "2026-10-28T19:20:11Z",
+        "id": 2,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "4844f919647381ee36e27ef0d2cb7f4170408abe",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-10-28T19:40:50Z",
+        "deployedAt": "2026-10-28T19:40:45Z",
+        "id": 3,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-10-28T19:42:48Z",
+        "deployedAt": "2026-10-28T19:42:48Z",
+        "id": 4,
+        "initiatedBy": {
+          "username": "admin"
+        },
+        "revision": "f40aefc436a24f427565e00a9a1e54e2ba7ca3b3",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-10-28T19:49:36Z",
+        "deployedAt": "2026-10-28T19:49:37Z",
+        "id": 5,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "0e89a564811e6769c40d70281323cb004b1275a7",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-11-03T17:36:43Z",
+        "deployedAt": "2026-11-03T17:36:45Z",
+        "id": 6,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "ac626dc692843725bae26c63180f86113f56e402",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-11-03T17:40:05Z",
+        "deployedAt": "2026-11-03T17:40:07Z",
+        "id": 7,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "3ea28b8d71784e48423a252bb836f661abfc2ee5",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-11-03T18:43:40Z",
+        "deployedAt": "2026-11-03T18:43:41Z",
+        "id": 8,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "5b406ba2088698865d3c0f7a1f4f9392af7ecd85",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      {
+        "deployStartedAt": "2026-11-08T02:57:08Z",
+        "deployedAt": "2026-11-08T02:57:10Z",
+        "id": 9,
+        "initiatedBy": {
+          "automated": true
+        },
+        "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      }
+    ],
+    "operationState": {
+      "finishedAt": "2026-11-08T02:57:10Z",
+      "message": "successfully synced (all tasks run)",
+      "operation": {
+        "initiatedBy": {
+          "automated": true
+        },
+        "retry": {
+          "limit": 5
+        },
+        "sync": {
+          "prune": true,
+          "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+          "source": {
+            "path": "deploy/helm/fastapi",
+            "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+            "targetRevision": "main"
+          }
+        }
+      },
+      "phase": "Succeeded",
+      "startedAt": "2026-11-08T02:57:08Z",
+      "syncResult": {
+        "resources": [
+          {
+            "group": "",
+            "hookPhase": "Running",
+            "kind": "Service",
+            "message": "service/fastapi unchanged",
+            "name": "fastapi",
+            "namespace": "genai",
+            "status": "Synced",
+            "syncPhase": "Sync",
+            "version": "v1"
+          },
+          {
+            "group": "apps",
+            "hookPhase": "Running",
+            "images": [
+              "genai-fastapi:s09-pacientes-compartidos-20261107"
+            ],
+            "kind": "Deployment",
+            "message": "deployment.apps/fastapi configured",
+            "name": "fastapi",
+            "namespace": "genai",
+            "status": "Synced",
+            "syncPhase": "Sync",
+            "version": "v1"
+          }
+        ],
+        "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      }
+    },
+    "reconciledAt": "2026-11-08T03:09:55Z",
+    "resourceHealthSource": "appTree",
+    "resources": [
+      {
+        "kind": "Service",
+        "name": "fastapi",
+        "namespace": "genai",
+        "status": "Synced",
+        "version": "v1"
+      },
+      {
+        "group": "apps",
+        "kind": "Deployment",
+        "name": "fastapi",
+        "namespace": "genai",
+        "status": "Synced",
+        "version": "v1"
+      }
+    ],
+    "sourceHydrator": {},
+    "sourceType": "Helm",
+    "summary": {
+      "images": [
+        "genai-fastapi:s09-pacientes-compartidos-20261107"
+      ]
+    },
+    "sync": {
+      "comparedTo": {
+        "destination": {
+          "namespace": "genai",
+          "server": "https://kubernetes.default.svc"
+        },
+        "source": {
+          "path": "deploy/helm/fastapi",
+          "repoURL": "https://github.com/saico09/GenAIRUIFormacion2026.git",
+          "targetRevision": "main"
+        }
+      },
+      "revision": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068",
+      "status": "Synced"
+    }
+  },
+  "temporary_removed": true,
+  "final": {
+    "patient_ids": [
+      1,
+      2,
+      3,
+      4,
+      24
+    ],
+    "patients": "36b0042e7397f58dd89a1db6e9145e7d5afd761eab241198b34e244bfee20359",
+    "diseases": "2815c9eba967f6b821afafd791efecb5751a66a336c21c70d861bbb96432b471",
+    "consultations": "bbd70e2d0a1b43120e3457bc51017288a5dcc19b17c617ca09e7cc462e4e6b1c",
+    "files": {
+      "paciente-1-ana-demo.md": "0bc3024890423931828124d4949ed071f513c1a7c471c78394e059eb075738f9",
+      "paciente-2-bruno-demo.md": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+      "paciente-24-paciente-de-prueba.md": "20a2088040dcc456800bbd5abf271793cfdc5a655a8ded670c7539252a49f02d",
+      "paciente-3-carla-demo.md": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+      "paciente-4-marco-contreras.md": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de"
+    }
+  },
+  "preserved": true,
+  "passed": true,
+  "finished_at": "2026-11-08T03:11:02.373910+00:00"
+}
