@@ -213,7 +213,7 @@ Para descargar el modelo de chat, si falta:
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
 ```
 
-Se usa **Qwen3 4B Instruct 2507** en ambas ramas. En los ocho casos del [ensayo local](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 frente a 6/8 de Llama; es evidencia de esta muestra, no una garantía para cualquier consulta.
+Se usa **Qwen3 4B Instruct 2507** en ambas ramas. En los ocho casos del [ensayo con el corpus anterior](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 frente a 6/8 de Llama. Con el corpus realista pasaron [14 preguntas RAG](evidencias/corpus-realista-2026-11-07/rag-real.json), sin repetir la comparación con Llama. Son muestras concretas, no una garantía para cualquier consulta.
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.
 

@@ -48,5 +48,9 @@
     "Minikube",
     "SonarQube",
     "full observability regression"
-  ]
+  ],
+  "deployed_python_source_matches_local": {
+    "rag.py": "e88262d500995291f48157c953dae3e71f2cfaa2777a83dade124758a2ad5aa5",
+    "app/knowledge.py": "1cb7ccd2ddee552872d627abfc835ec21ebe1bdc9b045546479d735709b43717"
+  }
 }

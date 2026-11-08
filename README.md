@@ -51,7 +51,7 @@ Para descargar los modelos de embeddings y chat, si todavía faltan:
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
 ```
 
-Ambas respuestas usan Qwen3 4B Instruct 2507, con los mismos parámetros. La [comparación local de ocho casos](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 con Qwen y 6/8 con Llama; no es una medida de precisión clínica general.
+Ambas respuestas usan Qwen3 4B Instruct 2507, con los mismos parámetros. Se eligió tras una [comparación local de ocho casos con el corpus anterior](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json): 8/8 con Qwen y 6/8 con Llama. Con los casos realistas pasaron [14 preguntas RAG](evidencias/corpus-realista-2026-11-07/rag-real.json); no se repitió el A/B ni se mide precisión clínica general.
 
 Para comprobar Python:
 

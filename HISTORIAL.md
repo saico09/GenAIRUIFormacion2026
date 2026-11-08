@@ -8,6 +8,8 @@ Ana ahora tiene un caso de reflujo con omeprazol; Bruno, diabetes tipo 2 con met
 
 La actualización conserva los UUID y las consultas anteriores, respalda el Markdown en SQL y sincroniza Qdrant. El prompt admite enfermedades reales sin completar antecedentes faltantes: una dosis habitual no demuestra la dosis del paciente, y alergia al polen no significa alergia a medicamentos. [Pruebas de esta revisión](evidencias/corpus-realista-2026-11-07/LEEME.md).
 
+Pasaron 14 preguntas RAG y 35 contratos en el principal, más siete consultas y sus reintentos en las copias. Trello, Postman y las entregas locales quedaron alineados; el Word S3 se actualizó en Drive. [Cierre y límites](evidencias/corpus-realista-2026-11-07/entrega-semanal.json).
+
 ## Consultas persistentes · 07/11/2026 · Informe y respaldo SQL
 
 **Comparar y guardar** conserva la consulta y las dos respuestas en el informe del paciente y en `java.medical_consultations`. La página Pacientes muestra esas consultas por fecha, separadas de la tabla de enfermedad, tratamiento y medicamento confirmados. El reintento de la misma consulta conserva su UUID para no duplicarla; actualizar el índice RAG tiene su propio reintento.
