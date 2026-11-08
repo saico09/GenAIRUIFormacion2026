@@ -30,6 +30,7 @@ try {
     Write-Output '2/5 Reanudando el perfil genai...'
     & $minikubePath start --profile=genai --keep-context --wait=all --wait-timeout=6m
     if ($LASTEXITCODE -ne 0) { throw 'Minikube no termino de arrancar; no se abrieron tuneles.' }
+    $historyMount = & (Join-Path $PSScriptRoot 'montar_historias_minikube.ps1')
 
     $deploymentJson = & $kubectlPath --context=genai -n genai get deployment fastapi -o json
     if ($LASTEXITCODE -ne 0) { throw 'No se encontro el Deployment fastapi; revisar la Application de Argo CD.' }
@@ -47,7 +48,24 @@ try {
         args = @(@'
 import os
 import time
+from pathlib import Path
+import tempfile
 import psycopg
+
+marker = os.environ.get("HISTORY_SHARED_MARKER")
+if marker:
+    assert Path(marker).read_text().strip() == "genai-historias-v1"
+    directory = Path(os.environ["HISTORY_DIR"])
+    descriptor, temporary = tempfile.mkstemp(prefix=".mount-probe-", dir=directory)
+    final = Path(temporary + ".result")
+    try:
+        with os.fdopen(descriptor, "w") as stream:
+            stream.write("mount-ok")
+        os.replace(temporary, final)
+        assert final.read_text() == "mount-ok"
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+        final.unlink(missing_ok=True)
 
 deadline = time.monotonic() + 120
 while True:
@@ -73,11 +91,14 @@ while True:
     }
     if ($container.env) { $sqlContainer.env = $container.env }
     if ($container.envFrom) { $sqlContainer.envFrom = $container.envFrom }
+    if ($container.volumeMounts) { $sqlContainer.volumeMounts = $container.volumeMounts }
     $pod = @{
         apiVersion = 'v1'; kind = 'Pod'
         metadata = @{ name = $podName; namespace = 'genai' }
         spec = @{ restartPolicy = 'Never'; activeDeadlineSeconds = 150; containers = @($sqlContainer) }
     }
+    if ($deployment.spec.template.spec.volumes) { $pod.spec.volumes = $deployment.spec.template.spec.volumes }
+    if ($deployment.spec.template.spec.securityContext) { $pod.spec.securityContext = $deployment.spec.template.spec.securityContext }
     try {
         $pod | ConvertTo-Json -Depth 20 -Compress | & $kubectlPath --context=genai -n genai create -f -
         if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear el pod temporal de comprobacion SQL.' }
@@ -97,6 +118,11 @@ while True:
     }
 
     Write-Output '4/5 Esperando las replicas deseadas de FastAPI...'
+    if (-not $historyMount.Reused) {
+        # Un pod anterior puede conservar el bind de un montaje perdido. No cambia el chart ni las replicas.
+        & $kubectlPath --context=genai -n genai rollout restart deployment/fastapi
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudieron renovar los pods tras recuperar el montaje.' }
+    }
     & $kubectlPath --context=genai -n genai rollout status deployment/fastapi --timeout=300s
     if ($LASTEXITCODE -ne 0) { throw 'FastAPI no quedo Ready; revisar sus eventos y logs antes de abrir tuneles.' }
     $readyJson = & $kubectlPath --context=genai -n genai get deployment fastapi -o json

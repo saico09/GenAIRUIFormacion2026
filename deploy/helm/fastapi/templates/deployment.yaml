@@ -13,6 +13,15 @@ spec:
       labels:
         app: fastapi
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+      volumes:
+        - name: histories
+          hostPath:
+            path: {{ .Values.history.nodePath | quote }}
+            type: Directory
       containers:
         - name: fastapi
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -20,7 +29,14 @@ spec:
           ports:
             - name: http
               containerPort: 8000
+          volumeMounts:
+            - name: histories
+              mountPath: /datos/historias
           env:
+            - name: HISTORY_DIR
+              value: /datos/historias
+            - name: HISTORY_SHARED_MARKER
+              value: /datos/historias/.genai-shared
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.host | quote }}
             - name: POSTGRES_PORT

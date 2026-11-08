@@ -44,12 +44,12 @@ Para iniciar Ollama:
 
 Abre [localhost:8000](http://localhost:8000). Arriba tienes cuatro secciones:
 
-1. **Consultas médicas:** elige un paciente Java, describe la consulta o pregunta por sus antecedentes y pulsa **Comparar y guardar**. Abre cada fuente para leer el fragmento y su UUID. Al terminar aparece la confirmación de guardado y el enlace al informe.
+1. **Consultas médicas:** elige un paciente, describe la consulta o pregunta por sus antecedentes y pulsa **Comparar y guardar**. Abre cada fuente para leer el fragmento y su UUID. Al terminar aparece la confirmación de guardado y el enlace al informe.
 2. **Pacientes:** agrega, busca o edita pacientes. Pulsa su nombre para abrir la historia; **Eliminar** pide confirmación y retira su archivo activo, conservando los respaldos SQL.
 3. **API Python:** abre una operación, completa el ID o el JSON y pulsa **Ejecutar petición**.
 4. **API Java:** lo mismo, pero contra Spring Boot. Los colores distinguen GET, POST, PUT y DELETE; el resultado muestra el código HTTP y el detalle del error si lo hay.
 
-La tabla y el selector clínico comparten los pacientes Java. El CRUD Python conserva su tabla independiente. Los exploradores modifican datos reales de esta app local; usa un paciente temporal para practicar.
+La tabla, el selector clínico y las dos APIs comparten `public.patients`. Cada alta crea su informe Markdown automáticamente. Los exploradores modifican datos reales de esta app local; usa un paciente temporal para practicar.
 
 Para actualizar una instalación que ya está funcionando:
 
@@ -65,71 +65,73 @@ Para verla: **Pacientes → nombre del paciente**. La primera tabla muestra regi
 
 Para guardar una consulta: usa **Consultas médicas → Comparar y guardar**. Se guarda automáticamente el texto y las respuestas en el `.md` y en PostgreSQL. Los síntomas que escribes y la orientación del modelo no se convierten por eso en diagnósticos confirmados.
 
-Para añadir enfermedad, tratamiento o medicamento confirmados: **Registro confirmado → escribir la nota ficticia → Preparar con IA → revisar los campos → Guardar este registro → Confirmar y guardar**. Si no encuentra hechos o la IA no está disponible, usa **Crear registro manual**.
+Para añadir datos: **Registros confirmados → Agregar registro → completar enfermedad, tratamiento y medicamento → Guardar registro → Confirmar y guardar**. Basta con un campo; deja vacío lo que no sepas. Usa **Editar** o **Eliminar** en la misma fila. Cada cambio actualiza la tabla SQL y el Markdown conservando el UUID.
+
+Para partir de una nota: **Preparar desde una nota → escribir los hechos ficticios → Preparar con IA → revisar campos → Guardar este registro**. Puedes corregir la propuesta antes de confirmarla.
 
 Para ver o bajar el archivo: **Ver archivo Markdown → Descargar .md**. Para editar los registros confirmados: **Editar Markdown → Guardar Markdown → Confirmar y guardar**. Conserva sus UUID y la sección **Consultas registradas**, que mantiene el historial original. Si aparece 409, pulsa **Actualizar historia**, compara tu borrador con la versión actual y confirma de nuevo.
 
-El guardado actualiza el índice RAG. Si falla, el informe queda guardado: pulsa **Reintentar sincronización**. Renombrar o eliminar pacientes también sincroniza; el reintento no repite el cambio en Java.
+El guardado actualiza el índice RAG. Si falla, el informe queda guardado: pulsa **Reintentar sincronización**. Renombrar o eliminar pacientes también sincroniza; el reintento no repite el cambio guardado.
 
 Si al terminar el chat aparece **Falta actualizar el índice RAG**, la consulta ya quedó guardada: pulsa **Reintentar índice RAG**. No vuelve a generar ni a guardar la consulta. Si se cortó la conexión, reintenta el mismo texto con el mismo paciente sin recargar la página: el navegador conserva su UUID para evitar duplicarlo.
 
-Los informes viven en `datos/historias/paciente-ID-nombre.md`, montado con escritura en Java. `java.medical_consultations` conserva consultas y versiones completas del Markdown; `public.transaction_logs` registra el UUID de ejecución, API, operación, verbo, código HTTP y cuerpos de entrada/salida. Conserva tanto la carpeta como el volumen PostgreSQL. Las consultas de uso modifican los Markdown locales; las semillas versionadas y las copias semanales se mantienen sin ese diario personal.
+Los informes viven en `datos/historias/paciente-ID-nombre.md`, montado con escritura en ambas APIs. `public.patient_diseases` guarda los registros confirmados y los relaciona con `public.patients` mediante `patient_id`. `public.medical_consultations` conserva las consultas y versiones completas del Markdown. `public.transaction_logs` guarda un solo UUID `id` por operación, más `patient_id`, API, verbo, operación, código HTTP y cuerpos de entrada/salida. Conserva tanto la carpeta como el volumen PostgreSQL. Las consultas de uso modifican los Markdown locales; las semillas versionadas y las copias semanales se mantienen sin ese diario personal.
 
 Para ver las últimas consultas guardadas:
 
 ```powershell
-'SELECT id, patient_id, created_at, question, model FROM java.medical_consultations WHERE kind = ''consultation'' ORDER BY created_at DESC LIMIT 10;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+'SELECT id, patient_id, created_at, question, model FROM public.medical_consultations WHERE kind = ''consultation'' ORDER BY created_at DESC LIMIT 10;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 ```
 
 Para ver las últimas transacciones de las APIs:
 
 ```powershell
-'SELECT execution_id, service, method, operation, http_status, created_at FROM public.transaction_logs ORDER BY created_at DESC LIMIT 20;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+'SELECT id, patient_id, service, method, operation, http_status, created_at FROM public.transaction_logs ORDER BY created_at DESC LIMIT 20;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 ```
+
+En los logs, `patient_id` queda vacío cuando la operación no corresponde a un paciente. Se conserva aunque borres ese paciente, para poder revisar lo que ocurrió. Los identificadores de cabecera sirven para trazas e idempotencia del chat; no añaden columnas UUID a `transaction_logs`.
 
 En `medical_consultations`, `kind = 'consultation'` identifica una consulta; `snapshot` guarda una versión del informe y `deleted` respalda su última versión al borrar el paciente. `markdown_content` contiene el Markdown completo. Eliminar el paciente retira el archivo activo, pero conserva los respaldos y las transacciones.
 
 Para leer el último respaldo del Markdown de Ana:
 
 ```powershell
-'SELECT filename, revision, markdown_content FROM java.medical_consultations WHERE patient_id = 1 ORDER BY storage_order DESC LIMIT 1;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+'SELECT filename, revision, markdown_content FROM public.medical_consultations WHERE patient_id = 1 ORDER BY storage_order DESC LIMIT 1;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 ```
 
 El registro HTTP cubre las rutas de pacientes, chat y clínica, incluidos sus errores; omite las sondas y archivos de la página. Guarda hasta 128 KiB de cada cuerpo e indica cualquier recorte en `request_truncated` y `response_truncated`. No guarda las cabeceras. Si falla la escritura del log SQL, se registra el error en los logs de la API; no se deshace una operación de negocio ya completada.
 
-## Pacientes Python
+## Pacientes compartidos
 
-Para consultar los pacientes antes de cargar datos:
+Para listar desde Python y Java:
 
 ```powershell
 curl.exe -i http://localhost:8000/patients
-```
-
-Para cargar los tres ficticios **solo si faltan**:
-
-```powershell
-(Get-Content datos/pacientes.json -Raw | ConvertFrom-Json) | ForEach-Object { Invoke-RestMethod -Method Post -Uri http://localhost:8000/patients -ContentType 'application/json' -Body ($_ | ConvertTo-Json) }
-```
-
-Ojo: repetir esta carga duplica pacientes. En este equipo ya estaban cargados.
-
-## Pacientes Java
-
-Para consultar Java:
-
-```powershell
 curl.exe -i http://localhost:8080/patients
 ```
 
-Para inicializar los tres pacientes Java de la demo, después de levantar ambas APIs:
+Para cargar la demo en una instalación nueva:
 
 ```powershell
-docker compose exec -T python-api python inicializar_java.py
+docker compose exec -T python-api python inicializar_datos.py
 ```
 
-El comando valida `datos/pacientes.json` y los tres informes de `datos/historias/` antes de asociar los IDs 1–3. Solo escribe si `java.patients` está completamente vacía; si tiene cualquier paciente, responde `conservados` y no modifica filas, informes ni secuencia. No completa una carga parcial ni sobrescribe historias. La secuencia continúa desde al menos 4, sin retroceder si ya consumió IDs. Los ids de Java y Python son independientes.
+La carga conserva los datos existentes. No repitas POST sobre los tres ejemplos: úsalo para pacientes nuevos. Las dos APIs crean el Markdown al dar de alta y mantienen la misma identidad.
 
-Los POST habituales siguen sirviendo para pacientes nuevos. No sustituyen esta carga inicial: si el ID reservado ya tiene un informe, Java responde 409 para protegerlo.
+Para ver los registros confirmados de Ana desde cualquiera de las APIs:
+
+```powershell
+curl.exe -i http://localhost:8000/patients/1/diseases
+curl.exe -i http://localhost:8080/patients/1/diseases
+```
+
+Para ver la tabla clínica en PostgreSQL:
+
+```powershell
+'SELECT id, patient_id, disease, treatment, medication FROM public.patient_diseases ORDER BY patient_id, id;' | docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+
+Para practicar el CRUD de enfermedades, abre **API Python** o **API Java** y busca `/patients/{id}/diseases`. POST recibe los tres textos y devuelve un UUID. Copia ese UUID para GET, PUT o DELETE del registro. Las rutas siempre incluyen el ID del paciente.
 
 ## Comprobar el CRUD
 
@@ -174,7 +176,7 @@ docker compose exec postgres psql -U genai -d genai
 Para contar filas sin mostrar datos personales:
 
 ```powershell
-docker compose exec postgres psql -U genai -d genai -c "SELECT 'python' AS api, count(*) FROM public.patients UNION ALL SELECT 'java', count(*) FROM java.patients;"
+docker compose exec postgres psql -U genai -d genai -c "SELECT count(*) AS patients FROM public.patients;"
 ```
 
 DBeaver: `localhost:5432`, base `genai`, usuario/clave de `.env`. Minikube usa la conexión directa por la red Docker `genai`.
@@ -219,7 +221,7 @@ Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermed
 
 Ana tiene un caso simulado de reflujo con omeprazol; Bruno, diabetes tipo 2 con metformina; Carla, rinitis alérgica por polen con cetirizina. Los planes, preguntas para probar y fuentes están en [Casos de prueba](datos/CASOS.md). Las dosis y algunos antecedentes se dejan sin registrar para comprobar que el RAG no los invente.
 
-«Con RAG» comprueba la historia vigente de Java, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
+«Con RAG» comprueba la historia vigente del paciente, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
 
 Puedes preguntar por datos registrados o describir síntomas de una consulta ficticia. La respuesta contextual separa los antecedentes del informe de la orientación general y explica qué información falta. No convierte síntomas nuevos en una enfermedad confirmada ni prescribe medicamentos.
 
@@ -347,16 +349,24 @@ Para crear el perfil (2 CPU y 3072 MiB):
 .\.local\bin\minikube.exe start --profile=genai --driver=docker --cpus=2 --memory=3072 --kubernetes-version=v1.36.6 --keep-context --wait=all --wait-timeout=6m
 ```
 
+Para compartir los mismos informes de Compose:
+
+```powershell
+.\scripts\montar_historias_minikube.ps1
+```
+
+Deja un proceso oculto de Minikube que mantiene la carpeta conectada. Si reinicias el equipo o detienes el perfil, usa después `reanudar_minikube.ps1`: comprueba y recupera el montaje por ti.
+
 Para construir la imagen:
 
 ```powershell
-docker build --tag genai-fastapi:s09-reanudacion-20261103 --progress=plain ./python-api
+docker build --tag genai-fastapi:s09-pacientes-compartidos-20261107 --progress=plain ./python-api
 ```
 
 Para cargarla en el perfil:
 
 ```powershell
-.\.local\bin\minikube.exe --profile=genai image load genai-fastapi:s09-reanudacion-20261103
+.\.local\bin\minikube.exe --profile=genai image load genai-fastapi:s09-pacientes-compartidos-20261107
 ```
 
 <a id="chart-y-conexión-a-postgres"></a>
@@ -417,7 +427,9 @@ Para reanudar el perfil ya creado y abrir sus accesos:
 .\scripts\reanudar_minikube.ps1
 ```
 
-Espera PostgreSQL, asegura su conexión directa, comprueba SQL desde Minikube y las réplicas Ready; después abre los túneles. Solo levanta el CRUD de este perfil; el chat sigue en Compose, puerto 8000.
+Espera PostgreSQL, asegura su conexión directa y comparte `datos/historias` con las dos réplicas. Comprueba lectura, escritura y SQL antes de abrir los túneles. Si recuperó el montaje, renueva los pods para usarlo. El chat sigue en Compose, puerto 8000.
+
+El CRUD de Minikube usa los mismos pacientes e informes que Compose. Si falta el montaje, el marcador impide arrancar la API o devuelve 503 en salud; ejecuta otra vez el comando de reanudación. Sus registros están en `.local/historias-mount-genai.*`.
 
 Necesita que Docker Desktop responda. La ruta directa evita el puerto publicado de Windows; no repara un backend de Docker bloqueado.
 

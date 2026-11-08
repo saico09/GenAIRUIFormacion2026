@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: genai-fastapi
-  tag: s09-reanudacion-20261103
+  tag: s09-pacientes-compartidos-20261107
   pullPolicy: IfNotPresent
 
 postgres:
@@ -11,6 +11,9 @@ postgres:
   port: 5432
   database: genai
   existingSecret: genai-postgres
+
+history:
+  nodePath: /mnt/genai-historias
 
 resources:
   requests:
