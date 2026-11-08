@@ -72,7 +72,7 @@ def request(base, path, method="GET", body=None, execution=None):
 
 def sql_backup(compose_dir, patient_id):
     assert type(patient_id) is int and patient_id in (1, 2, 3)
-    query = ("SELECT row_to_json(t) FROM (SELECT revision,markdown_content FROM java.medical_consultations "
+    query = ("SELECT row_to_json(t) FROM (SELECT revision,markdown_content FROM public.medical_consultations "
              f"WHERE patient_id={patient_id} ORDER BY storage_order DESC LIMIT 1) t;")
     result = subprocess.run(["docker", "compose", "exec", "-T", "postgres", "sh", "-c",
                              'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At'],

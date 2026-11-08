@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,11 +26,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.web.server.ResponseStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Un bloqueo local serializa el CRUD y las revisiones de los informes de esta instancia. */
+/** SQL y Markdown comparten un bloqueo PostgreSQL entre Java y Python. */
 @Service
 public class PatientHistoryService {
     private static final Logger log = LoggerFactory.getLogger(PatientHistoryService.class);
@@ -43,86 +48,109 @@ public class PatientHistoryService {
     private static final Pattern HEADING = Pattern.compile("(?m)^#{1,6}(?:\\s|$)");
     private final PatientRepository patients;
     private final MedicalConsultationRepository consultations;
+    private final PatientDiseaseRepository diseases;
     private final TransactionTemplate transactions;
     private final Path directory;
+    private final ThreadLocal<LinkedHashMap<Path, String>> beforeWrites = new ThreadLocal<>();
 
-    public PatientHistoryService(PatientRepository patients, MedicalConsultationRepository consultations, PlatformTransactionManager manager,
+    public PatientHistoryService(PatientRepository patients, MedicalConsultationRepository consultations,
+            PatientDiseaseRepository diseases, PlatformTransactionManager manager,
             @Value("${app.history.dir}") String directory) {
         this.patients = patients;
         this.consultations = consultations;
+        this.diseases = diseases;
+        if (manager instanceof AbstractPlatformTransactionManager springTransactions) {
+            springTransactions.setRollbackOnCommitFailure(true);
+        }
         this.transactions = new TransactionTemplate(manager);
         this.directory = Path.of(directory).toAbsolutePath().normalize();
     }
 
-    public synchronized PatientResponse create(PatientRequest input) {
-        checkName(input.name());
-        Path[] created = new Path[1];
-        try {
-            return transactions.execute(status -> {
-                Patient patient = patients.saveAndFlush(new Patient(input.name(), input.birthDate(), input.email()));
-                if (findFile(patient.getId()) != null) throw conflict("Ya existe un informe para este ID");
-                Path path = filename(patient);
-                String markdown = render(patient, List.of(), List.of());
-                write(path, markdown);
-                created[0] = path;
-                snapshot(patient, path.getFileName().toString(), markdown, "snapshot");
-                return PatientResponse.from(patient);
+    private <T> T locked(Supplier<T> action) {
+        return transactions.execute(status -> {
+            diseases.lock();
+            var before = new LinkedHashMap<Path, String>();
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override public void afterCompletion(int completion) {
+                    try {
+                        if (completion == STATUS_ROLLED_BACK) {
+                            for (var item : before.entrySet()) {
+                                try {
+                                    if (item.getValue() == null) Files.deleteIfExists(item.getKey());
+                                    else writeRaw(item.getKey(), item.getValue());
+                                } catch (Exception recovery) {
+                                    log.error("No se pudo restaurar {} tras rollback", item.getKey().getFileName(), recovery);
+                                }
+                            }
+                        } else if (completion == STATUS_UNKNOWN && !before.isEmpty()) {
+                            log.error("Resultado SQL desconocido; se conserva el Markdown para conciliación");
+                        }
+                    } finally {
+                        // Spring aún conserva aquí la conexión transaccional; se libera antes de devolverla al pool.
+                        diseases.unlock();
+                    }
+                }
             });
-        } catch (RuntimeException error) {
-            if (created[0] != null) compensate(error, () -> Files.deleteIfExists(created[0]));
-            throw error;
-        }
+            beforeWrites.set(before);
+            try { return action.get(); }
+            finally { beforeWrites.remove(); }
+        });
     }
 
-    public synchronized PatientResponse update(Integer id, PatientRequest input) {
+    public PatientResponse create(PatientRequest input) { return locked(() -> createLocked(input)); }
+    public PatientResponse update(Integer id, PatientRequest input) { return locked(() -> updateLocked(id, input)); }
+    public void delete(Integer id) { locked(() -> { deleteLocked(id); return null; }); }
+    public HistoryResponse get(Integer id) { return locked(() -> load(findPatient(id))); }
+    public HistoryResponse replace(Integer id, HistoryRequest.Replace input) { return locked(() -> replaceLocked(id, input)); }
+    public HistoryResponse append(Integer id, HistoryRequest.Append input) { return locked(() -> appendLocked(id, input)); }
+    public ConsultationSaved consult(Integer id, ConsultationRequest input) { return locked(() -> consultLocked(id, input)); }
+    public HistoryResponse.Consultation getConsultation(Integer id, String consultationId) {
+        return locked(() -> getConsultationLocked(id, consultationId));
+    }
+
+    private PatientResponse createLocked(PatientRequest input) {
+        checkName(input.name());
+        Patient patient = patients.saveAndFlush(new Patient(input.name(), input.birthDate(), input.email()));
+        if (findFile(patient.getId()) != null) throw conflict("Ya existe un informe para este ID");
+        Path path = filename(patient);
+        String markdown = render(patient, List.of(), List.of());
+        write(path, markdown);
+        snapshot(patient, path.getFileName().toString(), markdown, "snapshot");
+        return PatientResponse.from(patient);
+    }
+
+    private PatientResponse updateLocked(Integer id, PatientRequest input) {
         checkName(input.name());
         Patient previous = findPatient(id);
         HistoryResponse history = load(previous);
         Path oldPath = directory.resolve(history.filename());
-        Path[] newPath = {oldPath};
-        try {
-            return transactions.execute(status -> {
-                Patient patient = findPatient(id);
-                patient.updateDetails(input.name(), input.birthDate(), input.email());
-                patients.saveAndFlush(patient);
-                newPath[0] = filename(patient);
-                String markdown = render(patient, history.entries(), history.consultations());
-                write(oldPath, markdown);
-                if (!oldPath.equals(newPath[0])) move(oldPath, newPath[0]);
-                snapshot(patient, newPath[0].getFileName().toString(), markdown, "snapshot");
-                return PatientResponse.from(patient);
-            });
-        } catch (RuntimeException error) {
-            restore(error, oldPath, history.markdown(), newPath[0]);
-            throw error;
-        }
+        previous.updateDetails(input.name(), input.birthDate(), input.email());
+        patients.saveAndFlush(previous);
+        Path newPath = filename(previous);
+        String markdown = render(previous, history.entries(), history.consultations());
+        write(oldPath, markdown);
+        if (!oldPath.equals(newPath)) move(oldPath, newPath);
+        snapshot(previous, newPath.getFileName().toString(), markdown, "snapshot");
+        return PatientResponse.from(previous);
     }
 
-    public synchronized void delete(Integer id) {
+    private void deleteLocked(Integer id) {
         Patient patient = findPatient(id);
         Path path = findFile(id);
         String before = path == null ? null : read(path);
-        try {
-            transactions.executeWithoutResult(status -> {
-                if (before != null) snapshot(patient, path.getFileName().toString(), before, "deleted");
-                patients.delete(patient);
-                patients.flush();
-                if (path != null) io(() -> { Files.delete(path); return null; });
-            });
-        } catch (RuntimeException error) {
-            if (path != null) restore(error, path, before, path);
-            throw error;
+        if (before != null) snapshot(patient, path.getFileName().toString(), before, "deleted");
+        patients.delete(patient);
+        patients.flush();
+        if (path != null) {
+            remember(path);
+            io(() -> { Files.delete(path); return null; });
         }
     }
 
-    public synchronized HistoryResponse get(Integer id) {
-        return load(findPatient(id));
-    }
-
-    public synchronized void backupExisting() {
+    public void backupExisting() {
         for (Patient patient : patients.findAll()) {
             try {
-                load(patient);
+                get(patient.getId());
             } catch (RuntimeException error) {
                 // No se sobrescribe un archivo conflictivo ni se impide usar otros pacientes.
                 log.error("No se pudo respaldar el informe del paciente {}; tipo={}", patient.getId(), error.getClass().getSimpleName());
@@ -130,13 +158,13 @@ public class PatientHistoryService {
         }
     }
 
-    public synchronized HistoryResponse.Consultation getConsultation(Integer id, String consultationId) {
+    private HistoryResponse.Consultation getConsultationLocked(Integer id, String consultationId) {
         findPatient(id);
         return consultations.list(id).stream().filter(item -> item.id().equals(consultationId)).findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Consulta no encontrada"));
     }
 
-    public synchronized ConsultationSaved consult(Integer id, ConsultationRequest input) {
+    private ConsultationSaved consultLocked(Integer id, ConsultationRequest input) {
         Patient patient = findPatient(id);
         UUID consultationId = UUID.fromString(input.id());
         var existing = consultations.find(consultationId);
@@ -163,21 +191,14 @@ public class PatientHistoryService {
         String markdown = render(patient, current.entries(), journal);
         checkSize(markdown);
         Path path = directory.resolve(current.filename());
-        try {
-            transactions.executeWithoutResult(status -> {
-                consultations.consultation(id, consultation, current.filename(), markdown, revision(markdown));
-                write(path, markdown);
-            });
-        } catch (RuntimeException error) {
-            restore(error, path, current.markdown(), path);
-            throw error;
-        }
+        consultations.consultation(id, consultation, current.filename(), markdown, revision(markdown));
+        write(path, markdown);
         return new ConsultationSaved(response(patient, current.filename(), markdown, current.entries(), journal), true);
     }
 
     public record ConsultationSaved(HistoryResponse history, boolean created) {}
 
-    public synchronized HistoryResponse replace(Integer id, HistoryRequest.Replace input) {
+    private HistoryResponse replaceLocked(Integer id, HistoryRequest.Replace input) {
         Patient patient = findPatient(id);
         HistoryResponse current = load(patient);
         checkRevision(input.revision(), current);
@@ -189,7 +210,7 @@ public class PatientHistoryService {
         return save(patient, current, entries);
     }
 
-    public synchronized HistoryResponse append(Integer id, HistoryRequest.Append input) {
+    private HistoryResponse appendLocked(Integer id, HistoryRequest.Append input) {
         Patient patient = findPatient(id);
         HistoryResponse current = load(patient);
         checkRevision(input.revision(), current);
@@ -199,19 +220,64 @@ public class PatientHistoryService {
         return save(patient, current, entries);
     }
 
+    public List<DiseaseResponse> listDiseases(Integer id) {
+        return locked(() -> load(findPatient(id)).entries().stream().map(item -> DiseaseResponse.from(id, item)).toList());
+    }
+
+    public DiseaseResponse getDisease(Integer id, String diseaseId) {
+        return locked(() -> DiseaseResponse.from(id, findEntry(load(findPatient(id)), diseaseId)));
+    }
+
+    public DiseaseResponse addDisease(Integer id, DiseaseRequest input) {
+        return locked(() -> {
+            Patient patient = findPatient(id);
+            HistoryResponse current = load(patient);
+            if (current.entries().size() >= MAX_ENTRIES) throw invalid("La historia admite como máximo 50 registros");
+            var item = entry(UUID.randomUUID().toString(), input.disease(), input.treatment(), input.medication());
+            var entries = new ArrayList<>(current.entries());
+            entries.add(item);
+            save(patient, current, entries);
+            return DiseaseResponse.from(id, item);
+        });
+    }
+
+    public DiseaseResponse updateDisease(Integer id, String diseaseId, DiseaseRequest input) {
+        return locked(() -> {
+            Patient patient = findPatient(id);
+            HistoryResponse current = load(patient);
+            var previous = findEntry(current, diseaseId);
+            var item = entry(previous.id(), input.disease(), input.treatment(), input.medication());
+            var entries = new ArrayList<>(current.entries());
+            entries.set(entries.indexOf(previous), item);
+            save(patient, current, entries);
+            return DiseaseResponse.from(id, item);
+        });
+    }
+
+    public void deleteDisease(Integer id, String diseaseId) {
+        locked(() -> {
+            Patient patient = findPatient(id);
+            HistoryResponse current = load(patient);
+            var previous = findEntry(current, diseaseId);
+            var entries = new ArrayList<>(current.entries());
+            entries.remove(previous);
+            save(patient, current, entries);
+            return null;
+        });
+    }
+
+    private HistoryResponse.Entry findEntry(HistoryResponse history, String id) {
+        return history.entries().stream().filter(item -> item.id().equals(id)).findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro no encontrado para este paciente"));
+    }
+
     private HistoryResponse save(Patient patient, HistoryResponse previous, List<HistoryResponse.Entry> entries) {
         String markdown = render(patient, entries, previous.consultations());
         checkSize(markdown);
         Path path = directory.resolve(previous.filename());
-        try {
-            transactions.executeWithoutResult(status -> {
-                write(path, markdown);
-                snapshot(patient, previous.filename(), markdown, "snapshot");
-            });
-        } catch (RuntimeException error) {
-            restore(error, path, previous.markdown(), path);
-            throw error;
-        }
+        diseases.synchronize(patient.getId(), entries);
+        write(path, markdown);
+        snapshot(patient, previous.filename(), markdown, "snapshot");
         return response(patient, previous.filename(), markdown, entries, previous.consultations());
     }
 
@@ -226,12 +292,13 @@ public class PatientHistoryService {
                 parse(patient, backup.markdown(), consultations.list(patient.getId()));
                 write(path, backup.markdown());
             } else {
-                write(path, render(patient, List.of(), List.of()));
+                write(path, render(patient, diseases.list(patient.getId()), consultations.list(patient.getId())));
             }
         }
         String markdown = read(path);
         var journal = consultations.list(patient.getId());
         var entries = parse(patient, markdown, journal);
+        diseases.synchronize(patient.getId(), entries);
         snapshot(patient, path.getFileName().toString(), markdown, "snapshot");
         return response(patient, path.getFileName().toString(), markdown, entries, journal);
     }
@@ -373,6 +440,17 @@ public class PatientHistoryService {
 
     private void write(Path path, String content) {
         checkSize(content);
+        remember(path);
+        writeRaw(path, content);
+    }
+
+    private void remember(Path path) {
+        var before = beforeWrites.get();
+        if (before == null) throw new IllegalStateException("La escritura clínica requiere una transacción");
+        if (!before.containsKey(path)) before.put(path, Files.exists(path) ? read(path) : null);
+    }
+
+    private void writeRaw(Path path, String content) {
         io(() -> {
             Files.createDirectories(directory);
             Path temporary = Files.createTempFile(directory, ".history-", ".tmp");
@@ -385,18 +463,9 @@ public class PatientHistoryService {
     }
 
     private void move(Path from, Path to) {
+        remember(from);
+        remember(to);
         io(() -> { Files.move(from, to, StandardCopyOption.ATOMIC_MOVE); return null; });
-    }
-
-    private void restore(RuntimeException original, Path oldPath, String content, Path newPath) {
-        try {
-            write(oldPath, content);
-            if (!newPath.equals(oldPath)) io(() -> { Files.deleteIfExists(newPath); return null; });
-        } catch (RuntimeException recovery) { original.addSuppressed(recovery); }
-    }
-
-    private void compensate(RuntimeException original, StorageAction<?> action) {
-        try { io(action); } catch (RuntimeException recovery) { original.addSuppressed(recovery); }
     }
 
     private void checkSize(String text) {

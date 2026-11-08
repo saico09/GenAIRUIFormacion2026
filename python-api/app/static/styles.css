@@ -162,10 +162,15 @@ dialog label:not(:first-child) { margin-top: 17px; }
 .history-heading { margin-top: 16px; }
 .history-heading h2 { font-size: 27px; overflow-wrap: anywhere; }
 .history-panel, .markdown-panel, .consultation-panel { margin-bottom: 22px; }
-#history-table { table-layout: fixed; min-width: 700px; }
+#history-table { table-layout: fixed; min-width: 850px; }
 #history-table td { vertical-align: top; white-space: pre-wrap; }
 #history-table td:first-child { font-size: 11px; }
 #history-table td:nth-child(2) { font-weight: 400; }
+#history-table th:last-child { width: 190px; }
+#history-table .row-actions button { white-space: nowrap; flex-shrink: 0; }
+.disease-form { margin: 22px; padding: 20px; border: 1px solid var(--line); border-radius: 9px; background: #f6faf5; }
+.disease-form h3 { font-size: 17px; }
+.disease-form .entry-fields { margin: 18px 0 12px; }
 .markdown-panel > summary { padding: 19px 24px; cursor: pointer; font-weight: 600; }
 .markdown-panel > summary span { margin-left: 12px; overflow-wrap: anywhere; }
 .history-content, .consultation-panel { padding: 24px; }

@@ -41,6 +41,7 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://phoenix:6006/v1/traces
     volumes:
       - ./datos:/datos:ro
+      - ./datos/historias:/datos/historias
     depends_on:
       postgres:
         condition: service_healthy

@@ -19,7 +19,7 @@ public class JavaApiApplication {
     @Bean
     ApplicationRunner verifyDatabase(PatientRepository patients) {
         // Lee solo el esquema java; registra el conteo, nunca datos de pacientes.
-        return args -> log.info("Tabla java.patients accesible: {} filas", patients.count());
+        return args -> log.info("Tabla public.patients compartida accesible: {} filas", patients.count());
     }
 
 }

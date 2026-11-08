@@ -14,6 +14,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import text
 
 from app.db import engine
+from app.observability import transaction_patient_id
 
 
 BASE = "http://127.0.0.1:8000"
@@ -35,6 +36,10 @@ def call(method, path, expected, body=None, *, raw=None, execution=None):
     headers = {"Content-Type": "application/json", "X-Execution-ID": execution,
                "X-Request-ID": "audit-python-" + str(uuid4())}
     request = Request(BASE + path, data=payload, headers=headers, method=method)
+    with engine.connect() as connection:
+        previous = set(connection.execute(text("SELECT id FROM public.transaction_logs WHERE service='python' "
+                                               "AND path=:path AND method=:method"),
+                                          {"path": path, "method": method}).scalars())
     try:
         response = urlopen(request, timeout=30)
     except HTTPError as error:
@@ -53,18 +58,18 @@ def call(method, path, expected, body=None, *, raw=None, execution=None):
     while True:
         with engine.connect() as connection:
             rows = connection.execute(text("""
-                SELECT id, execution_id, request_id, service, operation, method, path, http_status,
+                SELECT id, patient_id, service, operation, method, path, http_status,
                        request_body, response_body, request_truncated, response_truncated, duration_ms
-                FROM public.transaction_logs WHERE execution_id = :execution AND service = 'python'
-                """), {"execution": UUID(execution)}).mappings().all()
+                FROM public.transaction_logs WHERE path = :path AND method = :method AND service = 'python'
+                """), {"path": path, "method": method}).mappings().all()
+            rows = [row for row in rows if row["id"] not in previous]
         if rows or time.monotonic() >= deadline:
             break
         time.sleep(0.1)
     assert len(rows) == 1, ("one_transaction", path, len(rows))
     row = rows[0]
     UUID(str(row["id"]))
-    assert str(row["execution_id"]) == execution
-    assert row["request_id"] == headers["X-Request-ID"]
+    assert row["patient_id"] == transaction_patient_id(path, method, status, (payload or b"").decode(), actual_body.decode())
     assert row["service"] == "python"
     assert row["method"] == method and row["path"] == path
     assert row["http_status"] == status == expected, ("http_status", path, row["http_status"], status, expected)
@@ -77,7 +82,7 @@ def call(method, path, expected, body=None, *, raw=None, execution=None):
     report["requests"].append({
         "method": method, "path": path, "status": status, "execution_id": execution,
         "transaction_id": str(row["id"]), "operation": row["operation"],
-        "body_match": True, "uuid_match": True, "truncated": False,
+        "body_match": True, "patient_id": row["patient_id"], "truncated": False,
     })
     return json.loads(actual_body) if actual_body else None
 

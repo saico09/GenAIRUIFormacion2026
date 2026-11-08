@@ -54,6 +54,23 @@ def is_audited_path(path: str) -> bool:
                for prefix in ("/patients", "/chat", "/clinical"))
 
 
+def transaction_patient_id(path: str, method: str, status: int, request_body: str, response_body: str) -> int | None:
+    """Conserva también el objetivo de un 404/DELETE, aunque ya no exista en patients."""
+    match = re.match(r"^(?:/clinical)?/patients/([1-9][0-9]*)(?:/|$)", path)
+    if match:
+        value = int(match[1])
+        return value if value <= 2147483647 else None
+    candidate = None
+    try:
+        if path == "/patients" and method == "POST" and 200 <= status < 300:
+            candidate = json.loads(response_body).get("id")
+        elif path in ("/chat", "/clinical/proposals"):
+            candidate = json.loads(request_body).get("patient_id")
+    except (ValueError, AttributeError):
+        pass
+    return candidate if type(candidate) is int and 0 < candidate <= 2147483647 else None
+
+
 class RequestLoggingMiddleware:
     """Captura acotada sin consumir ni reconstruir la respuesta de streaming.
 
@@ -97,7 +114,8 @@ class RequestLoggingMiddleware:
             route = getattr(scope.get("route"), "path", "unmatched").replace("{patient_id}", "{id}")
             try:
                 await run_in_threadpool(write_transaction, {
-                    "execution_id": UUID(execution_id), "request_id": request_id, "service": "python",
+                    "patient_id": transaction_patient_id(scope["path"], scope["method"], status,
+                                                          incoming.text(), outgoing.text()), "service": "python",
                     "operation": f"{scope['method']} {route}", "method": scope["method"],
                     "path": scope["path"], "http_status": status,
                     "request_body": incoming.text(), "response_body": outgoing.text(),

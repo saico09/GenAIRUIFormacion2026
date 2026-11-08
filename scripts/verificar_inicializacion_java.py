@@ -1,4 +1,4 @@
-"""Prueba el bootstrap en PG/Java nuevos; elimina solamente sus recursos Docker etiquetados."""
+"""Prueba el bootstrap compartido en PG/Java nuevos; elimina solamente sus recursos Docker etiquetados."""
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -32,8 +32,10 @@ def main():
     data = local / "datos"
     (data / "historias").mkdir(parents=True)
     shutil.copy2(ROOT / "datos/pacientes.json", data / "pacientes.json")
-    for path in (ROOT / "datos/historias").glob("paciente-*.md"):
-        shutil.copy2(path, data / "historias" / path.name)
+    for patient_id, name_part in ((1, "ana"), (2, "bruno"), (3, "carla")):
+        filename = f"paciente-{patient_id}-{name_part}-demo.md"
+        seed = subprocess.check_output(["git", "-C", str(ROOT), "show", f"HEAD:datos/historias/{filename}"])
+        (data / "historias" / filename).write_bytes(seed)
     env = os.environ.copy()
     env["POSTGRES_PASSWORD"] = secrets.token_urlsafe(32)
     image, pg, java, runner = [name + suffix for suffix in (":test", "-pg", "-java", "-python")]
@@ -63,19 +65,19 @@ def main():
         return json.loads(docker("exec", "-i", runner, "python", "-", input=script).stdout)
 
     def state():
-        rows = sql_query("SELECT id,name,birth_date,email FROM java.patients ORDER BY id")
+        rows = sql_query("SELECT id,name,birth_date,email FROM public.patients ORDER BY id")
         return {"count": len(rows), "ids": [row[0] for row in rows],
                 "rows_sha256": hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest(),
-                "sequence": sql_query("SELECT last_value,is_called FROM java.patients_id_seq")[0]}
+                "sequence": sql_query("SELECT last_value,is_called FROM public.patients_id_seq")[0]}
 
     def files():
         return {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
                 for path in sorted((data / "historias").glob("*.md"))}
 
     def cli(*options, success=True):
-        result = docker("exec", runner, "python", "inicializar_java.py", *options, check=False)
+        result = docker("exec", runner, "python", "inicializar_datos.py", *options, check=False)
         assert (result.returncode == 0) == success, ("CLI exit", result.returncode)
-        return json.loads(result.stdout if success else result.stderr)
+        return json.loads((result.stdout if success else result.stderr).strip().splitlines()[-1])
 
     def mark(check, **details):
         evidence["checks"].append({"check": check, "passed": True, **details})
@@ -115,7 +117,7 @@ def main():
         else:
             raise RuntimeError("PostgreSQL aislado no inició")
         docker("run", "-d", "--name", runner, *common, "-e", "POSTGRES_HOST=" + pg,
-               "--mount", f"type=bind,src={data},dst=/datos,readonly", image,
+               "--mount", f"type=bind,src={data},dst=/datos", image,
                "python", "-c", "import time;time.sleep(1800)")
         containers.append(runner)
         docker("run", "-d", "--name", java, *common, "-e", "POSTGRES_HOST=" + pg,
@@ -154,13 +156,13 @@ def main():
             target.write_bytes(original)
             mark("rechazo_sin_escrituras_" + reason, error_type=failure["error_type"])
 
-        sql_query("""CREATE FUNCTION java.reject_demo() RETURNS trigger LANGUAGE plpgsql AS $$
+        sql_query("""CREATE FUNCTION public.reject_demo() RETURNS trigger LANGUAGE plpgsql AS $$
             BEGIN IF NEW.id = 2 THEN RAISE EXCEPTION 'test' USING ERRCODE='23514'; END IF; RETURN NEW; END $$""")
-        sql_query("CREATE TRIGGER reject_demo BEFORE INSERT ON java.patients FOR EACH ROW EXECUTE FUNCTION java.reject_demo()")
+        sql_query("CREATE TRIGGER reject_demo BEFORE INSERT ON public.patients FOR EACH ROW EXECUTE FUNCTION public.reject_demo()")
         failure = cli(success=False)
         assert failure["sqlstate"] == "23514" and state() == before and files() == original_files
-        sql_query("DROP TRIGGER reject_demo ON java.patients")
-        sql_query("DROP FUNCTION java.reject_demo()")
+        sql_query("DROP TRIGGER reject_demo ON public.patients")
+        sql_query("DROP FUNCTION public.reject_demo()")
         mark("rollback_filas_y_restart_secuencia", sqlstate=failure["sqlstate"])
 
         dataset = json.loads((data / "pacientes.json").read_text(encoding="utf-8"))
@@ -194,10 +196,12 @@ def main():
         mark("repeticion_con_datos_no_lee_ni_toca_demo_o_secuencia", count=existing["count"])
 
         # Solo la BD efímera de este test: simula una secuencia ya consumida por intentos previos.
-        sql_query("DELETE FROM java.patients")
-        sql_query("SELECT setval('java.patients_id_seq',20,true)")
-        result = cli()
-        assert result["next_id"] == 21 and state()["sequence"] == [21, False]
+        sql_query("DELETE FROM public.patients")
+        sql_query("SELECT setval('public.patients_id_seq',20,true)")
+        empty = state()
+        failure = cli(success=False)
+        assert failure["error_type"] == "ValueError" and state() == empty
+        mark("no_recrear_pacientes_borrados_con_historial", preserved=True)
         created = http("/patients", "POST", temporary, expected=201)
         assert created["id"] == 21
         http("/patients/21", "DELETE", expected=204)
@@ -228,7 +232,7 @@ def main():
         evidence["cleanup"] = {"removed_owned_resources": removed, "temporary_files_removed": True}
         evidence["finished_at"] = datetime.now(timezone.utc).isoformat()
         save()
-    print("Bootstrap Java: PASS; recursos efímeros eliminados.")
+    print("Bootstrap compartido: PASS; recursos efímeros eliminados.")
 
 
 if __name__ == "__main__":

@@ -152,8 +152,8 @@ def main():
 
         final = history()
         assert len(final["consultations"]) == 4 and final["entries"] == confirmed
-        assert sql(f"SELECT count(*) FROM java.medical_consultations WHERE patient_id = {patient['id']} AND kind = 'consultation'") == "4"
-        sql_backup = json.loads(sql(f"SELECT json_build_object('revision',revision,'hash',encode(sha256(convert_to(markdown_content,'UTF8')),'hex'),'bytes',octet_length(markdown_content)) FROM java.medical_consultations WHERE patient_id = {patient['id']} ORDER BY storage_order DESC LIMIT 1"))
+        assert sql(f"SELECT count(*) FROM public.medical_consultations WHERE patient_id = {patient['id']} AND kind = 'consultation'") == "4"
+        sql_backup = json.loads(sql(f"SELECT json_build_object('revision',revision,'hash',encode(sha256(convert_to(markdown_content,'UTF8')),'hex'),'bytes',octet_length(markdown_content)) FROM public.medical_consultations WHERE patient_id = {patient['id']} ORDER BY storage_order DESC LIMIT 1"))
         assert sql_backup["hash"] == sql_backup["revision"] == final["revision"]
         assert sql_backup["bytes"] == len(final["markdown"].encode())
         own_points = points(patient["id"])
@@ -166,13 +166,15 @@ def main():
                 assert saved["question"] in payload["text"]
                 assert saved["direct_answer"] not in payload["text"] and saved["rag_answer"] not in payload["text"]
         report["checks"].append("SQL respalda MD completo y revisión; Qdrant conserva tres campos y cuatro notas, sin reingerir respuestas IA")
-        ids = ",".join("'" + row["execution_id"] + "'" for row in report["cases"])
-        logs = json.loads(sql(f"SELECT json_agg(t) FROM (SELECT execution_id::text,service,operation,http_status,request_truncated,response_truncated FROM public.transaction_logs WHERE execution_id IN ({ids}) ORDER BY created_at) t"))
-        for row in report["cases"]:
-            assert {"python", "java"} <= {item["service"] for item in logs if item["execution_id"] == row["execution_id"]}
+        logs = json.loads(sql(f"SELECT json_agg(t) FROM (SELECT id::text,patient_id,service,operation,http_status,request_truncated,response_truncated FROM public.transaction_logs WHERE patient_id = {patient['id']} ORDER BY created_at) t"))
+        assert {"python", "java"} <= {item["service"] for item in logs}
+        assert len({item["id"] for item in logs}) == len(logs)
+        chat_logs = [item for item in logs if item['service'] == 'python' and item['operation'] == 'POST /chat']
+        assert sum(item['http_status'] == 200 for item in chat_logs) == 5  # 4 consultas y 1 reintento.
+        assert sum(item['http_status'] == 409 for item in chat_logs) == 1
         report["sql_backup"] = sql_backup
-        report["correlated_logs"] = logs
-        report["checks"].append("La ejecución UUID une los registros Java/Python con sus códigos HTTP")
+        report["patient_logs"] = logs
+        report["checks"].append("Cada operación HTTP tiene un UUID único y patient_id; el reintento conserva una sola consulta clínica")
         if args.trace:
             trace_output = args.output.with_name("regresion-traza.json")
             trace = subprocess.run([sys.executable, "-X", "utf8", str(Path(__file__).with_name("verificar_traza.py")),

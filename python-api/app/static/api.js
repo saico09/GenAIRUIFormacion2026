@@ -58,5 +58,5 @@ export function confirmAction(description, {title = 'Confirmar cambios', label =
 
 export function confirmDelete(description) {
   return confirmAction(description, {title: 'Eliminar paciente', label: 'Eliminar', danger: true,
-    hint: 'Se elimina el paciente y, en Java, su archivo clínico activo. Los respaldos SQL y el historial de transacciones se conservan.'});
+    hint: 'Se elimina el paciente, sus registros confirmados y su archivo clínico activo. Los respaldos SQL y el historial de transacciones se conservan.'});
 }

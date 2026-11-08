@@ -1,18 +1,22 @@
 """Pruebas aisladas: python -m unittest discover -s tests -v desde python-api."""
 
 import os
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import MagicMock, patch
 
 from psycopg.errors import ConnectionTimeout, InvalidPassword
 from sqlalchemy.exc import OperationalError
+from fastapi import HTTPException
 
 # Solo valores ficticios; importar db crea el engine, sin abrir conexiones.
 with patch.dict(os.environ, {
     "POSTGRES_HOST": "unused.invalid", "POSTGRES_DB": "test",
     "POSTGRES_USER": "test", "POSTGRES_PASSWORD": "never-log-test-password",
 }):
-    from app import db
+    from app import db, clinical_store
+    from app.clinical_store import require_shared_history
 
 
 def unavailable():
@@ -23,7 +27,8 @@ class DatabaseStartupTests(unittest.TestCase):
     def setUp(self):
         self.now = 0.0
         self.engine = self.enterContext(patch.object(db, "engine"))
-        self.create_all = self.enterContext(patch.object(db.Base.metadata, "create_all"))
+        self.execute_sql = MagicMock()
+        self.engine.begin.return_value.__enter__.return_value.exec_driver_sql = self.execute_sql
         self.log = self.enterContext(patch.object(db, "log_event"))
         self.enterContext(patch.object(db, "monotonic", side_effect=lambda: self.now))
         self.sleep = self.enterContext(patch.object(db, "sleep", side_effect=self.advance))
@@ -33,27 +38,31 @@ class DatabaseStartupTests(unittest.TestCase):
 
     def test_recovers_after_two_failed_connections(self):
         transaction = MagicMock()
+        transaction.__enter__.return_value.exec_driver_sql = self.execute_sql
         self.engine.begin.side_effect = [unavailable(), unavailable(), transaction]
 
         db.initialize_database()
 
         self.assertEqual(self.engine.begin.call_count, 3)
         self.assertEqual(self.now, 4)
-        self.create_all.assert_called_once_with(transaction.__enter__.return_value)
+        self.execute_sql.assert_called_once()
+        self.assertEqual(self.execute_sql.call_args.kwargs, {"execution_options": {"no_parameters": True}})
         self.assertEqual([c.kwargs["status"] for c in self.log.call_args_list],
                          ["waiting", "waiting", "ready"])
         self.assertNotIn("never-log-test-password", repr(self.log.call_args_list))
 
     def test_transaction_is_closed_before_retrying_initialization(self):
         first, second = MagicMock(), MagicMock()
+        first.__enter__.return_value.exec_driver_sql = self.execute_sql
+        second.__enter__.return_value.exec_driver_sql = self.execute_sql
         self.engine.begin.side_effect = [first, second]
-        self.create_all.side_effect = [unavailable(), None]
+        self.execute_sql.side_effect = [unavailable(), None]
 
         db.initialize_database()
 
         self.assertIs(first.__exit__.call_args.args[0], OperationalError)
         second.__exit__.assert_called_once_with(None, None, None)
-        self.assertEqual(self.create_all.call_count, 2)
+        self.assertEqual(self.execute_sql.call_count, 2)
 
     def test_deadline_stops_retries_without_another_attempt(self):
         self.engine.begin.side_effect = unavailable()
@@ -64,7 +73,7 @@ class DatabaseStartupTests(unittest.TestCase):
         self.assertEqual(self.now, 3)
         self.assertEqual(self.engine.begin.call_count, 2)
         self.assertEqual(self.log.call_args.kwargs["reason"], "deadline")
-        self.create_all.assert_not_called()
+        self.execute_sql.assert_not_called()
 
     def test_last_connection_can_finish_after_retry_deadline(self):
         def timed_out():
@@ -93,7 +102,7 @@ class DatabaseStartupTests(unittest.TestCase):
         self.assertNotIn("never-log-test-password", repr(self.log.call_args_list))
 
     def test_non_operational_error_is_not_retried(self):
-        self.create_all.side_effect = TypeError("esquema inválido")
+        self.execute_sql.side_effect = TypeError("esquema inválido")
 
         with self.assertRaisesRegex(TypeError, "esquema inválido"):
             db.initialize_database()
@@ -113,6 +122,54 @@ class EngineConfigurationTests(unittest.TestCase):
             with self.assertRaises(OperationalError):
                 db.engine.connect()
         self.assertEqual(connect.call_args.kwargs["connect_timeout"], 5)
+
+
+class SharedHistoryMarkerTests(unittest.TestCase):
+    """El guard sólo lee un marcador temporal; nunca monta datos ni abre PostgreSQL."""
+
+    def setUp(self):
+        self.directory = Path(self.enterContext(TemporaryDirectory()))
+        self.marker = self.directory / ".genai-historias"
+        self.enterContext(patch.dict(os.environ, {"HISTORY_SHARED_MARKER": str(self.marker)}))
+        self.enterContext(patch.object(db.engine, "connect", side_effect=AssertionError("No debe abrir SQL")))
+
+    def test_missing_marker_returns_503_without_creating_files(self):
+        with self.assertRaises(HTTPException) as raised:
+            require_shared_history()
+        self.assertEqual(raised.exception.status_code, 503)
+        self.assertEqual(list(self.directory.iterdir()), [])
+        previous = self.directory / "informe-previo.md"
+        previous.write_bytes(b"contenido previo")
+        unmounted = self.directory / "montaje-ausente"
+        with patch.object(clinical_store, "DIRECTORY", unmounted):
+            with self.assertRaises(HTTPException):
+                clinical_store.find_file(1)
+            with self.assertRaises(HTTPException):
+                clinical_store.atomic_write(previous, b"no guardar")
+        self.assertFalse(unmounted.exists())
+        self.assertEqual(previous.read_bytes(), b"contenido previo")
+
+    def test_invalid_marker_returns_503_without_changing_content(self):
+        for content in (b"otra-carpeta\n", b"\xff\xfe"):
+            with self.subTest(content=content):
+                self.marker.write_bytes(content)
+                with self.assertRaises(HTTPException) as raised:
+                    require_shared_history()
+                self.assertEqual(raised.exception.status_code, 503)
+                self.assertEqual(self.marker.read_bytes(), content)
+
+    def test_valid_marker_allows_access_without_writing(self):
+        content = b"genai-historias-v1\r\n"
+        self.marker.write_bytes(content)
+        require_shared_history()
+        self.assertEqual(self.marker.read_bytes(), content)
+        self.assertEqual(list(self.directory.iterdir()), [self.marker])
+
+    def test_disabled_marker_never_reads_a_file(self):
+        os.environ.pop("HISTORY_SHARED_MARKER", None)
+        with patch.object(Path, "read_text", side_effect=AssertionError("Guard deshabilitado")):
+            require_shared_history()
+        self.assertEqual(list(self.directory.iterdir()), [])
 
 
 if __name__ == "__main__":

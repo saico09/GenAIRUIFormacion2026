@@ -142,7 +142,7 @@ export function initChat(javaBase) {
     patient.value = selectedId;
     question.focus();
   });
-  document.addEventListener('java-patients-changed', loadPatients);
+  document.addEventListener('patients-changed', loadPatients);
   document.addEventListener('clinical-patients-changed', loadPatients);
   loadPatients();
 }

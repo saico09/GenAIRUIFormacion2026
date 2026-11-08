@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from time import monotonic, sleep
 
 from sqlalchemy import URL, create_engine, text
@@ -6,7 +7,6 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.observability import log_event
-from app.transaction_log import SCHEMA_LOCK
 
 CONNECT_TIMEOUT_SECONDS = 5
 STARTUP_RETRY_SECONDS = 2
@@ -57,12 +57,13 @@ def initialize_database(*, timeout_seconds: float = 120) -> None:
 
         attempts += 1
         try:
-            # La misma conexión comprueba el esquema y lo crea si falta. En
-            # PostgreSQL, un fallo revierte esta transacción antes de reintentar.
+            # Mismo SQL que Spring: migra volúmenes anteriores y crea una base
+            # vacía. La transacción y sus locks se conservan hasta completar DDL.
             with engine.begin() as connection:
-                # Ambas APIs comparten transaction_logs: serializa su primer DDL.
-                connection.execute(text("SELECT pg_advisory_xact_lock(:lock)"), {"lock": SCHEMA_LOCK})
-                Base.metadata.create_all(connection)
+                source = Path(__file__).with_name("schema.sql").read_text(encoding="utf-8")
+                sql = "\n".join(line for line in source.splitlines() if line.strip() not in {"BEGIN;", "COMMIT;"})
+                # El SQL contiene format('%s', ...): no son placeholders del driver.
+                connection.exec_driver_sql(sql, execution_options={"no_parameters": True})
         except OperationalError as error:
             sqlstate = getattr(error.orig, "sqlstate", None)
             transient = (sqlstate is None or sqlstate.startswith("08")

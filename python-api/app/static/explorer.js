@@ -1,6 +1,7 @@
 import {request, notice, confirmDelete, confirmAction} from './api.js';
 
 const samplePatient = {name: 'Paciente de prueba', birth_date: '1990-05-15', email: 'prueba@example.com'};
+const sampleDisease = {disease: 'Rinitis alérgica', treatment: 'Evitar la exposición al polen', medication: 'Cetirizina'};
 const operations = [
   {method: 'GET', path: '/health', title: 'Comprobar disponibilidad'},
   {method: 'GET', path: '/patients', title: 'Listar pacientes'},
@@ -8,6 +9,11 @@ const operations = [
   {method: 'GET', path: '/patients/{id}', title: 'Consultar un paciente por ID'},
   {method: 'PUT', path: '/patients/{id}', title: 'Actualizar los datos de un paciente', body: samplePatient},
   {method: 'DELETE', path: '/patients/{id}', title: 'Eliminar un paciente'},
+  {method: 'GET', path: '/patients/{id}/diseases', title: 'Listar los registros confirmados de un paciente'},
+  {method: 'POST', path: '/patients/{id}/diseases', title: 'Agregar enfermedad, tratamiento y medicamento', body: sampleDisease, clinicalRecord: true},
+  {method: 'GET', path: '/patients/{id}/diseases/{uuid}', title: 'Consultar un registro por UUID', recordUuid: true},
+  {method: 'PUT', path: '/patients/{id}/diseases/{uuid}', title: 'Editar un registro conservando su UUID', body: sampleDisease, clinicalRecord: true, recordUuid: true},
+  {method: 'DELETE', path: '/patients/{id}/diseases/{uuid}', title: 'Eliminar un registro confirmado', recordUuid: true},
 ];
 
 function node(tag, className, text) {
@@ -21,7 +27,7 @@ export function initExplorer(api, baseUrl, metricsEnabled) {
   const root = document.querySelector(`#explorer-${api}`);
   const base = node('div', 'api-base');
   base.append(node('span', 'eyebrow', 'URL BASE'), node('code', '', baseUrl));
-  root.append(base, node('p', 'api-intro', 'Las peticiones se ejecutan sobre datos reales de este entorno local. POST agrega, PUT modifica y DELETE elimina el paciente indicado.'));
+  root.append(base, node('p', 'api-intro', 'Python y Java usan los mismos pacientes y registros. POST agrega, PUT modifica y DELETE elimina. Los cambios clínicos actualizan la tabla y el Markdown del paciente.'));
   const entries = [...operations];
   if (api === 'python') entries.push(
     {method: 'POST', path: '/chat', title: 'Comparar respuestas y guardar la consulta en el informe', timeout: 420000,
@@ -77,9 +83,9 @@ function endpoint(api, base, operation, index) {
     form.append(label, idInput);
   }
   if (path.includes('{uuid}')) {
-    const label = node('label', '', 'UUID de la consulta'); label.htmlFor = `${prefix}-uuid`;
+    const label = node('label', '', operation.recordUuid ? 'UUID del registro confirmado' : 'UUID de la consulta'); label.htmlFor = `${prefix}-uuid`;
     uuidInput = node('input'); uuidInput.id = label.htmlFor; uuidInput.name = 'uuid'; uuidInput.required = true;
-    uuidInput.placeholder = 'Copia el ID de una consulta guardada';
+    uuidInput.placeholder = operation.recordUuid ? 'Copia el ID de GET diseases' : 'Copia el ID de una consulta guardada';
     uuidInput.addEventListener('input', () => { urlDisplay.textContent = `${base}${resolvedPath()}`; });
     form.append(label, uuidInput);
   }
@@ -89,6 +95,7 @@ function endpoint(api, base, operation, index) {
     bodyInput = node('textarea'); bodyInput.id = label.htmlFor; bodyInput.name = 'body'; bodyInput.spellcheck = false;
     bodyInput.value = JSON.stringify(operation.body, null, 2); bodyInput.required = true;
     form.append(label, bodyInput);
+    if (operation.clinicalRecord) form.append(node('p', 'helper', 'Ejemplo de formación. Completa al menos un campo; deja vacío lo que no sepas. El ID une los tres campos y se asigna al crear el registro.'));
     if (operation.confirmHistory) form.append(node('p', 'helper', path.endsWith('/consultations')
       ? 'Guarda estos textos como una consulta, sin ejecutar un modelo. Reutiliza el mismo UUID sólo para reintentar el mismo contenido. Confirmarás antes de enviar.'
       : 'Copia la revisión de GET history. Para editar Markdown conserva los UUID existentes y el historial de consultas. Las altas usan POST entries. Confirmarás antes de enviar.'));
@@ -113,7 +120,7 @@ function endpoint(api, base, operation, index) {
       if (!result.ok) throw new Error('No se pudo actualizar el índice RAG.');
       pendingSyncId = null; retrySync.hidden = true; notice(formNotice, 'Índice RAG sincronizado.', 'success');
     } catch (error) {
-      notice(formNotice, `El cambio en Java está guardado, pero el índice del paciente ${pendingSyncId} sigue pendiente. Reintentar no repite ${method}. ${error.message}`, 'warning');
+      notice(formNotice, `El cambio está guardado, pero el índice del paciente ${pendingSyncId} sigue pendiente. Reintentar no repite ${method}. ${error.message}`, 'warning');
       retrySync.hidden = false;
     }
   }
@@ -141,12 +148,20 @@ function endpoint(api, base, operation, index) {
       notice(formNotice, 'El ID debe ser un número entero positivo.'); return;
     }
     if (uuidInput && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuidInput.value)) {
-      notice(formNotice, 'El ID de la consulta debe tener formato UUID.'); return;
+      notice(formNotice, 'El identificador debe tener formato UUID.'); return;
     }
     const endpointPath = resolvedPath();
-    if (method === 'DELETE' && !await confirmDelete(`¿Quieres ejecutar DELETE ${endpointPath} en la API ${api === 'java' ? 'Java' : 'Python'}?`)) return;
+    if (method === 'DELETE') {
+      const description = `¿Quieres ejecutar DELETE ${endpointPath} en la API ${api === 'java' ? 'Java' : 'Python'}?`;
+      const accepted = operation.recordUuid
+        ? await confirmAction(description, {title: 'Eliminar registro', label: 'Eliminar registro', danger: true, hint: 'Sólo se elimina este registro confirmado. El paciente y las consultas guardadas se conservan.'})
+        : await confirmDelete(description);
+      if (!accepted) return;
+    }
     if (operation.confirmHistory && !await confirmAction(`¿Enviar ${method} ${endpointPath} y guardar estos cambios en la historia clínica?`,
       {title: 'Guardar historia clínica', label: 'Confirmar y enviar', hint: 'Revisa el JSON, los datos y la revisión vigente. Esta operación modifica el informe del paciente.'})) return;
+    if (operation.clinicalRecord && !await confirmAction(`¿Guardar estos datos en el registro de ${endpointPath}?`,
+      {title: 'Guardar registro confirmado', label: 'Confirmar y enviar', hint: 'Revisa los tres campos del JSON. El cambio se reflejará en el Markdown.'})) return;
     busy = true; run.disabled = true; run.textContent = 'Ejecutando…';
     if (bodyInput) bodyInput.disabled = true;
     if (idInput) idInput.disabled = true;
@@ -165,9 +180,11 @@ function endpoint(api, base, operation, index) {
         : result.data !== null ? JSON.stringify(result.data, null, 2) : result.text || '(Respuesta vacía)';
       metadata.textContent = [result.contentType, result.requestId && `Request ID: ${result.requestId}`, result.executionId && `Ejecución: ${result.executionId}`].filter(Boolean).join(' · ');
       if (result.ok && path.startsWith('/patients') && method !== 'GET') {
-        document.dispatchEvent(new Event(`${api}-patients-changed`));
-        if (api === 'java' && (['PUT', 'DELETE'].includes(method) || operation.confirmHistory)) {
-          pendingSyncId = Number(idInput.value);
+        document.dispatchEvent(new Event('patients-changed'));
+        const patientId = Number(idInput?.value || result.data?.id);
+        document.dispatchEvent(new CustomEvent('clinical-history-changed', {detail: {patient_id: patientId}}));
+        if (Number.isSafeInteger(patientId) && patientId > 0) {
+          pendingSyncId = patientId;
           await synchronize();
         }
       }

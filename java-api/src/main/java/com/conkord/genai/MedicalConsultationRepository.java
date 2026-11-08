@@ -23,7 +23,7 @@ public class MedicalConsultationRepository {
     public List<HistoryResponse.Consultation> list(Integer patientId) {
         return jdbc.query("""
                 SELECT id, question, direct_answer, rag_answer, model, created_at, sources::text AS sources
-                FROM java.medical_consultations WHERE patient_id = ? AND kind = 'consultation'
+                FROM public.medical_consultations WHERE patient_id = ? AND kind = 'consultation'
                 ORDER BY storage_order
                 """, (row, n) -> new HistoryResponse.Consultation(row.getString("id"), row.getString("question"),
                         row.getString("direct_answer"), row.getString("rag_answer"), row.getString("model"),
@@ -33,7 +33,7 @@ public class MedicalConsultationRepository {
     public Stored find(UUID id) {
         var rows = jdbc.query("""
                 SELECT patient_id, kind, question, direct_answer, rag_answer, model, sources::text AS sources
-                FROM java.medical_consultations WHERE id = ?
+                FROM public.medical_consultations WHERE id = ?
                 """, (row, n) -> new Stored(row.getInt("patient_id"), row.getString("kind"),
                         row.getString("question"), row.getString("direct_answer"), row.getString("rag_answer"),
                         row.getString("model"), sources(row.getString("sources"))), id);
@@ -44,7 +44,7 @@ public class MedicalConsultationRepository {
             String markdown, String revision) {
         UUID id = UUID.fromString(input.id());
         jdbc.update("""
-                INSERT INTO java.medical_consultations
+                INSERT INTO public.medical_consultations
                 (id, execution_id, patient_id, kind, question, direct_answer, rag_answer, model,
                  filename, markdown_content, revision, created_at, sources)
                 VALUES (?, ?, ?, 'consultation', ?, ?, ?, ?, ?, ?, ?, ?, CAST(? AS jsonb))
@@ -58,7 +58,7 @@ public class MedicalConsultationRepository {
         if (!kind.equals("deleted") && previous != null && previous.revision().equals(revision)
                 && previous.filename().equals(filename)) return;
         jdbc.update("""
-                INSERT INTO java.medical_consultations
+                INSERT INTO public.medical_consultations
                 (id, execution_id, patient_id, kind, filename, markdown_content, revision)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """, UUID.randomUUID(), executionId(), patientId, kind, filename, markdown, revision);
@@ -66,7 +66,7 @@ public class MedicalConsultationRepository {
 
     public Backup latest(Integer patientId) {
         var rows = jdbc.query("""
-                SELECT filename, markdown_content, revision FROM java.medical_consultations
+                SELECT filename, markdown_content, revision FROM public.medical_consultations
                 WHERE patient_id = ? ORDER BY storage_order DESC LIMIT 1
                 """, (row, n) -> new Backup(row.getString("filename"), row.getString("markdown_content"),
                         row.getString("revision")), patientId);

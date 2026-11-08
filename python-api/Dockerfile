@@ -19,5 +19,10 @@ RUN --mount=type=bind,from=dependencies,source=/wheels,target=/wheels \
 COPY app ./app
 COPY *.py ./
 
+ENV PYTHONDONTWRITEBYTECODE=1
+# Mismo UID que Java: ambos pueden leer sus informes privados (0600).
+RUN mkdir -p /datos/historias && chown 10001:10001 /datos/historias
+USER 10001:10001
+
 EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

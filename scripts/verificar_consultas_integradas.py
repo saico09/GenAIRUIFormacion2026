@@ -70,17 +70,17 @@ def main():
 from sqlalchemy import text
 from app.db import engine
 with engine.connect() as c:
- rows=c.execute(text("SELECT id::text, revision, markdown_content FROM java.medical_consultations WHERE patient_id=1 AND kind='consultation' ORDER BY storage_order")).mappings().all()
- logs=c.execute(text("SELECT execution_id::text,service,operation,http_status,request_truncated,response_truncated FROM public.transaction_logs WHERE execution_id IN ('c5a3b358-1e9d-468f-b29f-0bbe49cd4496','aac69259-a232-4d86-be8a-58c50228f4fe','5bd7851e-de0d-47b9-9fd6-9b2ac1529bf4') ORDER BY created_at")).mappings().all()
+ rows=c.execute(text("SELECT id::text, revision, markdown_content FROM public.medical_consultations WHERE patient_id=1 ORDER BY storage_order")).mappings().all()
+ logs=c.execute(text("SELECT id::text,patient_id,service,operation,http_status,request_truncated,response_truncated FROM public.transaction_logs WHERE patient_id=1 ORDER BY created_at")).mappings().all()
  print(json.dumps({'consultations':[dict(x) for x in rows], 'logs':[dict(x) for x in logs]}))
 '''
     sql = json.loads(subprocess.check_output(['docker','exec','genairuiformacion2026-python-api-1','python','-c',program], text=True, encoding='utf-8'))
     report['sql_consultations'] = [{k:v for k,v in row.items() if k != 'markdown_content'} for row in sql['consultations']]
     report['sql_matches_latest_md'] = sql['consultations'][-1]['markdown_content'] == final['markdown']
-    report['correlated_logs'] = sql['logs']
-    report['both_services_per_consultation'] = all({'java','python'} <= {l['service'] for l in sql['logs'] if l['execution_id']==i} for i,_ in CASES)
+    report['patient_logs'] = sql['logs']
+    report['both_services_for_patient'] = {'java','python'} <= {row['service'] for row in sql['logs']}
     report['passed'] = all(row['passed'] for row in report['cases']) and all(report[k] for k in
-        ('retry_cached','different_input_409','all_three_unique','revision_matches_file','sql_matches_latest_md','both_services_per_consultation'))
+        ('retry_cached','different_input_409','all_three_unique','revision_matches_file','sql_matches_latest_md','both_services_for_patient'))
     OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     assert report['passed'], 'Revisar evidencia del ensayo'
     print('PASS tres consultas + reintento + SQL/MD/auditoría')

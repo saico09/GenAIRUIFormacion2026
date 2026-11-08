@@ -28,12 +28,15 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger("http_json");
     private static final Pattern REQUEST_ID = Pattern.compile("[A-Za-z0-9._:-]{1,128}");
+    private static final Pattern PATIENT_PATH = Pattern.compile("^/patients/([0-9]+)(?:/|$)");
     private static final int BODY_LIMIT = 131072;
     private final ObjectWriter writer;
+    private final JsonMapper mapper;
     private final TransactionLogRepository transactions;
 
     public HttpLoggingFilter(JsonMapper mapper, TransactionLogRepository transactions) {
         this.writer = mapper.writer().without(SerializationFeature.INDENT_OUTPUT);
+        this.mapper = mapper;
         this.transactions = transactions;
     }
 
@@ -80,7 +83,7 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
                         while (cachedRequest.getInputStream().read(buffer) != -1) { }
                     } catch (IOException closed) { unread = true; }
                     byte[] input = cachedRequest.getContentAsByteArray(), output = cachedResponse.getContentAsByteArray();
-                    transactions.record(executionId, requestId, request.getMethod() + " " + route,
+                    transactions.record(patientId(request, output), request.getMethod() + " " + route,
                             request.getMethod(), request.getRequestURI(), failed ? 500 : response.getStatus(),
                             body(input), body(output), (System.nanoTime() - start) / 1_000_000.0,
                             (unread && (request.getContentLengthLong() < 0 || input.length < request.getContentLengthLong()))
@@ -95,6 +98,23 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
                 }
             }
         }
+    }
+
+    private Integer patientId(HttpServletRequest request, byte[] output) {
+        var match = PATIENT_PATH.matcher(request.getRequestURI());
+        if (match.find()) {
+            try { return Integer.valueOf(match.group(1)); }
+            catch (NumberFormatException ignored) { return null; }
+        }
+        // Crear un paciente todavía no tiene ID en la URL: se toma del resultado real.
+        if (request.getMethod().equals("POST") && request.getRequestURI().equals("/patients")) {
+            try {
+                var json = mapper.readTree(output);
+                var id = json.get("id");
+                if (id != null && id.isIntegralNumber() && id.canConvertToInt()) return id.intValue();
+            } catch (RuntimeException ignored) { }
+        }
+        return null;
     }
 
     private UUID executionId(String supplied) {

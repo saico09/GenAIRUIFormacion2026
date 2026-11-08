@@ -34,7 +34,7 @@ export function initPatients(javaBase) {
     container.replaceChildren(...[...pendingIndex.values()].map(item => {
       const section = document.createElement('div'); section.className = 'sync-state';
       const text = document.createElement('p'); text.className = 'notice warning'; text.setAttribute('role', 'status');
-      text.textContent = `El paciente ${item.name} ya fue ${item.action === 'delete' ? 'eliminado' : 'actualizado'} en Java, pero falta sincronizar su índice RAG. ${item.error || ''}`;
+      text.textContent = `El paciente ${item.name} ya fue ${item.action === 'delete' ? 'eliminado' : 'actualizado'}, pero falta sincronizar su índice RAG. ${item.error || ''}`;
       const retry = document.createElement('button'); retry.type = 'button'; retry.className = 'button secondary';
       retry.textContent = 'Reintentar sincronización'; retry.dataset.syncPatient = item.id;
       retry.addEventListener('click', async () => {
@@ -179,7 +179,7 @@ export function initPatients(javaBase) {
   document.querySelector('#new-patient').addEventListener('click', () => openForm());
   document.querySelector('#refresh-java').addEventListener('click', () => loadPatients());
   search.addEventListener('input', renderRows);
-  document.addEventListener('java-patients-changed', () => {
+  document.addEventListener('patients-changed', () => {
     if (!document.querySelector('#view-pacientes').hidden) loadPatients();
   });
   async function openFromChat(event, prepare) {

@@ -7,6 +7,7 @@ Los respaldos y transaction_logs de esta prueba se conservan, como los de cualqu
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 from urllib.error import HTTPError
@@ -39,6 +40,8 @@ def main():
         raw = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
         headers = {"Content-Type": "application/json", "X-Execution-ID": eid, "Origin": "http://localhost:8000"}
         request = Request(args.base_url.rstrip("/") + path, data=raw, headers=headers, method=method)
+        criteria = "service='java' AND method='" + method.replace("'", "''") + "' AND path='" + path.replace("'", "''") + "'"
+        before_ids = set(json.loads(sql("SELECT COALESCE(json_agg(id::text), '[]'::json) FROM public.transaction_logs WHERE " + criteria)))
         try:
             response = urlopen(request, timeout=30)
         except HTTPError as error:
@@ -54,9 +57,15 @@ def main():
             if status != 405:  # PATCH no forma parte de los métodos CORS permitidos.
                 assert response.headers.get("Access-Control-Allow-Origin") == "http://localhost:8000"
                 assert "X-Execution-ID" in response.headers.get("Access-Control-Expose-Headers", "")
-        rows = json.loads(sql(f"SELECT COALESCE(json_agg(t), '[]'::json) FROM (SELECT * FROM public.transaction_logs WHERE execution_id = '{eid}'::uuid AND service = 'java' ORDER BY created_at) t"))
-        assert rows, ("No hay auditoría", eid)
-        row = rows[-1]
+        excluded = " AND id NOT IN (" + ",".join("'" + item + "'::uuid" for item in sorted(before_ids)) + ")" if before_ids else ""
+        rows = json.loads(sql("SELECT COALESCE(json_agg(t), '[]'::json) FROM (SELECT * FROM public.transaction_logs WHERE " + criteria + excluded + " ORDER BY created_at) t"))
+        rows = [row for row in rows if row["id"] not in before_ids and row["method"] == method and row["path"] == path]
+        assert len(rows) == 1, ("Se esperaba una fila de auditoría por operación", eid, len(rows))
+        row = rows[0]
+        assert "execution_id" not in row and "request_id" not in row
+        owner = re.match(r"/patients/(\d+)(?:/|$)", path)
+        patient_id = int(owner[1]) if owner else (json.loads(body)["id"] if method == "POST" and path == "/patients" and status == 201 else None)
+        assert row["patient_id"] == patient_id
         assert row["http_status"] == status and row["method"] == method and row["path"] == path
         sent = raw or b""
         received = body.encode("utf-8")
@@ -64,13 +73,13 @@ def main():
         assert row["response_body"] == received[:131072].decode("utf-8", errors="replace")
         assert row["request_truncated"] == (len(sent) > 131072)
         assert row["response_truncated"] == (len(received) > 131072)
-        events.append({"execution_id": eid, "status": status, "operation": row["operation"]})
+        events.append({"id": row["id"], "patient_id": patient_id, "status": status, "operation": row["operation"]})
         return json.loads(body) if body else None
 
     def history(pid):
         current = call("GET", f"/patients/{pid}/history")
         assert hashlib.sha256(current["markdown"].encode()).hexdigest() == current["revision"]
-        backed_up = sql(f"SELECT count(*) FROM java.medical_consultations WHERE patient_id = {pid} AND revision = '{current['revision']}' AND encode(sha256(convert_to(markdown_content, 'UTF8')), 'hex') = '{current['revision']}' AND octet_length(markdown_content) = {len(current['markdown'].encode('utf-8'))}")
+        backed_up = sql(f"SELECT count(*) FROM public.medical_consultations WHERE patient_id = {pid} AND revision = '{current['revision']}' AND encode(sha256(convert_to(markdown_content, 'UTF8')), 'hex') = '{current['revision']}' AND octet_length(markdown_content) = {len(current['markdown'].encode('utf-8'))}")
         assert int(backed_up) > 0
         return current
 
@@ -109,7 +118,7 @@ def main():
         call("POST", f"/patients/{pid}/consultations", {**consultation, "question": "Nota distinta"}, 409)
         call("POST", f"/patients/{other}/consultations", consultation, 409)
         assert history(pid) == saved
-        assert sql(f"SELECT count(*) FROM java.medical_consultations WHERE id = '{cid}'") == "1"
+        assert sql(f"SELECT count(*) FROM public.medical_consultations WHERE id = '{cid}'") == "1"
         checks.append("UUID idempotente; reuso distinto o en otro paciente rechazado sin cambios")
 
         call("PUT", f"/patients/{pid}/history", {"revision": first["revision"], "confirmed": True, "markdown": first["markdown"]}, 409)
@@ -124,7 +133,7 @@ def main():
         reverted = call("PUT", f"/patients/{pid}/history", {"revision": edited["revision"], "confirmed": True,
              "markdown": saved["markdown"]})
         assert reverted == saved
-        assert sql(f"SELECT revision FROM java.medical_consultations WHERE patient_id = {pid} ORDER BY storage_order DESC LIMIT 1") == saved["revision"]
+        assert sql(f"SELECT revision FROM public.medical_consultations WHERE patient_id = {pid} ORDER BY storage_order DESC LIMIT 1") == saved["revision"]
         checks.append("Reversión A → B → A conserva A como última copia, aunque su hash ya existía")
 
         patient = owned[0]
@@ -175,7 +184,7 @@ def main():
             assert check["email"] == patient["email"], "No se elimina un paciente ajeno"
             call("DELETE", f"/patients/{patient['id']}", status=204)
             call("GET", f"/patients/{patient['id']}", status=404)
-            assert int(sql(f"SELECT count(*) FROM java.medical_consultations WHERE patient_id = {patient['id']}")) > 0
+            assert int(sql(f"SELECT count(*) FROM public.medical_consultations WHERE patient_id = {patient['id']}")) > 0
         checks.append("Limpieza de pacientes propios; respaldo y auditoría conservados al borrar")
     report = {"result": "PASS", "scope": "Java HTTP y PostgreSQL reales; respuestas de contrato fijas, sin ejecutar modelo",
               "checks": checks, "events": events, "temporary_patient_ids": [patient["id"] for patient in owned]}

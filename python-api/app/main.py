@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from opentelemetry.trace import StatusCode
@@ -10,7 +11,8 @@ from app.db import get_db, initialize_database
 from app.models import Patient
 from app.metrics import install_metrics
 from app.observability import install_request_logging
-from app.schemas import ChatIn, ClinicalProposalIn, PatientIn, PatientOut
+from app.schemas import ChatIn, ClinicalProposalIn, DiseaseIn, DiseaseOut, PatientIn, PatientOut
+from app import clinical_store
 from app.tracing import configure_tracing, tracer
 from app.llm import CHAT_MODEL, LLMUnavailable, llamar_llm
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
@@ -24,8 +26,10 @@ from rag import DIRECT_SYSTEM
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    clinical_store.require_shared_history()
     # Al arrancar crea public.patients si todavía no existe (no borra datos)
     initialize_database()
+    clinical_store.bootstrap_histories()
     tracing_provider = configure_tracing()
     try:
         yield
@@ -45,6 +49,7 @@ Db = Annotated[Session, Depends(get_db)]
 
 @app.get("/health")
 def health():
+    clinical_store.require_shared_history()
     # FastAPI convierte el dict a JSON y responde 200 por defecto
     return {"status": "ok"}
 
@@ -110,12 +115,7 @@ def sync_clinical_history(patient_id: int):
 
 @app.post("/patients", response_model=PatientOut, status_code=201)
 def create_patient(patient: PatientIn, db: Db):
-    # Llega aquí solo si PatientIn validó los tres campos
-    row = Patient(**patient.model_dump())
-    db.add(row)
-    db.commit()  # aquí SQLAlchemy envía el INSERT a PostgreSQL
-    db.refresh(row)  # trae el id que generó la base
-    return row
+    return clinical_store.create_patient(db, patient)
 
 
 @app.get("/patients", response_model=list[PatientOut])
@@ -130,21 +130,41 @@ def get_patient(patient_id: int, db: Db):
 
 @app.put("/patients/{patient_id}", response_model=PatientOut)
 def update_patient(patient_id: int, patient: PatientIn, db: Db):
-    # PUT reemplaza los tres campos; usa las mismas validaciones que POST.
-    row = find_patient(patient_id, db)
-    row.name = patient.name
-    row.birth_date = patient.birth_date
-    row.email = patient.email
-    db.commit()
-    db.refresh(row)
-    return row
+    return clinical_store.update_patient(db, patient_id, patient)
 
 
 @app.delete("/patients/{patient_id}", status_code=204, response_class=Response)
 def delete_patient(patient_id: int, db: Db):
-    row = find_patient(patient_id, db)
-    db.delete(row)
-    db.commit()
+    clinical_store.delete_patient(db, patient_id)
+    return Response(status_code=204)
+
+
+@app.get("/patients/{patient_id}/diseases", response_model=list[DiseaseOut])
+def list_diseases(patient_id: int, db: Db):
+    return clinical_store.diseases(db, patient_id)
+
+
+@app.get("/patients/{patient_id}/diseases/{disease_id}", response_model=DiseaseOut)
+def get_disease(patient_id: int, disease_id: UUID, db: Db):
+    row = clinical_store.diseases(db, patient_id, disease_id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Registro no encontrado para este paciente")
+    return row
+
+
+@app.post("/patients/{patient_id}/diseases", response_model=DiseaseOut, status_code=201)
+def create_disease(patient_id: int, body: DiseaseIn, db: Db):
+    return clinical_store.mutate_disease(db, patient_id, body)
+
+
+@app.put("/patients/{patient_id}/diseases/{disease_id}", response_model=DiseaseOut)
+def update_disease(patient_id: int, disease_id: UUID, body: DiseaseIn, db: Db):
+    return clinical_store.mutate_disease(db, patient_id, body, disease_id)
+
+
+@app.delete("/patients/{patient_id}/diseases/{disease_id}", status_code=204, response_class=Response)
+def delete_disease(patient_id: int, disease_id: UUID, db: Db):
+    clinical_store.mutate_disease(db, patient_id, None, disease_id)
     return Response(status_code=204)
 
 

@@ -63,6 +63,32 @@ public class PatientController {
     @GetMapping("/{id}/history")
     public HistoryResponse history(@PathVariable Integer id) { return histories.get(id); }
 
+    @GetMapping("/{id}/diseases")
+    public List<DiseaseResponse> diseases(@PathVariable Integer id) { return histories.listDiseases(id); }
+
+    @GetMapping("/{id}/diseases/{diseaseId}")
+    public DiseaseResponse disease(@PathVariable Integer id, @PathVariable String diseaseId) {
+        return histories.getDisease(id, diseaseId);
+    }
+
+    @PostMapping("/{id}/diseases")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DiseaseResponse addDisease(@PathVariable Integer id, @Valid @RequestBody DiseaseRequest input) {
+        return histories.addDisease(id, input);
+    }
+
+    @PutMapping("/{id}/diseases/{diseaseId}")
+    public DiseaseResponse updateDisease(@PathVariable Integer id, @PathVariable String diseaseId,
+            @Valid @RequestBody DiseaseRequest input) {
+        return histories.updateDisease(id, diseaseId, input);
+    }
+
+    @DeleteMapping("/{id}/diseases/{diseaseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDisease(@PathVariable Integer id, @PathVariable String diseaseId) {
+        histories.deleteDisease(id, diseaseId);
+    }
+
     @GetMapping("/{id}/history.md")
     public ResponseEntity<String> downloadHistory(@PathVariable Integer id) {
         HistoryResponse history = histories.get(id);
