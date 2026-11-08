@@ -2,6 +2,8 @@
 
 CRUD Python y Java, chatbot con/sin RAG, métricas, logs, trazas y GitOps local. Usa **PowerShell 7**, **Python 3** y Docker Desktop; ejecuta los comandos desde `codigo/`.
 
+Los [casos de prueba](datos/CASOS.md) usan pacientes inventados con reflujo gastroesofágico, diabetes tipo 2 y rinitis alérgica, más tratamientos y medicamentos reales.
+
 [Guía de comandos](GUIA.md) · [Historial breve](HISTORIAL.md) · [Demo S5](evidencias/S05-guion.md) · [Demo final](evidencias/s10/guion.md) · [Resultados y pendientes](evidencias/s10/evaluacion.md)
 
 ## Arrancar

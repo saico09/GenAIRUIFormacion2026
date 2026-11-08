@@ -1,0 +1,51 @@
+{
+  "version": "2026-11-07-realista-v1",
+  "description": "Personas, fechas y evolución inventadas para capacitación; nombres de enfermedades y medicamentos reales. No son prescripciones ni datos de pacientes reales.",
+  "cases": [
+    {
+      "patient_id": 1,
+      "name": "Ana Demo",
+      "email": "ana@example.com",
+      "birth_date": "1990-01-10",
+      "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+      "disease": "Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo.",
+      "treatment": "El tratamiento registrado para el reflujo de Ana Demo consiste en evitar las cenas abundantes y los alimentos que identifica como desencadenantes, dejar tres horas entre la cena y acostarse, y llevar un registro de los episodios de ardor. Se programó una revisión de síntomas el 2026-11-12 en atención primaria.",
+      "medication": "Ana Demo recibe omeprazol para el reflujo gastroesofágico, según el registro simulado del 2026-10-20. No constan dosis, frecuencia ni duración de la pauta en este informe. No se ha establecido que las molestias comunicadas en consultas posteriores sean causadas por ese medicamento.",
+      "references": [
+        "https://www.niddk.nih.gov/health-information/digestive-diseases/acid-reflux-ger-gerd-adults",
+        "https://www.nhs.uk/medicines/omeprazole/"
+      ],
+      "legacy_entry_sha256": "e2f8cd9583870f9d0e0d02ea6f7fc1619b7b8509f29c4eef6edb2df47a9d29ab"
+    },
+    {
+      "patient_id": 2,
+      "name": "Bruno Demo",
+      "email": "bruno@example.com",
+      "birth_date": "1985-02-20",
+      "record_id": "a22c0bf2-4de5-5684-80b1-e5c2910e50b2",
+      "disease": "Bruno Demo tiene diabetes mellitus tipo 2, registrada en la consulta simulada del 2026-10-21 tras controles de glucosa alterados. Había referido sed frecuente y aumento de la frecuencia urinaria durante el mes anterior. Este informe no contiene los valores de glucemia ni de HbA1c.",
+      "treatment": "Bruno Demo sigue un plan de alimentación con verduras, legumbres y cereales integrales, actividad física regular y seguimiento de la glucosa para el manejo de la diabetes tipo 2. Se programó un control de HbA1c el 2027-01-21 y la revisión de la función renal en atención primaria.",
+      "medication": "Bruno Demo recibe metformina, registrada para el manejo de la diabetes mellitus tipo 2 en la consulta simulada del 2026-10-21. No constan dosis, frecuencia ni cambios de medicación en este informe.",
+      "references": [
+        "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/type-2-diabetes",
+        "https://www.nhs.uk/conditions/type-2-diabetes/treatment/"
+      ],
+      "legacy_entry_sha256": "0c27e6bcbcf9f172c9760614d7bbf88d98f90d7a8d73d7161ef79a1d07edc7b7"
+    },
+    {
+      "patient_id": 3,
+      "name": "Carla Demo",
+      "email": "carla@example.com",
+      "birth_date": "2000-03-30",
+      "record_id": "34a87963-7e6b-5283-934a-93de012c9c93",
+      "disease": "Carla Demo tiene rinitis alérgica estacional, registrada en la consulta simulada del 2026-10-22. Tiene una alergia ambiental al polen documentada en este caso ficticio. Refiere estornudos, picor nasal, secreción nasal acuosa y picor de ojos al pasar tiempo al aire libre durante la primavera. No constan alergias a medicamentos en este informe.",
+      "treatment": "El tratamiento registrado para Carla Demo consiste en reducir la exposición al polen, usar lavados nasales con solución salina y anotar la evolución de los síntomas de rinitis. Se programó una revisión el 2026-11-14 si las molestias continúan afectando sus actividades.",
+      "medication": "Carla Demo recibe cetirizina para aliviar los síntomas de la rinitis alérgica estacional, según el registro simulado del 2026-10-22. No constan dosis, frecuencia ni duración de la pauta en este informe.",
+      "references": [
+        "https://www.nhs.uk/conditions/allergic-rhinitis/",
+        "https://www.nhs.uk/medicines/cetirizine/about-cetirizine/"
+      ],
+      "legacy_entry_sha256": "e2b423ebf7ae20aa084875b605ec6ab6762ba4fb2ac7182b9d830bd445152e0d"
+    }
+  ]
+}

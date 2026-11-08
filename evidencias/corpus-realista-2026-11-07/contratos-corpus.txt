@@ -1,0 +1,15 @@
+test_actual_corpus_preserves_the_distinction_and_missing_doses (__main__.RealisticCorpusContracts.test_actual_corpus_preserves_the_distinction_and_missing_doses) ... ok
+test_allergic_rhinitis_is_not_a_medication_allergy (__main__.RealisticCorpusContracts.test_allergic_rhinitis_is_not_a_medication_allergy) ... ok
+test_allergy_questions_prioritize_documented_records (__main__.RealisticCorpusContracts.test_allergy_questions_prioritize_documented_records) ... ok
+test_allergy_treatment_still_accepts_its_literal_record (__main__.RealisticCorpusContracts.test_allergy_treatment_still_accepts_its_literal_record) ... ok
+test_environmental_allergy_does_not_answer_medication_allergy (__main__.RealisticCorpusContracts.test_environmental_allergy_does_not_answer_medication_allergy) ... ok
+test_explicit_medication_allergy_can_be_reported (__main__.RealisticCorpusContracts.test_explicit_medication_allergy_can_be_reported) ... ok
+test_real_diagnosis_remains_a_documented_fact (__main__.RealisticCorpusContracts.test_real_diagnosis_remains_a_documented_fact) ... ok
+test_treatment_and_control_are_not_surgery (__main__.RealisticCorpusContracts.test_treatment_and_control_are_not_surgery) ... ok
+test_unrecorded_allergies_are_not_a_positive_allergy_or_its_absence (__main__.RealisticCorpusContracts.test_unrecorded_allergies_are_not_a_positive_allergy_or_its_absence) ... ok
+test_unrecorded_dose_is_not_filled_with_a_typical_dose (__main__.RealisticCorpusContracts.test_unrecorded_dose_is_not_filled_with_a_typical_dose) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.008s
+
+OK

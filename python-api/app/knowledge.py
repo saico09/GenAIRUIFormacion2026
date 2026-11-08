@@ -55,7 +55,7 @@ def qdrant(method: str, path: str, data: dict | None = None) -> dict:
 
 
 def prepare_collection() -> dict:
-    vector = embed("Enfermedad Alfa")
+    vector = embed("Historia clínica")
     names = {entry["name"] for entry in qdrant("GET", "/collections")["result"]["collections"]}
     if COLLECTION not in names:
         qdrant("PUT", f"/collections/{COLLECTION}", {

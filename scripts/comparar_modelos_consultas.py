@@ -14,7 +14,7 @@ CASES = [
     ('indigestion', 'tiene indigestión aguda y le duele la cabeza', 'guidance'),
     ('diarrea', 'tiene dolor estomacal y diarrea', 'guidance'),
     ('temblores', 'aprieta los dientes en la noche y tiene temblores en las manos', 'guidance'),
-    ('enfermedad', '¿Qué enfermedad tiene Ana Demo?', 'Enfermedad Alfa'),
+    ('enfermedad', '¿Qué enfermedad tiene Ana Demo?', 'reflujo gastroesofágico'),
     ('resumen', 'Resume la enfermedad, el tratamiento y el medicamento de Ana Demo.', 'summary'),
     ('cirugia', '¿Qué cirugía tiene programada Ana Demo?', 'missing'),
     ('otro_paciente', '¿Qué tratamiento sigue Bruno Demo?', 'missing'),
@@ -58,7 +58,7 @@ def main():
                 if expected == 'guidance':
                     passed = 'Orientación general' in result and 'Para aclarar' in result
                 elif expected == 'summary':
-                    passed = all(x in result for x in ['Enfermedad Alfa', 'Tratamiento Alfa', 'Medicamento Alfa'])
+                    passed = all(x in result for x in ['reflujo gastroesofágico', 'tres horas entre la cena y acostarse', 'omeprazol'])
                 elif expected == 'missing':
                     passed = result == 'No hay información suficiente'
                 elif expected == 'no_invent':

@@ -39,7 +39,7 @@ for case in cases:
     assert case["direct_prompt"] == case["request"]["question"]
     assert f"CONSULTA:\n{case['request']['question']}\n\nJSON:" in case["rag_prompt"]
 known = cases[0]["response"]
-assert "Enfermedad Alfa" in known["rag_answer"]
-known_source = next(source for source in known["sources"] if source["section"] == "Enfermedad" and "Enfermedad Alfa" in source["text"])
+assert "reflujo gastroesofágico" in known["rag_answer"]
+known_source = next(source for source in known["sources"] if source["section"] == "Enfermedad" and "reflujo gastroesofágico" in source["text"])
 assert source_label(known_source) in known["rag_answer"]
 assert cases[1]["response"]["rag_answer"].rstrip(".") == "No hay información suficiente"

@@ -2,17 +2,17 @@
   {
     "patient_id": 1,
     "question": "¿Qué enfermedad tiene Ana Demo?",
-    "expected": "Enfermedad Alfa"
+    "expected": "reflujo gastroesofágico"
   },
   {
     "patient_id": 2,
     "question": "¿Qué tratamiento sigue Bruno Demo?",
-    "expected": "Tratamiento Beta"
+    "expected": "plan de alimentación"
   },
   {
     "patient_id": 3,
     "question": "¿Qué medicamento recibe Carla Demo?",
-    "expected": "Medicamento Gamma"
+    "expected": "cetirizina"
   },
   {
     "patient_id": 1,

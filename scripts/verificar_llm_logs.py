@@ -30,10 +30,10 @@ with urlopen(request, timeout=300) as response:
 with urlopen("http://127.0.0.1:8080/patients/1/history", timeout=15) as response:
     history = json.load(response)
 assert len(answer["sources"]) == 3
-known_source = next(source for source in answer["sources"] if source["section"] == "Enfermedad" and "Enfermedad Alfa" in source["text"])
+known_source = next(source for source in answer["sources"] if source["section"] == "Enfermedad" and "reflujo gastroesofágico" in source["text"])
 assert known_source["source"] == history["filename"]
 assert any(entry["id"] == known_source["record_id"] and entry["disease"] == known_source["text"] for entry in history["entries"])
-assert "Enfermedad Alfa" in answer["rag_answer"] and source_label(known_source) in answer["rag_answer"]
+assert "reflujo gastroesofágico" in answer["rag_answer"] and source_label(known_source) in answer["rag_answer"]
 query = f'{{service="fastapi"}} | json | request_id="{request_id}"'
 deadline = time.monotonic() + 60
 while True:

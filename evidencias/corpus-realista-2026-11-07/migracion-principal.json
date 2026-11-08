@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-11-08T00:24:26.274430+00:00",
+  "result": "PASS",
+  "dataset_version": "2026-11-07-realista-v1",
+  "first_run_writes": 3,
+  "second_run_writes": 0,
+  "patients": [
+    {
+      "patient_id": 1,
+      "record_ids": [
+        "263e4c3c-8db4-5b09-a711-bebc55a0828f"
+      ],
+      "consultations_preserved": 3,
+      "sql_backup_matches": true,
+      "journal_and_other_records_preserved": true,
+      "repeat_plan_is_noop": true,
+      "line_endings_normalized": false,
+      "after_revision": "60d028725affa18b1daab1a163d648018016ca3b6c041afafe3e3e9cdb22cea6",
+      "sync": {
+        "patient_id": 1,
+        "filename": "paciente-1-ana-demo.md",
+        "revision": "60d028725affa18b1daab1a163d648018016ca3b6c041afafe3e3e9cdb22cea6",
+        "records": 1,
+        "consultations": 3,
+        "fragments": 6,
+        "status": "synced"
+      }
+    },
+    {
+      "patient_id": 2,
+      "record_ids": [
+        "a22c0bf2-4de5-5684-80b1-e5c2910e50b2"
+      ],
+      "consultations_preserved": 0,
+      "sql_backup_matches": true,
+      "journal_and_other_records_preserved": true,
+      "repeat_plan_is_noop": true,
+      "line_endings_normalized": true,
+      "after_revision": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+      "sync": {
+        "patient_id": 2,
+        "filename": "paciente-2-bruno-demo.md",
+        "revision": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+        "records": 1,
+        "consultations": 0,
+        "fragments": 3,
+        "status": "synced"
+      }
+    },
+    {
+      "patient_id": 3,
+      "record_ids": [
+        "34a87963-7e6b-5283-934a-93de012c9c93"
+      ],
+      "consultations_preserved": 0,
+      "sql_backup_matches": true,
+      "journal_and_other_records_preserved": true,
+      "repeat_plan_is_noop": true,
+      "line_endings_normalized": true,
+      "after_revision": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+      "sync": {
+        "patient_id": 3,
+        "filename": "paciente-3-carla-demo.md",
+        "revision": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+        "records": 1,
+        "consultations": 0,
+        "fragments": 3,
+        "status": "synced"
+      }
+    }
+  ],
+  "prior_failure": "El primer preflight detectó Markdown CRLF en Bruno/Carla y no escribió nada. El migrador admite LF/CRLF y Java guarda LF; se conservaron contenido, UUID y diarios.",
+  "private_backups": "Los tres informes originales, dump SQL y vectores Qdrant se conservaron localmente fuera de Git.",
+  "limitations": [
+    "No hay transacción global entre los tres pacientes; cada PUT usa su revisión y respaldo SQL. Si se interrumpe, se retoma idempotentemente.",
+    "No se cambió el flujo de confirmación ni se añadieron diagnósticos a partir de síntomas."
+  ]
+}

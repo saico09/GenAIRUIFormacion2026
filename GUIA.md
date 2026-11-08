@@ -215,7 +215,9 @@ Para descargar el modelo de chat, si falta:
 
 Se usa **Qwen3 4B Instruct 2507** en ambas ramas. En los ocho casos del [ensayo local](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 frente a 6/8 de Llama; es evidencia de esta muestra, no una garantía para cualquier consulta.
 
-Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe usar Alfa y su fuente en la primera y reconocer que falta información en la segunda.
+Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.
+
+Ana tiene un caso simulado de reflujo con omeprazol; Bruno, diabetes tipo 2 con metformina; Carla, rinitis alérgica por polen con cetirizina. Los planes, preguntas para probar y fuentes están en [Casos de prueba](datos/CASOS.md). Las dosis y algunos antecedentes se dejan sin registrar para comprobar que el RAG no los invente.
 
 «Con RAG» comprueba la historia vigente de Java, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
 

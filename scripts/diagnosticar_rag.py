@@ -1,6 +1,7 @@
-"""Experimento de lectura sobre /chat; no modifica pacientes ni documentos.
+"""Experimento sobre /chat: cada petición guarda una consulta en el diario y SQL.
 
-Guarda respuestas completas y cobertura literal de datos ficticios. La cobertura
+Conserva los registros clínicos, pero añade preguntas al historial. Para ensayar
+sin guardar conversaciones usa verificar_corpus_realista.py. La cobertura
 no es una evaluación clínica ni demuestra corrección semántica por sí sola.
 """
 
@@ -15,20 +16,20 @@ from urllib.request import Request, urlopen
 
 
 CASES = [
-    ("literal", "¿Qué enfermedad tiene Ana Demo?", ["Enfermedad Alfa"]),
-    ("parafrasis", "¿Cuál es el diagnóstico de Ana?", ["Enfermedad Alfa"]),
-    ("tratamiento", "¿Cómo se está tratando a Ana Demo?", ["Tratamiento Alfa"]),
-    ("sin_nombre", "¿Qué medicamento toma?", ["Medicamento Alfa"]),
+    ("literal", "¿Qué enfermedad tiene Ana Demo?", ["reflujo gastroesofágico"]),
+    ("parafrasis", "¿Cuál es el diagnóstico de Ana?", ["reflujo gastroesofágico"]),
+    ("tratamiento", "¿Cómo se está tratando a Ana Demo?", ["tres horas entre la cena y acostarse"]),
+    ("sin_nombre", "¿Qué medicamento toma?", ["omeprazol"]),
     ("tres_datos", "Resume la enfermedad, el tratamiento y el medicamento de Ana Demo.",
-     ["Enfermedad Alfa", "Tratamiento Alfa", "Medicamento Alfa"]),
+     ["reflujo gastroesofágico", "tres horas entre la cena y acostarse", "omeprazol"]),
     ("resumen", "Cuéntame la historia clínica de Ana Demo.",
-     ["Enfermedad Alfa", "Tratamiento Alfa", "Medicamento Alfa"]),
+     ["reflujo gastroesofágico", "tres horas entre la cena y acostarse", "omeprazol"]),
     ("dosis_ausente", "¿Qué dosis de su medicamento debe tomar Ana Demo?", []),
-    ("consulta_registrada", "¿Cuándo fue la última consulta médica de Ana Demo?", ["2026-10-20"]),
+    ("consulta_registrada", "¿En qué fecha se registró el diagnóstico de reflujo de Ana Demo?", ["2026-10-20"]),
     ("dato_solo_sql", "¿Cuál es la fecha de nacimiento de Ana Demo?", []),
     ("otro_paciente", "¿Qué tratamiento sigue Bruno Demo?", []),
-    ("pregunta_corta", "¿Qué tiene?", ["Enfermedad Alfa"]),
-    ("control_repetido", "¿Qué enfermedad tiene Ana Demo?", ["Enfermedad Alfa"]),
+    ("pregunta_corta", "¿Qué tiene?", ["reflujo gastroesofágico"]),
+    ("control_repetido", "¿Qué enfermedad tiene Ana Demo?", ["reflujo gastroesofágico"]),
 ]
 
 
