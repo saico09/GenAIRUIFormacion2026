@@ -107,7 +107,7 @@ def main():
                       "expected_facts": all(fact.casefold() in answer.casefold() for fact in expected),
                       "valid_citations": all(cite in labels for cite in cited) and (guidance or bool(cited)) if not abstention else not cited,
                       "abstention": answer.rstrip(". \n") == "No hay información suficiente" if abstention else True,
-                      "orientation": "Orientación general (no es un diagnóstico)" in answer if guidance else True,
+                      "orientation": "Diagnóstico orientativo (sin confirmar)" in answer and "?" not in answer if guidance else True,
                       "consultation_saved": response.get("consultation", {}).get("saved") is True}
             row = {"case": name, "patient_id": pid, "question": question, "request_id": request_id,
                    "seconds": round(perf_counter() - started, 2), "status": status,

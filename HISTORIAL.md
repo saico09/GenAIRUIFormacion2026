@@ -1,5 +1,11 @@
 # Historial de la app
 
+## Hipótesis ante síntomas · 11/11/2026
+
+Al describir síntomas, el chat ofrece una hipótesis principal y alternativas condicionales con la información escrita, sin pedir más datos ni repetir preguntas. Las posibilidades quedan como orientación en las respuestas guardadas; no crean registros confirmados de enfermedad, tratamiento o medicamento. Las consultas sobre antecedentes siguen limitadas a lo documentado.
+
+Esta revisión configura Gemma 4 (`gemma4:12b`) mediante Ollama, con `think=false` y los mismos parámetros en ambas ramas. La comparación conserva la misma pregunta. Es un ajuste solicitado para la práctica; no añade HDU, horas ni cambia las fechas. Verificación de esta revisión en curso.
+
 ## Informes compartidos con Minikube · 08/11/2026
 
 El CRUD de Minikube usa los mismos pacientes e informes que Compose. `scripts/reanudar_minikube.ps1` recupera la carpeta compartida, comprueba escritura y SQL, y abre los accesos cuando las réplicas están disponibles. Si falta el marcador del montaje, la API impide escribir en una carpeta alternativa.

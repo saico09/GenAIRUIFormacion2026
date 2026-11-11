@@ -108,7 +108,9 @@ def main():
     assert outputs["respuesta"] == {"respuesta": validate_rag_answer(raw_rag, fragments, case["question"])} == {"respuesta": chat["rag_answer"]}
     llm_span = children[2]
     assert llm_span["span_kind"] == "LLM" and children[0]["span_kind"] == "RETRIEVER"
-    assert json.loads(attribute(llm_span, "llm.invocation_parameters")) == {"temperature": 0, "num_ctx": 4096, "num_predict": 1024}
+    expected_options = {"temperature": 1, "num_ctx": 8192, "num_predict": 1024, "top_p": 0.95, "top_k": 64,
+                        "draft_num_predict": 0}
+    assert json.loads(attribute(llm_span, "llm.invocation_parameters")) == {**expected_options, "think": False}
 
     query = f'{{service="fastapi"}} | json | request_id="{request_id}"'
     deadline = time.monotonic() + 60
@@ -137,6 +139,8 @@ def main():
     for branch, event in branches.items():
         expected_raw = raw_rag if branch == "rag" else chat["direct_answer"]
         assert event["status"] == "ok" and event["response"] == expected_raw
+        assert event["model_options"] == expected_options and event["think_requested"] is False
+        assert type(event["thinking_returned"]) is bool and "thinking" not in event
     assert any(event["event"] == "http" and event["status"] == 200 for event in events)
 
     result = {

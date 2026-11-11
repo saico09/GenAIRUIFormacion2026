@@ -6,7 +6,7 @@ from typing import NotRequired, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from app.knowledge import search_fragments
-from app.llm import CHAT_MODEL, MODEL_OPTIONS, llamar_llm
+from app.llm import CHAT_MODEL, MODEL_OPTIONS, THINK, llamar_llm
 from app.observability import log_event, request_id_context
 from app.tracing import trace_node
 from rag import RAG_SYSTEM, build_rag_prompt, rag_response_schema, validate_rag_answer
@@ -36,7 +36,7 @@ def prompt(state: EstadoRag) -> dict:
 
 @trace_node("prompt", kind="LLM", attributes={
     "llm.model_name": CHAT_MODEL,
-    "llm.invocation_parameters": json.dumps(MODEL_OPTIONS),
+    "llm.invocation_parameters": json.dumps({**MODEL_OPTIONS, "think": THINK}),
 })
 def llamada_llm(state: EstadoRag) -> dict:
     log_event("rag_node", node="llamada_llm", request_id=state["request_id"])

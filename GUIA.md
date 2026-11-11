@@ -212,10 +212,12 @@ Get-Content -Raw scripts/verificar_recuperacion.py | docker compose exec -T pyth
 Para descargar el modelo de chat, si falta:
 
 ```powershell
-& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull gemma4:12b
 ```
 
-Se usa **Qwen3 4B Instruct 2507** en ambas ramas. En los ocho casos del [ensayo con el corpus anterior](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json) pasó 8/8 frente a 6/8 de Llama. Con el corpus realista pasaron [14 preguntas RAG](evidencias/corpus-realista-2026-11-07/rag-real.json), sin repetir la comparación con Llama. Son muestras concretas, no una garantía para cualquier consulta.
+**Ollama** es el servidor local; **Gemma 4** es el modelo que responde (`gemma4:12b`). Ambas ramas usan ese mismo modelo, la misma pregunta y los mismos parámetros, con `think=false`. Puedes revisar los [ensayos de esta versión](evidencias/hipotesis-2026-11-11/LEEME.md); son casos concretos y no garantizan exactitud clínica general.
+
+La optimización de generación especulativa queda desactivada (`draft_num_predict: 0`) por el fallo observado al cargar su asistente en GPU. Su recuperación tras un arranque en frío se comprueba por separado.
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.
 
@@ -223,7 +225,9 @@ Ana tiene un caso simulado de reflujo con omeprazol; Bruno, diabetes tipo 2 con 
 
 «Con RAG» comprueba la historia vigente del paciente, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
 
-Puedes preguntar por datos registrados o describir síntomas de una consulta ficticia. La respuesta contextual separa los antecedentes del informe de la orientación general y explica qué información falta. No convierte síntomas nuevos en una enfermedad confirmada ni prescribe medicamentos.
+Puedes preguntar por datos registrados o describir síntomas de una consulta ficticia. Ante síntomas, ambas ramas plantean una hipótesis principal y alternativas condicionales con lo que escribiste, sin pedir más datos ni repetir preguntas. RAG separa los antecedentes del informe de esas posibilidades. No son diagnósticos confirmados ni recetas.
+
+Si preguntas qué consta en la historia, RAG responde sólo con antecedentes respaldados. Cuando el dato no está registrado, lo reconoce; no completa el historial con una suposición.
 
 Cada consulta terminada se añade al Markdown y a PostgreSQL con un UUID. Los registros confirmados de enfermedad, tratamiento y medicamento siguen siendo distintos: se guardan después de revisar sus campos. Las respuestas anteriores de IA no se reutilizan como hechos confirmados del paciente.
 

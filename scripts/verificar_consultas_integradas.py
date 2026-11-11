@@ -5,6 +5,7 @@ repetir el ensayo sin duplicarlas. No escribe diagnósticos ni recetas confirmad
 """
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 from time import perf_counter
@@ -13,6 +14,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'evidencias/consultas-automaticas-2026-11-07/ana-consultas.json'
+CHAT_MODEL = os.getenv('CHAT_MODEL', 'gemma4:12b')
 CASES = [
     ('c5a3b358-1e9d-468f-b29f-0bbe49cd4496', 'tiene indigestión aguda y le duele la cabeza'),
     ('aac69259-a232-4d86-be8a-58c50228f4fe', 'tiene dolor estomacal y diarrea'),
@@ -44,12 +46,15 @@ def main():
         history = http(8080, '/patients/1/history')[1]
         saved = [c for c in history['consultations'] if c['id'] == identifier]
         row['checks'] = {'http_200': code == 200, 'execution_header': header == identifier,
-                         'useful_orientation': 'Orientación general' in result.get('rag_answer', ''),
+                         # Reintenta UUID históricos: sus respuestas originales no se reescriben.
+                         'useful_orientation': any(label in result.get('rag_answer', '') for label in
+                                                   ('Diagnóstico orientativo (sin confirmar)', 'Orientación general')),
                          'saved_once': len(saved) == 1, 'md_contains_input': question in history['markdown'],
                          'md_contains_answers': all(result.get(k, '!missing!') in history['markdown'].replace('\n> ', '\n') for k in ('direct_answer', 'rag_answer')),
                          'confirmed_entries_unchanged': history['entries'] == before['entries'],
                          'rag_synced': result.get('index_synced') is True,
-                         'chosen_model': result.get('model') == 'qwen3:4b-instruct-2507-q4_K_M'}
+                         'chosen_model': result.get('model') == next(
+                             (c['model'] for c in before['consultations'] if c['id'] == identifier), CHAT_MODEL)}
         row['passed'] = all(row['checks'].values())
         report['cases'].append(row)
         OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')

@@ -31,7 +31,7 @@ async function main() {
     await page.goto(base);
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
     await page.locator('#patient').selectOption(String(patient.id));
-    const question = 'Refiere dolor de estómago desde ayer. ¿Qué información falta para evaluar el caso?';
+    const question = 'Refiere dolor de estómago después de comer desde ayer. No presenta vómitos ni diarrea.';
     await page.locator('#question').fill(question);
     const reply = page.waitForResponse(response => response.url() === `${base}/chat` && response.request().method() === 'POST', {timeout: 420000});
     await page.locator('#submit').click();
@@ -41,7 +41,8 @@ async function main() {
     assert.equal(data.consultation.saved, true); assert.equal(data.consultation.patient_id, patient.id);
     assert.match(data.consultation.id, /^[0-9a-f-]{36}$/);
     assert.ok(data.direct_answer.length > 30); assert.ok(data.rag_answer.length > 30);
-    assert.match(data.rag_answer, /orientación|información|síntomas/i);
+    assert.match(data.rag_answer, /Diagnóstico orientativo \(sin confirmar\)/);
+    assert.doesNotMatch(data.rag_answer, /[¿?]/);
     assert.match(await page.locator('#chat-save-status').textContent(), /guardada.*PostgreSQL/);
     const saved = await api(`${java}/patients/${patient.id}/history`); assert.equal(saved.status, 200);
     assert.equal(saved.data.entries.length, 0); assert.equal(saved.data.consultations.length, 1);

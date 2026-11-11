@@ -273,12 +273,23 @@ class OfflineContracts(unittest.TestCase):
 
     def test_symptom_guidance_does_not_require_a_preexisting_diagnosis(self):
         raw = json.dumps({"mode": "symptom_guidance", "missing_information": True, "facts": [],
-                          "guidance": "Falta conocer la duración de lo que describes.",
-                          "questions": ["¿Cuándo comenzó?"]})
+                          "guidance": "Una posibilidad es dispepsia si predomina la molestia tras comer; faltan datos para priorizar una causa.",
+                          "questions": []})
         rendered = validate_rag_answer(raw, [], "dolor de estómago desde ayer")
-        self.assertIn("Orientación general (no es un diagnóstico)", rendered)
-        self.assertIn("¿Cuándo comenzó?", rendered)
+        self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
+        self.assertIn("Una posibilidad es dispepsia", rendered)
+        self.assertNotIn("?", rendered)
         self.assertNotIn("Fuente:", rendered)
+
+    def test_guidance_schema_and_render_do_not_enable_a_questionnaire(self):
+        self.assertEqual(rag_response_schema([])["properties"]["questions"]["maxItems"], 0)
+        raw = json.dumps({"mode": "symptom_guidance", "missing_information": True, "facts": [],
+                          "guidance": "Podría ser reflujo por su relación con comidas.",
+                          "questions": ["¿Tiene síntomas?", "¿Cuándo comenzó?"]})
+        rendered = validate_rag_answer(raw, [], "Acidez después de comer, sin otros síntomas.")
+        self.assertNotIn("¿Tiene síntomas?", rendered)
+        self.assertNotIn("¿Cuándo comenzó?", rendered)
+        self.assertNotIn("Para aclarar la consulta", rendered)
 
     def test_existing_treatment_quote_is_not_evidence_of_surgery(self):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
@@ -295,7 +306,7 @@ class OfflineContracts(unittest.TestCase):
                           "facts": [{"source": source_label(sources[0]), "quote": "Diagnóstico inventado"}],
                           "guidance": "Conviene aclarar lo que describes [archivo-inventado.md].", "questions": []})
         rendered = validate_rag_answer(raw, sources, "dolor de cabeza")
-        self.assertIn("Orientación general", rendered)
+        self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
         self.assertNotIn("Diagnóstico inventado", rendered)
         self.assertNotIn("archivo-inventado", rendered)
         self.assertNotIn("Fuente:", rendered)

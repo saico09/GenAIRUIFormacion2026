@@ -6,10 +6,13 @@ from time import perf_counter
 from app.knowledge import OLLAMA_BASE_URL, request_json
 from app.observability import log_event
 
-CHAT_MODEL = os.getenv("CHAT_MODEL", "qwen3:4b-instruct-2507-q4_K_M")
-TEMPERATURE = 0
-MODEL_OPTIONS = {"temperature": TEMPERATURE, "num_ctx": 4096, "num_predict": 1024}
-TIMEOUT_SECONDS = 120
+CHAT_MODEL = os.getenv("CHAT_MODEL", "gemma4:12b")
+TEMPERATURE = 1
+MODEL_OPTIONS = {"temperature": TEMPERATURE, "num_ctx": 8192, "num_predict": 1024,
+                 "top_p": 0.95, "top_k": 64, "draft_num_predict": 0}
+# Evita cargar el modelo auxiliar especulativo, que falló al iniciar CUDA en este equipo.
+THINK = False
+TIMEOUT_SECONDS = 180
 
 
 class LLMUnavailable(Exception):
@@ -18,19 +21,37 @@ class LLMUnavailable(Exception):
 
 def llamar_llm(prompt: str, *, branch: str = "direct", schema: dict | None = None, system: str | None = None) -> str:
     start = perf_counter()
+    body = {
+        "model": CHAT_MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "think": THINK,
+        "options": dict(MODEL_OPTIONS),
+        "keep_alive": "1m",
+    }
+    if schema is not None:
+        body["format"] = schema
+    if system is not None:
+        body["system"] = system
+    diagnostics = {
+        "model_options": dict(body["options"]),
+        "prompt_eval_count": None,
+        "eval_count": None,
+        "done_reason": None,
+        "thinking_returned": False,
+    }
+    if "think" in body:
+        diagnostics["think_requested"] = body["think"]
     try:
-        body = {
-            "model": CHAT_MODEL,
-            "prompt": prompt,
-            "stream": False,
-            "options": MODEL_OPTIONS,
-            "keep_alive": "1m",
-        }
-        if schema is not None:
-            body["format"] = schema
-        if system is not None:
-            body["system"] = system
         result = request_json("POST", f"{OLLAMA_BASE_URL}/api/generate", body, timeout=TIMEOUT_SECONDS)
+        if not isinstance(result, dict):
+            raise ValueError("Respuesta inválida del modelo")
+        # Sólo se registra la presencia de thinking, nunca su contenido ni el resultado completo.
+        diagnostics["thinking_returned"] = bool(result.get("thinking"))
+        diagnostics["done_reason"] = result.get("done_reason")
+        for name in ("prompt_eval_count", "eval_count"):
+            count = result.get(name)
+            diagnostics[name] = count if type(count) is int and count >= 0 else None
         answer = result["response"]
         if (not isinstance(answer, str) or not answer.strip() or not result.get("done")
                 or result.get("done_reason") == "length"):
@@ -38,8 +59,8 @@ def llamar_llm(prompt: str, *, branch: str = "direct", schema: dict | None = Non
         answer = answer.strip()
     except (OSError, ValueError, KeyError) as error:
         log_event("llm", branch=branch, model=CHAT_MODEL, prompt=prompt, system=system, response=None,
-                  duration_ms=round((perf_counter() - start) * 1000, 3), status="error")
+                  duration_ms=round((perf_counter() - start) * 1000, 3), status="error", **diagnostics)
         raise LLMUnavailable("LLM no disponible") from error
     log_event("llm", branch=branch, model=CHAT_MODEL, prompt=prompt, system=system, response=answer,
-              duration_ms=round((perf_counter() - start) * 1000, 3), status="ok")
+              duration_ms=round((perf_counter() - start) * 1000, 3), status="ok", **diagnostics)
     return answer

@@ -10,6 +10,9 @@ from urllib.request import Request, urlopen
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'python-api'))
 from rag import RAG_SYSTEM, build_rag_prompt, rag_response_schema, validate_rag_answer
 
+OPTIONS = {'temperature': 1, 'num_ctx': 8192, 'num_predict': 1024,
+           'top_p': 0.95, 'top_k': 64, 'draft_num_predict': 0}
+
 CASES = [
     ('indigestion', 'tiene indigestión aguda y le duele la cabeza', 'guidance'),
     ('diarrea', 'tiene dolor estomacal y diarrea', 'guidance'),
@@ -31,16 +34,19 @@ def http(url, data=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--models', nargs='+', default=['llama3.2:3b', 'qwen3:4b-instruct-2507-q4_K_M'])
+    parser.add_argument('--models', nargs='+', default=['qwen3:4b-instruct-2507-q4_K_M', 'gemma4:12b'])
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cases', nargs='*')
     args = parser.parse_args()
+    if args.output.exists():
+        parser.error('La evidencia ya existe; usa otro nombre para conservar el ensayo anterior')
     history = http('http://localhost:8080/patients/1/history')
     source = history['entries'][0]
     fragments = [{'patient_id': 1, 'record_id': source['id'], 'source': history['filename'],
                   'section': name, 'text': source[field]} for name, field in
                  [('Enfermedad', 'disease'), ('Tratamiento', 'treatment'), ('Medicamento', 'medication')]]
-    report = {'at': datetime.now(timezone.utc).isoformat(), 'scope': 'Mismo prompt, fuentes, opciones y esquema; lectura sin persistencia.', 'cases': []}
+    report = {'at': datetime.now(timezone.utc).isoformat(), 'scope': 'Mismo prompt, fuentes, opciones y esquema; lectura sin persistencia.',
+              'options': OPTIONS, 'think': False, 'cases': []}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for model in args.models:
         for name, question, expected in CASES:
@@ -51,12 +57,16 @@ def main():
             try:
                 payload = http('http://localhost:11434/api/generate', {
                     'model': model, 'system': RAG_SYSTEM, 'prompt': build_rag_prompt(question, fragments, 'Ana Demo'),
-                    'stream': False, 'format': rag_response_schema(fragments), 'keep_alive': '1m',
-                    'options': {'temperature': 0, 'num_ctx': 4096, 'num_predict': 1024}})
+                    'stream': False, 'think': False, 'format': rag_response_schema(fragments), 'keep_alive': '1m',
+                    'options': OPTIONS})
+                row.update(done_reason=payload.get('done_reason'), eval_count=payload.get('eval_count'),
+                           prompt_eval_count=payload.get('prompt_eval_count'), thinking_returned=bool(payload.get('thinking')))
+                if payload.get('done') is not True or payload.get('done_reason') == 'length':
+                    raise RuntimeError('Generación incompleta; no se muestra ni evalúa una respuesta truncada')
                 raw = payload['response']
                 result = validate_rag_answer(raw, fragments, question)
                 if expected == 'guidance':
-                    passed = 'Orientación general' in result and 'Para aclarar' in result
+                    passed = 'Diagnóstico orientativo (sin confirmar)' in result and '?' not in result and 'Para aclarar' not in result
                 elif expected == 'summary':
                     passed = all(x in result for x in ['reflujo gastroesofágico', 'tres horas entre la cena y acostarse', 'omeprazol'])
                 elif expected == 'missing':

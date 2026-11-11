@@ -23,7 +23,7 @@ def main():
     parser.add_argument("--java-url", default="http://127.0.0.1:8080")
     parser.add_argument("--qdrant-url", default="http://127.0.0.1:6333")
     parser.add_argument("--postgres-container", default="genairuiformacion2026-postgres-1")
-    parser.add_argument("--expected-model", default="qwen3:4b-instruct-2507-q4_K_M")
+    parser.add_argument("--expected-model", default="gemma4:12b")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--trace", action="store_true", help="Comprueba además Phoenix/Loki con una quinta consulta del mismo temporal")
     args = parser.parse_args()
@@ -122,7 +122,8 @@ def main():
              lambda result: result["rag_answer"].strip().rstrip(".") == "No hay información suficiente")
         symptom_note = "Desde ayer refiere cansancio y dolor de cabeza leve."
         symptom = chat("sintomas_nuevos", symptom_note,
-                       lambda result: "Orientación general (no es un diagnóstico)" in result["rag_answer"] and "Para aclarar la consulta" in result["rag_answer"])
+                       lambda result: "Diagnóstico orientativo (sin confirmar)" in result["rag_answer"]
+                       and "Para aclarar la consulta" not in result["rag_answer"] and "?" not in result["rag_answer"])
         chat("recuperar_consulta_anterior", "¿Qué síntomas relató el paciente en consultas anteriores?",
              lambda result: "cansancio" in result["rag_answer"].lower() and "dolor de cabeza" in result["rag_answer"].lower()
              and symptom["execution_id"] in result["rag_answer"] and "/Consulta]" in result["rag_answer"])

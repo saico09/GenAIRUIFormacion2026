@@ -30,7 +30,7 @@
       <form id="chat-form" class="panel query-form" novalidate>
         <div class="query-fields"><div><label for="patient">Paciente de la consulta</label><select id="patient" required><option value="">Cargando pacientes…</option></select><button id="reload-patients" class="text-button" type="button">Actualizar listado</button></div><div><label for="question">¿Qué quieres consultar?</label><textarea id="question" required maxlength="2000" rows="3" placeholder="Por ejemplo: Ana refiere dolor de cabeza desde ayer. ¿Qué antecedentes constan y qué información falta?"></textarea></div></div>
         <div class="form-footer"><span class="helper">La consulta y ambas respuestas se guardan en el informe del paciente. La orientación de la IA no confirma diagnósticos.</span><button id="submit" class="button primary" type="submit" disabled>Comparar y guardar <span aria-hidden="true">↗</span></button></div>
-        <p id="loading" class="notice loading" role="status" hidden><span class="spinner" aria-hidden="true"></span> Consultando el modelo, recuperando el contexto y guardando la consulta…</p>
+        <p id="loading" class="notice loading" role="status" hidden><span class="spinner" aria-hidden="true"></span> Consultando el modelo, recuperando el contexto y guardando la consulta… Esta comparación puede tardar unos minutos con el modelo local.</p>
         <p id="error" class="notice error" role="alert" hidden></p>
       </form>
       <p id="used-question" class="used-question" hidden></p>

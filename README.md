@@ -48,10 +48,10 @@ Para descargar los modelos de embeddings y chat, si todavía faltan:
 
 ```powershell
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull nomic-embed-text
-& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3:4b-instruct-2507-q4_K_M
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull gemma4:12b
 ```
 
-Ambas respuestas usan Qwen3 4B Instruct 2507, con los mismos parámetros. Se eligió tras una [comparación local de ocho casos con el corpus anterior](evidencias/consultas-automaticas-2026-11-07/modelos-ab-final.json): 8/8 con Qwen y 6/8 con Llama. Con los casos realistas pasaron [14 preguntas RAG](evidencias/corpus-realista-2026-11-07/rag-real.json); no se repitió el A/B ni se mide precisión clínica general.
+Ollama es el servidor local que ejecuta los modelos. Gemma 4 (`gemma4:12b`) es el modelo de chat configurado para ambas respuestas, con los mismos parámetros y `think=false`. Los [ensayos y sus límites](evidencias/hipotesis-2026-11-11/LEEME.md) sirven para revisar casos concretos; no miden exactitud clínica general.
 
 Para comprobar Python:
 
@@ -105,6 +105,8 @@ Python y Java usan el mismo registro `public.patients`: un paciente creado en un
 En **Pacientes**, pulsa un nombre para abrir su historia. **Registros confirmados → Agregar registro** permite completar enfermedad, tratamiento y medicamento; cada fila tiene **Editar** y **Eliminar**. Los cambios actualizan `patient_diseases` y el Markdown, con el mismo UUID. **Preparar desde una nota** conserva la opción de extraer una propuesta con IA y revisarla antes de guardar.
 
 **Consultas médicas → Comparar y guardar** guarda automáticamente tu consulta y ambas respuestas en el informe y en PostgreSQL. El mensaje de guardado muestra su UUID y permite abrir el informe. Las respuestas quedan como orientación de IA, separadas de los diagnósticos confirmados.
+
+Si describes síntomas, la IA plantea una hipótesis principal y alternativas condicionales, sin pedir más datos ni repetir preguntas. Son posibilidades para el caso ficticio; no se añaden como enfermedades confirmadas. Si preguntas por un dato del historial, RAG sólo usa lo documentado y reconoce cuando ese dato falta.
 
 | Operación | Correcto | Error |
 |---|---|---|

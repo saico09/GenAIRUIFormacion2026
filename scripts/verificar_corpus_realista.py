@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import sys
 from time import perf_counter
+from urllib.error import HTTPError
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "python-api"))
@@ -64,7 +65,7 @@ def vector_snapshot():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--java-url", default="http://127.0.0.1:8080")
-    parser.add_argument("--model", default="qwen3:4b-instruct-2507-q4_K_M")
+    parser.add_argument("--model", default="gemma4:12b")
     parser.add_argument("--cases", help="Nombres separados por coma; por defecto los catorce casos")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -91,7 +92,11 @@ def main():
         allowed[pid] = {source_label(p["payload"]): p["payload"]["text"] for p in fragments_from_history(parsed)}
     report = {"started_at": datetime.now(timezone.utc).isoformat(), "scope": __doc__,
               "corpus_version": corpus["version"], "model": args.model,
-              "options": {"temperature": 0, "num_ctx": 4096, "num_predict": 1024},
+              "options": {"temperature": 1, "num_ctx": 8192, "num_predict": 1024,
+                          "top_p": 0.95, "top_k": 64, "draft_num_predict": 0},
+              "think": False,
+              "source_rag_sha256": hashlib.sha256((ROOT / "python-api/rag.py").read_bytes()).hexdigest(),
+              "verifier_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               "qdrant_before": vector_snapshot(), "cases": [], "passed": False}
     args.output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -109,8 +114,13 @@ def main():
                     "model": args.model, "system": RAG_SYSTEM,
                     "prompt": build_rag_prompt(question, sources, definitions[pid]["name"]),
                     "format": rag_response_schema(sources), "options": report["options"],
-                    "stream": False, "keep_alive": "1m"}, timeout=180)
+                    "stream": False, "think": report["think"], "keep_alive": "1m"}, timeout=180)
+                row.update(done_reason=raw.get("done_reason"), eval_count=raw.get("eval_count"),
+                           prompt_eval_count=raw.get("prompt_eval_count"), thinking_returned=bool(raw.get("thinking")))
+                if raw.get("done") is not True or raw.get("done_reason") == "length":
+                    raise RuntimeError("Generación incompleta; no se muestra ni evalúa una respuesta truncada")
                 answer = validate_rag_answer(raw["response"], sources, question)
+                facts = json.loads(raw["response"]).get("facts", [])
                 labels = [source_label(s) for s in sources]
                 citations = re.findall(r"\[[^\]\n]+\]", answer)
                 absent = not expected
@@ -118,6 +128,7 @@ def main():
                           "three_sources": len(sources) == 3,
                           "patient_isolation": all(s["patient_id"] == pid for s in sources),
                           "exact_current_sources": all(allowed[pid].get(source_label(s)) == s["text"] for s in sources),
+                          "generated_facts_literal": all(f.get("source") in allowed[pid] and f.get("quote", "!") in allowed[pid][f["source"]] for f in facts),
                           "expected_facts": all(term.casefold() in answer.casefold() for term in expected),
                           "valid_citations": not citations if absent else bool(citations) and all(c in labels for c in citations),
                           "missing_data_not_invented": answer.rstrip(". \n") == "No hay información suficiente" if absent else True}
@@ -125,11 +136,20 @@ def main():
                            checks=checks, passed=all(checks.values()))
             except Exception as error:
                 row.update(error=str(error), passed=False)
+                if isinstance(error, HTTPError):
+                    row["http_status"] = error.code
+                    try:
+                        detail = json.loads(error.read())
+                        row["http_error_detail"] = str(detail.get("error", ""))[:2000] if isinstance(detail, dict) else "Error HTTP sin objeto JSON"
+                    except (ValueError, OSError):
+                        row["http_error_detail"] = "Error HTTP sin detalle JSON legible"
             row["seconds"] = round(perf_counter() - started, 3)
             report["cases"].append(row)
             save()
             print(json.dumps({"case": name, "passed": row["passed"], "seconds": row["seconds"],
                               "failed_checks": [k for k, v in row.get("checks", {}).items() if not v]}, ensure_ascii=False), flush=True)
+            if row.get("http_status", 0) >= 500:
+                raise RuntimeError("Ensayo detenido tras fallo HTTP del modelo; revisar el detalle sin repetir llamadas")
     finally:
         after = histories()
         report["histories_before_sha256"] = {pid: digest(h) for pid, h in before.items()}
