@@ -10,12 +10,14 @@ from uuid import UUID
 
 from app import clinical_proposals, history_index, knowledge
 from app.history_documents import fragments_from_history, load_histories, parse_history
-from rag import is_record_lookup, rag_response_schema, source_label, validate_rag_answer
+from rag import is_current_symptom_report, is_record_lookup, rag_response_schema, source_label, validate_rag_answer
 
 
 RECORD = "02b2f5e5-2cd0-4e90-b6a3-a40c864824fa"
 OTHER = "ad544594-cd33-49d0-9afd-46d9a370cfa8"
 FILENAME = "paciente-71-prueba-demo.md"
+USER_FIRST = "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. "
+USER_SECOND = USER_FIRST + "no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas"
 
 
 def document(*, record=RECORD, disease="Enfermedad Prueba", treatment="Tratamiento Prueba",
@@ -258,6 +260,82 @@ class OfflineContracts(unittest.TestCase):
             with self.subTest(question=question):
                 self.assertTrue(is_record_lookup(question))
                 self.assertIn("Fuente: " + source_label(sources[0]), validate_rag_answer(raw, sources, question))
+
+    def test_current_narratives_require_guidance_without_a_disease_classifier(self):
+        narratives = (USER_FIRST, USER_SECOND, "Desde ayer tengo diarrea y cólicos.",
+                      "Hoy, me duele la cabeza.", "Actualmente el paciente refiere cansancio.",
+                      "La paciente presenta tos, pero no tiene fiebre.", "Me siento mal.",
+                      "Estoy vomitando sangre y me siento mareada.")
+        for question in narratives:
+            with self.subTest(question=question):
+                self.assertTrue(is_current_symptom_report(question))
+                self.assertFalse(is_record_lookup(question))
+                properties = rag_response_schema([], question)["properties"]
+                self.assertEqual(properties["mode"]["enum"], ["symptom_guidance"])
+                self.assertEqual(properties["guidance"], {"type": "string", "minLength": 1, "maxLength": 1800})
+                self.assertEqual(properties["questions"]["maxItems"], 0)
+                self.assertEqual(properties["facts"]["maxItems"], 0)
+
+    def test_documentary_and_mixed_requests_keep_the_documentary_mode(self):
+        questions = ("¿Qué síntomas relató en consultas anteriores?",
+                     "Indica la dosis registrada de omeprazol.", "¿Qué cirugía tiene programada?",
+                     "¿Qué medicamento toma Bruno?", "¿Qué tratamiento tengo registrado?",
+                     "Tengo acidez; ¿qué dosis tengo registrada?",
+                     "Me duele la cabeza. Dime qué medicamento consta en mi historia.",
+                     "La paciente siente acidez; muestra el tratamiento registrado.")
+        for question in questions:
+            with self.subTest(question=question):
+                self.assertFalse(is_current_symptom_report(question))
+                self.assertTrue(is_record_lookup(question))
+                properties = rag_response_schema([], question)["properties"]
+                self.assertEqual(properties["mode"]["enum"], ["record_lookup", "symptom_guidance"])
+                self.assertEqual(properties["guidance"]["minLength"], 0)
+
+    def test_quoted_and_ambiguous_text_does_not_force_a_current_report(self):
+        questions = ('¿Qué significa "tengo acidez" en el informe?',
+                     'Resume lo que dijo: "la paciente siente acidez".',
+                     '"Me duele la cabeza" es una frase de ejemplo.',
+                     "En la nota anterior dice que tengo dolor.",
+                     "Acidez después de comer.", "¿Por qué me duele la cabeza?")
+        for question in questions:
+            with self.subTest(question=question):
+                self.assertFalse(is_current_symptom_report(question))
+                self.assertEqual(rag_response_schema([], question)["properties"]["mode"]["enum"],
+                                 ["record_lookup", "symptom_guidance"])
+
+    def test_retrieved_narrative_never_decides_the_current_question_mode(self):
+        source = {"source": FILENAME, "record_id": OTHER, "section": "Consulta", "text": USER_FIRST}
+        schema = rag_response_schema([source], "¿Qué cirugía tiene programada?")
+        self.assertEqual(schema["properties"]["mode"]["enum"], ["record_lookup", "symptom_guidance"])
+        self.assertEqual(schema["properties"]["facts"]["items"]["properties"]["source"]["enum"],
+                         [source_label(source)])
+        # Cambiar fuentes no decide si el texto actual relata síntomas.
+        self.assertEqual(rag_response_schema([source], USER_SECOND)["properties"]["mode"],
+                         rag_response_schema([], USER_SECOND)["properties"]["mode"])
+
+    def test_failed_record_lookup_replay_is_rejected_for_current_story_but_valid_for_history(self):
+        # Reproduce la forma exacta del fallo HTTP: cita literal de la primera
+        # consulta, pero modo documental y guidance vacío ante el segundo relato.
+        source = {"source": FILENAME, "record_id": OTHER, "section": "Consulta",
+                  "text": "Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\n" + USER_FIRST}
+        payload = {"mode": "record_lookup", "missing_information": False, "guidance": "",
+                   "facts": [{"source": source_label(source), "quote": USER_FIRST.strip()}], "questions": []}
+        raw = json.dumps(payload)
+        self.assertNotIn(payload["mode"], rag_response_schema([source], USER_SECOND)["properties"]["mode"]["enum"])
+        self.assertEqual(validate_rag_answer(raw, [source], USER_SECOND), "No hay información suficiente")
+        historical = validate_rag_answer(raw, [source], "¿Qué síntomas relató en consultas anteriores?")
+        self.assertIn("Relato registrado (sin diagnóstico confirmado): " + USER_FIRST.strip(), historical)
+        self.assertIn("Fuente: " + source_label(source), historical)
+        self.assertNotIn("Diagnóstico orientativo", historical)
+        # El guard no inventa orientación ni reinterpreta el JSON rechazado.
+        self.assertEqual(json.loads(raw), payload)
+
+    def test_current_story_still_rejects_empty_or_oversized_guidance(self):
+        for guidance in ("", "   ", "x" * 1801):
+            with self.subTest(length=len(guidance)):
+                raw = json.dumps({"mode": "symptom_guidance", "missing_information": True,
+                                  "guidance": guidance, "facts": [], "questions": []})
+                self.assertEqual(validate_rag_answer(raw, [], USER_SECOND), "No hay información suficiente")
 
     def test_missing_documentary_information_does_not_turn_into_general_guidance(self):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]

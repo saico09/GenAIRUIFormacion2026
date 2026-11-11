@@ -44,7 +44,7 @@ def llamada_llm(state: EstadoRag) -> dict:
     token = request_id_context.set(state["request_id"])
     try:
         return {"respuesta": llamar_llm(state["prompt"], branch="rag",
-                                       schema=rag_response_schema(state["fragmentos"]), system=RAG_SYSTEM)}
+                                       schema=rag_response_schema(state["fragmentos"], state["pregunta"]), system=RAG_SYSTEM)}
     finally:
         request_id_context.reset(token)
 

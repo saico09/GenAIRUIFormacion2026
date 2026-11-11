@@ -217,6 +217,8 @@ Para descargar el modelo de chat, si falta:
 
 **Ollama** es el servidor local; **Gemma 4** es el modelo que responde (`gemma4:12b`). Ambas ramas usan ese mismo modelo, la misma pregunta y los mismos parámetros, con `think=false`. Puedes revisar los [ensayos de esta versión](evidencias/hipotesis-2026-11-11/LEEME.md); son casos concretos y no garantizan exactitud clínica general.
 
+La comparación puede tardar unos minutos con este modelo local. Espera a que termine y aparezca la confirmación de guardado antes de enviar otra consulta.
+
 La optimización de generación especulativa queda desactivada (`draft_num_predict: 0`) por el fallo observado al cargar su asistente en GPU. Su recuperación tras un arranque en frío se comprueba por separado.
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.

@@ -6,6 +6,7 @@ const {randomUUID, createHash} = require('node:crypto');
 const {chromium} = require('playwright');
 const base = process.env.PYTHON_URL || 'http://localhost:8000';
 const java = process.env.JAVA_URL || 'http://localhost:8080';
+const expectedModel = process.env.EXPECTED_CHAT_MODEL || 'gemma4:12b';
 const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, '../evidencias/consultas-automaticas-2026-11-07/ui-real'));
 const report = {mode: 'real_browser_real_apis_real_llm', mocks: false, started_at: new Date().toISOString(), checks: []};
 const check = name => {report.checks.push({name, passed: true}); console.log(`PASS ${name}`);};
@@ -17,6 +18,8 @@ async function api(url, options = {}) {
 }
 const json = (method, body) => ({method, headers: {'content-type': 'application/json'}, body: JSON.stringify(body)});
 async function main() {
+  assert.ok(!fs.existsSync(output) || fs.readdirSync(output).length === 0,
+    'La carpeta de evidencia ya contiene archivos; usa otro EVIDENCE_DIR para conservar el intento anterior');
   fs.mkdirSync(output, {recursive: true});
   const before = await api(`${java}/patients`); assert.equal(before.status, 200);
   const temp = {name: 'Prueba UI consulta automática', birth_date: '1990-05-15', email: `ui-auto-${randomUUID()}@example.com`};
@@ -34,15 +37,25 @@ async function main() {
     const question = 'Refiere dolor de estómago después de comer desde ayer. No presenta vómitos ni diarrea.';
     await page.locator('#question').fill(question);
     const reply = page.waitForResponse(response => response.url() === `${base}/chat` && response.request().method() === 'POST', {timeout: 420000});
+    const chatStarted = Date.now();
     await page.locator('#submit').click();
+    await page.locator('#loading').waitFor({state: 'visible'});
+    assert.match(await page.locator('#loading').textContent(), /Esta comparación puede tardar unos minutos con el modelo local/);
+    await page.screenshot({path: path.join(output, 'comparacion-en-espera.png'), fullPage: true});
     const response = await reply; assert.equal(response.status(), 200); const data = await response.json();
     report.chat = data; report.execution_id = response.headers()['x-execution-id'];
-    await page.waitForFunction(() => document.querySelector('#loading').hidden, {timeout: 420000});
+    report.chat_seconds = (Date.now() - chatStarted) / 1000;
+    await page.waitForFunction(() => document.querySelector('#loading').hidden, undefined, {timeout: 420000});
+    assert.equal(data.model, expectedModel);
     assert.equal(data.consultation.saved, true); assert.equal(data.consultation.patient_id, patient.id);
     assert.match(data.consultation.id, /^[0-9a-f-]{36}$/);
     assert.ok(data.direct_answer.length > 30); assert.ok(data.rag_answer.length > 30);
     assert.match(data.rag_answer, /Diagnóstico orientativo \(sin confirmar\)/);
+    assert.doesNotMatch(data.direct_answer, /[¿?]/);
     assert.doesNotMatch(data.rag_answer, /[¿?]/);
+    assert.equal(await page.locator('#direct').textContent(), data.direct_answer);
+    assert.equal(await page.locator('#rag').textContent(), data.rag_answer);
+    await page.screenshot({path: path.join(output, 'comparacion-guardada.png'), fullPage: true});
     assert.match(await page.locator('#chat-save-status').textContent(), /guardada.*PostgreSQL/);
     const saved = await api(`${java}/patients/${patient.id}/history`); assert.equal(saved.status, 200);
     assert.equal(saved.data.entries.length, 0); assert.equal(saved.data.consultations.length, 1);
@@ -106,20 +119,26 @@ async function main() {
     if (page) await page.screenshot({path: path.join(output, 'fallo.png'), fullPage: true});
     throw error;
   } finally {
-    if (browser) await browser.close();
-    if (patient) {
-      const actual = await api(`${java}/patients/${patient.id}`);
-      assert.equal(actual.data.email, temp.email, 'Sólo borrar el temporal propio');
-      const deleted = await api(`${java}/patients/${patient.id}`, {method: 'DELETE'}); assert.equal(deleted.status, 204);
-      const sync = await api(`${base}/clinical/patients/${patient.id}/sync`, {method: 'POST'}); assert.equal(sync.status, 200);
-      const missing = await api(`${java}/patients/${patient.id}`); assert.equal(missing.status, 404);
-      report.cleanup = {patient_deleted: true, index_removed: sync.data, retained_sql_backups_and_audit_expected: true};
+    try {
+      if (browser) await browser.close();
+      if (patient) {
+        const actual = await api(`${java}/patients/${patient.id}`);
+        assert.equal(actual.data.email, temp.email, 'Sólo borrar el temporal propio');
+        const deleted = await api(`${java}/patients/${patient.id}`, {method: 'DELETE'}); assert.equal(deleted.status, 204);
+        const sync = await api(`${base}/clinical/patients/${patient.id}/sync`, {method: 'POST'}); assert.equal(sync.status, 200);
+        const missing = await api(`${java}/patients/${patient.id}`); assert.equal(missing.status, 404);
+        report.cleanup = {patient_deleted: true, index_removed: sync.data, retained_sql_backups_and_audit_expected: true};
+      }
+      const after = await api(`${java}/patients`);
+      for (const original of before.data) assert.deepEqual(after.data.find(row => row.id === original.id), original);
+      report.original_patient_rows_preserved = true;
+    } catch (error) {
+      report.cleanup_error = error.message; report.result = 'failed';
+      throw error;
+    } finally {
+      report.finished_at = new Date().toISOString();
+      fs.writeFileSync(path.join(output, 'resultados.json'), JSON.stringify(report, null, 2) + '\n');
     }
-    const after = await api(`${java}/patients`);
-    for (const original of before.data) assert.deepEqual(after.data.find(row => row.id === original.id), original);
-    report.original_patient_rows_preserved = true;
-    report.finished_at = new Date().toISOString();
-    fs.writeFileSync(path.join(output, 'resultados.json'), JSON.stringify(report, null, 2) + '\n');
   }
 }
 main().catch(error => {console.error(error); process.exitCode = 1;});

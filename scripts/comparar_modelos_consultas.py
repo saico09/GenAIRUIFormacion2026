@@ -57,7 +57,7 @@ def main():
             try:
                 payload = http('http://localhost:11434/api/generate', {
                     'model': model, 'system': RAG_SYSTEM, 'prompt': build_rag_prompt(question, fragments, 'Ana Demo'),
-                    'stream': False, 'think': False, 'format': rag_response_schema(fragments), 'keep_alive': '1m',
+                    'stream': False, 'think': False, 'format': rag_response_schema(fragments, question), 'keep_alive': '1m',
                     'options': OPTIONS})
                 row.update(done_reason=payload.get('done_reason'), eval_count=payload.get('eval_count'),
                            prompt_eval_count=payload.get('prompt_eval_count'), thinking_returned=bool(payload.get('thinking')))

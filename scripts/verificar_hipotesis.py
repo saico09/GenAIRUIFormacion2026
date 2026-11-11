@@ -196,7 +196,7 @@ def main():
                         if thinking is not None:
                             body["think"] = thinking
                         if branch == "rag":
-                            body["format"] = rag_response_schema(sources)
+                            body["format"] = rag_response_schema(sources, case["question"])
                         result = request_json("POST", args.ollama_url.rstrip("/") + "/api/generate", body, timeout=args.inference_timeout)
                         row.update(thinking_requested=thinking, thinking_returned=bool(result.get("thinking")),
                                    eval_count=result.get("eval_count"), prompt_eval_count=result.get("prompt_eval_count"),

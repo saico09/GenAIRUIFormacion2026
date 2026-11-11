@@ -52,12 +52,34 @@ def source_label(source: dict) -> str:
     return f"[{source['source']}{record}/{source['section']}]"
 
 
-def rag_response_schema(sources: list[dict]) -> dict:
+def is_current_symptom_report(question: str) -> bool:
+    """Reconoce relatos actuales claros, no enfermedades ni la intención de cualquier frase.
+
+    Las solicitudes de antecedentes tienen prioridad. Los casos ambiguos quedan
+    a cargo del modelo; una nota parecida recuperada nunca decide esta intención.
+    """
+    text = "".join(c for c in unicodedata.normalize("NFD", question.casefold())
+                   if not unicodedata.combining(c)).strip()
+    documentary = r"\b(?:historia|historial|informe|registrad\w*|documentad\w*|consta|constan|anteriores?|previas?)\b"
+    documentary_request = (r"\b(?:que|cual|cuales|cuando|dime|muestra|resume|indica)\b[^.?!;]{0,100}"
+                           r"\b(?:dosis|cirugias?|operaciones?|medicamentos?|tratamientos?|diagnosticos?|enfermedades?)\b")
+    if re.search(documentary, text) or re.search(documentary_request, text):
+        return False
+    # Sólo al inicio: no interpretar «tengo…» citado dentro de una pregunta.
+    text = re.sub(r"^(?:(?:desde (?:ayer|hoy)|hoy|ahora|actualmente)\s*,?\s+)", "", text)
+    return bool(re.match(
+        r"(?:(?:yo\s+)?(?:tengo|siento|presento)\b|me (?:duele|duelen|siento)\b|"
+        r"(?:estoy|he estado) vomitando\b|he vomitado\b|"
+        r"(?:la|el|mi) paciente (?:no )?(?:siente|presenta|refiere|tiene)\b)", text))
+
+
+def rag_response_schema(sources: list[dict], question: str = "") -> dict:
     labels = [source_label(source) for source in sources]
+    current_report = is_current_symptom_report(question)
     return {"type": "object", "properties": {
-        "mode": {"type": "string", "enum": ["record_lookup", "symptom_guidance"]},
+        "mode": {"type": "string", "enum": ["symptom_guidance"] if current_report else ["record_lookup", "symptom_guidance"]},
         "missing_information": {"type": "boolean"},
-        "guidance": {"type": "string", "maxLength": 1800},
+        "guidance": {"type": "string", "minLength": 1 if current_report else 0, "maxLength": 1800},
         "facts": {"type": "array", "maxItems": 3 if labels else 0, "items": {
             "type": "object", "properties": {
                 "source": {"type": "string", "enum": labels or [""]},
@@ -117,10 +139,12 @@ def is_record_lookup(question: str) -> bool:
 
     No bloquea la orientación ni decide por sí sola si una respuesta es correcta.
     """
+    if is_current_symptom_report(question):
+        return False
     text = "".join(c for c in unicodedata.normalize("NFD", question.casefold()) if not unicodedata.combining(c))
     if re.search(r"\b(?:recomiendas?|recomiende|recomendarias|debo|deberia|sirve para|puedo tomar|puede tomar)\b", text):
         return False
-    recorded = re.search(r"\b(?:registrad\w*|consta\w*|documentad\w*|historia|informe)\b", text)
+    recorded = re.search(r"\b(?:registrad\w*|consta|constan|documentad\w*|historia|informe)\b", text)
     if not recorded and re.search(r"\b(?:tengo|me duele|me pasa|me siento)\b", text):
         return False
     # El informe de esta demo contiene estos tres campos y su contexto registrado.
@@ -195,6 +219,8 @@ def validate_rag_answer(answer: str, sources: list[dict], question: str = "") ->
             raise ValueError("Formato de respuesta inválido")
         if mode not in {"record_lookup", "symptom_guidance", "out_of_scope"}:
             raise ValueError("Modo inválido")
+        if is_current_symptom_report(question) and mode != "symptom_guidance":
+            raise ValueError("Un relato actual requiere orientación")
         if mode == "out_of_scope":
             return "Esta sección permite consultar antecedentes y comentar síntomas de pacientes ficticios."
         if missing and mode == "record_lookup":

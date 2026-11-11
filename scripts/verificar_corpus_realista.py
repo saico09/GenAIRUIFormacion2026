@@ -113,7 +113,7 @@ def main():
                 raw = request_json("POST", f"{OLLAMA_BASE_URL}/api/generate", {
                     "model": args.model, "system": RAG_SYSTEM,
                     "prompt": build_rag_prompt(question, sources, definitions[pid]["name"]),
-                    "format": rag_response_schema(sources), "options": report["options"],
+                    "format": rag_response_schema(sources, question), "options": report["options"],
                     "stream": False, "think": report["think"], "keep_alive": "1m"}, timeout=180)
                 row.update(done_reason=raw.get("done_reason"), eval_count=raw.get("eval_count"),
                            prompt_eval_count=raw.get("prompt_eval_count"), thinking_returned=bool(raw.get("thinking")))
