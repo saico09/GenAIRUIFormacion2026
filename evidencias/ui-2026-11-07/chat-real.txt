@@ -1,5 +1,0 @@
-OK pregunta vacía: aviso y cero POST
-OK ID 1: Enfermedad Alfa, fuentes correctas
-OK ID 2: Tratamiento Beta, fuentes correctas
-OK ID 3: Medicamento Gamma, fuentes correctas
-OK ID 1: No hay información suficiente, fuentes correctas

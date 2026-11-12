@@ -1,6 +1,6 @@
 # Guía rápida
 
-PowerShell 7, Python 3 y Docker Desktop. Todo desde `codigo/`. [Arranque y CRUD manual](README.md) · [Demo S5](evidencias/S05-guion.md) · [Demo final](evidencias/s10/guion.md).
+PowerShell 7, Python 3 y Docker Desktop. Todo desde `codigo/`. [Arranque y CRUD manual](README.md).
 
 Para entrar:
 
@@ -215,9 +215,9 @@ Para descargar el modelo de chat, si falta:
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3.5:4b-q4_K_M
 ```
 
-**Ollama** es el servidor local; **Qwen 3.5 de 4B** es el modelo que responde (`qwen3.5:4b-q4_K_M`). Ambas ramas usan la misma pregunta y parámetros, con temperatura `0.2` y `think=false`. En este equipo entra completo en la GPU; Gemma 12B necesitaba también RAM y resultó mucho más lento. Los [ensayos y sus límites](evidencias/revision-funcional-2026-11-11/LEEME.md) corresponden a casos ficticios concretos.
+**Ollama** es el servidor local; **Qwen 3.5 de 4B** es el modelo que responde (`qwen3.5:4b-q4_K_M`). Ambas ramas usan la misma pregunta y parámetros, con temperatura `0.2` y `think=false`.
 
-Las dos pruebas cortas desde la página tardaron unos 22–25 segundos en este equipo; la primera carga o una respuesta larga pueden demorar más. Espera la confirmación de guardado antes de enviar otra consulta.
+La primera carga o una respuesta larga pueden demorar más. Espera la confirmación de guardado antes de enviar otra consulta.
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.
 
@@ -238,8 +238,6 @@ Si preguntas qué consta en la historia, RAG responde sólo con antecedentes res
 Cada consulta terminada se añade al Markdown y a PostgreSQL con un UUID. Los registros confirmados de enfermedad, tratamiento y medicamento siguen siendo distintos: se guardan después de revisar sus campos. Las respuestas anteriores de IA no se reutilizan como hechos confirmados del paciente.
 
 Las citas de antecedentes se comprueban contra los fragmentos recuperados. Si falta un dato del historial, se indica; la orientación de la consulta se presenta por separado. Una cita válida demuestra de dónde viene el texto, no la exactitud de cualquier interpretación del modelo: puedes cotejarla abriendo sus fuentes.
-
-La revisión del 07/11 detectó respuestas sin respaldo fuera de los casos preparados. [Experimentos anteriores](evidencias/revision-rag-2026-11-07/LEEME.md). El registro asistido fue solicitado por Marco; no añade requisitos de Rui.
 
 Para comprobar ambos casos del dataset inicial por API:
 
@@ -319,6 +317,8 @@ Para generar peticiones y encontrarlas en Loki:
 python scripts/verificar_loki.py --output "ejecuciones/$ejecucion-loki.json"
 ```
 
+Si usas `capturar_loki.cjs`, pásale ese JSON recién generado: `node scripts/capturar_loki.cjs "ejecuciones/$ejecucion-loki.json"`. Necesita Playwright y Edge instalados.
+
 Para seguir las dos llamadas del LLM:
 
 ```powershell
@@ -393,7 +393,7 @@ Para conectarlo directamente al perfil, antes de aplicar el chart:
 .\scripts\conectar_postgres_minikube.ps1
 ```
 
-Usa `192.168.49.10:5432` en la red `genai`; conserva la red original de PostgreSQL. El chart ya tiene esa IP. La [prueba SQL antigua](evidencias/s09/040-conectividad.md) conserva el host usado en octubre.
+Usa `192.168.49.10:5432` en la red `genai`; conserva la red original de PostgreSQL. El chart ya tiene esa IP.
 
 Para preparar el Secret desde `.env`:
 
@@ -483,15 +483,7 @@ Para ver la sincronización actual:
 
 El chat sigue en 8000. Si reemplazas un pod, vuelve a ejecutar el helper del túnel antes del GET.
 
-## Guion final
-
-Para repetir la demo: [guion](evidencias/s10/guion.md). Para volver de dos a una réplica por Git: [preparación](evidencias/s10/gitops-preparacion.md#volver-a-una-réplica-para-otra-demo).
-
-Usa `verificar_gitops.py` con el SHA nuevo justo después de cambiar réplicas; los SHA antiguos son evidencia histórica. Para una consulta normal usa los comandos de estado anteriores. Si reaparece el error de reloj de Argo, conserva el fallo y sigue el [diagnóstico](evidencias/s10/046-reloj.md); no cambies relojes ni status.
-
-<a id="retomar-después-del-receso"></a>
-
-Para retomar tras una pausa, sigue [Arrancar](README.md#arrancar), consulta Ana y repite la prueba de chat. El receso previsto sigue siendo 21/12–01/01, sin tareas.
+Para comprobar un cambio de réplicas publicado, usa `verificar_gitops.py` con su SHA nuevo. Para consultar el estado actual bastan los comandos anteriores.
 
 ## Comprobar el entorno completo
 
@@ -503,4 +495,36 @@ python scripts/verificar_componentes.py --output "ejecuciones/$ejecucion-compone
 
 Usa `$ejecucion` del bloque de observabilidad. Si Loki aún arranca, espera y repite con un nombre nuevo.
 
-La [guía extensa anterior](evidencias/revision-claude/documentacion-original/GUIA.md) queda archivada; sus rutas relativas y resultados corresponden al documento original.
+Para comprobar la interfaz servida sin abrir el navegador:
+
+```powershell
+python -B scripts/verificar_assets.py
+```
+
+Para probar el CRUD compartido entre Python y Java:
+
+```powershell
+python -B scripts/verificar_backend_cruzado.py crud
+```
+
+Crea y retira sólo su paciente temporal; conserva sus logs y respaldos SQL. No edites pacientes durante la prueba. Los resultados quedan en `.local/verificaciones/`.
+
+Para probar las reglas de conexión de Minikube sin iniciar ni detener contenedores:
+
+```powershell
+.\scripts\verificar_conexion_minikube.ps1
+```
+
+## Revisar calidad con SonarQube
+
+Para levantar Sonar y analizar este proyecto, desde PowerShell 7:
+
+```powershell
+cd C:\Users\marco\Documents\CONKORD\SonarQube
+.\sonar.ps1 iniciar
+.\escanear.ps1
+```
+
+Abre [el resultado](http://localhost:9000/dashboard?id=genairui-formacion2026). El script analiza una copia y revoca su token al terminar. `SUCCESS` indica que terminó el análisis; el Quality Gate puede seguir en rojo por sus umbrales. La cobertura necesita un reporte: el 0 % mostrado aquí no significa que no existan pruebas.
+
+Las correcciones y los avisos conservados están resumidos en [la revisión actual](evidencias/calidad-2026-11-12/LEEME.md). No cambies las reglas sólo para obtener un resultado verde.

@@ -1,1 +1,0 @@
-Ollama 0.40.12 ya responde en localhost:11434

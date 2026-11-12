@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "helm_lint": true,
+  "helm_template": true,
+  "changes": [
+    "              ephemeral-storage: 128Mi",
+    "              ephemeral-storage: 512Mi",
+    "      automountServiceAccountToken: false"
+  ],
+  "rest_of_manifest_identical": true,
+  "hostPath_volumes_env_ports_and_probes_preserved": true,
+  "minikube_or_cluster_calls": false,
+  "scope": "Mismo microservicio GitOps; desactiva un token de ServiceAccount que no usa y explicita presupuesto efímero128Mi/512Mi. No añade servicios ni privilegios.",
+  "before_sha256": "2b8c6e05ee2fe2ab5b255eec4653a63dcc6412f06ec6dada4fe369c00b240ab9",
+  "after_sha256": "0489f6510ae1569b9574be74be04997dfbe60bb5d5225e5b74bf7a48dd46ff2b"
+}

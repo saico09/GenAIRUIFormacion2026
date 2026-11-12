@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "scope": "Pruebas Java offline de parser y validación; sin DB, HTTP, datos ni reinicios",
+  "image": "maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58",
+  "command": "mvn -B -ntp test",
+  "tests": 7,
+  "failures": 0,
+  "errors": 0,
+  "cases": [
+    {
+      "name": "emailValidatorKeepsNormalizationAndRejectsMalformedAddresses",
+      "seconds": 1.809
+    },
+    {
+      "name": "markdownRejectsBrokenStructureAndDuplicateIds",
+      "seconds": 0.074
+    },
+    {
+      "name": "markdownKeepsRecordAndFieldLimits",
+      "seconds": 0.025
+    },
+    {
+      "name": "markdownPreservesFieldsAndCrLf",
+      "seconds": 0.003
+    },
+    {
+      "name": "longInvalidEmailDoesNotBacktrack",
+      "seconds": 0.038
+    },
+    {
+      "name": "malformedLargeMarkdownDoesNotBacktrack",
+      "seconds": 0.024
+    },
+    {
+      "name": "emailPatternPreservesPreviousLanguage",
+      "seconds": 0.07
+    }
+  ],
+  "email_equivalence_samples": 50000,
+  "source_sha256": {
+    "java-api/pom.xml": "ae37e6052a20769465514f992363ee8267321c1f77cb0d7edc66da4335ecc3d7",
+    "java-api/src/main/java/com/conkord/genai/PatientRequest.java": "eec095f269257e286276ed72930fbf7c357340a1c3080d36aa34668f4855099b",
+    "java-api/src/main/java/com/conkord/genai/PatientHistoryService.java": "81d36dffc76e270b976d5c14ac55c17d2fdd17ab89f8cd17b57460b52ea84702",
+    "java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java": "537b13a8ed5c8c8e638764ee0aa1cb56a0b1bb3f2504d5932c97404aaddf2e3e"
+  },
+  "runtime_dependencies_changed": false,
+  "test_dependency_added": "org.junit.jupiter:junit-jupiter (versión gestionada por Spring Boot)",
+  "prior_tag_runner": "Ensayo inicial con tag Maven oficial también pasó; el resultado final usa el digest del Dockerfile. La caché temporal propia sonarqube_maven_cache y ese tag nuevo se retiraron; conkord-sonarqube_maven_cache se conservó.",
+  "reference": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/regex/Pattern.html"
+}

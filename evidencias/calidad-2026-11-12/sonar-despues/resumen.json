@@ -1,0 +1,88 @@
+{
+  "at": "2026-11-12T18:35:06.0773979Z",
+  "projectKey": "genairui-formacion2026",
+  "serverVersion": "26.11.0.134175",
+  "openIssues": 29,
+  "hotspots": 0,
+  "qualityGate": "ERROR",
+  "bySeverity": [
+    {
+      "Name": "CRITICAL",
+      "Count": 27
+    },
+    {
+      "Name": "MAJOR",
+      "Count": 1
+    },
+    {
+      "Name": "MINOR",
+      "Count": 1
+    }
+  ],
+  "byRule": [
+    {
+      "Name": "python:S5779",
+      "Count": 24
+    },
+    {
+      "Name": "python:S5527",
+      "Count": 2
+    },
+    {
+      "Name": "java:S8786",
+      "Count": 1
+    },
+    {
+      "Name": "python:S4830",
+      "Count": 1
+    },
+    {
+      "Name": "python:S5332",
+      "Count": 1
+    }
+  ],
+  "byType": [
+    {
+      "Name": "BUG",
+      "Count": 24
+    },
+    {
+      "Name": "VULNERABILITY",
+      "Count": 4
+    },
+    {
+      "Name": "CODE_SMELL",
+      "Count": 1
+    }
+  ],
+  "byComponent": [
+    {
+      "Name": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+      "Count": 20
+    },
+    {
+      "Name": "genairui-formacion2026:scripts/verificar_componentes.py",
+      "Count": 3
+    },
+    {
+      "Name": "genairui-formacion2026:scripts/verificar_repo_argocd.py",
+      "Count": 2
+    },
+    {
+      "Name": "genairui-formacion2026:java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+      "Count": 1
+    },
+    {
+      "Name": "genairui-formacion2026:scripts/verificar_arranque_db.py",
+      "Count": 1
+    },
+    {
+      "Name": "genairui-formacion2026:scripts/verificar_assets.py",
+      "Count": 1
+    },
+    {
+      "Name": "genairui-formacion2026:scripts/verificar_auditoria_python.py",
+      "Count": 1
+    }
+  ]
+}

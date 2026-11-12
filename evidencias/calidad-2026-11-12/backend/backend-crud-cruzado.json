@@ -1,0 +1,1446 @@
+{
+  "started_at": "2026-11-12T18:30:24.352331+00:00",
+  "checks": [
+    {
+      "name": "Ambas APIs muestran los pacientes reales iniciales",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Alta Python visible por Java",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Alta genera Markdown y respaldo SQL automáticamente",
+      "passed": true,
+      "details": [
+        {
+          "patient_id": 60,
+          "files": 1,
+          "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a.md",
+          "sha256": "0039dc12942f33bce41d1f0ab2f04c3e290ad3c32ecbc4ad93c7a7e9094a80bc",
+          "record_count": 0,
+          "records_match_md": true,
+          "latest_snapshot_id": "6e4b9d8d-7173-4c0b-a8f8-49ce3365a848",
+          "latest_snapshot_kind": "snapshot",
+          "latest_snapshot_matches": true
+        }
+      ]
+    },
+    {
+      "name": "Actualizar paciente Java se refleja en Python",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Renombrar conserva asociación y único MD",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Enfermedad Python visible por Java",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Tratamiento Java visible por Python",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "UUID y tres campos coinciden SQL/MD tras editar Java",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Alta Java y medicamento editado Python se ven en ambas APIs",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Listado enfermedades cruzado idéntico",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Dos registros alineados con respaldo SQL",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Descarga Markdown coincide con historia y SQL",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Edición confirmada MD actualiza tabla y respaldo",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Borrar enfermedades por cada API actualiza SQL/MD",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Actualización final Python visible en Java",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Todas las filas previas se conservan sin cambios",
+      "passed": true,
+      "details": {
+        "patients": true,
+        "patient_diseases": true,
+        "medical_consultations": true,
+        "transaction_logs": true
+      }
+    },
+    {
+      "name": "Pacientes y Markdown finales idénticos al baseline",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "Ningún contenedor reiniciado o recreado",
+      "passed": false,
+      "details": null
+    }
+  ],
+  "requests": [
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients",
+      "status": 200,
+      "request": null,
+      "response": [
+        {
+          "id": 1,
+          "name": "Ana Demo",
+          "birth_date": "1990-01-10",
+          "email": "ana@example.com"
+        },
+        {
+          "id": 2,
+          "name": "Bruno Demo",
+          "birth_date": "1985-02-20",
+          "email": "bruno@example.com"
+        },
+        {
+          "id": 3,
+          "name": "Carla Demo",
+          "birth_date": "2000-03-30",
+          "email": "carla@example.com"
+        },
+        {
+          "id": 4,
+          "name": "Marco Contreras",
+          "birth_date": "1997-08-02",
+          "email": "marco@example.com"
+        },
+        {
+          "id": 24,
+          "name": "Paciente de prueba",
+          "birth_date": "1990-05-15",
+          "email": "prueba@example.com"
+        }
+      ]
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients",
+      "status": 200,
+      "request": null,
+      "response": [
+        {
+          "id": 1,
+          "name": "Ana Demo",
+          "birth_date": "1990-01-10",
+          "email": "ana@example.com"
+        },
+        {
+          "id": 2,
+          "name": "Bruno Demo",
+          "birth_date": "1985-02-20",
+          "email": "bruno@example.com"
+        },
+        {
+          "id": 3,
+          "name": "Carla Demo",
+          "birth_date": "2000-03-30",
+          "email": "carla@example.com"
+        },
+        {
+          "id": 4,
+          "name": "Marco Contreras",
+          "birth_date": "1997-08-02",
+          "email": "marco@example.com"
+        },
+        {
+          "id": 24,
+          "name": "Paciente de prueba",
+          "birth_date": "1990-05-15",
+          "email": "prueba@example.com"
+        }
+      ]
+    },
+    {
+      "service": "python",
+      "method": "POST",
+      "path": "/patients",
+      "status": 201,
+      "request": {
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Python",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      },
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60",
+      "status": 200,
+      "request": null,
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "java",
+      "method": "PUT",
+      "path": "/patients/60",
+      "status": 200,
+      "request": {
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Python",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      },
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Java",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/60",
+      "status": 200,
+      "request": null,
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Java",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "python",
+      "method": "POST",
+      "path": "/patients/60/diseases",
+      "status": 201,
+      "request": {
+        "disease": "Rinitis alérgica de prueba",
+        "treatment": "Plan actualizado mediante Java para el caso sintético",
+        "medication": "Cetirizina de prueba, sin pauta"
+      },
+      "response": {
+        "disease": "Rinitis alérgica de prueba",
+        "treatment": "Evitar el desencadenante descrito en el caso sintético",
+        "medication": "Cetirizina de prueba, sin pauta",
+        "id": "80abc390-9da4-4498-b116-e732ab250754",
+        "patient_id": 60
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60/diseases/80abc390-9da4-4498-b116-e732ab250754",
+      "status": 200,
+      "request": null,
+      "response": {
+        "id": "80abc390-9da4-4498-b116-e732ab250754",
+        "patient_id": 60,
+        "disease": "Rinitis alérgica de prueba",
+        "treatment": "Evitar el desencadenante descrito en el caso sintético",
+        "medication": "Cetirizina de prueba, sin pauta"
+      }
+    },
+    {
+      "service": "java",
+      "method": "PUT",
+      "path": "/patients/60/diseases/80abc390-9da4-4498-b116-e732ab250754",
+      "status": 200,
+      "request": {
+        "disease": "Rinitis alérgica de prueba",
+        "treatment": "Plan actualizado mediante Java para el caso sintético",
+        "medication": "Cetirizina de prueba, sin pauta"
+      },
+      "response": {
+        "id": "80abc390-9da4-4498-b116-e732ab250754",
+        "patient_id": 60,
+        "disease": "Rinitis alérgica de prueba",
+        "treatment": "Plan actualizado mediante Java para el caso sintético",
+        "medication": "Cetirizina de prueba, sin pauta"
+      }
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/60/diseases/80abc390-9da4-4498-b116-e732ab250754",
+      "status": 200,
+      "request": null,
+      "response": {
+        "disease": "Rinitis alérgica de prueba",
+        "treatment": "Plan actualizado mediante Java para el caso sintético",
+        "medication": "Cetirizina de prueba, sin pauta",
+        "id": "80abc390-9da4-4498-b116-e732ab250754",
+        "patient_id": 60
+      }
+    },
+    {
+      "service": "java",
+      "method": "POST",
+      "path": "/patients/60/diseases",
+      "status": 201,
+      "request": {
+        "disease": "Reflujo de prueba",
+        "treatment": "Seguimiento ficticio",
+        "medication": "Medicamento de prueba editado mediante Python"
+      },
+      "response": {
+        "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+        "patient_id": 60,
+        "disease": "Reflujo de prueba",
+        "treatment": "Seguimiento ficticio",
+        "medication": "Omeprazol de prueba, sin pauta"
+      }
+    },
+    {
+      "service": "python",
+      "method": "PUT",
+      "path": "/patients/60/diseases/6ded47f8-460a-4336-9a09-56eadd08656b",
+      "status": 200,
+      "request": {
+        "disease": "Reflujo de prueba",
+        "treatment": "Seguimiento ficticio",
+        "medication": "Medicamento de prueba editado mediante Python"
+      },
+      "response": {
+        "disease": "Reflujo de prueba",
+        "treatment": "Seguimiento ficticio",
+        "medication": "Medicamento de prueba editado mediante Python",
+        "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+        "patient_id": 60
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60/diseases/6ded47f8-460a-4336-9a09-56eadd08656b",
+      "status": 200,
+      "request": null,
+      "response": {
+        "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+        "patient_id": 60,
+        "disease": "Reflujo de prueba",
+        "treatment": "Seguimiento ficticio",
+        "medication": "Medicamento de prueba editado mediante Python"
+      }
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/60/diseases",
+      "status": 200,
+      "request": null,
+      "response": [
+        {
+          "disease": "Rinitis alérgica de prueba",
+          "treatment": "Plan actualizado mediante Java para el caso sintético",
+          "medication": "Cetirizina de prueba, sin pauta",
+          "id": "80abc390-9da4-4498-b116-e732ab250754",
+          "patient_id": 60
+        },
+        {
+          "disease": "Reflujo de prueba",
+          "treatment": "Seguimiento ficticio",
+          "medication": "Medicamento de prueba editado mediante Python",
+          "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+          "patient_id": 60
+        }
+      ]
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60/diseases",
+      "status": 200,
+      "request": null,
+      "response": [
+        {
+          "id": "80abc390-9da4-4498-b116-e732ab250754",
+          "patient_id": 60,
+          "disease": "Rinitis alérgica de prueba",
+          "treatment": "Plan actualizado mediante Java para el caso sintético",
+          "medication": "Cetirizina de prueba, sin pauta"
+        },
+        {
+          "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+          "patient_id": 60,
+          "disease": "Reflujo de prueba",
+          "treatment": "Seguimiento ficticio",
+          "medication": "Medicamento de prueba editado mediante Python"
+        }
+      ]
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60/history",
+      "status": 200,
+      "request": null,
+      "response": {
+        "patient_id": 60,
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "3cee6f37533f44e89f8a02f1dfd21a7d6181d8360ec59f3b40f3ecaed49b3e40",
+        "markdown": "# Historia clínica ficticia — QA Backend Revision 20261111 0dc0506a Renombrado Java\n\nDatos ficticios para la formación.\n\npatient_id: 60\n\n## Registro 80abc390-9da4-4498-b116-e732ab250754\n\n### Enfermedad\nRinitis alérgica de prueba\n\n### Tratamiento\nPlan actualizado mediante Java para el caso sintético\n\n### Medicamento\nCetirizina de prueba, sin pauta\n\n## Registro 6ded47f8-460a-4336-9a09-56eadd08656b\n\n### Enfermedad\nReflujo de prueba\n\n### Tratamiento\nSeguimiento ficticio\n\n### Medicamento\nMedicamento de prueba editado mediante Python\n",
+        "entries": [
+          {
+            "id": "80abc390-9da4-4498-b116-e732ab250754",
+            "disease": "Rinitis alérgica de prueba",
+            "treatment": "Plan actualizado mediante Java para el caso sintético",
+            "medication": "Cetirizina de prueba, sin pauta"
+          },
+          {
+            "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+            "disease": "Reflujo de prueba",
+            "treatment": "Seguimiento ficticio",
+            "medication": "Medicamento de prueba editado mediante Python"
+          }
+        ],
+        "consultations": []
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60/history.md",
+      "status": 200,
+      "request": null,
+      "response": "# Historia clínica ficticia — QA Backend Revision 20261111 0dc0506a Renombrado Java\n\nDatos ficticios para la formación.\n\npatient_id: 60\n\n## Registro 80abc390-9da4-4498-b116-e732ab250754\n\n### Enfermedad\nRinitis alérgica de prueba\n\n### Tratamiento\nPlan actualizado mediante Java para el caso sintético\n\n### Medicamento\nCetirizina de prueba, sin pauta\n\n## Registro 6ded47f8-460a-4336-9a09-56eadd08656b\n\n### Enfermedad\nReflujo de prueba\n\n### Tratamiento\nSeguimiento ficticio\n\n### Medicamento\nMedicamento de prueba editado mediante Python\n"
+    },
+    {
+      "service": "java",
+      "method": "PUT",
+      "path": "/patients/60/history",
+      "status": 200,
+      "request": {
+        "revision": "3cee6f37533f44e89f8a02f1dfd21a7d6181d8360ec59f3b40f3ecaed49b3e40",
+        "markdown": "# Historia clínica ficticia — QA Backend Revision 20261111 0dc0506a Renombrado Java\n\nDatos ficticios para la formación.\n\npatient_id: 60\n\n## Registro 80abc390-9da4-4498-b116-e732ab250754\n\n### Enfermedad\nRinitis alérgica de prueba\n\n### Tratamiento\nPlan actualizado mediante Java para el caso sintético\n\n### Medicamento\nCetirizina de prueba, sin pauta\n\n## Registro 6ded47f8-460a-4336-9a09-56eadd08656b\n\n### Enfermedad\nReflujo de prueba\n\n### Tratamiento\nSeguimiento ficticio editado desde Markdown\n\n### Medicamento\nMedicamento de prueba editado mediante Python\n",
+        "confirmed": true
+      },
+      "response": {
+        "patient_id": 60,
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "b27f2bbffdb71e8397a41de78bccde49af77299ca488040869b5a67ecd2d2a19",
+        "markdown": "# Historia clínica ficticia — QA Backend Revision 20261111 0dc0506a Renombrado Java\n\nDatos ficticios para la formación.\n\npatient_id: 60\n\n## Registro 80abc390-9da4-4498-b116-e732ab250754\n\n### Enfermedad\nRinitis alérgica de prueba\n\n### Tratamiento\nPlan actualizado mediante Java para el caso sintético\n\n### Medicamento\nCetirizina de prueba, sin pauta\n\n## Registro 6ded47f8-460a-4336-9a09-56eadd08656b\n\n### Enfermedad\nReflujo de prueba\n\n### Tratamiento\nSeguimiento ficticio editado desde Markdown\n\n### Medicamento\nMedicamento de prueba editado mediante Python\n",
+        "entries": [
+          {
+            "id": "80abc390-9da4-4498-b116-e732ab250754",
+            "disease": "Rinitis alérgica de prueba",
+            "treatment": "Plan actualizado mediante Java para el caso sintético",
+            "medication": "Cetirizina de prueba, sin pauta"
+          },
+          {
+            "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+            "disease": "Reflujo de prueba",
+            "treatment": "Seguimiento ficticio editado desde Markdown",
+            "medication": "Medicamento de prueba editado mediante Python"
+          }
+        ],
+        "consultations": []
+      }
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/60/diseases/6ded47f8-460a-4336-9a09-56eadd08656b",
+      "status": 200,
+      "request": null,
+      "response": {
+        "disease": "Reflujo de prueba",
+        "treatment": "Seguimiento ficticio editado desde Markdown",
+        "medication": "Medicamento de prueba editado mediante Python",
+        "id": "6ded47f8-460a-4336-9a09-56eadd08656b",
+        "patient_id": 60
+      }
+    },
+    {
+      "service": "java",
+      "method": "DELETE",
+      "path": "/patients/60/diseases/80abc390-9da4-4498-b116-e732ab250754",
+      "status": 204,
+      "request": null,
+      "response": ""
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/60/diseases/80abc390-9da4-4498-b116-e732ab250754",
+      "status": 404,
+      "request": null,
+      "response": {
+        "detail": "Registro no encontrado para este paciente"
+      }
+    },
+    {
+      "service": "python",
+      "method": "DELETE",
+      "path": "/patients/60/diseases/6ded47f8-460a-4336-9a09-56eadd08656b",
+      "status": 204,
+      "request": null,
+      "response": ""
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60/diseases/6ded47f8-460a-4336-9a09-56eadd08656b",
+      "status": 404,
+      "request": null,
+      "response": {
+        "detail": "Registro no encontrado para este paciente"
+      }
+    },
+    {
+      "service": "python",
+      "method": "PUT",
+      "path": "/patients/60",
+      "status": 200,
+      "request": {
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Python",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      },
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Python",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60",
+      "status": 200,
+      "request": null,
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Python",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60",
+      "status": 200,
+      "request": null,
+      "response": {
+        "id": 60,
+        "name": "QA Backend Revision 20261111 0dc0506a Renombrado Python",
+        "birth_date": "1995-06-15",
+        "email": "qa-2337fd5d@example.com"
+      }
+    },
+    {
+      "service": "java",
+      "method": "DELETE",
+      "path": "/patients/60",
+      "status": 204,
+      "request": null,
+      "response": ""
+    },
+    {
+      "service": "python",
+      "method": "GET",
+      "path": "/patients/60",
+      "status": 404,
+      "request": null,
+      "response": {
+        "detail": "Paciente no encontrado"
+      }
+    },
+    {
+      "service": "java",
+      "method": "GET",
+      "path": "/patients/60",
+      "status": 404,
+      "request": null,
+      "response": {
+        "detail": "Paciente no encontrado"
+      }
+    }
+  ],
+  "before": {
+    "transaction_read_only": true,
+    "tables": [
+      {
+        "table_schema": "public",
+        "table_name": "medical_consultations"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "patient_diseases"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "patients"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "transaction_logs"
+      }
+    ],
+    "columns": {
+      "patients": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "name",
+          "data_type": "character varying",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "birth_date",
+          "data_type": "date",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "email",
+          "data_type": "character varying",
+          "is_nullable": "NO"
+        }
+      ],
+      "patient_diseases": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "patient_id",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "disease",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "treatment",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "medication",
+          "data_type": "text",
+          "is_nullable": "NO"
+        }
+      ],
+      "medical_consultations": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "execution_id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "patient_id",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "kind",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "question",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "direct_answer",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "rag_answer",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "model",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "sources",
+          "data_type": "jsonb",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "filename",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "markdown_content",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "revision",
+          "data_type": "character varying",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "storage_order",
+          "data_type": "bigint",
+          "is_nullable": "NO"
+        }
+      ],
+      "transaction_logs": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "service",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "operation",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "method",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "path",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "http_status",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "request_body",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "response_body",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "duration_ms",
+          "data_type": "double precision",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "request_truncated",
+          "data_type": "boolean",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "response_truncated",
+          "data_type": "boolean",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "patient_id",
+          "data_type": "integer",
+          "is_nullable": "YES"
+        }
+      ]
+    },
+    "patients": [
+      {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      },
+      {
+        "id": 2,
+        "name": "Bruno Demo",
+        "birth_date": "1985-02-20",
+        "email": "bruno@example.com"
+      },
+      {
+        "id": 3,
+        "name": "Carla Demo",
+        "birth_date": "2000-03-30",
+        "email": "carla@example.com"
+      },
+      {
+        "id": 4,
+        "name": "Marco Contreras",
+        "birth_date": "1997-08-02",
+        "email": "marco@example.com"
+      },
+      {
+        "id": 24,
+        "name": "Paciente de prueba",
+        "birth_date": "1990-05-15",
+        "email": "prueba@example.com"
+      }
+    ],
+    "diseases": [
+      {
+        "id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+        "patient_id": 1,
+        "disease": "Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo.",
+        "treatment": "El tratamiento registrado para el reflujo de Ana Demo consiste en evitar las cenas abundantes y los alimentos que identifica como desencadenantes, dejar tres horas entre la cena y acostarse, y llevar un registro de los episodios de ardor. Se programó una revisión de síntomas el 2026-11-12 en atención primaria.",
+        "medication": "Ana Demo recibe omeprazol para el reflujo gastroesofágico, según el registro simulado del 2026-10-20. No constan dosis, frecuencia ni duración de la pauta en este informe. No se ha establecido que las molestias comunicadas en consultas posteriores sean causadas por ese medicamento."
+      },
+      {
+        "id": "a22c0bf2-4de5-5684-80b1-e5c2910e50b2",
+        "patient_id": 2,
+        "disease": "Bruno Demo tiene diabetes mellitus tipo 2, registrada en la consulta simulada del 2026-10-21 tras controles de glucosa alterados. Había referido sed frecuente y aumento de la frecuencia urinaria durante el mes anterior. Este informe no contiene los valores de glucemia ni de HbA1c.",
+        "treatment": "Bruno Demo sigue un plan de alimentación con verduras, legumbres y cereales integrales, actividad física regular y seguimiento de la glucosa para el manejo de la diabetes tipo 2. Se programó un control de HbA1c el 2027-01-21 y la revisión de la función renal en atención primaria.",
+        "medication": "Bruno Demo recibe metformina, registrada para el manejo de la diabetes mellitus tipo 2 en la consulta simulada del 2026-10-21. No constan dosis, frecuencia ni cambios de medicación en este informe."
+      },
+      {
+        "id": "34a87963-7e6b-5283-934a-93de012c9c93",
+        "patient_id": 3,
+        "disease": "Carla Demo tiene rinitis alérgica estacional, registrada en la consulta simulada del 2026-10-22. Tiene una alergia ambiental al polen documentada en este caso ficticio. Refiere estornudos, picor nasal, secreción nasal acuosa y picor de ojos al pasar tiempo al aire libre durante la primavera. No constan alergias a medicamentos en este informe.",
+        "treatment": "El tratamiento registrado para Carla Demo consiste en reducir la exposición al polen, usar lavados nasales con solución salina y anotar la evolución de los síntomas de rinitis. Se programó una revisión el 2026-11-14 si las molestias continúan afectando sus actividades.",
+        "medication": "Carla Demo recibe cetirizina para aliviar los síntomas de la rinitis alérgica estacional, según el registro simulado del 2026-10-22. No constan dosis, frecuencia ni duración de la pauta en este informe."
+      }
+    ],
+    "md": {
+      "paciente-1-ana-demo.md": "bb821748fa599d2fdf70dae341116701358a54c3c6e518c1e8a8e359b034d419",
+      "paciente-2-bruno-demo.md": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+      "paciente-3-carla-demo.md": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+      "paciente-4-marco-contreras.md": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de",
+      "paciente-24-paciente-de-prueba.md": "75e499e8dd42e3e22760db277d319c8e22555feeb0851375508b4ee2e18bd98b"
+    },
+    "alignment": [
+      {
+        "patient_id": 1,
+        "files": 1,
+        "filename": "paciente-1-ana-demo.md",
+        "sha256": "bb821748fa599d2fdf70dae341116701358a54c3c6e518c1e8a8e359b034d419",
+        "record_count": 1,
+        "records_match_md": true,
+        "latest_snapshot_id": "ee1bd111-208a-4edf-b015-4ec7beb22531",
+        "latest_snapshot_kind": "consultation",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 2,
+        "files": 1,
+        "filename": "paciente-2-bruno-demo.md",
+        "sha256": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+        "record_count": 1,
+        "records_match_md": true,
+        "latest_snapshot_id": "7e7c17b4-c2a8-4748-8f94-fdfee1ea612b",
+        "latest_snapshot_kind": "snapshot",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 3,
+        "files": 1,
+        "filename": "paciente-3-carla-demo.md",
+        "sha256": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+        "record_count": 1,
+        "records_match_md": true,
+        "latest_snapshot_id": "f2be5269-0646-4213-88d8-87a324289b21",
+        "latest_snapshot_kind": "snapshot",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 4,
+        "files": 1,
+        "filename": "paciente-4-marco-contreras.md",
+        "sha256": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de",
+        "record_count": 0,
+        "records_match_md": true,
+        "latest_snapshot_id": "1647f1c7-c310-4fa7-940c-913db6dbc4f8",
+        "latest_snapshot_kind": "snapshot",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 24,
+        "files": 1,
+        "filename": "paciente-24-paciente-de-prueba.md",
+        "sha256": "75e499e8dd42e3e22760db277d319c8e22555feeb0851375508b4ee2e18bd98b",
+        "record_count": 0,
+        "records_match_md": true,
+        "latest_snapshot_id": "9d355fd3-5e2b-44d1-af99-b246ffc39538",
+        "latest_snapshot_kind": "consultation",
+        "latest_snapshot_matches": true
+      }
+    ],
+    "log_uniqueness": {
+      "rows": 1376,
+      "unique_ids": 1376
+    },
+    "snapshot_kinds": [
+      {
+        "kind": "consultation",
+        "rows": 62
+      },
+      {
+        "kind": "deleted",
+        "rows": 27
+      },
+      {
+        "kind": "snapshot",
+        "rows": 106
+      }
+    ],
+    "row_sets": {
+      "patients": {
+        "rows": 5,
+        "hash_sha256": "c355eb49c8f2a529f057063a3a06c955421c6aacea1f8820f9c2000d34fbaabb"
+      },
+      "patient_diseases": {
+        "rows": 3,
+        "hash_sha256": "e6187acec0965155d29bfc7069a0fc39baeafc1def454f01c6d7067da74d5d08"
+      },
+      "medical_consultations": {
+        "rows": 195,
+        "hash_sha256": "9aa263c2dc4e16b0b1c9b990bea301b6d9db24c9a7ab906eb109fe9aad401ffa"
+      },
+      "transaction_logs": {
+        "rows": 1376,
+        "hash_sha256": "451e414512e89166f49b7b430d2b9e49e753170765490e6fc55e06413c8183b7"
+      }
+    }
+  },
+  "correlation_header": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+  "scope": "Un paciente temporal, sin /chat, propuestas, sincronización del índice, inferencias ni reinicios.",
+  "temporary_patient_id": 60,
+  "cleanup": {
+    "patient_id": 60,
+    "deleted": true,
+    "historical_rows_retained": true
+  },
+  "after": {
+    "transaction_read_only": true,
+    "tables": [
+      {
+        "table_schema": "public",
+        "table_name": "medical_consultations"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "patient_diseases"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "patients"
+      },
+      {
+        "table_schema": "public",
+        "table_name": "transaction_logs"
+      }
+    ],
+    "columns": {
+      "patients": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "name",
+          "data_type": "character varying",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "birth_date",
+          "data_type": "date",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "email",
+          "data_type": "character varying",
+          "is_nullable": "NO"
+        }
+      ],
+      "patient_diseases": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "patient_id",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "disease",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "treatment",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "medication",
+          "data_type": "text",
+          "is_nullable": "NO"
+        }
+      ],
+      "medical_consultations": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "execution_id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "patient_id",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "kind",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "question",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "direct_answer",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "rag_answer",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "model",
+          "data_type": "text",
+          "is_nullable": "YES"
+        },
+        {
+          "column_name": "sources",
+          "data_type": "jsonb",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "filename",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "markdown_content",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "revision",
+          "data_type": "character varying",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "storage_order",
+          "data_type": "bigint",
+          "is_nullable": "NO"
+        }
+      ],
+      "transaction_logs": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "service",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "operation",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "method",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "path",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "http_status",
+          "data_type": "integer",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "request_body",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "response_body",
+          "data_type": "text",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp with time zone",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "duration_ms",
+          "data_type": "double precision",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "request_truncated",
+          "data_type": "boolean",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "response_truncated",
+          "data_type": "boolean",
+          "is_nullable": "NO"
+        },
+        {
+          "column_name": "patient_id",
+          "data_type": "integer",
+          "is_nullable": "YES"
+        }
+      ]
+    },
+    "patients": [
+      {
+        "id": 1,
+        "name": "Ana Demo",
+        "birth_date": "1990-01-10",
+        "email": "ana@example.com"
+      },
+      {
+        "id": 2,
+        "name": "Bruno Demo",
+        "birth_date": "1985-02-20",
+        "email": "bruno@example.com"
+      },
+      {
+        "id": 3,
+        "name": "Carla Demo",
+        "birth_date": "2000-03-30",
+        "email": "carla@example.com"
+      },
+      {
+        "id": 4,
+        "name": "Marco Contreras",
+        "birth_date": "1997-08-02",
+        "email": "marco@example.com"
+      },
+      {
+        "id": 24,
+        "name": "Paciente de prueba",
+        "birth_date": "1990-05-15",
+        "email": "prueba@example.com"
+      }
+    ],
+    "diseases": [
+      {
+        "id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+        "patient_id": 1,
+        "disease": "Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo.",
+        "treatment": "El tratamiento registrado para el reflujo de Ana Demo consiste en evitar las cenas abundantes y los alimentos que identifica como desencadenantes, dejar tres horas entre la cena y acostarse, y llevar un registro de los episodios de ardor. Se programó una revisión de síntomas el 2026-11-12 en atención primaria.",
+        "medication": "Ana Demo recibe omeprazol para el reflujo gastroesofágico, según el registro simulado del 2026-10-20. No constan dosis, frecuencia ni duración de la pauta en este informe. No se ha establecido que las molestias comunicadas en consultas posteriores sean causadas por ese medicamento."
+      },
+      {
+        "id": "a22c0bf2-4de5-5684-80b1-e5c2910e50b2",
+        "patient_id": 2,
+        "disease": "Bruno Demo tiene diabetes mellitus tipo 2, registrada en la consulta simulada del 2026-10-21 tras controles de glucosa alterados. Había referido sed frecuente y aumento de la frecuencia urinaria durante el mes anterior. Este informe no contiene los valores de glucemia ni de HbA1c.",
+        "treatment": "Bruno Demo sigue un plan de alimentación con verduras, legumbres y cereales integrales, actividad física regular y seguimiento de la glucosa para el manejo de la diabetes tipo 2. Se programó un control de HbA1c el 2027-01-21 y la revisión de la función renal en atención primaria.",
+        "medication": "Bruno Demo recibe metformina, registrada para el manejo de la diabetes mellitus tipo 2 en la consulta simulada del 2026-10-21. No constan dosis, frecuencia ni cambios de medicación en este informe."
+      },
+      {
+        "id": "34a87963-7e6b-5283-934a-93de012c9c93",
+        "patient_id": 3,
+        "disease": "Carla Demo tiene rinitis alérgica estacional, registrada en la consulta simulada del 2026-10-22. Tiene una alergia ambiental al polen documentada en este caso ficticio. Refiere estornudos, picor nasal, secreción nasal acuosa y picor de ojos al pasar tiempo al aire libre durante la primavera. No constan alergias a medicamentos en este informe.",
+        "treatment": "El tratamiento registrado para Carla Demo consiste en reducir la exposición al polen, usar lavados nasales con solución salina y anotar la evolución de los síntomas de rinitis. Se programó una revisión el 2026-11-14 si las molestias continúan afectando sus actividades.",
+        "medication": "Carla Demo recibe cetirizina para aliviar los síntomas de la rinitis alérgica estacional, según el registro simulado del 2026-10-22. No constan dosis, frecuencia ni duración de la pauta en este informe."
+      }
+    ],
+    "md": {
+      "paciente-1-ana-demo.md": "bb821748fa599d2fdf70dae341116701358a54c3c6e518c1e8a8e359b034d419",
+      "paciente-2-bruno-demo.md": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+      "paciente-3-carla-demo.md": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+      "paciente-4-marco-contreras.md": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de",
+      "paciente-24-paciente-de-prueba.md": "75e499e8dd42e3e22760db277d319c8e22555feeb0851375508b4ee2e18bd98b"
+    },
+    "alignment": [
+      {
+        "patient_id": 1,
+        "files": 1,
+        "filename": "paciente-1-ana-demo.md",
+        "sha256": "bb821748fa599d2fdf70dae341116701358a54c3c6e518c1e8a8e359b034d419",
+        "record_count": 1,
+        "records_match_md": true,
+        "latest_snapshot_id": "ee1bd111-208a-4edf-b015-4ec7beb22531",
+        "latest_snapshot_kind": "consultation",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 2,
+        "files": 1,
+        "filename": "paciente-2-bruno-demo.md",
+        "sha256": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+        "record_count": 1,
+        "records_match_md": true,
+        "latest_snapshot_id": "7e7c17b4-c2a8-4748-8f94-fdfee1ea612b",
+        "latest_snapshot_kind": "snapshot",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 3,
+        "files": 1,
+        "filename": "paciente-3-carla-demo.md",
+        "sha256": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+        "record_count": 1,
+        "records_match_md": true,
+        "latest_snapshot_id": "f2be5269-0646-4213-88d8-87a324289b21",
+        "latest_snapshot_kind": "snapshot",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 4,
+        "files": 1,
+        "filename": "paciente-4-marco-contreras.md",
+        "sha256": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de",
+        "record_count": 0,
+        "records_match_md": true,
+        "latest_snapshot_id": "1647f1c7-c310-4fa7-940c-913db6dbc4f8",
+        "latest_snapshot_kind": "snapshot",
+        "latest_snapshot_matches": true
+      },
+      {
+        "patient_id": 24,
+        "files": 1,
+        "filename": "paciente-24-paciente-de-prueba.md",
+        "sha256": "75e499e8dd42e3e22760db277d319c8e22555feeb0851375508b4ee2e18bd98b",
+        "record_count": 0,
+        "records_match_md": true,
+        "latest_snapshot_id": "9d355fd3-5e2b-44d1-af99-b246ffc39538",
+        "latest_snapshot_kind": "consultation",
+        "latest_snapshot_matches": true
+      }
+    ],
+    "log_uniqueness": {
+      "rows": 1406,
+      "unique_ids": 1406
+    },
+    "snapshot_kinds": [
+      {
+        "kind": "consultation",
+        "rows": 62
+      },
+      {
+        "kind": "deleted",
+        "rows": 28
+      },
+      {
+        "kind": "snapshot",
+        "rows": 116
+      }
+    ],
+    "temporary_snapshots": [
+      {
+        "id": "6e4b9d8d-7173-4c0b-a8f8-49ce3365a848",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a.md",
+        "revision": "0039dc12942f33bce41d1f0ab2f04c3e290ad3c32ecbc4ad93c7a7e9094a80bc",
+        "storage_order": 202
+      },
+      {
+        "id": "68d7448d-8c1d-4cb5-9ac5-50540bc783b3",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "d42dece3dc31d121d857ee5d8bf40cba13cafac1eb94a400ac36ad952e8513ee",
+        "storage_order": 203
+      },
+      {
+        "id": "828c18f2-015a-4262-ad3d-1edfa4b986ec",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "770c069f4a8eca8521b493a92dbf120a0b9d6ddf28d772159bdc0bb9d9a22a92",
+        "storage_order": 204
+      },
+      {
+        "id": "bdb7fbaf-1d83-4d66-aa2a-d16e3f25ffe6",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "dd064d4b4a22bb5cde1d55790aefbc0c4ab564c1f1cf2dbdd28dcc12b0dceda4",
+        "storage_order": 205
+      },
+      {
+        "id": "f791deba-44b6-42b0-8543-0e55a9873372",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "d36e313749198bb84df916b66b1b81a3793df223ba2cf46aa8ac19aa98d70d30",
+        "storage_order": 206
+      },
+      {
+        "id": "1eb6f129-1acd-44da-b0b4-e22e31b33bc8",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "3cee6f37533f44e89f8a02f1dfd21a7d6181d8360ec59f3b40f3ecaed49b3e40",
+        "storage_order": 207
+      },
+      {
+        "id": "76ef4ecb-384e-4957-b947-b1414d009f07",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "b27f2bbffdb71e8397a41de78bccde49af77299ca488040869b5a67ecd2d2a19",
+        "storage_order": 208
+      },
+      {
+        "id": "b21dc504-d356-49d6-a51b-f90d2d8c8a0f",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "f1f5bad653cc4d47c2ff701a1739a03d469f3e459e0e06b1f7d0608e7cc432f0",
+        "storage_order": 209
+      },
+      {
+        "id": "d576d1c3-3169-4ede-adda-481d9af7a742",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-java.md",
+        "revision": "d42dece3dc31d121d857ee5d8bf40cba13cafac1eb94a400ac36ad952e8513ee",
+        "storage_order": 210
+      },
+      {
+        "id": "50577c3b-221c-4afe-a77e-3c462d82245d",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "snapshot",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-python.md",
+        "revision": "337ae19808a7e8e59b6f01e948c9d41cf4fd73482208234aa4970f58ae8be11d",
+        "storage_order": 211
+      },
+      {
+        "id": "95ab625f-7bad-4ba8-94d4-bea6f3cf3c36",
+        "execution_id": "127b7440-7870-4eca-bb76-c62b907dd0d1",
+        "patient_id": 60,
+        "kind": "deleted",
+        "filename": "paciente-60-qa-backend-revision-20261111-0dc0506a-renombrado-python.md",
+        "revision": "337ae19808a7e8e59b6f01e948c9d41cf4fd73482208234aa4970f58ae8be11d",
+        "storage_order": 212
+      }
+    ],
+    "row_sets": {
+      "patients": {
+        "rows": 5,
+        "hash_sha256": "c355eb49c8f2a529f057063a3a06c955421c6aacea1f8820f9c2000d34fbaabb"
+      },
+      "patient_diseases": {
+        "rows": 3,
+        "hash_sha256": "e6187acec0965155d29bfc7069a0fc39baeafc1def454f01c6d7067da74d5d08"
+      },
+      "medical_consultations": {
+        "rows": 206,
+        "hash_sha256": "304074386f2a9aaa39c9f4453ecb8a6aaf48a03d953071117dc8e67547d47599"
+      },
+      "transaction_logs": {
+        "rows": 1406,
+        "hash_sha256": "556dbc9bdb98f017ebf1dfa3cbf98cfb40075790bb8346121591842c5b97ba04"
+      }
+    }
+  },
+  "final_check_error": "AssertionError: Ningún contenedor reiniciado o recreado",
+  "status": "FAIL",
+  "finished_at": "2026-11-12T18:31:45.388598+00:00",
+  "limits": "No se invoca chat ni LLM, no se prueba navegación UI, concurrencia, fallo de commit ni GitOps. Java se valida por contratos reales; el hash del JAR no certifica compilación reproducible."
+}

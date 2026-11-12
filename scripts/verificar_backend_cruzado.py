@@ -56,13 +56,15 @@ def check(name, condition, details=None):
 
 
 def containers():
-    ids = run(['docker', 'ps', '-aq']).split()
+    # Sólo servicios persistentes: un scanner o runner paralelo no es un reinicio.
+    ids = run(['docker', 'ps', '-aq', '--filter', 'label=com.docker.compose.oneoff=False']).split()
     rows = json.loads(run(['docker', 'inspect', *ids]))
     return {r['Name'].lstrip('/'): {'id': r['Id'], 'state': r['State']['Status'],
             'image': r['Image'], 'restart_count': r['RestartCount'],
             'project': (r['Config'].get('Labels') or {}).get('com.docker.compose.project'),
             'service': (r['Config'].get('Labels') or {}).get('com.docker.compose.service')}
-            for r in rows}
+            for r in rows if (r['Config'].get('Labels') or {}).get('com.docker.compose.project')
+            in ('genairuiformacion2026', 'conkord-sonarqube')}
 
 
 def sql_snapshot(patient_id=None):

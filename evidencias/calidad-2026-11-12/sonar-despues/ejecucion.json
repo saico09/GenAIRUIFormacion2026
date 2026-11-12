@@ -1,0 +1,66 @@
+{
+  "projectKey": "genairui-formacion2026",
+  "projectName": "GenAIRUI Formación 2026",
+  "source": "C:\\Users\\marco\\Documents\\CONKORD\\GenAIRUIFormacion2026\\codigo",
+  "snapshot": "C:\\Users\\marco\\Documents\\CONKORD\\SonarQube\\.local\\escaneos\\genairui-formacion2026-20261112T183132524Z-b733e6\\source",
+  "profile": "genairui",
+  "startedAt": "2026-11-12T18:31:32.5529575Z",
+  "status": "success",
+  "analysisStatus": "SUCCESS",
+  "qualityGate": "ERROR",
+  "scannerImage": "sonarsource/sonar-scanner-cli:12.3.1.4302_8.3.1@sha256:38207bba3d98c8ce6f6c051ea2b9f05a24480da78c9ee5945ceafc3d9de02b88",
+  "tokenRevoked": true,
+  "warnings": [
+    "18:32:02.923 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value '.scannerwork'",
+    "18:32:10.080 WARN  The token used for this analysis will expire on: November 13, 2026",
+    "18:32:10.080 WARN  Analysis executed with this token will fail after the expiration date.",
+    "18:32:29.292 WARN  Missing 'sonar.java.test.libraries' property. You might end up with less precise analysis results.",
+    "18:32:29.293 WARN  Unresolved imports/types have been detected during analysis. Enable DEBUG mode to see them.",
+    "18:32:29.293 WARN  Use of preview features have been detected during analysis. Enable DEBUG mode to see them.",
+    "18:32:31.130 WARN  No explicit support for version 3.15. Python version has been set to 3.14.",
+    "18:32:48.383 WARN  Retrieving only language associated files, make sure to run the analysis inside a git repository to make use of inclusions specified via \"sonar.text.inclusions\""
+  ],
+  "dashboardUrl": "http://127.0.0.1:9000/dashboard?id=genairui-formacion2026",
+  "gitCommit": "6173af2b7e77bb22111649d10697156c07bb85a1",
+  "gitDirty": true,
+  "fileCount": 152,
+  "skippedLinksOrMissing": [],
+  "mavenImage": "maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58",
+  "javaJdkVolume": "conkord-sonarqube_jdk_8e5eff783c58",
+  "ceTaskId": "5fbe2faf-cc50-4ff5-b5aa-d53560492a03",
+  "analysisId": "c0365b8f-a338-4cc2-9bf9-46cdca689ec7",
+  "qualityGateConditions": [
+    {
+      "status": "ERROR",
+      "metricKey": "new_coverage",
+      "comparator": "LT",
+      "errorThreshold": "80",
+      "actualValue": "0.0"
+    },
+    {
+      "status": "OK",
+      "metricKey": "new_duplicated_lines_density",
+      "comparator": "GT",
+      "errorThreshold": "3",
+      "actualValue": "0.16502"
+    },
+    {
+      "status": "ERROR",
+      "metricKey": "new_violations",
+      "comparator": "GT",
+      "errorThreshold": "0",
+      "actualValue": "23"
+    }
+  ],
+  "scannerWarnings": [
+    "18:32:02.923 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value '.scannerwork'",
+    "18:32:10.080 WARN  The token used for this analysis will expire on: November 13, 2026",
+    "18:32:10.080 WARN  Analysis executed with this token will fail after the expiration date.",
+    "18:32:29.292 WARN  Missing 'sonar.java.test.libraries' property. You might end up with less precise analysis results.",
+    "18:32:29.293 WARN  Unresolved imports/types have been detected during analysis. Enable DEBUG mode to see them.",
+    "18:32:29.293 WARN  Use of preview features have been detected during analysis. Enable DEBUG mode to see them.",
+    "18:32:31.130 WARN  No explicit support for version 3.15. Python version has been set to 3.14.",
+    "18:32:48.383 WARN  Retrieving only language associated files, make sure to run the analysis inside a git repository to make use of inclusions specified via \"sonar.text.inclusions\""
+  ],
+  "finishedAt": "2026-11-12T18:34:52.3977694Z"
+}

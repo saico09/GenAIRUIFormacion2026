@@ -1,0 +1,11 @@
+{
+  "commit": "c2ee267d60a63b90777550494c806e7888107387",
+  "manifest_files": 150,
+  "tracked_files": 150,
+  "changed_from_commit": [
+    "python-api/app/static/index.html",
+    "python-api/app/static/styles.css"
+  ],
+  "untracked": [],
+  "comparison": "Contenido normalizado CRLF/LF; manifiesto conserva SHA256 literal de cada copia."
+}

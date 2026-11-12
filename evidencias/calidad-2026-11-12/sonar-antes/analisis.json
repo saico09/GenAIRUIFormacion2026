@@ -1,0 +1,52 @@
+{
+  "paging": {
+    "pageIndex": 1,
+    "pageSize": 10,
+    "total": 3
+  },
+  "analyses": [
+    {
+      "key": "fdf19117-cd72-407a-95e1-7d34222ba371",
+      "date": "2026-11-12T15:12:28-03:00",
+      "events": [
+        {
+          "key": "3316555f-b297-4d54-86fc-a68e499d9302",
+          "category": "VERSION",
+          "name": "not provided"
+        }
+      ],
+      "projectVersion": "not provided",
+      "manualNewCodePeriodBaseline": false,
+      "detectedCI": "undetected"
+    },
+    {
+      "key": "9c0f2dc7-0817-4752-bc49-dbba76edf119",
+      "date": "2026-11-07T18:42:06-03:00",
+      "events": [
+        {
+          "key": "13cf86c1-6b7a-4824-a4ce-f56feb7ff4fc",
+          "category": "QUALITY_GATE",
+          "name": "Failed",
+          "description": "Coverage on New Code < 80"
+        }
+      ],
+      "projectVersion": "not provided",
+      "manualNewCodePeriodBaseline": false,
+      "detectedCI": "undetected"
+    },
+    {
+      "key": "3e08c35a-68dd-46dc-83d3-71bff4f1ebbc",
+      "date": "2026-11-07T18:33:39-03:00",
+      "events": [
+        {
+          "key": "ba60dd24-9855-404b-b63a-84fcef85ff95",
+          "category": "SQ_UPGRADE",
+          "name": "26.11.0.134175"
+        }
+      ],
+      "projectVersion": "not provided",
+      "manualNewCodePeriodBaseline": false,
+      "detectedCI": "undetected"
+    }
+  ]
+}

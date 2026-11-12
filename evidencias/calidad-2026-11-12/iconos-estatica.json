@@ -1,0 +1,65 @@
+{
+  "scope": "Verificación del cambio inicial de íconos, antes de las correcciones asíncronas posteriores; no prueba de navegador ni de CRUD/LLM.",
+  "status": "PASS",
+  "files": [
+    "python-api/app/static/index.html",
+    "python-api/app/static/styles.css"
+  ],
+  "cause": "Los símbolos de texto dependían de las métricas de fuente y los botones de cierre no centraban el contenido explícitamente.",
+  "change": "Doce SVG inline decorativos con viewBox común, tamaños estables, contenedores centrados y separación consistente; sin dependencias nuevas.",
+  "ids_preserved": 102,
+  "interactive_elements_preserved": 52,
+  "sections_preserved": [
+    "consultas",
+    "pacientes",
+    "api-python",
+    "api-java"
+  ],
+  "decorative_icons": 12,
+  "weekly_copies_with_same_interface": [
+    {
+      "week": "semana-04_2026-11-20",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    },
+    {
+      "week": "semana-05_2026-11-27",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    },
+    {
+      "week": "semana-06_2026-12-04",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    },
+    {
+      "week": "semana-07_2026-12-11",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    },
+    {
+      "week": "semana-08_2026-12-18",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    },
+    {
+      "week": "semana-09_2027-01-08",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    },
+    {
+      "week": "semana-10_2027-01-15",
+      "css_matches_previous_main": true,
+      "html_matches_previous_main": true
+    }
+  ],
+  "browser_review_pending": true,
+  "javascript_unchanged_by_icon_patch": [
+    "api.js",
+    "chat.js",
+    "explorer.js",
+    "history.js",
+    "patients.js",
+    "ui.js"
+  ]
+}

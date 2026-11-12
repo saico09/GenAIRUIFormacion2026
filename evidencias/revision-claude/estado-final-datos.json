@@ -1,9 +1,0 @@
-{
-  "checked_at": "2026-11-03T18:19:31.217182+00:00",
-  "python_patients": 4,
-  "java_patients": 3,
-  "ana_minikube_matches_compose": true,
-  "qdrant_points": 9,
-  "prometheus_targets_up": 2,
-  "ollama_version": "0.40.12"
-}

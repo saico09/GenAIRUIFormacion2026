@@ -1,0 +1,118 @@
+{
+  "result": "PASS_ARCHIVE",
+  "mode": "reversible_archive_no_delete",
+  "backup": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache",
+  "manifest_sha256": "24719ec34ff91f0da76cb2d75ed1110373c5e4e176ea285193f5c18b321c63b6",
+  "first_control_preserved": "MANIFIESTO-PRIMER-CONTROL.json",
+  "archived_directories": 8,
+  "archived_files": 96,
+  "archived_bytes": 1030924.0,
+  "entries": [
+    {
+      "source": "codigo/java-api/src/test/python/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\codigo\\java-api\\src\\test\\python\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 1,
+      "bytes": 17621.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "codigo/java-api/target",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\codigo\\java-api\\target",
+      "kind": "maven_generated",
+      "files": 42,
+      "bytes": 190478.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "codigo/python-api/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\codigo\\python-api\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 8,
+      "bytes": 54477.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "codigo/python-api/app/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\codigo\\python-api\\app\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 16,
+      "bytes": 136423.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "codigo/python-api/tests/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\codigo\\python-api\\tests\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 3,
+      "bytes": 45936.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "codigo/scripts/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\codigo\\scripts\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 6,
+      "bytes": 110622.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "dailys/_herramientas/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\dailys\\_herramientas\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 19,
+      "bytes": 466012.0,
+      "status": "archived_and_hash_verified"
+    },
+    {
+      "source": "dailys/_herramientas/borrador-historias-2026-11-07/__pycache__",
+      "destination": "C:\\Users\\marco\\Documents\\CONKORD\\Respaldos\\GenAIRUIFormacion2026\\archivo-limpieza-2026-11-12-cache\\dailys\\_herramientas\\borrador-historias-2026-11-07\\__pycache__",
+      "kind": "python_bytecode",
+      "files": 1,
+      "bytes": 9355.0,
+      "status": "archived_and_hash_verified"
+    }
+  ],
+  "protected_files_checked": 1645,
+  "protected_files_unchanged_at_check": 1641,
+  "concurrent_changes": [
+    {
+      "path": "codigo/HISTORIAL.md",
+      "before_sha256": "a8d0ec8cd8d719981d832e5bfa5de786b4639d6f9df95a8f625bf19dd7f68a9b",
+      "after_sha256": "e7becbc859d74df6fc254294e59e7a789024f9be6bb55b8d89238eb14b3cf65c",
+      "confirmed_by_parent": true,
+      "reason": "Edición documental concurrente confirmada por el agente principal."
+    },
+    {
+      "path": "codigo/GUIA.md",
+      "before_sha256": "d4c4f77a7213c53a3dc9cf2087f7ba6dcaa15036171053127a1c2356af80b531",
+      "after_sha256": "067fca04c90a54c132abaee69b9dd5371cd6a78740db64dacaeae0d440fbdfda",
+      "confirmed_by_parent": true,
+      "reason": "Bloque de SonarQube y comando reproducible; edición concurrente confirmada por el agente principal."
+    },
+    {
+      "path": "codigo/.gitignore",
+      "before_sha256": "9ab3b7f6ed273c7457725876f5d165b3d9e115d9ea9d2e68db702d17cdaca98f",
+      "after_sha256": "96f54d45a657938456b350f3824a7635e93e02734eab0c62d1eab8b13cdce99a",
+      "confirmed_by_parent": true,
+      "reason": "Exclusión evidencias/**/privado/ para snapshots SQL privados; edición concurrente confirmada por el agente principal."
+    },
+    {
+      "path": "codigo/datos/historias/paciente-62-qa-backend-revision-20261111-0cefc97f-renombrado-java.md",
+      "before_sha256": "005e383171074e87fa3a645128bda8b80bf61563b45007cc3c9d6e44079291ca",
+      "after_sha256": null,
+      "confirmed_by_parent": true,
+      "reason": "Temporal 62 de backend-final, renombrado y eliminado por API al terminar; confirmado por el agente principal. No pertenecía a los cinco originales."
+    }
+  ],
+  "concurrency_evidence": "codigo/evidencias/calidad-2026-11-12/backend-final/backend-crud-cruzado.json",
+  "daily_md_and_word_unchanged": 20,
+  "provenance_manifests_unchanged": 10,
+  "weekly_cache_directories_found": 0,
+  "no_source_data_env_sonarqube_moved": true,
+  "absolute_paths_validated": true,
+  "reparse_points_found": 0,
+  "all_archive_hashes_match": true,
+  "scope": "La integridad del archivado se valida separadamente de las ediciones concurrentes documentales y del paciente temporal del ensayo backend. El cierre global verifica el estado final.",
+  "finished_at": "2026-11-12T18:41:00.8207784+00:00"
+}

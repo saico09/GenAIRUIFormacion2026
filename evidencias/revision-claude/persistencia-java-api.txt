@@ -1,8 +1,0 @@
- Container genairuiformacion2026-postgres-1  Restarting
- Container genairuiformacion2026-postgres-1  Started
- Container genairuiformacion2026-postgres-1  Running
- Container genairuiformacion2026-postgres-1  Waiting
- Container genairuiformacion2026-postgres-1  Healthy
- Container genairuiformacion2026-java-api-1  Restarting
- Container genairuiformacion2026-java-api-1  Started
-OK java-api : 3 filas conservadas; Ana id=1, cuatro campos originales; sin borrar pgdata.

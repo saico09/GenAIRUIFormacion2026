@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-12T18:37:13.771Z",
+  "source": "6173af2b7e77bb22111649d10697156c07bb85a1",
+  "tool": "Navegador integrado real, sin mocks",
+  "temporaryPatient": 61,
+  "consultationId": "b94572fd-c641-446a-ae48-4d5e33035f50",
+  "checks": [
+    "Alta Java visible en lista y selector de chat",
+    "Markdown representativo generado",
+    "Alta de registro y UUID compartido",
+    "Edición de registro conserva UUID",
+    "Edición Markdown con confirmación y tabla actualizada",
+    "Sincronización RAG completada",
+    "Comparación real: directo sin antecedentes, RAG rinitis/cetirizina con citas",
+    "Consulta persistida y visible en tabla del paciente",
+    "Explorador Python health200",
+    "Explorador Java health200 y paciente inexistente404",
+    "Eliminación registro conserva consulta",
+    "Eliminación paciente temporal y sincronización índice",
+    "Vista390px sin desborde de página, iconos18px centrados",
+    "Sin errores de consola; borrador original conservado al recargar"
+  ],
+  "mobile": {
+    "viewport": 390,
+    "documentScrollWidth": 390
+  },
+  "passed": true,
+  "limitations": "No prueba exhaustiva de navegadores ni calidad clínica general; no se probaron nuevas propuestas LLM ni GitOps."
+}

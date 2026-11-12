@@ -1,3 +1,0 @@
-INFO:     Started server process [1]
-INFO:     Waiting for application startup.
-Found 2 pods, using pod/fastapi-766cfdc5d5-wbd8l

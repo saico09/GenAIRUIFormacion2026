@@ -1,1 +1,0 @@
-pod "fastapi-766cfdc5d5-pf4q5" deleted from genai namespace

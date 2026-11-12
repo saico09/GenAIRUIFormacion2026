@@ -1,0 +1,727 @@
+{
+  "checked_at": "2026-11-12T18:32:25.003618+00:00",
+  "head": "6173af2b7e77bb22111649d10697156c07bb85a1",
+  "http_assets": [
+    {
+      "url": "http://localhost:8000/",
+      "status": 200,
+      "bytes": 17894,
+      "sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:31:48 GMT",
+        "server": "uvicorn",
+        "cache-control": "no-cache",
+        "content-type": "text/html; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "17894",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+        "x-request-id": "1d6ce1d0-79c5-4718-a511-943361f59490",
+        "x-execution-id": "845009f4-1f9e-419c-972f-6f9a1a2a82c6",
+        "connection": "close"
+      },
+      "local_sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "conditional_etag": {
+        "url": "http://localhost:8000/",
+        "status": 200,
+        "bytes": 17894,
+        "sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:31:50 GMT",
+          "server": "uvicorn",
+          "cache-control": "no-cache",
+          "content-type": "text/html; charset=utf-8",
+          "accept-ranges": "bytes",
+          "content-length": "17894",
+          "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+          "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+          "x-request-id": "8e46283d-5c16-4c41-b640-804d7916532f",
+          "x-execution-id": "08b9c1ce-9cca-444a-a0ac-975194f97464",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/ui-config",
+      "status": 200,
+      "bytes": 45,
+      "sha256": "f68dd4f0c6d8a5ebd8ced4d707382b9d9b97f0fa54d4d700b784d71460250f7d",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:31:52 GMT",
+        "server": "uvicorn",
+        "content-length": "45",
+        "content-type": "application/json",
+        "x-request-id": "0459c7c6-cce7-4728-b5be-fb9083575764",
+        "x-execution-id": "7baf5493-7407-4307-83b5-95c55effd89f",
+        "connection": "close"
+      },
+      "config": {
+        "java_api_port": 8080,
+        "metrics_enabled": true
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/api.js",
+      "status": 200,
+      "bytes": 3079,
+      "sha256": "8db61637a649b572a6da842313211505ab98f0e37162f1272884f12189d91dfe",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:31:53 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "3079",
+        "last-modified": "Sun, 08 Nov 2026 01:46:54 GMT",
+        "etag": "\"d29e3aac1d9d68d30b21a904604448a7\"",
+        "x-request-id": "9e85b959-989c-4560-bf00-340dc763fa4a",
+        "x-execution-id": "77bef072-4aac-4956-8cb2-d6baeff55133",
+        "connection": "close"
+      },
+      "local_sha256": "8db61637a649b572a6da842313211505ab98f0e37162f1272884f12189d91dfe",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [],
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/api.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:31:55 GMT",
+          "server": "uvicorn",
+          "etag": "\"d29e3aac1d9d68d30b21a904604448a7\"",
+          "x-request-id": "979f0847-f4f0-4163-88e2-50fe40daad9c",
+          "x-execution-id": "8e15869f-11bb-42dc-be48-1e2507ae4501",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/chat.js",
+      "status": 200,
+      "bytes": 8551,
+      "sha256": "a6f40dddef83dfcfb1990b10d8de0bea67035dae7c1bc2c8be426511e2b2e45f",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:31:57 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "8551",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"2d9a81a58fcb517f3e2b6208bf87fb2b\"",
+        "x-request-id": "9909e9dd-6412-44ae-9bcb-be21d7dfb8bd",
+        "x-execution-id": "c6d90754-2cee-4a8f-8f34-d9313171c112",
+        "connection": "close"
+      },
+      "local_sha256": "a6f40dddef83dfcfb1990b10d8de0bea67035dae7c1bc2c8be426511e2b2e45f",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js"
+      ],
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/chat.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:31:59 GMT",
+          "server": "uvicorn",
+          "etag": "\"2d9a81a58fcb517f3e2b6208bf87fb2b\"",
+          "x-request-id": "55c72c0f-18bf-4f7e-a7f7-55dedd8d12a6",
+          "x-execution-id": "755266fa-b687-41f2-9168-cccbe1eb8e99",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/explorer.js",
+      "status": 200,
+      "bytes": 14268,
+      "sha256": "a8f5e55b688b2b366775dd854c78d98a81a933bd14e182f227a1bea00967faff",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:03 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "14268",
+        "last-modified": "Sun, 08 Nov 2026 01:47:35 GMT",
+        "etag": "\"676a5a3be2d0c49be98d75fcb9851ffd\"",
+        "x-request-id": "0bd4b23a-aae3-43cd-8fc3-38e30f7cfa91",
+        "x-execution-id": "b34bf8bc-1f66-4f5d-81fa-30173a1e6230",
+        "connection": "close"
+      },
+      "local_sha256": "a8f5e55b688b2b366775dd854c78d98a81a933bd14e182f227a1bea00967faff",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js"
+      ],
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/explorer.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:05 GMT",
+          "server": "uvicorn",
+          "etag": "\"676a5a3be2d0c49be98d75fcb9851ffd\"",
+          "x-request-id": "f1a83ad3-1011-4db6-8f21-f122de7b9985",
+          "x-execution-id": "9973a756-5835-4aba-b414-8cd136f5ebfe",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/history.js",
+      "status": 200,
+      "bytes": 21473,
+      "sha256": "35c69e6993919716880eae2ce566dedc244e916a10443572539fb4e14a2987dc",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:07 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "21473",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"6218a616dfd6cea9ac818d71ac9f1696\"",
+        "x-request-id": "967c8e13-4404-43d2-9715-ec9db317bca7",
+        "x-execution-id": "c1350817-cc63-4828-be1a-6aa48e4d0122",
+        "connection": "close"
+      },
+      "local_sha256": "35c69e6993919716880eae2ce566dedc244e916a10443572539fb4e14a2987dc",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js"
+      ],
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/history.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:09 GMT",
+          "server": "uvicorn",
+          "etag": "\"6218a616dfd6cea9ac818d71ac9f1696\"",
+          "x-request-id": "d0a2dbaf-9dbe-4a7b-9674-4488af4fefed",
+          "x-execution-id": "887d000a-1730-4271-b32f-d7d2551c4cac",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/index.html",
+      "status": 200,
+      "bytes": 17894,
+      "sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:10 GMT",
+        "server": "uvicorn",
+        "content-type": "text/html; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "17894",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+        "x-request-id": "80c2d434-cfc6-4493-b83f-3dcdbcbedd83",
+        "x-execution-id": "09f08f82-625a-4bf2-84c2-30163e558a48",
+        "connection": "close"
+      },
+      "local_sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/index.html",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:12 GMT",
+          "server": "uvicorn",
+          "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+          "x-request-id": "7db9d269-cfd5-472c-8e25-a35c64c66c6e",
+          "x-execution-id": "e5ee56e0-015a-4cca-a465-31e45e32df34",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/patients.js",
+      "status": 200,
+      "bytes": 10079,
+      "sha256": "a0ac24652ffd84f561b8fb8f6181b3a4d725c2ab360395f79498aff39ff780c0",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:14 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "10079",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"cf45f118e7dd2aea986de8492d0fb50e\"",
+        "x-request-id": "46178376-afd4-4fb4-b27f-802b1f58f519",
+        "x-execution-id": "2a22ab65-763d-4cd6-a672-bebdf1328332",
+        "connection": "close"
+      },
+      "local_sha256": "a0ac24652ffd84f561b8fb8f6181b3a4d725c2ab360395f79498aff39ff780c0",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js",
+        "./history.js"
+      ],
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/patients.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:16 GMT",
+          "server": "uvicorn",
+          "etag": "\"cf45f118e7dd2aea986de8492d0fb50e\"",
+          "x-request-id": "0cac82b1-6320-4541-90e7-4a4e66bff08d",
+          "x-execution-id": "f42a9825-b40c-4e59-9bfc-5cade7ffc480",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/styles.css",
+      "status": 200,
+      "bytes": 19769,
+      "sha256": "318338ca8fdbaf538b2fb65a249b87f38b080b4cbf9c86694ed92222ff151ea9",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:18 GMT",
+        "server": "uvicorn",
+        "content-type": "text/css; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "19769",
+        "last-modified": "Thu, 12 Nov 2026 18:11:44 GMT",
+        "etag": "\"e26b949fb12e464bb7fffdeadf07e5a2\"",
+        "x-request-id": "8479603d-896c-4aca-9ef9-45324ecb808f",
+        "x-execution-id": "9c205521-8322-451a-a135-fb88e776e3bf",
+        "connection": "close"
+      },
+      "local_sha256": "318338ca8fdbaf538b2fb65a249b87f38b080b4cbf9c86694ed92222ff151ea9",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/styles.css",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:20 GMT",
+          "server": "uvicorn",
+          "etag": "\"e26b949fb12e464bb7fffdeadf07e5a2\"",
+          "x-request-id": "d224df83-1068-44de-8175-b68ff655cab1",
+          "x-execution-id": "caaceeba-1423-48d3-8899-d86b9e7b99af",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://localhost:8000/static/ui.js",
+      "status": 200,
+      "bytes": 1937,
+      "sha256": "7d1e0acd3f3740232ba55b13be89d5f4a9f0019984854ad2577be95a697969a9",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:22 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "1937",
+        "last-modified": "Sat, 07 Nov 2026 21:09:54 GMT",
+        "etag": "\"94122a7afc58f0f7a4a45e85fc181bbd\"",
+        "x-request-id": "61ffa9e5-72ef-4521-b27e-66ad5add65ec",
+        "x-execution-id": "3d95009e-defc-4dd7-90a5-331776eca53a",
+        "connection": "close"
+      },
+      "local_sha256": "7d1e0acd3f3740232ba55b13be89d5f4a9f0019984854ad2577be95a697969a9",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js",
+        "./chat.js",
+        "./patients.js",
+        "./explorer.js"
+      ],
+      "conditional_etag": {
+        "url": "http://localhost:8000/static/ui.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:23 GMT",
+          "server": "uvicorn",
+          "etag": "\"94122a7afc58f0f7a4a45e85fc181bbd\"",
+          "x-request-id": "a7421ff8-d04c-47f5-9dc2-aa8d8a3372b3",
+          "x-execution-id": "90f7e69a-19e8-40fa-aaa5-9d7468ff9be9",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/",
+      "status": 200,
+      "bytes": 17894,
+      "sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:23 GMT",
+        "server": "uvicorn",
+        "cache-control": "no-cache",
+        "content-type": "text/html; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "17894",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+        "x-request-id": "dd59eb10-0b02-4c1c-9dcf-eb1eac04b6d5",
+        "x-execution-id": "98d26dfd-a6ea-40f1-9389-f1cf095fc267",
+        "connection": "close"
+      },
+      "local_sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/",
+        "status": 200,
+        "bytes": 17894,
+        "sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:23 GMT",
+          "server": "uvicorn",
+          "cache-control": "no-cache",
+          "content-type": "text/html; charset=utf-8",
+          "accept-ranges": "bytes",
+          "content-length": "17894",
+          "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+          "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+          "x-request-id": "e729787e-6cb0-481b-b930-32adb0ba9306",
+          "x-execution-id": "fc7ea2e0-9220-45c3-bfea-7ad1a643e589",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/ui-config",
+      "status": 200,
+      "bytes": 45,
+      "sha256": "f68dd4f0c6d8a5ebd8ced4d707382b9d9b97f0fa54d4d700b784d71460250f7d",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-length": "45",
+        "content-type": "application/json",
+        "x-request-id": "6c588e7b-785b-4eff-82e6-e1053743f3a6",
+        "x-execution-id": "8425ae7c-10cf-4919-826e-6b1c69a48e86",
+        "connection": "close"
+      },
+      "config": {
+        "java_api_port": 8080,
+        "metrics_enabled": true
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/api.js",
+      "status": 200,
+      "bytes": 3079,
+      "sha256": "8db61637a649b572a6da842313211505ab98f0e37162f1272884f12189d91dfe",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "3079",
+        "last-modified": "Sun, 08 Nov 2026 01:46:54 GMT",
+        "etag": "\"d29e3aac1d9d68d30b21a904604448a7\"",
+        "x-request-id": "b5fe3d98-bd73-4f88-9195-1f0167f2f40c",
+        "x-execution-id": "a5f187fa-d678-4efa-b7d6-d51c39221bb6",
+        "connection": "close"
+      },
+      "local_sha256": "8db61637a649b572a6da842313211505ab98f0e37162f1272884f12189d91dfe",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [],
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/api.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"d29e3aac1d9d68d30b21a904604448a7\"",
+          "x-request-id": "b48cae0e-6b52-49b1-bc19-69a59f8c1713",
+          "x-execution-id": "87764dee-f9e4-474d-aec5-9c3143302993",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/chat.js",
+      "status": 200,
+      "bytes": 8551,
+      "sha256": "a6f40dddef83dfcfb1990b10d8de0bea67035dae7c1bc2c8be426511e2b2e45f",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "8551",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"2d9a81a58fcb517f3e2b6208bf87fb2b\"",
+        "x-request-id": "ea326586-b346-4f80-b617-1d8f1bea03a6",
+        "x-execution-id": "3b67ce08-0878-4704-8b5d-183c455d9c23",
+        "connection": "close"
+      },
+      "local_sha256": "a6f40dddef83dfcfb1990b10d8de0bea67035dae7c1bc2c8be426511e2b2e45f",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js"
+      ],
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/chat.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"2d9a81a58fcb517f3e2b6208bf87fb2b\"",
+          "x-request-id": "c6cd0a1b-c381-4b2a-8875-20d43bf41c44",
+          "x-execution-id": "9dec4837-ad94-4da1-bf9e-8c6f3a06c779",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/explorer.js",
+      "status": 200,
+      "bytes": 14268,
+      "sha256": "a8f5e55b688b2b366775dd854c78d98a81a933bd14e182f227a1bea00967faff",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "14268",
+        "last-modified": "Sun, 08 Nov 2026 01:47:35 GMT",
+        "etag": "\"676a5a3be2d0c49be98d75fcb9851ffd\"",
+        "x-request-id": "c60e9926-e209-4005-9965-45bad948414d",
+        "x-execution-id": "4c746c02-d826-4f7e-882d-b8e6867f3947",
+        "connection": "close"
+      },
+      "local_sha256": "a8f5e55b688b2b366775dd854c78d98a81a933bd14e182f227a1bea00967faff",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js"
+      ],
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/explorer.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"676a5a3be2d0c49be98d75fcb9851ffd\"",
+          "x-request-id": "a494348f-6a66-4570-8870-013d759a70b8",
+          "x-execution-id": "769df06d-08bb-4538-a346-ed76293cc730",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/history.js",
+      "status": 200,
+      "bytes": 21473,
+      "sha256": "35c69e6993919716880eae2ce566dedc244e916a10443572539fb4e14a2987dc",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "21473",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"6218a616dfd6cea9ac818d71ac9f1696\"",
+        "x-request-id": "fb3543f4-d41b-422c-b96a-57c07c654bc0",
+        "x-execution-id": "c315ba31-75bc-4585-a831-a2527a415546",
+        "connection": "close"
+      },
+      "local_sha256": "35c69e6993919716880eae2ce566dedc244e916a10443572539fb4e14a2987dc",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js"
+      ],
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/history.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"6218a616dfd6cea9ac818d71ac9f1696\"",
+          "x-request-id": "f51fb966-d87f-41fa-a9a9-4ca9bed8a15b",
+          "x-execution-id": "4873203f-e15c-4719-865f-001bcc74e31e",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/index.html",
+      "status": 200,
+      "bytes": 17894,
+      "sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/html; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "17894",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+        "x-request-id": "68c42503-97e6-4f7e-bf85-f240002cb98d",
+        "x-execution-id": "360b89f5-a4e0-481b-a8eb-ab4ef93e08af",
+        "connection": "close"
+      },
+      "local_sha256": "bda51f8ba3069589886eccd800fe8d08a98b2a3fb5fda5161522367c4885bac0",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/index.html",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"78971fc369fc835bde1c15bc981891a9\"",
+          "x-request-id": "fe93b3c6-0564-4975-a1e7-3c994268ae0a",
+          "x-execution-id": "d8ee6a13-b9ae-43f5-98ea-ffd0d81cc15f",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/patients.js",
+      "status": 200,
+      "bytes": 10079,
+      "sha256": "a0ac24652ffd84f561b8fb8f6181b3a4d725c2ab360395f79498aff39ff780c0",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "10079",
+        "last-modified": "Thu, 12 Nov 2026 18:18:43 GMT",
+        "etag": "\"cf45f118e7dd2aea986de8492d0fb50e\"",
+        "x-request-id": "0f6ef794-f9eb-4350-beb2-28e59174d7f7",
+        "x-execution-id": "7fc3788e-d675-4314-a302-8aea83ef52ee",
+        "connection": "close"
+      },
+      "local_sha256": "a0ac24652ffd84f561b8fb8f6181b3a4d725c2ab360395f79498aff39ff780c0",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js",
+        "./history.js"
+      ],
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/patients.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"cf45f118e7dd2aea986de8492d0fb50e\"",
+          "x-request-id": "d64281b4-0747-4c43-a33e-069cdfd0eb84",
+          "x-execution-id": "6af0625a-465c-4551-bd5e-0d11498ab5f0",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/styles.css",
+      "status": 200,
+      "bytes": 19769,
+      "sha256": "318338ca8fdbaf538b2fb65a249b87f38b080b4cbf9c86694ed92222ff151ea9",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/css; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "19769",
+        "last-modified": "Thu, 12 Nov 2026 18:11:44 GMT",
+        "etag": "\"e26b949fb12e464bb7fffdeadf07e5a2\"",
+        "x-request-id": "e84c91de-0e31-4051-97d4-e3be863b54f7",
+        "x-execution-id": "dabe349c-3ac3-4ec3-9615-d4cf3ddd434d",
+        "connection": "close"
+      },
+      "local_sha256": "318338ca8fdbaf538b2fb65a249b87f38b080b4cbf9c86694ed92222ff151ea9",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/styles.css",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"e26b949fb12e464bb7fffdeadf07e5a2\"",
+          "x-request-id": "4b89d29a-da7f-4ad0-aec3-4331d4b42b71",
+          "x-execution-id": "2c24fd8f-8c5c-44f8-b800-c1cdc7413f4a",
+          "connection": "close"
+        }
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/static/ui.js",
+      "status": 200,
+      "bytes": 1937,
+      "sha256": "7d1e0acd3f3740232ba55b13be89d5f4a9f0019984854ad2577be95a697969a9",
+      "headers": {
+        "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+        "server": "uvicorn",
+        "content-type": "text/javascript; charset=utf-8",
+        "accept-ranges": "bytes",
+        "content-length": "1937",
+        "last-modified": "Sat, 07 Nov 2026 21:09:54 GMT",
+        "etag": "\"94122a7afc58f0f7a4a45e85fc181bbd\"",
+        "x-request-id": "f2af220e-7065-4f5a-8b48-93f13355a5f8",
+        "x-execution-id": "5b974700-6f30-4897-beae-6b82fd9fa531",
+        "connection": "close"
+      },
+      "local_sha256": "7d1e0acd3f3740232ba55b13be89d5f4a9f0019984854ad2577be95a697969a9",
+      "matches_local": true,
+      "matches_local_normalized": true,
+      "imports": [
+        "./api.js",
+        "./chat.js",
+        "./patients.js",
+        "./explorer.js"
+      ],
+      "conditional_etag": {
+        "url": "http://127.0.0.1:8000/static/ui.js",
+        "status": 304,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "date": "Thu, 12 Nov 2026 18:32:24 GMT",
+          "server": "uvicorn",
+          "etag": "\"94122a7afc58f0f7a4a45e85fc181bbd\"",
+          "x-request-id": "278cb4be-b56c-48d5-8dd8-eb683b414561",
+          "x-execution-id": "37f63eae-522d-4535-9440-51141381738e",
+          "connection": "close"
+        }
+      }
+    }
+  ],
+  "scope": "Sólo GET de HTML/assets/config; sin inferencias ni escrituras clínicas."
+}

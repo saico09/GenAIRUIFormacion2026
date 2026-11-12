@@ -1,0 +1,79 @@
+- link "Ir al contenido":
+  - /url: "#main"
+- banner:
+  - link "GenAI Clínica, inicio":
+    - /url: "#consultas"
+    - text: GenAI
+    - strong: Clínica
+    - generic: CONSULTAS & PACIENTES
+  - generic: Datos sintéticos
+  - navigation "Secciones":
+    - link "01 Consultas médicas":
+      - /url: "#consultas"
+      - generic: "01"
+      - text: Consultas médicas
+    - link "02 Pacientes":
+      - /url: "#pacientes"
+      - generic: "02"
+      - text: Pacientes
+    - link "03 API Python":
+      - /url: "#api-python"
+      - generic: "03"
+      - text: API Python
+    - link "04 API Java":
+      - /url: "#api-java"
+      - generic: "04"
+      - text: API Java
+- main:
+  - region "Una consulta. Dos perspectivas.":
+    - paragraph: CONSULTAS MÉDICAS
+    - heading "Una consulta. Dos perspectivas." [level=1]
+    - paragraph: Describe una consulta ficticia o pregunta por sus antecedentes. Compara la respuesta con y sin la historia del paciente.
+    - generic: Mismo modelo · Misma consulta
+    - generic: Paciente de la consulta
+    - combobox "Paciente de la consulta":
+      - option "Ana Demo"
+      - option "Bruno Demo"
+      - option "Carla Demo"
+      - option "Marco Contreras"
+      - option "Paciente de prueba"
+      - option "QA Calidad 20261112 UI" [selected]
+    - button "Actualizar listado"
+    - generic: ¿Qué quieres consultar?
+    - textbox "¿Qué quieres consultar?":
+      - /placeholder: "Por ejemplo: Ana refiere dolor de cabeza desde ayer. ¿Qué antecedentes constan y qué información falta?"
+      - text: ¿Qué enfermedad y medicamento tiene registrados este paciente?
+    - generic: La consulta y ambas respuestas se guardan en el informe del paciente. La orientación de la IA no confirma diagnósticos.
+    - button "Comparar y guardar":
+      - text: Comparar y guardar
+    - paragraph: "Paciente consultado: QA Calidad 20261112 UI. Consulta enviada: ¿Qué enfermedad y medicamento tiene registrados este paciente?"
+    - status: Consulta guardada en el informe de QA Calidad 20261112 UI y en PostgreSQL.
+    - paragraph: "ID de la consulta: b94572fd-c641-446a-ae48-4d5e33035f50 · Modelo: qwen3.5:4b-q4_K_M"
+    - paragraph: Para registrar una enfermedad, tratamiento o medicamento como dato confirmado, revisa los campos antes de guardarlos.
+    - button "Ver informe del paciente"
+    - button "Preparar registro confirmado"
+    - article:
+      - paragraph: RESPUESTA DIRECTA
+      - heading "Sin RAG" [level=2]
+      - generic: Solo la pregunta
+      - generic: No tengo acceso al historial del paciente para responder ese dato.
+      - generic: El modelo responde sin consultar la historia del paciente.
+    - article:
+      - paragraph: RESPUESTA CON CONTEXTO
+      - heading "Con RAG" [level=2]
+      - generic: Historia del paciente
+      - generic: "Respuesta: Rinitis alérgica Fuente: [paciente-61-qa-calidad-20261112-ui.md/a1f830e9-4cad-4d90-aa04-100b0638b518/Enfermedad] Respuesta: Cetirizina Fuente: [paciente-61-qa-calidad-20261112-ui.md/a1f830e9-4cad-4d90-aa04-100b0638b518/Medicamento]"
+      - heading "Fuentes recuperadas" [level=3]
+      - list:
+        - generic "paciente-61-qa-calidad-20261112-ui.md / Enfermedad · Registro confirmado a1f830e9-4cad-4d90-aa04-100b0638b518"
+        - generic "paciente-61-qa-calidad-20261112-ui.md / Medicamento · Registro confirmado a1f830e9-4cad-4d90-aa04-100b0638b518"
+        - generic "paciente-61-qa-calidad-20261112-ui.md / Tratamiento · Registro confirmado a1f830e9-4cad-4d90-aa04-100b0638b518"
+    - complementary:
+      - heading "¿Qué es RAG?" [level=2]
+      - paragraph:
+        - text: RAG significa
+        - strong: generación aumentada por recuperación
+        - text: ": busca fragmentos de la historia del paciente y los entrega al modelo como contexto. La respuesta distingue los antecedentes documentados de la orientación sobre la consulta actual. Si falta un dato, lo indica en lugar de inventarlo."
+  - text: + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+  - generic: GenAI Clínica
+  - generic: FastAPI · Spring Boot · PostgreSQL

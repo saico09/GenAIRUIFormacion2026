@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-12T18:32:15.430342+00:00",
+  "commit": "6173af2b7e77bb22111649d10697156c07bb85a1",
+  "sourceFiles": 152,
+  "snapshot": "C:\\Users\\marco\\Documents\\CONKORD\\SonarQube\\.local\\escaneos\\genairui-formacion2026-20261112T183132524Z-b733e6\\source",
+  "allSnapshotFilesMatchCommitIgnoringCRLF": true,
+  "differencesFromCommit": [],
+  "manifestChangesFromInitial": {
+    "added": [
+      "java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+      "python-api/tests/frontend_async.test.cjs",
+      "scripts/verificar_assets.py",
+      "scripts/verificar_backend_cruzado.py",
+      "scripts/verificar_conexion_minikube.ps1"
+    ],
+    "removed": [
+      "scripts/diagnosticar_rag.py",
+      "scripts/experimentar_formato_hipotesis.py",
+      "scripts/experimentar_fundamentacion_rag.py"
+    ],
+    "changed": [
+      "deploy/helm/fastapi/templates/deployment.yaml",
+      "deploy/helm/fastapi/values.yaml",
+      "java-api/pom.xml",
+      "java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+      "java-api/src/main/java/com/conkord/genai/PatientRequest.java",
+      "python-api/app/static/chat.js",
+      "python-api/app/static/history.js",
+      "python-api/app/static/index.html",
+      "python-api/app/static/patients.js",
+      "scripts/verificar_consultas_ui_real.cjs",
+      "scripts/verificar_historia_ui_real.cjs",
+      "scripts/verificar_portal_ui.cjs",
+      "scripts/verificar_registros_ui.cjs"
+    ]
+  },
+  "initialCaveat": "The initial snapshot was c2ee267 plus index.html/styles.css icon work already in progress; it was the only initial scan."
+}

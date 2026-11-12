@@ -1,0 +1,752 @@
+[
+  {
+    "path": "compose.yml",
+    "sha256": "9043DBF169C42676F4B469EDB1277FE5A366824F9ACED40CC49C04FAA721E28F",
+    "bytes": 4674
+  },
+  {
+    "path": "deploy/argocd/fastapi.yaml",
+    "sha256": "3E36747D90F005309C8DDA7F0789836DD8FCD3827146CF211BF8093B1E4D8ECE",
+    "bytes": 400
+  },
+  {
+    "path": "deploy/argocd/repositorio.yaml",
+    "sha256": "958E50D747EB69C940817F15E9C42DDC034B92A9AA731990E91CF736891370BD",
+    "bytes": 327
+  },
+  {
+    "path": "deploy/helm/fastapi/Chart.yaml",
+    "sha256": "295117AB238B3AE5B13EC599C3FBB2FF1397E1132C3DC31072342F9973DB4F5D",
+    "bytes": 184
+  },
+  {
+    "path": "deploy/helm/fastapi/templates/deployment.yaml",
+    "sha256": "CF7321FBD52A21908FFE60B3C1F39F4C6E1B4891D92178D48A64B18F6D5D17C0",
+    "bytes": 1938
+  },
+  {
+    "path": "deploy/helm/fastapi/templates/service.yaml",
+    "sha256": "FB3BE891C6D572939906A1718D433126CEDD83D53825B7DDBF33B444FA80312F",
+    "bytes": 212
+  },
+  {
+    "path": "deploy/helm/fastapi/values.yaml",
+    "sha256": "7DAB7F860D481871E240F6B0167C459B0B240763BAFB457F3C87EDBCF86AFE8C",
+    "bytes": 442
+  },
+  {
+    "path": "java-api/.dockerignore",
+    "sha256": "A07F83D4CBC04CCBF11457829935BA0E1D80227662DB3C0642ED28F8AEBA9448",
+    "bytes": 23
+  },
+  {
+    "path": "java-api/.gitattributes",
+    "sha256": "5775A77AD2F6D12DDE053A3FB0CCA4309189163F0888F4E7E984CD0AB327028B",
+    "bytes": 38
+  },
+  {
+    "path": "java-api/.gitignore",
+    "sha256": "089382E4D7944AB6CB6900A1269678EBFF93C00D441ADA788CD05A8DA182B22B",
+    "bytes": 394
+  },
+  {
+    "path": "java-api/.mvn/wrapper/maven-wrapper.properties",
+    "sha256": "E475C49E0CB54793FEF372F979672F56BFE7D272B981AD6F5EBD5E50E08EE1DD",
+    "bytes": 168
+  },
+  {
+    "path": "java-api/Dockerfile",
+    "sha256": "1C2D0B2BB5EECDFCEBF58FB020D30DD4A6F5D8B0CFF9AE00E146C6AF99BE2B01",
+    "bytes": 620
+  },
+  {
+    "path": "java-api/mvnw",
+    "sha256": "CAE96CEF89EBEA3531221F4AE17C23CF8EDF67D00EAE8306D4186AE1BBED4D02",
+    "bytes": 11790
+  },
+  {
+    "path": "java-api/mvnw.cmd",
+    "sha256": "4A361E1374A3E5AD6D03E18E9ADC0CF181AC5058AC6203B76F0BA3B456B56481",
+    "bytes": 8292
+  },
+  {
+    "path": "java-api/pom.xml",
+    "sha256": "4E5DA64E1AB17DAA331E53177ED48B6747FE92BC8B6FB15B96ACDFFEDFF9992B",
+    "bytes": 1791
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/ApiExceptionHandler.java",
+    "sha256": "DD5E608FB1D3E43C9B9E2A60DA4771C0294BEA4254865C0BE3E03760EF08709C",
+    "bytes": 2484
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/BirthDateDeserializer.java",
+    "sha256": "8068015A8EF5FB30B0BE13E3DC83235D3BB9D820E90BA8D3EE52E2FD473F0EA3",
+    "bytes": 1327
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/ConsultationRequest.java",
+    "sha256": "5F2ED963D60C7071887B9660BEFCA1F95CC697E86A0784877C11DE71415DD7C8",
+    "bytes": 1258
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/CorsConfiguration.java",
+    "sha256": "D1D7F8B0778C2891B059B9BD4B73E5557C60680E6E738633BF09CA8FA248F784",
+    "bytes": 1435
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/DiseaseRequest.java",
+    "sha256": "1E48A68E8F5F9316C9166FD76599FB2D1A36137B9905016530CB907F62C3B93F",
+    "bytes": 619
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/DiseaseResponse.java",
+    "sha256": "B82A8719F1A146324A19CBEF97F284FDD52ABE60F956A29104960AE51C891D2E",
+    "bytes": 431
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/HealthController.java",
+    "sha256": "11ABF79560189533F387F009C1066DE6C09484A9EBD5064BC821195F0A7B1472",
+    "bytes": 339
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/HistoryBackupInitializer.java",
+    "sha256": "763E4DA36AC13457BF9D5BFC024F59E7999CFBD1FC8C5521E960A7557F1A4D0F",
+    "bytes": 588
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/HistoryRequest.java",
+    "sha256": "F8FFA9CA23BF5B7A169FBF0780676F8FD11A82AA0470BF4A5C1ADBB47916141D",
+    "bytes": 1365
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/HistoryResponse.java",
+    "sha256": "9E85850A1E3A8ABA73030F241F4AE727B4B5772B056B80E310E11ADB1E0791D2",
+    "bytes": 701
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/HttpLoggingFilter.java",
+    "sha256": "45466DA608AE6F8D5937696E04E56065FAC440F68FA23EFBB94450E8FEF6178B",
+    "bytes": 6640
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/JavaApiApplication.java",
+    "sha256": "179A24A3473375E3529DB016B18259C24152B5F5A3910BFF797BADFEC1497F3A",
+    "bytes": 848
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/MedicalConsultationRepository.java",
+    "sha256": "A312F0667E317257E81707417BB0FC00B13604C1F66E990FDA73DC63B5CFF5EF",
+    "bytes": 5303
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/Patient.java",
+    "sha256": "A057EC13577DC6D516B178BF44840882606B97019735F2D9D88004C79C051598",
+    "bytes": 1364
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/PatientController.java",
+    "sha256": "8A37D03DA9CCADF278410D4FCC9288706DF4FD38680D335B28E6F188054BBE92",
+    "bytes": 5121
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/PatientDiseaseRepository.java",
+    "sha256": "CD53FF8C0425C340AD4FCBD7A311050F8D60EC26D6A2C361E254998DC7E82E90",
+    "bytes": 2873
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+    "sha256": "DCC4203965DA67FCE52B00365158031A97E039F5EE6DEAC74D70477F6CB99F3B",
+    "bytes": 25789
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/PatientRepository.java",
+    "sha256": "DD5D8EA19601DABD366E80DD3A9A95CFF59E49CCE71A101295FC523DEAE1792C",
+    "bytes": 170
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/PatientRequest.java",
+    "sha256": "FBF290E3712C37ACA3337B510545EFCF74EA188856E4ED6737CAEFAF598B07BE",
+    "bytes": 1434
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/PatientResponse.java",
+    "sha256": "863FB873E652CB79560526D29DEC1E363F159259C67575F572F3643E03C66D7A",
+    "bytes": 439
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/StrictBooleanDeserializer.java",
+    "sha256": "532BF6626C1D5FE7285AB384AF13AD8AFEDF585077D74FF54D0DCC4AAEF8447C",
+    "bytes": 634
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/StrictTextDeserializer.java",
+    "sha256": "FB820B11096F5B86827001F2224EF8CF6C44DB0370F1BC4B1254B7221469DAF7",
+    "bytes": 649
+  },
+  {
+    "path": "java-api/src/main/java/com/conkord/genai/TransactionLogRepository.java",
+    "sha256": "370D1CAA51E4ACB708E39E109AFDE7005520C15F06E51D7D843427040D6B8CEB",
+    "bytes": 1032
+  },
+  {
+    "path": "java-api/src/main/resources/application.properties",
+    "sha256": "E875B0BE25989A4A710F9FC868920670D8A5BD9EC70F6BF2B673C18C7C2F0A1A",
+    "bytes": 1775
+  },
+  {
+    "path": "java-api/src/main/resources/logback-spring.xml",
+    "sha256": "112C9052F25AABF90A349A3F5E5957FC12745DC03B152CAFFFAA9BCA521E171B",
+    "bytes": 640
+  },
+  {
+    "path": "java-api/src/main/resources/schema.sql",
+    "sha256": "AA47BC7F20D9B663632CDD41F9F70A192D5A78D7FC8497A72399E2329403A986",
+    "bytes": 6506
+  },
+  {
+    "path": "java-api/src/test/python/verificar_consultas.py",
+    "sha256": "3EFCF19F22DB1C6127FB72435FB0FB0FEE2070ADD53629B951BD15003F1B4250",
+    "bytes": 12499
+  },
+  {
+    "path": "java-api/src/test/python/verificar_cors.py",
+    "sha256": "7F1B2AE0F6BBDBCAC99A53BA1BF6BDC0942F5AD214A4E9216F6DA3D6AB2D1367",
+    "bytes": 7304
+  },
+  {
+    "path": "java-api/src/test/python/verificar_historias.py",
+    "sha256": "F7F4F97F1266266508FC5ACF1E533D0BE539600107A25474056EE41AFACD499F",
+    "bytes": 12223
+  },
+  {
+    "path": "observabilidad/alloy.alloy",
+    "sha256": "02C85A67C42C9E6D9F07A52F95964EEA0A1C7FD44562556B181CFBDAEA918E8A",
+    "bytes": 1331
+  },
+  {
+    "path": "observabilidad/dashboard.json",
+    "sha256": "8B9AE6812C9F5D886C92F2DA4D8A8FA7D5D0BB91B72388ECEEB1E9193D51D07D",
+    "bytes": 8907
+  },
+  {
+    "path": "observabilidad/grafana-dashboards.yml",
+    "sha256": "564192FDE267E94AC4AD8DABCAAADF02C3AA79CDE95BB6C7A0EAD42294976728",
+    "bytes": 183
+  },
+  {
+    "path": "observabilidad/grafana-datasources.yml",
+    "sha256": "77A5E617819E9F19E9CBE0BA4B239FB9992DE6E79F7CE99A55C8DD4449B39811",
+    "bytes": 308
+  },
+  {
+    "path": "observabilidad/loki.yml",
+    "sha256": "1345C0C24DB8985A81A93C735436BFDDC5985348BC0B416E3E1F24773D8F7273",
+    "bytes": 491
+  },
+  {
+    "path": "observabilidad/prometheus.yml",
+    "sha256": "117F8CFCDAFFCFF2EDE66F26887B0F928601A44B51F7ADE41E60F25210AF60DE",
+    "bytes": 359
+  },
+  {
+    "path": "python-api/.dockerignore",
+    "sha256": "F6C0836F65089289149AE8B35A220902FE2071160B1546B807CE13F57F22F480",
+    "bytes": 29
+  },
+  {
+    "path": "python-api/app/clinical_proposals.py",
+    "sha256": "C343D5FBA532AC9361519FA88651B36A4FA9621B011F6669AB49643AC02DDA4A",
+    "bytes": 4733
+  },
+  {
+    "path": "python-api/app/clinical_store.py",
+    "sha256": "0D24EF432D051A5FCD573AC8E86CA3534397B838377CB3F4FF8984652BAA8AF9",
+    "bytes": 15559
+  },
+  {
+    "path": "python-api/app/clinical.py",
+    "sha256": "1FADC9804ADDDA0932A6DEA7535BF908D9931BB85278ACF6044D7163FB0EBFF2",
+    "bytes": 4663
+  },
+  {
+    "path": "python-api/app/db.py",
+    "sha256": "EBDC7CB18EC3405205B600D7C19373301B8459890D4678A8098B21229842B0FF",
+    "bytes": 3912
+  },
+  {
+    "path": "python-api/app/history_documents.py",
+    "sha256": "BCED5F31DC3734820DCA9F74E74A968CEBD2E086F07246DD20B11BDFCFFDF9B5",
+    "bytes": 5868
+  },
+  {
+    "path": "python-api/app/history_index.py",
+    "sha256": "6FF619798D9339D93A5C604B881CA367B395CF57843FA03329C9952B109A50C8",
+    "bytes": 3479
+  },
+  {
+    "path": "python-api/app/knowledge.py",
+    "sha256": "1CB7CCD2DDEE552872D627ABFC835EC21EBE1BDC9B045546479D735709B43717",
+    "bytes": 5545
+  },
+  {
+    "path": "python-api/app/llm.py",
+    "sha256": "EAE5AFBD90B22F513084291493F2D1D12F2443A9522C939F1E0987B8E172B8E5",
+    "bytes": 3529
+  },
+  {
+    "path": "python-api/app/main.py",
+    "sha256": "6DFA8A612805F4B39406406B114363ADEA555315397DFFAF117F9E4EBE111A88",
+    "bytes": 7766
+  },
+  {
+    "path": "python-api/app/metrics.py",
+    "sha256": "0F310F3C70B5C02D1518BC2333A70EACFD0F4E1871057A778E790194180443BF",
+    "bytes": 1261
+  },
+  {
+    "path": "python-api/app/models.py",
+    "sha256": "44870E92B5B7D47BAD5B155213D04F4FE7A717F483DFE9BBBB4BCFF832035095",
+    "bytes": 4230
+  },
+  {
+    "path": "python-api/app/observability.py",
+    "sha256": "E2BF9CB2F63F4472DB1BE4ED1276F813A00490E5CB1C21B98B84732F9DEF7EFA",
+    "bytes": 8532
+  },
+  {
+    "path": "python-api/app/schema.sql",
+    "sha256": "AA47BC7F20D9B663632CDD41F9F70A192D5A78D7FC8497A72399E2329403A986",
+    "bytes": 6506
+  },
+  {
+    "path": "python-api/app/schemas.py",
+    "sha256": "D745BB9E654577D6EE7F81846E7970389091A921BDC5D95C4CE83809DAEFBAD2",
+    "bytes": 3220
+  },
+  {
+    "path": "python-api/app/static/api.js",
+    "sha256": "8DB61637A649B572A6DA842313211505AB98F0E37162F1272884F12189D91DFE",
+    "bytes": 3079
+  },
+  {
+    "path": "python-api/app/static/chat.js",
+    "sha256": "990BED7F8B10E7CFF53CD5DCBF51C37C476F59B4D72A183A50052440638744FC",
+    "bytes": 8490
+  },
+  {
+    "path": "python-api/app/static/explorer.js",
+    "sha256": "A8F5E55B688B2B366775DD854C78D98A81A933BD14E182F227A1BEA00967FAFF",
+    "bytes": 14268
+  },
+  {
+    "path": "python-api/app/static/history.js",
+    "sha256": "94E7A790ACE9EEA6746B9D6A12A3932A9892D08E8E5559C32F35BC43CE6EF6F9",
+    "bytes": 21406
+  },
+  {
+    "path": "python-api/app/static/index.html",
+    "sha256": "0B67D3869B9E1837AFA3C4D98E18C7CC3CFBE0563109BE2B13E4B4317A3E8532",
+    "bytes": 17873
+  },
+  {
+    "path": "python-api/app/static/patients.js",
+    "sha256": "8FEFC6124C97A606A24294B7A58CD14BC8B015F615DF82BB417BA6D71A4E678F",
+    "bytes": 10055
+  },
+  {
+    "path": "python-api/app/static/styles.css",
+    "sha256": "318338CA8FDBAF538B2FB65A249B87F38B080B4CBF9C86694ED92222FF151EA9",
+    "bytes": 19769
+  },
+  {
+    "path": "python-api/app/static/ui.js",
+    "sha256": "7D1E0ACD3F3740232BA55B13BE89D5F4A9F0019984854AD2577BE95A697969A9",
+    "bytes": 1937
+  },
+  {
+    "path": "python-api/app/tracing.py",
+    "sha256": "E23E838640EB2E1B53DB3F32B549FD7ED5D0953DE7D8E167992218F7AFF4F67E",
+    "bytes": 1952
+  },
+  {
+    "path": "python-api/app/transaction_log.py",
+    "sha256": "515D826FB53A81E1BC294BF01DE8A96F307FE80EF4EDB89D16C5FF0092AD3F09",
+    "bytes": 1198
+  },
+  {
+    "path": "python-api/app/ui.py",
+    "sha256": "9139846978E27C57898AEEDD3EAB48A84ABC14ED9768BD8313794941069A509E",
+    "bytes": 1055
+  },
+  {
+    "path": "python-api/buscar.py",
+    "sha256": "8EA47BF7C18F1AAB99D6F03561B4415BBB0E559469922656A5AFB542FAEAC5C3",
+    "bytes": 588
+  },
+  {
+    "path": "python-api/Dockerfile",
+    "sha256": "39B369E0FC772A7CD8181C98BD1851CC155B97939B3F0A2970BDBD252EC93A02",
+    "bytes": 968
+  },
+  {
+    "path": "python-api/grafo.py",
+    "sha256": "92B7037E7942094BEA6F340996D63DEE258009BC4B1440AA7956A2373255E013",
+    "bytes": 3600
+  },
+  {
+    "path": "python-api/ingestar.py",
+    "sha256": "4ED38C6CE76B70C30FF04454E10D49309DC604996257F34B1A09E6D9A0794B29",
+    "bytes": 2089
+  },
+  {
+    "path": "python-api/inicializar_datos.py",
+    "sha256": "5CF80B8F821B16909D10499F0AAB0155E8503D025E46E91EEE802DA98EDEEB63",
+    "bytes": 5052
+  },
+  {
+    "path": "python-api/inicializar_java.py",
+    "sha256": "50AD5B8D40E40856E7EF3B97DF4E0B48FAA70243C555D34A369E82A64624D80F",
+    "bytes": 193
+  },
+  {
+    "path": "python-api/orientation.py",
+    "sha256": "2D1702AEA9F79321A3C6B25F0A76D84727FE0C6E9B9FCD9EF055929903110360",
+    "bytes": 4373
+  },
+  {
+    "path": "python-api/preparar_vectores.py",
+    "sha256": "7E7E0B3E504B4C81315DDB16BB7C80F90013D358A032EC46E8709A9D8B687033",
+    "bytes": 235
+  },
+  {
+    "path": "python-api/rag.py",
+    "sha256": "19CB7450696D29991904F8D29744DC931B6EB79570D4B200A953E7202BC8039F",
+    "bytes": 19372
+  },
+  {
+    "path": "python-api/requirements.txt",
+    "sha256": "3648E4675F0DEAF51D0AA2D9727E33BCEE363AA4F43286F07FE1198F4D34B424",
+    "bytes": 214
+  },
+  {
+    "path": "python-api/tests/test_chat_order.py",
+    "sha256": "197A81123EC4C4051D78328AC0DA0435C7A39B7EEDE3FDFDC132D55B2D8FE044",
+    "bytes": 6402
+  },
+  {
+    "path": "python-api/tests/test_db_startup.py",
+    "sha256": "AF15DB35AC800C9291E15C963405736C49222D08A741A6B044E924FD90C5737A",
+    "bytes": 7823
+  },
+  {
+    "path": "python-api/tests/test_llm.py",
+    "sha256": "D90C8FFE7B85BF4C50A5447BFDBEE478307857BB13423375E987F24F410B241E",
+    "bytes": 9418
+  },
+  {
+    "path": "python-api/tests/test_orientation.py",
+    "sha256": "90CEEB5B0028C737031F19132341F2140A129EBA9556B2F28A13A04BFE8DE8B5",
+    "bytes": 7593
+  },
+  {
+    "path": "python-api/tests/test_transaction_log.py",
+    "sha256": "F0F525C3E0890FAC358DD1603148FEDEC26586B3717B1E636D61EB64304F0C66",
+    "bytes": 10052
+  },
+  {
+    "path": "scripts/abrir_argocd.ps1",
+    "sha256": "F640B13AC13B78B1ED09198A22CF70B6E2E1A1EC07EA7E66F7DE745D7DED79E9",
+    "bytes": 2894
+  },
+  {
+    "path": "scripts/abrir_fastapi_minikube.ps1",
+    "sha256": "E2FF439E14AADA4A02C9B61B03F0B7E0B69140024C8A8F057CD1026D5E69EEA9",
+    "bytes": 2969
+  },
+  {
+    "path": "scripts/actualizar_casos_demo.py",
+    "sha256": "326667926A825A7AD27C6E9CAD084B770C47E309DBDCEFA3F23BDB11ECC4ADFA",
+    "bytes": 8644
+  },
+  {
+    "path": "scripts/capturar_argocd.cjs",
+    "sha256": "931F63AF9FE2F553F1FBAC3803C2AAA26800A15AE7EC789436441C5C715DF04D",
+    "bytes": 3180
+  },
+  {
+    "path": "scripts/capturar_loki.cjs",
+    "sha256": "C8E140393F4B0E0917B1B3F4B89E6BC47F618518216B515F0DCB678B917AA273",
+    "bytes": 2810
+  },
+  {
+    "path": "scripts/capturar_phoenix.cjs",
+    "sha256": "DA422029A1F99F847E407CEC6A08580EE4DA8CB10344FF7ADF60AEDE385E00EF",
+    "bytes": 2878
+  },
+  {
+    "path": "scripts/comparar_modelos_consultas.py",
+    "sha256": "00F5C5A01617F3A828D651A59071C18C01D899F00341113820BC9C57EC8EA2A0",
+    "bytes": 5316
+  },
+  {
+    "path": "scripts/conectar_postgres_minikube.ps1",
+    "sha256": "35F4467166F908038DD4CCAB50E35042CDBC4F13A168798DFF7A693C3ECCA3D9",
+    "bytes": 2678
+  },
+  {
+    "path": "scripts/crear_secret_postgres.ps1",
+    "sha256": "20175E4F83B8EE347342F1AC028C49E59A83B8F2D88A6B0DC7E1FBB271826050",
+    "bytes": 2089
+  },
+  {
+    "path": "scripts/diagnosticar_rag.py",
+    "sha256": "016E555BAFADF2DE0D4CAF74C28C8C2A71793D37CC09434C379E5F84DD9E07B2",
+    "bytes": 4894
+  },
+  {
+    "path": "scripts/esperar_apis.ps1",
+    "sha256": "CAA3B81FB778758D503CDB50F2E721E61766CBDB1AD48A1017CC44077259ED27",
+    "bytes": 1355
+  },
+  {
+    "path": "scripts/experimentar_formato_hipotesis.py",
+    "sha256": "524A2532E839014A270B114DC98F02E11EB254D11A91BC14857524803D1F7D8F",
+    "bytes": 7200
+  },
+  {
+    "path": "scripts/experimentar_fundamentacion_rag.py",
+    "sha256": "E5321104F800C735E07CAC309CF6D23782E692A5B3E4EE0AE7398FDE4FADD3D3",
+    "bytes": 8503
+  },
+  {
+    "path": "scripts/generar_trafico.py",
+    "sha256": "7CE41A4E5C331EC681F25CF20D1D2370076D7CA387A5787DDE633FF48CCC986A",
+    "bytes": 1835
+  },
+  {
+    "path": "scripts/iniciar_ollama.ps1",
+    "sha256": "2DC1B56018F993976E6B16E6CC44FB6A838F75CB0981A7BAE311FAD122E116D5",
+    "bytes": 1331
+  },
+  {
+    "path": "scripts/instalar_argocd.ps1",
+    "sha256": "0CD5CFFC1691386E1115AF41BCBBE776F20218B8204C406B5B3FFCD52E0050AA",
+    "bytes": 3088
+  },
+  {
+    "path": "scripts/instalar_gitops.ps1",
+    "sha256": "F24804A2585267DCAD655043CC8EDB1730812DD4CCF6CA7EDEE7D4A178523F53",
+    "bytes": 4548
+  },
+  {
+    "path": "scripts/montar_historias_minikube.ps1",
+    "sha256": "79A197CE96D726B3F75E7CDBBD95898118E6907F5ED9978C21FE0D143A097EF3",
+    "bytes": 8269
+  },
+  {
+    "path": "scripts/reanudar_minikube.ps1",
+    "sha256": "9B6AAF22907EFD6A2410A8AC1F49F66AED8B2AD574E990C2E09C25A3CCC1807D",
+    "bytes": 7763
+  },
+  {
+    "path": "scripts/verificar_arranque_db.py",
+    "sha256": "1C52F45B81C63879E813818707637CE82A6DABA3ABA93B5BD1BCC410975644AB",
+    "bytes": 4471
+  },
+  {
+    "path": "scripts/verificar_auditoria_python.py",
+    "sha256": "EB610E72780541DD6D6BB5D9EE893722478643B099324B24789303CB5E8BFFF1",
+    "bytes": 7272
+  },
+  {
+    "path": "scripts/verificar_chat_ui.cjs",
+    "sha256": "F866E5A0C46C5847C2125A6A6AEF87B90ABC43FF4246E7CD65552FFDAFB2671E",
+    "bytes": 9942
+  },
+  {
+    "path": "scripts/verificar_chat.py",
+    "sha256": "0C943B054D00DA442AA407BA7F1E6D9A5D3D5424FBFA1FA15AF0369C74B71348",
+    "bytes": 2335
+  },
+  {
+    "path": "scripts/verificar_clinica.py",
+    "sha256": "A3EBFD5EB2DA86B613A8F0DECDE27C72D3E28C9CD6A38F1EDDA418DE8DA87A41",
+    "bytes": 13792
+  },
+  {
+    "path": "scripts/verificar_componentes.py",
+    "sha256": "34E7AC6CC2B3E796138638787CB3A0A2C723ABB8A5EF7E9BA490F73FF6414723",
+    "bytes": 2124
+  },
+  {
+    "path": "scripts/verificar_consultas_integradas.py",
+    "sha256": "45969F10737E9BF4A9DAF9FF8BFAD9E5129AD4062D0014DCAD8BBD7D1ABF89DA",
+    "bytes": 6087
+  },
+  {
+    "path": "scripts/verificar_consultas_regresion.py",
+    "sha256": "F926F8A2067B2008A1428B2B0DBC6420E1D409FA26E2E8D65FF50F8D4322C0BD",
+    "bytes": 14771
+  },
+  {
+    "path": "scripts/verificar_consultas_ui_real.cjs",
+    "sha256": "F1338773BBC3AB4174A6D13AFC711AD8990E98FC8954B3173F44C99CAF69E14D",
+    "bytes": 10979
+  },
+  {
+    "path": "scripts/verificar_consultas_ui.cjs",
+    "sha256": "C8BBCA6C44A0F799739A788870568B17A0F4D447870B83AEA08F116DDE1EE167",
+    "bytes": 14112
+  },
+  {
+    "path": "scripts/verificar_contratos_historia.py",
+    "sha256": "E7232A8E5DFB7A1F9C8FF128F8A627A48097F82377C7486E5BC28681DA2D422F",
+    "bytes": 30071
+  },
+  {
+    "path": "scripts/verificar_contratos_unificacion.py",
+    "sha256": "2CFCE43A1B9CDAA3BC8C9CBA71AC807E5C0C5CF230DA0E9A102B6E4A9518C075",
+    "bytes": 5631
+  },
+  {
+    "path": "scripts/verificar_corpus_realista.py",
+    "sha256": "E70B434C9EEFCACE0620A68652F66B3B80DC3EFB16AADEF48917BDF9E8103EB9",
+    "bytes": 10264
+  },
+  {
+    "path": "scripts/verificar_crud.py",
+    "sha256": "E76EC8ABE8EE28B3CC581068360BD844C417E07C4047FD501865AD42557EB910",
+    "bytes": 6127
+  },
+  {
+    "path": "scripts/verificar_dashboard.cjs",
+    "sha256": "504644D145F10DEDD16C373C84FCF751BB48353A863D2F1C71E429ACAC86AC3C",
+    "bytes": 3724
+  },
+  {
+    "path": "scripts/verificar_esquema_orientacion.py",
+    "sha256": "3F7A2310F2AA64AF15D66E7AB497B0E38BA9798042327A12A40CC81C3EFB51F7",
+    "bytes": 7225
+  },
+  {
+    "path": "scripts/verificar_gitops.py",
+    "sha256": "0A69BBA114C2FCCBDE6B0FF438F138641C5360528600A341420A29513907026D",
+    "bytes": 4214
+  },
+  {
+    "path": "scripts/verificar_grafo_logs.py",
+    "sha256": "466E917FDB28284826ACEBDA5925AAE304C72CEC042FF62F72677BA6E70C22F2",
+    "bytes": 3320
+  },
+  {
+    "path": "scripts/verificar_hipotesis.py",
+    "sha256": "16A24C832CC64C42CE74597FE406328AA1AED2BC58A19214AE91DFF842E5CC2F",
+    "bytes": 26010
+  },
+  {
+    "path": "scripts/verificar_historia_ui_real.cjs",
+    "sha256": "A0326E8CAB49DDE7D914E8EFC6CC28C685778D154BAA3BAE86F2500341BC7C77",
+    "bytes": 15316
+  },
+  {
+    "path": "scripts/verificar_historia_ui.cjs",
+    "sha256": "F07CC9C795BD11BD0853DF87477AE0C4A52CCB7A542452C75551CD242E1711B6",
+    "bytes": 22649
+  },
+  {
+    "path": "scripts/verificar_historias_minikube.py",
+    "sha256": "267DF64D3732B50B7C5F253B7377BB476815A19365F3DC2DCBE3E8EDB6C48F0D",
+    "bytes": 17516
+  },
+  {
+    "path": "scripts/verificar_inicializacion_java.py",
+    "sha256": "69AB334EC36E96CB74CB8BEFBFB9A00DA134039BB4DC3807979E0F373304B3DE",
+    "bytes": 12462
+  },
+  {
+    "path": "scripts/verificar_llm_logs.py",
+    "sha256": "F6DC7D62DA69DBF72835760FF862CA54B718C7E78C35C8EE8E4BBDD2942F643F",
+    "bytes": 4586
+  },
+  {
+    "path": "scripts/verificar_logs.py",
+    "sha256": "DFFCFE5E9A367064187B3A334ABAB90E5022E747FEC2076DD2700DAEE6AAE0E7",
+    "bytes": 3281
+  },
+  {
+    "path": "scripts/verificar_loki.py",
+    "sha256": "12A271FE0F3A076D9AD7F69618A476C5E92DC3DBCB90FBB7B891F4C9A47E4309",
+    "bytes": 3904
+  },
+  {
+    "path": "scripts/verificar_metricas.py",
+    "sha256": "885DA4BF14E9829368457ADDDB8E4D552B8C660A8CC1999F08943CC9786DEF32",
+    "bytes": 2123
+  },
+  {
+    "path": "scripts/verificar_migracion_compartida.py",
+    "sha256": "868F025DD67DABF864702978CD3E50B06AA18A22BB6CEAE79C5890E561D2A6D1",
+    "bytes": 2392
+  },
+  {
+    "path": "scripts/verificar_persistencia.ps1",
+    "sha256": "C3374F9D6B14146A7A4E45E45E6073D1309FD7471A954AFAB398E97580B6BD3D",
+    "bytes": 2051
+  },
+  {
+    "path": "scripts/verificar_portal_ui.cjs",
+    "sha256": "58D5FA84812D1F0E9FBC1C7399F6E13D3B610D391FF80E848BBA75A2E422868F",
+    "bytes": 22771
+  },
+  {
+    "path": "scripts/verificar_rag_clinico.py",
+    "sha256": "0FEC07DD2692A2A1E7B7D2835EE6819F6F20B565D4248FF7FDAE62336F786E7E",
+    "bytes": 8108
+  },
+  {
+    "path": "scripts/verificar_rag_corpus_realista.py",
+    "sha256": "6678359DE56F9422C32072653F9F676A6E82793EC86DA0432136D3B0E4FAC0F2",
+    "bytes": 4937
+  },
+  {
+    "path": "scripts/verificar_recuperacion.py",
+    "sha256": "BBFA40FA0264F2DCD09F802B7891BF69CA9243F37ABF1F7676699D13AB3066C7",
+    "bytes": 3028
+  },
+  {
+    "path": "scripts/verificar_registros_ui_visual.cjs",
+    "sha256": "938274CFA19A68A08D98D6C0A1AB1F627F85619ACB83C20BD46AA6B500A6797E",
+    "bytes": 3061
+  },
+  {
+    "path": "scripts/verificar_registros_ui.cjs",
+    "sha256": "405579EF2E63F11008A5978C244030603AD13CEA07E9476576771BCAF1AEF4FC",
+    "bytes": 12628
+  },
+  {
+    "path": "scripts/verificar_repo_argocd.py",
+    "sha256": "77604458E803FFB5FC2B5DA5E5D94E5C466C542816D9043F28008B10988505EE",
+    "bytes": 2709
+  },
+  {
+    "path": "scripts/verificar_sintomas_breves.py",
+    "sha256": "A4D360696A42B1612FD95B38B578F3BF7C231667ADBE9879ABFA9554A87A7142",
+    "bytes": 11012
+  },
+  {
+    "path": "scripts/verificar_traza.py",
+    "sha256": "D3C127424A1FC0C83D1116984FC41F7D7A6EC92B9A4A214DA1B154BC283D2A05",
+    "bytes": 9086
+  },
+  {
+    "path": "scripts/verificar_unificacion_java.py",
+    "sha256": "5870E4E9C46C621D32A8A8D60DFC30F8F1D62FE185AC3884F753DAC23637D243",
+    "bytes": 13071
+  },
+  {
+    "path": "scripts/verificar_unificacion_python.py",
+    "sha256": "6E5E759F1E8890027B1B619775F9A902C7BF7F9C7DA8F128D2F22930F13AEBE1",
+    "bytes": 6244
+  }
+]

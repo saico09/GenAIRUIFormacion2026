@@ -1,2 +1,0 @@
- Container genairuiformacion2026-postgres-1  Stopping
- Container genairuiformacion2026-postgres-1  Stopped

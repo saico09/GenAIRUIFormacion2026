@@ -1,1 +1,0 @@
-{"timestamp": "2026-11-03T22:09:52.855853+00:00", "service": "fastapi", "event": "db_startup", "request_id": null, "status": "ready", "attempts": 1, "elapsed_seconds": 0.043}

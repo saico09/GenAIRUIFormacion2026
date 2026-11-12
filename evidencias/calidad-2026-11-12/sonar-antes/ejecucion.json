@@ -1,0 +1,60 @@
+{
+  "projectKey": "genairui-formacion2026",
+  "projectName": "GenAIRUI Formación 2026",
+  "source": "C:\\Users\\marco\\Documents\\CONKORD\\GenAIRUIFormacion2026\\codigo",
+  "snapshot": "C:\\Users\\marco\\Documents\\CONKORD\\SonarQube\\.local\\escaneos\\genairui-formacion2026-20261112T181145279Z-1358de\\source",
+  "profile": "genairui",
+  "startedAt": "2026-11-12T18:11:45.3262365Z",
+  "status": "success",
+  "analysisStatus": "SUCCESS",
+  "qualityGate": "ERROR",
+  "scannerImage": "sonarsource/sonar-scanner-cli:12.3.1.4302_8.3.1@sha256:38207bba3d98c8ce6f6c051ea2b9f05a24480da78c9ee5945ceafc3d9de02b88",
+  "tokenRevoked": true,
+  "warnings": [
+    "18:12:21.993 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value '.scannerwork'",
+    "18:12:27.262 WARN  The token used for this analysis will expire on: November 13, 2026",
+    "18:12:27.262 WARN  Analysis executed with this token will fail after the expiration date.",
+    "18:12:45.148 WARN  No explicit support for version 3.15. Python version has been set to 3.14.",
+    "18:13:00.466 WARN  Retrieving only language associated files, make sure to run the analysis inside a git repository to make use of inclusions specified via \"sonar.text.inclusions\""
+  ],
+  "dashboardUrl": "http://127.0.0.1:9000/dashboard?id=genairui-formacion2026",
+  "gitCommit": "c2ee267d60a63b90777550494c806e7888107387",
+  "gitDirty": true,
+  "fileCount": 150,
+  "skippedLinksOrMissing": [],
+  "mavenImage": "maven:3.10.0-eclipse-temurin-27@sha256:bd2c0a2c430f787b7b6887826b6b1a43fe48f1e3ca4196b9ab886567bf54de58",
+  "javaJdkVolume": "conkord-sonarqube_jdk_8e5eff783c58",
+  "ceTaskId": "913ad444-064d-4aae-b29d-f873d5f06aa2",
+  "analysisId": "fdf19117-cd72-407a-95e1-7d34222ba371",
+  "qualityGateConditions": [
+    {
+      "status": "ERROR",
+      "metricKey": "new_coverage",
+      "comparator": "LT",
+      "errorThreshold": "80",
+      "actualValue": "0.0"
+    },
+    {
+      "status": "OK",
+      "metricKey": "new_duplicated_lines_density",
+      "comparator": "GT",
+      "errorThreshold": "3",
+      "actualValue": "0.17874"
+    },
+    {
+      "status": "ERROR",
+      "metricKey": "new_violations",
+      "comparator": "GT",
+      "errorThreshold": "0",
+      "actualValue": "29"
+    }
+  ],
+  "scannerWarnings": [
+    "18:12:21.993 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value '.scannerwork'",
+    "18:12:27.262 WARN  The token used for this analysis will expire on: November 13, 2026",
+    "18:12:27.262 WARN  Analysis executed with this token will fail after the expiration date.",
+    "18:12:45.148 WARN  No explicit support for version 3.15. Python version has been set to 3.14.",
+    "18:13:00.466 WARN  Retrieving only language associated files, make sure to run the analysis inside a git repository to make use of inclusions specified via \"sonar.text.inclusions\""
+  ],
+  "finishedAt": "2026-11-12T18:14:41.8251673Z"
+}

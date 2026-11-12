@@ -1,0 +1,101 @@
+{
+  "component": {
+    "key": "genairui-formacion2026",
+    "name": "GenAIRUI Formación 2026",
+    "qualifier": "TRK",
+    "measures": [
+      {
+        "metric": "coverage",
+        "value": "0.0",
+        "bestValue": false
+      },
+      {
+        "metric": "reliability_rating",
+        "value": "4.0",
+        "bestValue": false
+      },
+      {
+        "metric": "duplicated_lines_density",
+        "value": "0.2",
+        "bestValue": false
+      },
+      {
+        "metric": "code_smells",
+        "value": "5",
+        "bestValue": false
+      },
+      {
+        "metric": "security_rating",
+        "value": "4.0",
+        "bestValue": false
+      },
+      {
+        "metric": "new_coverage",
+        "period": {
+          "index": 1,
+          "value": "0.0",
+          "bestValue": false
+        }
+      },
+      {
+        "metric": "violations",
+        "value": "49",
+        "bestValue": false
+      },
+      {
+        "metric": "security_hotspots",
+        "value": "0",
+        "bestValue": true
+      },
+      {
+        "metric": "sqale_index",
+        "value": "70",
+        "bestValue": false
+      },
+      {
+        "metric": "sqale_rating",
+        "value": "1.0",
+        "bestValue": true
+      },
+      {
+        "metric": "bugs",
+        "value": "39",
+        "bestValue": false
+      },
+      {
+        "metric": "new_violations",
+        "period": {
+          "index": 1,
+          "value": "29",
+          "bestValue": false
+        }
+      },
+      {
+        "metric": "duplicated_blocks",
+        "value": "2",
+        "bestValue": false
+      },
+      {
+        "metric": "ncloc",
+        "value": "10603"
+      },
+      {
+        "metric": "files",
+        "value": "114"
+      },
+      {
+        "metric": "vulnerabilities",
+        "value": "5",
+        "bestValue": false
+      },
+      {
+        "metric": "new_duplicated_lines_density",
+        "period": {
+          "index": 1,
+          "value": "0.17874",
+          "bestValue": false
+        }
+      }
+    ]
+  }
+}

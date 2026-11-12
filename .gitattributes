@@ -1,2 +1,2 @@
-# Micrometer emite HELP vacíos con espacios finales; conservar la captura real.
-evidencias/s06/java-metricas.txt whitespace=-blank-at-eol
+# Conservar literalmente los logs de herramientas, incluidos sus espacios finales.
+evidencias/**/*.log whitespace=-blank-at-eol

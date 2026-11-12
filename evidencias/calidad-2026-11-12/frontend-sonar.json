@@ -1,0 +1,55 @@
+{
+  "at": "2026-11-12T18:22:13.399Z",
+  "scope": "Cambios de promesas y accesibilidad; contratos con DOM/transporte simulados, sin navegador ni API real.",
+  "issues_addressed": {
+    "javascript:S9383": 10,
+    "Web:S6850": 1,
+    "javascript:S2871": 3,
+    "javascript:S1143": 1
+  },
+  "unit_tests": {
+    "command": "node --experimental-vm-modules --test python-api/tests/frontend_async.test.cjs",
+    "passed": 8,
+    "failed": 0,
+    "observed_in": "Ejecución de la herramienta durante esta revisión; no se repitió para capturar la salida."
+  },
+  "canonical_checks": [
+    {
+      "file": "scripts/verificar_registros_ui.cjs",
+      "fixtures": 5,
+      "passed": true,
+      "sha256": "1f4e4daaa394da6732f4db773c6e4c180e4516639488534e7e90ebf8ab61c8b4"
+    },
+    {
+      "file": "scripts/verificar_historia_ui_real.cjs",
+      "fixtures": 5,
+      "passed": true,
+      "sha256": "51f181ed3503e7c800669d3e6438650c8abba1cfed3309745f694a334832f722"
+    },
+    {
+      "file": "scripts/verificar_portal_ui.cjs",
+      "fixtures": 5,
+      "passed": true,
+      "sha256": "810df1f718ce787c7d8af9b09c72c14edc97fb68c4ef8ea35fb3a636a6dc887e"
+    }
+  ],
+  "syntax_checks": {
+    "javascript_modules": 6,
+    "verifier_scripts": 4,
+    "passed": true
+  },
+  "checks": [
+    "Guardado de registro y Markdown esperan el refresco antes de sincronizar o permitir otra escritura.",
+    "El fallo posterior al guardado se muestra como guardado con vista pendiente y evita duplicar el alta.",
+    "El fallo HTTP de escritura se muestra y libera controles.",
+    "La notificación de pacientes ocurre después de refrescar su tabla.",
+    "Una recarga en cola queda incluida en la promesa inicial.",
+    "El verificador conserva el error primario junto al eventual error de limpieza."
+  ],
+  "limits": [
+    "Las pruebas simulan el DOM y el transporte: no acreditan otro recorrido de navegador ni CRUD real.",
+    "S9383 se corrigió propagando/esperando finalización; las funciones ya capturaban los errores HTTP habituales.",
+    "Las claves canónicas mantienen orden ordinal anterior; no se cambió a colación dependiente del idioma."
+  ],
+  "browser_review_pending": true
+}

@@ -1,0 +1,2181 @@
+[
+  {
+    "key": "492da381-4abb-48d5-8d83-11542081f290",
+    "rule": "java:S8786",
+    "severity": "MAJOR",
+    "component": "genairui-formacion2026:java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+    "project": "genairui-formacion2026",
+    "line": 86,
+    "hash": "2b11f33c16a97488a0e22314d27a0f44",
+    "textRange": {
+      "startLine": 86,
+      "endLine": 86,
+      "startOffset": 35,
+      "endOffset": 42
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking.",
+    "effort": "20min",
+    "debt": "20min",
+    "author": "",
+    "tags": [
+      "regex",
+      "performance"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:32:12-03:00",
+    "updateDate": "2026-11-12T15:32:12-03:00",
+    "type": "CODE_SMELL",
+    "scope": "TEST",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "EFFICIENT",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "MEDIUM"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "6d51fff8-5a0d-4dec-8d6e-75951d2d2663",
+    "rule": "python:S5332",
+    "severity": "MINOR",
+    "component": "genairui-formacion2026:scripts/verificar_assets.py",
+    "project": "genairui-formacion2026",
+    "line": 37,
+    "hash": "f6d32332b0ee1bb5a08cd923807d15e5",
+    "textRange": {
+      "startLine": 37,
+      "endLine": 37,
+      "startOffset": 24,
+      "endOffset": 33
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Using HTTP protocol is insecure. Use HTTPS instead.",
+    "effort": "30min",
+    "debt": "30min",
+    "author": "",
+    "tags": [
+      "cwe",
+      "cryptography",
+      "former-hotspot"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:32:12-03:00",
+    "updateDate": "2026-11-12T15:32:12-03:00",
+    "type": "VULNERABILITY",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "SECURITY",
+        "severity": "LOW"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "a6d2523e-6a63-4d1c-8b1d-c7691b7b160b",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_auditoria_python.py",
+    "project": "genairui-formacion2026",
+    "line": 139,
+    "hash": "241748e24941d473165f9673402ebdb0",
+    "textRange": {
+      "startLine": 139,
+      "endLine": 139,
+      "startOffset": 20,
+      "endOffset": 49
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_auditoria_python.py",
+            "textRange": {
+              "startLine": 143,
+              "endLine": 143,
+              "startOffset": 15,
+              "endOffset": 24
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "ed0d8ad0-8cee-4de7-8a23-0c9a60bbaace",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 169,
+    "hash": "c238922695920533e6eeb0d5ebdede5c",
+    "textRange": {
+      "startLine": 169,
+      "endLine": 169,
+      "startOffset": 8,
+      "endOffset": 101
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "ef3a08a7-3384-4cd6-af43-f2bf10e020ff",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 170,
+    "hash": "c8e121621ed257cc6cc82eac26503e4f",
+    "textRange": {
+      "startLine": 170,
+      "endLine": 170,
+      "startOffset": 8,
+      "endOffset": 153
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "83cb7c39-f1aa-4feb-bcfb-4741385f27ab",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 172,
+    "hash": "24291f8f8fc321d63fe3dabfad99a745",
+    "textRange": {
+      "startLine": 172,
+      "endLine": 172,
+      "startOffset": 8,
+      "endOffset": 42
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "96778752-ee40-4cc1-8f69-fcd8f96202fa",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 173,
+    "hash": "c70f7243c999aaa353a8d8643c8de60e",
+    "textRange": {
+      "startLine": 173,
+      "endLine": 173,
+      "startOffset": 8,
+      "endOffset": 138
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "c86c2f21-0367-4245-922d-13e33d4aecde",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 177,
+    "hash": "11dfabe4061aa78882166193760e88c2",
+    "textRange": {
+      "startLine": 177,
+      "endLine": 177,
+      "startOffset": 8,
+      "endOffset": 55
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "7c898f30-be4b-49d6-926d-cd926985043b",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 179,
+    "hash": "a992050df5f974db59a2a7e8483c457a",
+    "textRange": {
+      "startLine": 179,
+      "endLine": 179,
+      "startOffset": 8,
+      "endOffset": 63
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "31e16727-b5d0-4feb-9805-1eef257c6f2f",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 180,
+    "hash": "7801aa16d194c12ada138df95b93ee1a",
+    "textRange": {
+      "startLine": 180,
+      "endLine": 180,
+      "startOffset": 8,
+      "endOffset": 120
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "e8b292e2-8ab2-437f-b691-a66d8cbf5cf1",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 188,
+    "hash": "b7c995bbd33ab9a80c5de63f5a2d496c",
+    "textRange": {
+      "startLine": 188,
+      "endLine": 188,
+      "startOffset": 8,
+      "endOffset": 76
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "6ff2f200-6cc8-4e82-8108-a8bf5e2f6b11",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 190,
+    "hash": "0e9ef8d624d90187416b83e81447eb9c",
+    "textRange": {
+      "startLine": 190,
+      "endLine": 190,
+      "startOffset": 12,
+      "endOffset": 77
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "f3ceb826-3145-4688-af6b-d1d168cc7f69",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 200,
+    "hash": "bd8360a23ec923915f5bb6a66fa41188",
+    "textRange": {
+      "startLine": 200,
+      "endLine": 200,
+      "startOffset": 8,
+      "endOffset": 67
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "d1857c43-2cc9-4a19-a04c-77d054ac1498",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 201,
+    "hash": "8721a1c7096acb2f924b8765b77aca2a",
+    "textRange": {
+      "startLine": 201,
+      "endLine": 201,
+      "startOffset": 8,
+      "endOffset": 53
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "f4e37137-4af9-4bfb-b7b5-78c227ab41a8",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 210,
+    "hash": "6c42adbfaed12687b2222eeee8e30e97",
+    "textRange": {
+      "startLine": 210,
+      "endLine": 210,
+      "startOffset": 12,
+      "endOffset": 83
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "78390b18-9079-40fe-9e62-4faef0bc1c8e",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 211,
+    "hash": "7aa8b27413e6c9aee8b8168d901eee12",
+    "textRange": {
+      "startLine": 211,
+      "endLine": 211,
+      "startOffset": 12,
+      "endOffset": 107
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "785fdef5-abd7-4ace-89fb-5dcbe72d4013",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 234,
+    "hash": "bb55d26fc103af1305ac9e8ff985d211",
+    "textRange": {
+      "startLine": 234,
+      "endLine": 234,
+      "startOffset": 12,
+      "endOffset": 67
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "3063aef3-fd44-48c7-a1b3-6fd9d08719e0",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 243,
+    "hash": "bb55d26fc103af1305ac9e8ff985d211",
+    "textRange": {
+      "startLine": 243,
+      "endLine": 243,
+      "startOffset": 8,
+      "endOffset": 63
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "735b005f-098c-4dca-8d3f-c2f61b9c2059",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 249,
+    "hash": "2c0699cae5cab88376f3a9819b9f3cbd",
+    "textRange": {
+      "startLine": 249,
+      "endLine": 249,
+      "startOffset": 8,
+      "endOffset": 78
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 255,
+              "endLine": 255,
+              "startOffset": 11,
+              "endOffset": 20
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "6365d8db-878c-4aa5-b1b5-200bc111fbb5",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 269,
+    "hash": "a3d76a27813f944a399591c8e9b51659",
+    "textRange": {
+      "startLine": 269,
+      "endLine": 269,
+      "startOffset": 16,
+      "endOffset": 43
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 273,
+              "endLine": 273,
+              "startOffset": 19,
+              "endOffset": 28
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "7d33be4d-a1b9-414f-8b0b-698817e6cd6d",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 278,
+    "hash": "80851fa4f28d0ec85095b0ed259f5b0b",
+    "textRange": {
+      "startLine": 278,
+      "endLine": 278,
+      "startOffset": 16,
+      "endOffset": 78
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 281,
+              "endLine": 281,
+              "startOffset": 19,
+              "endOffset": 28
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "f6ad502e-0a48-40d0-bbc4-973eb782118d",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 279,
+    "hash": "4f49547d5c1878a0cece7968caa0a350",
+    "textRange": {
+      "startLine": 279,
+      "endLine": 279,
+      "startOffset": 16,
+      "endOffset": 105
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 281,
+              "endLine": 281,
+              "startOffset": 19,
+              "endOffset": 28
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "6beb8ec6-7137-458e-bbe7-4cd40a79e48c",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+    "project": "genairui-formacion2026",
+    "line": 287,
+    "hash": "0393e4d457f5e91e19691ee235a40bbb",
+    "textRange": {
+      "startLine": 287,
+      "endLine": 287,
+      "startOffset": 16,
+      "endOffset": 78
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+            "textRange": {
+              "startLine": 288,
+              "endLine": 288,
+              "startOffset": 19,
+              "endOffset": 28
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-12T15:12:28-03:00",
+    "updateDate": "2026-11-12T15:12:28-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "74f72470-60cc-440e-8d81-56aeaf7ad92d",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_arranque_db.py",
+    "project": "genairui-formacion2026",
+    "line": 94,
+    "hash": "93dad2a28a2663a66213188ab42ae8d4",
+    "textRange": {
+      "startLine": 94,
+      "endLine": 94,
+      "startOffset": 16,
+      "endOffset": 77
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_arranque_db.py",
+            "textRange": {
+              "startLine": 96,
+              "endLine": 96,
+              "startOffset": 15,
+              "endOffset": 24
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-07T18:33:39-03:00",
+    "updateDate": "2026-11-07T18:33:39-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "940dae61-5c63-409d-b133-14a87f39331d",
+    "rule": "python:S5527",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_componentes.py",
+    "project": "genairui-formacion2026",
+    "line": 30,
+    "hash": "3c425136d4df99f3190a40db25243237",
+    "textRange": {
+      "startLine": 30,
+      "endLine": 30,
+      "startOffset": 22,
+      "endOffset": 54
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Enable server hostname verification on this SSL/TLS connection.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "cwe",
+      "cryptography",
+      "privacy",
+      "ssl"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-07T18:33:39-03:00",
+    "updateDate": "2026-11-07T18:33:39-03:00",
+    "type": "VULNERABILITY",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "SECURITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "6a8e636a-3e4d-4bdf-8c66-58a847ef1075",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_componentes.py",
+    "project": "genairui-formacion2026",
+    "line": 33,
+    "hash": "973ceca8ffadd56f8a760cdf33b4bf04",
+    "textRange": {
+      "startLine": 33,
+      "endLine": 33,
+      "startOffset": 16,
+      "endOffset": 72
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_componentes.py",
+            "textRange": {
+              "startLine": 35,
+              "endLine": 35,
+              "startOffset": 15,
+              "endOffset": 24
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-07T18:33:39-03:00",
+    "updateDate": "2026-11-07T18:33:39-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "681b33eb-94d6-4aa4-b23a-731df44b2945",
+    "rule": "python:S5779",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_componentes.py",
+    "project": "genairui-formacion2026",
+    "line": 34,
+    "hash": "4181d3dd9bf51c733733448e4558ea3f",
+    "textRange": {
+      "startLine": 34,
+      "endLine": 34,
+      "startOffset": 16,
+      "endOffset": 57
+    },
+    "flows": [
+      {
+        "locations": [
+          {
+            "component": "genairui-formacion2026:scripts/verificar_componentes.py",
+            "textRange": {
+              "startLine": 35,
+              "endLine": 35,
+              "startOffset": 15,
+              "endOffset": 24
+            },
+            "msg": "Exception is caught here.",
+            "msgFormattings": []
+          }
+        ]
+      }
+    ],
+    "status": "OPEN",
+    "message": "Don't use assert inside a try-except that catches AssertionError.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "tests",
+      "pytest",
+      "unittest",
+      "assertpy"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-07T18:33:39-03:00",
+    "updateDate": "2026-11-07T18:33:39-03:00",
+    "type": "BUG",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "LOGICAL",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "RELIABILITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "13138f98-30cf-43c3-8df2-a024b00cf0f1",
+    "rule": "python:S4830",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_repo_argocd.py",
+    "project": "genairui-formacion2026",
+    "line": 26,
+    "hash": "be080ec2d21dc03beec188c61c58d891",
+    "textRange": {
+      "startLine": 26,
+      "endLine": 26,
+      "startOffset": 18,
+      "endOffset": 44
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Enable server certificate validation on this SSL/TLS connection.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "cwe",
+      "cryptography",
+      "privacy",
+      "ssl"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-07T18:33:39-03:00",
+    "updateDate": "2026-11-07T18:33:39-03:00",
+    "type": "VULNERABILITY",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "TRUSTWORTHY",
+    "cleanCodeAttributeCategory": "RESPONSIBLE",
+    "impacts": [
+      {
+        "softwareQuality": "SECURITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  },
+  {
+    "key": "955bf8dc-6b73-4731-8c8f-3df9acfea0c3",
+    "rule": "python:S5527",
+    "severity": "CRITICAL",
+    "component": "genairui-formacion2026:scripts/verificar_repo_argocd.py",
+    "project": "genairui-formacion2026",
+    "line": 26,
+    "hash": "be080ec2d21dc03beec188c61c58d891",
+    "textRange": {
+      "startLine": 26,
+      "endLine": 26,
+      "startOffset": 14,
+      "endOffset": 46
+    },
+    "flows": [],
+    "status": "OPEN",
+    "message": "Enable server hostname verification on this SSL/TLS connection.",
+    "effort": "5min",
+    "debt": "5min",
+    "author": "",
+    "tags": [
+      "cwe",
+      "cryptography",
+      "privacy",
+      "ssl"
+    ],
+    "transitions": [
+      "accept",
+      "falsepositive",
+      "confirm",
+      "resolve",
+      "wontfix"
+    ],
+    "actions": [
+      "set_type",
+      "set_tags",
+      "comment",
+      "set_severity",
+      "assign"
+    ],
+    "comments": [],
+    "creationDate": "2026-11-07T18:33:39-03:00",
+    "updateDate": "2026-11-07T18:33:39-03:00",
+    "type": "VULNERABILITY",
+    "scope": "MAIN",
+    "quickFixAvailable": false,
+    "messageFormattings": [],
+    "codeVariants": [],
+    "cleanCodeAttribute": "COMPLETE",
+    "cleanCodeAttributeCategory": "INTENTIONAL",
+    "impacts": [
+      {
+        "softwareQuality": "SECURITY",
+        "severity": "HIGH"
+      }
+    ],
+    "issueStatus": "OPEN",
+    "prioritizedRule": false,
+    "fromSonarQubeUpdate": false,
+    "internalTags": [],
+    "linkedTicketStatus": "NOT_LINKED"
+  }
+]

@@ -1,0 +1,24 @@
+[INFO] Scanning for projects...
+[INFO] Loaded 24464 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] 
+[INFO] ---------------------< com.conkord.genai:java-api >---------------------
+[INFO] Building JavaApi 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ java-api ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ java-api ---
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 23 source files with javac [debug parameters release 27] to target/classes
+[INFO] 
+[INFO] --- dependency:3.10.0:copy-dependencies (default-cli) @ java-api ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.910 s
+[INFO] Finished at: 2026-11-12T18:31:55Z
+[INFO] ------------------------------------------------------------------------

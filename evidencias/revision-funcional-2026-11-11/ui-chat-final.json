@@ -1,8 +1,0 @@
-{
-  "patient_id": 58,
-  "execution_id": "f48576ae-00e8-4d80-91eb-24a214d83f06",
-  "question": "dolor de estómago",
-  "model": "qwen3.5:4b-q4_K_M",
-  "http_duration_ms": 24458.164,
-  "state": "Browser tab: 1, Title: \"Consultas médicas · GenAI Clínica\", URL: \"http://localhost:8000/#consultas\".\nThere has been no change in the accessibility tree.\nThe focused UI element is 1 AXWebArea Consultas médicas · GenAI Clínica, URL: localhost:8000/#consultas"
-}

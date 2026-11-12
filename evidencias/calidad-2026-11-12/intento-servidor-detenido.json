@@ -1,0 +1,17 @@
+{
+  "projectKey": "genairui-formacion2026",
+  "projectName": "GenAIRUI Formación 2026",
+  "source": "C:\\Users\\marco\\Documents\\CONKORD\\GenAIRUIFormacion2026\\codigo",
+  "snapshot": "C:\\Users\\marco\\Documents\\CONKORD\\SonarQube\\.local\\escaneos\\genairui-formacion2026-20261112T181021765Z-00a7ec\\source",
+  "profile": "genairui",
+  "startedAt": "2026-11-12T18:10:21.7994188Z",
+  "status": "failed",
+  "analysisStatus": "NOT_STARTED",
+  "qualityGate": "NOT_EVALUATED",
+  "scannerImage": "sonarsource/sonar-scanner-cli:12.3.1.4302_8.3.1@sha256:38207bba3d98c8ce6f6c051ea2b9f05a24480da78c9ee5945ceafc3d9de02b88",
+  "tokenRevoked": null,
+  "warnings": [],
+  "dashboardUrl": "http://127.0.0.1:9000/dashboard?id=genairui-formacion2026",
+  "error": "No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión. (127.0.0.1:9000)",
+  "finishedAt": "2026-11-12T18:10:26.9999053Z"
+}

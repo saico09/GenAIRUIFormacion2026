@@ -1,0 +1,103 @@
+{
+  "scope": "Selección inicial de mejoras concretas a partir del análisis real, sin suprimir reglas ni modificar el Quality Gate.",
+  "baseline": "sonar-antes/ejecucion.json",
+  "source": "c2ee267 con los dos cambios de iconos ya presentes en index.html/styles.css; el resto de los 150 archivos coincide con el commit normalizando CRLF/LF.",
+  "initial_issues": 49,
+  "selection": [
+    {
+      "area": "Java",
+      "rules": [
+        "java:S8786",
+        "java:S5850"
+      ],
+      "issues": 3,
+      "files": [
+        "java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+        "java-api/src/main/java/com/conkord/genai/PatientRequest.java"
+      ],
+      "action": "Simplificar patrones de correo y parsing de registros, haciendo explícita la precedencia. Mantener validaciones, formato Markdown y comportamiento CRUD con casos de regresión."
+    },
+    {
+      "area": "Interfaz",
+      "rules": [
+        "javascript:S9383",
+        "Web:S6850"
+      ],
+      "issues": 11,
+      "files": [
+        "python-api/app/static/chat.js",
+        "python-api/app/static/history.js",
+        "python-api/app/static/patients.js",
+        "python-api/app/static/index.html"
+      ],
+      "action": "Distinguir llamadas con espera de eventos intencionales; conservar los manejadores de error existentes. Poner texto accesible inicial en el encabezado que después se completa al elegir paciente."
+    },
+    {
+      "area": "Helm local",
+      "rules": [
+        "kubernetes:S6865",
+        "kubernetes:S6870",
+        "kubernetes:S6897"
+      ],
+      "issues": 3,
+      "files": [
+        "deploy/helm/fastapi/templates/deployment.yaml"
+      ],
+      "action": "La API no usa la API de Kubernetes: desactivar el montaje automático del token y declarar almacenamiento efímero con valores modestos. Validar plantilla; no ampliar GitOps a otros servicios."
+    },
+    {
+      "area": "Verificadores que conservan fallos",
+      "rules": [
+        "python:S5779"
+      ],
+      "issues": 24,
+      "action": "El except registra el fallo y el verificador termina con error: no son 24 fallos del runtime. Revisar expresamente este control; una comprobación explícita es más fiable que assert bajo Python -O, pero no cambiar el comportamiento de limpieza o conservación por silenciar la regla."
+    },
+    {
+      "area": "TLS de Argo local",
+      "rules": [
+        "python:S5527",
+        "python:S4830"
+      ],
+      "issues": 3,
+      "files": [
+        "scripts/verificar_componentes.py",
+        "scripts/verificar_repo_argocd.py"
+      ],
+      "action": "Los helpers aceptan el certificado autofirmado de localhost. Es una excepción local real, no debe describirse como TLS verificado. Mejorar sólo con una confianza explícita en el certificado del clúster y hostname válido; evitar instalar infraestructura PKI para esta capacitación."
+    },
+    {
+      "area": "Otros verificadores",
+      "rules": [
+        "javascript:S2871",
+        "javascript:S1143",
+        "python:S8786"
+      ],
+      "issues": 5,
+      "action": "Comparador explícito al ordenar; no ocultar el error original con throw desde finally; simplificar regex experimental sólo si el script se conserva útil. No retirar código usado por pruebas para reducir métricas."
+    }
+  ],
+  "limits": [
+    "La instalación no importa reportes de cobertura: el 0% no equivale a ausencia de pruebas. No cambiar umbral80 ni fabricar porcentaje.",
+    "La etiqueta CRITICAL es clasificación de Sonar, no prueba de que haya31 fallos críticos explotables del producto.",
+    "El scanner declaró Python3.15 analizado como3.14. La documentación oficial declara soporte completo hastaPython3.14 yJava25, mientras la app usaJava27. No se rebajaron versiones del proyecto para cambiar el informe.",
+    "No se activaron otros perfiles ni se marcaron incidencias como aceptadas/falsos positivos."
+  ],
+  "references": [
+    "https://docs.sonarsource.com/sonarqube-community-build/analyzing-source-code/languages/python",
+    "https://docs.sonarsource.com/sonarqube-community-build/analyzing-source-code/languages/java"
+  ],
+  "decisions_after_review": {
+    "helm": "Aplicados sólo automountServiceAccountToken:false y ephemeral-storage request128Mi/limit512Mi. Helm lint/template correctos, el resto del manifiesto renderizado idéntico; sin despliegue ni llamada a Minikube.",
+    "local_tls": "Se mantienen los dos verificadores de Argo localhost con certificado autofirmado. Es una limitación deliberada de los clientes de prueba, no TLS validado ni una excepción global del navegador/servidor. No se modifica infraestructura de certificados para esta capacitación.",
+    "assert_reporters": "Se mantienen los assert capturados por los reportadores: el except guarda la evidencia y el programa termina con fallo; no se ignora el fallo. No se ejecutan con Python -O. Las incidencias permanecen visibles en Sonar, sin marcar como falsas ni cambiar reglas.",
+    "historical_experiment": {
+      "path": "scripts/experimentar_fundamentacion_rag.py",
+      "candidate_to_archive": true,
+      "reason": "Docstring indica A/B histórico para checkout fab6929, exige opciones temperature0/num_ctx2048/num_predict256 incompatibles con configuración actual y corpusAlfa/Beta/Gamma. Deriva a verificar_rag_clinico.py. No hay referencias activas desde README/GUIA/scripts/deploy en la búsqueda realizada.",
+      "deleted_by_this_agent": false,
+      "sonar_rule": "python:S8786",
+      "comparison_note": "Si se archiva, contar esa incidencia como fuera del conjunto analizado por limpieza, no como un fallo corregido del runtime."
+    }
+  }
+}

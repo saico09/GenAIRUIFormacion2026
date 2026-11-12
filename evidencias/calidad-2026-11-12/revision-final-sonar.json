@@ -1,0 +1,66 @@
+{
+  "at": "2026-11-12T18:36:17.309242+00:00",
+  "analysisCommit": "6173af2b7e77bb22111649d10697156c07bb85a1",
+  "counts": {
+    "initial": 49,
+    "final": 29,
+    "correctedInRetainedCode": 21,
+    "removedWithObsoleteArchivedFiles": 1,
+    "persisting": 27,
+    "newFindings": 2
+  },
+  "newFindingsReview": [
+    {
+      "rule": "java:S8786",
+      "path": "java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+      "line": 86,
+      "reason": "El patrón anterior se conserva como oráculo en la prueba de equivalencia: ejemplos fijos cortos y 50.000 cadenas sintéticas de longitud 0–31. No recibe entrada HTTP y no vuelve al código de producción. Las pruebas de entradas largas llaman exclusivamente al patrón nuevo.",
+      "action": "Conservar la prueba y el aviso visible. No ocultar la regla ni retirar la prueba para reducir el conteo."
+    },
+    {
+      "rule": "python:S5332",
+      "path": "scripts/verificar_assets.py",
+      "line": 37,
+      "reason": "La lista de hosts está fijada a localhost y 127.0.0.1. Son GET del HTML, assets y ui-config del servicio local HTTP8000; sin credenciales, historias ni escrituras clínicas. La advertencia refleja el transporte local elegido.",
+      "action": "Conservar el verificador y el aviso visible; no añadir TLS a toda la plataforma por esta comprobación."
+    }
+  ],
+  "remainingFindingsJustification": {
+    "python:S5779": {
+      "count": 24,
+      "reason": "Los reportadores registran el error capturado y terminan con fallo; no ejecutar con Python -O."
+    },
+    "python:S5527+S4830": {
+      "count": 3,
+      "reason": "Dos verificadores de Argo local aceptan el certificado autofirmado de localhost. No es TLS validado ni una excepción global. Mantener visible esta limitación."
+    }
+  },
+  "qualityGate": {
+    "status": "ERROR",
+    "new_coverage": 0.0,
+    "new_violations": 23,
+    "new_duplicated_lines_density": 0.16502,
+    "reason": "No se importaron reportes de cobertura; no equivale a ausencia de tests. Se conservan incidencias en verificadores/pruebas sin alterar reglas, umbrales ni estados."
+  },
+  "limits": [
+    "El análisis inicial es c2ee267 con index.html/styles.css de iconos ya modificados; no se ejecutó otra baseline redundante.",
+    "Python3.15 fue analizado como3.14. Se conservan avisos de Java preview/imports y de sonar.java.test.libraries no configurada; no se garantiza análisis completo de todas las características nuevas.",
+    "Los 152 archivos del snapshot final coinciden con6173af2 al normalizar CRLF/LF. Sonar computó113 archivos y10639 líneas de código.",
+    "El helper Maven compila fuentes y dependencias, no ejecuta la batería de tests ni importa cobertura."
+  ],
+  "postScanChangeReviewed": {
+    "path": "scripts/verificar_backend_cruzado.py",
+    "workingSha256": "5a75535cae89740e41b1dd53de34d4d474fe5870e22ebdf7f61aaa92c82adf5d",
+    "change": "Filtra docker ps por oneoff=False y limita inventario a servicios persistentes Compose del proyecto y Sonar. Evita que runners de análisis paralelos sean confundidos con reinicios.",
+    "analysisScope": "Cambio posterior de verificador revisado en diff; no incluido en el snapshot6173af2 ni se atribuye una nueva ejecución Sonar."
+  },
+  "reproducePowerShell7": [
+    "Set-Location 'C:\\Users\\marco\\Documents\\CONKORD\\SonarQube'",
+    ".\\sonar.ps1 iniciar  # sólo si SonarQube está detenido",
+    ".\\escanear.ps1"
+  ],
+  "exportCommandFromProjectRoot": ".\\.contexto\\calidad-2026-11-12\\exportar_sonar.ps1 -Etiqueta despues",
+  "dashboard": "http://localhost:9000/dashboard?id=genairui-formacion2026",
+  "credentials": "El helper usa la credencial local DPAPI y un token temporal revocado al terminar; no se copian credenciales al proyecto.",
+  "newRuntimeChangesByThisReview": false
+}

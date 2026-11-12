@@ -4,7 +4,7 @@ CRUD Python y Java, chatbot con/sin RAG, métricas, logs, trazas y GitOps local.
 
 Los [casos de prueba](datos/CASOS.md) usan pacientes inventados con reflujo gastroesofágico, diabetes tipo 2 y rinitis alérgica, más tratamientos y medicamentos reales.
 
-[Guía de comandos](GUIA.md) · [Historial breve](HISTORIAL.md) · [Demo S5](evidencias/S05-guion.md) · [Demo final](evidencias/s10/guion.md) · [Resultados y pendientes](evidencias/s10/evaluacion.md)
+[Guía de comandos](GUIA.md) · [Historial breve](HISTORIAL.md)
 
 ## Arrancar
 
@@ -51,7 +51,7 @@ Para descargar los modelos de embeddings y chat, si todavía faltan:
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3.5:4b-q4_K_M
 ```
 
-Ollama es el servidor local que ejecuta los modelos. Qwen 3.5 de 4B (`qwen3.5:4b-q4_K_M`) responde en ambas ramas con los mismos parámetros, temperatura `0.2` y `think=false`. El modelo propone causas y condiciones en una estructura que Python valida y presenta como texto. Los [ensayos y sus límites](evidencias/revision-funcional-2026-11-11/LEEME.md) corresponden a casos ficticios concretos.
+Ollama es el servidor local que ejecuta los modelos. Qwen 3.5 de 4B (`qwen3.5:4b-q4_K_M`) responde en ambas ramas con los mismos parámetros, temperatura `0.2` y `think=false`. Python valida y presenta sus posibles causas como texto; los ejemplos usan casos ficticios.
 
 Para comprobar Python:
 
@@ -77,6 +77,7 @@ curl.exe -i http://localhost:8080/health
 | Qdrant | [6333/dashboard](http://localhost:6333/dashboard) |
 | Prometheus | [9090/targets](http://localhost:9090/targets) |
 | Grafana | [3000](http://localhost:3000/d/genai-apis/apis-genai), usuario `admin` |
+| SonarQube preparado aparte | [9000](http://localhost:9000/dashboard?id=genairui-formacion2026) |
 | Loki | [3100/ready](http://localhost:3100/ready) |
 | Phoenix | [6006](http://localhost:6006) |
 | FastAPI en Minikube | [8002/patients](http://localhost:8002/patients) |
@@ -189,8 +190,4 @@ Haz la secuencia en la misma terminal. [La guía](GUIA.md#comprobar-el-crud) inc
 | `observabilidad/` | Prometheus, Grafana, Loki y Alloy |
 | `deploy/` | Chart y Application de FastAPI |
 | `scripts/` | Arranque y comprobaciones repetibles |
-| `evidencias/` | Resultados fechados; no son estado en vivo |
-
-El 07/11 se añadió la navegación, la administración con Java y los exploradores de endpoints: [pruebas de la interfaz](evidencias/ui-2026-11-07/LEEME.md). El [ensayo completo del 03/11](evidencias/revision-claude/LEEME.md) conserva las comprobaciones de observabilidad y GitOps. La explicación personal y la evaluación de Rui siguen pendientes.
-
-La gestión de historias y el registro asistido por IA son una ampliación solicitada por Marco el 07/11; no cambian las HDU ni constituyen una evaluación de Rui. [Recorrido de pantalla comprobado con LLM real](evidencias/clinica-2026-11-07/interfaz.md): propuesta revisada, guardado, edición, consulta RAG y limpieza, conservando los datos previos.
+| `evidencias/` | Resultados de la revisión actual; no son estado en vivo |

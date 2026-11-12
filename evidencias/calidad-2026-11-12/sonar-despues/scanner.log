@@ -1,0 +1,193 @@
+18:32:02.923 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value '.scannerwork'
+18:32:02.950 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+18:32:02.953 INFO  Project root configuration file: /config/profile.properties
+18:32:03.028 INFO  SonarScanner CLI 8.3.1.16491
+18:32:03.038 INFO  Linux 6.18.58.1-microsoft-standard-WSL2 amd64
+18:32:04.993 INFO  Communicating with SonarQube Community Build 26.11.0.134175
+18:32:04.994 INFO  JRE provisioning: os[linux], arch[x86_64]
+18:32:05.802 INFO  SONAR_SCANNER_JAVA_OPTS=-Xmx768m
+18:32:06.833 INFO  Starting SonarScanner Engine...
+18:32:06.834 INFO  Java 21.0.13 Eclipse Adoptium (64-bit)
+18:32:09.778 INFO  Load global settings
+18:32:10.080 WARN  The token used for this analysis will expire on: November 13, 2026
+18:32:10.080 WARN  Analysis executed with this token will fail after the expiration date.
+18:32:10.119 INFO  Load global settings (done) | time=342ms
+18:32:10.123 INFO  Server id: 243B8A4D-AaG37Fl8UouJzq3xZrRW
+18:32:10.976 INFO  Loading required plugins
+18:32:10.978 INFO  Load plugins index
+18:32:11.078 INFO  Load plugins index (done) | time=95ms
+18:32:11.079 INFO  Load/download plugins
+18:32:11.121 INFO  Load/download plugins (done) | time=44ms
+18:32:11.974 INFO  Load project settings for component key: 'genairui-formacion2026'
+18:32:12.458 INFO  Load project settings for component key: 'genairui-formacion2026' (done) | time=482ms
+18:32:12.489 INFO  Process project properties
+18:32:12.550 INFO  Process project properties (done) | time=60ms
+18:32:12.587 INFO  Project key: genairui-formacion2026
+18:32:12.588 INFO  Base dir: /usr/src
+18:32:12.589 INFO  Working dir: /usr/src/.scannerwork
+18:32:12.806 INFO  Load quality profiles
+18:32:14.363 INFO  Load quality profiles (done) | time=1557ms
+18:32:14.418 INFO  Load active rules
+18:32:15.132 INFO  Load active rules (done) | time=714ms
+18:32:15.141 INFO  Load analysis cache
+18:32:15.288 INFO  Load analysis cache | time=148ms
+18:32:15.410 INFO  Preprocessing files...
+18:32:16.204 INFO  9 languages detected in 149 preprocessed files (done) | time=793ms
+18:32:16.204 INFO  2 files ignored because of inclusion/exclusion patterns
+18:32:16.205 INFO  5 directories skipped because of exclusion patterns (content not counted)
+18:32:16.206 INFO  Loading plugins for detected languages
+18:32:16.207 INFO  Load/download plugins
+18:32:16.252 INFO  Load/download plugins (done) | time=45ms
+18:32:16.728 INFO  Load project repositories
+18:32:16.965 INFO  Load project repositories (done) | time=237ms
+18:32:17.033 INFO  Indexing files...
+18:32:17.035 INFO  Project configuration:
+18:32:17.036 INFO    Excluded sources: python-api/tests/**, java-api/src/test/**, **/target/**, **/.mvn/**, **/mvnw, **/mvnw.cmd, **/*.md, datos/**, evidencias/**, ejecuciones/**, **/.scannerwork/**, **/.git/**, **/node_modules/**, **/__pycache__/**, **/.venv/**
+18:32:17.908 INFO  149 files indexed (done) | time=872ms
+18:32:17.909 INFO  Quality profile for css: Sonar way core
+18:32:17.910 INFO  Quality profile for docker: Sonar way core
+18:32:17.911 INFO  Quality profile for java: Sonar way core
+18:32:17.911 INFO  Quality profile for js: Sonar way core
+18:32:17.912 INFO  Quality profile for json: Sonar way comprehensive
+18:32:17.913 INFO  Quality profile for py: Sonar way core
+18:32:17.913 INFO  Quality profile for web: Sonar way core
+18:32:17.913 INFO  Quality profile for xml: Sonar way core
+18:32:17.914 INFO  Quality profile for yaml: Sonar way comprehensive
+18:32:17.914 INFO  ------------- Run sensors on module GenAIRUI Formación 2026
+18:32:18.036 INFO  Load metrics repository
+18:32:18.072 INFO  Load metrics repository (done) | time=37ms
+18:32:19.111 INFO  Reflections took 117 ms to scan 1 urls, producing 30 keys and 313 values
+18:32:19.957 INFO  Sensor JavaSensor [java]
+18:32:20.194 INFO  Configured Java source version (sonar.java.source): 27, preview features enabled (sonar.java.enablePreview): false
+18:32:20.212 INFO  Server-side caching is enabled. The Java analyzer will not try to leverage data from a previous analysis.
+18:32:20.213 INFO  Using ECJ batch to parse 23 Main java source files with batch size 40 KB.
+18:32:20.937 INFO  Starting batch processing.
+18:32:22.695 INFO  The Java analyzer cannot skip unchanged files in this context. A full analysis is performed for all files.
+18:32:29.084 INFO  100% analyzed
+18:32:29.085 INFO  Batch processing: Done.
+18:32:29.115 INFO  Did not optimize analysis for any files, performed a full analysis for all 23 files.
+18:32:29.117 INFO  Using ECJ batch to parse 1 Test java source files with batch size 40 KB.
+18:32:29.135 INFO  Starting batch processing.
+18:32:29.290 INFO  100% analyzed
+18:32:29.291 INFO  Batch processing: Done.
+18:32:29.292 INFO  Did not optimize analysis for any files, performed a full analysis for all 1 files.
+18:32:29.292 WARN  Missing 'sonar.java.test.libraries' property. You might end up with less precise analysis results.
+18:32:29.293 WARN  Unresolved imports/types have been detected during analysis. Enable DEBUG mode to see them.
+18:32:29.293 WARN  Use of preview features have been detected during analysis. Enable DEBUG mode to see them.
+18:32:29.294 INFO  No "Generated" source files to scan.
+18:32:29.297 INFO  Sensor JavaSensor [java] (done) | time=9339ms
+18:32:29.297 INFO  Sensor IaC YAML File Type Classification Sensor [iac]
+18:32:29.415 INFO  Sensor IaC YAML File Type Classification Sensor [iac] (done) | time=117ms
+18:32:29.415 INFO  Sensor Python Sensor [python]
+18:32:31.130 WARN  No explicit support for version 3.15. Python version has been set to 3.14.
+18:32:31.433 INFO  Starting global symbols computation
+18:32:31.437 INFO  67 source files to be analyzed
+18:32:36.176 INFO  67/67 source files have been analyzed
+18:32:36.178 INFO  Finished step global symbols computation in 4741ms
+18:32:36.283 INFO  Starting rules execution
+18:32:36.285 INFO  67 source files to be analyzed
+18:32:43.494 INFO  67/67 source files have been analyzed
+18:32:43.494 INFO  Finished step rules execution in 7210ms
+18:32:43.495 INFO  The Python analyzer was able to leverage cached data from previous analyses for 0 out of 67 files. These files were not parsed.
+18:32:43.497 INFO  Sensor Python Sensor [python] (done) | time=14081ms
+18:32:43.497 INFO  Sensor Cobertura Sensor for Python coverage [python]
+18:32:44.474 INFO  Sensor Cobertura Sensor for Python coverage [python] (done) | time=977ms
+18:32:44.474 INFO  Sensor PythonXUnitSensor [python]
+18:32:45.570 INFO  Sensor PythonXUnitSensor [python] (done) | time=1095ms
+18:32:45.571 INFO  Sensor Python Dependency Sensor [python]
+18:32:45.588 INFO  Sensor Python Dependency Sensor [python] (done) | time=17ms
+18:32:45.589 INFO  Sensor SurefireSensor [java]
+18:32:45.589 INFO  parsing [/usr/src/target/surefire-reports]
+18:32:45.591 INFO  Sensor SurefireSensor [java] (done) | time=3ms
+18:32:45.592 INFO  Sensor HTML [web]
+18:32:45.783 INFO  Sensor HTML [web] (done) | time=191ms
+18:32:45.785 INFO  Sensor XML Sensor [xml]
+18:32:45.795 INFO  2 source files to be analyzed
+18:32:46.088 INFO  2/2 source files have been analyzed
+18:32:46.089 INFO  Sensor XML Sensor [xml] (done) | time=304ms
+18:32:46.089 INFO  Sensor JaCoCo XML Report Importer [jacoco]
+18:32:46.091 INFO  'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+18:32:46.093 INFO  No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+18:32:46.093 INFO  Sensor JaCoCo XML Report Importer [jacoco] (done) | time=4ms
+18:32:46.094 INFO  Sensor IaC CloudFormation Sensor [iac]
+18:32:46.095 INFO  There are no files to be analyzed for the CloudFormation language
+18:32:46.095 INFO  Sensor IaC CloudFormation Sensor [iac] (done) | time=0ms
+18:32:46.095 INFO  Sensor IaC cfn-lint report Sensor [iac]
+18:32:46.095 INFO  Sensor IaC cfn-lint report Sensor [iac] (done) | time=1ms
+18:32:46.096 INFO  Sensor IaC Kustomization Sensor [iac]
+18:32:46.097 INFO  Sensor IaC Kustomization Sensor [iac] (done) | time=1ms
+18:32:46.097 INFO  Sensor IaC hadolint report Sensor [iac]
+18:32:46.097 INFO  Sensor IaC hadolint report Sensor [iac] (done) | time=0ms
+18:32:46.098 INFO  Sensor IaC Azure Resource Manager Sensor [iac]
+18:32:46.098 INFO  There are no files to be analyzed for the Azure Resource Manager language
+18:32:46.098 INFO  Sensor IaC Azure Resource Manager Sensor [iac] (done) | time=0ms
+18:32:46.099 INFO  Sensor Java Config Sensor [iac]
+18:32:46.112 INFO  1 source file to be analyzed
+18:32:46.209 INFO  1/1 source file has been analyzed
+18:32:46.209 INFO  Sensor Java Config Sensor [iac] (done) | time=109ms
+18:32:46.210 INFO  Sensor IaC Docker Sensor [iac]
+18:32:46.264 INFO  2 source files to be analyzed
+18:32:46.368 INFO  2/2 source files have been analyzed
+18:32:46.369 INFO  Sensor IaC Docker Sensor [iac] (done) | time=159ms
+18:32:46.370 INFO  Sensor IaC Kubernetes Sensor [iac]
+18:32:47.077 INFO  6 source files to be parsed
+18:32:47.635 INFO  6/6 source files have been parsed
+18:32:47.636 INFO  6 source files to be analyzed
+18:32:47.837 INFO  6/6 source files have been analyzed
+18:32:47.838 INFO  6 source files to be checked
+18:32:47.862 INFO  6/6 source files have been checked
+18:32:47.863 INFO  Sensor IaC Kubernetes Sensor [iac] (done) | time=1493ms
+18:32:47.864 INFO  Sensor TextAndSecretsSensor [text]
+18:32:47.896 INFO  Available processors: 12
+18:32:47.896 INFO  Using 12 threads for analysis.
+18:32:48.309 INFO  Start fetching files for the text and secrets analysis
+18:32:48.377 INFO  Using Git CLI to retrieve dirty files
+18:32:48.383 WARN  Retrieving only language associated files, make sure to run the analysis inside a git repository to make use of inclusions specified via "sonar.text.inclusions"
+18:32:48.384 INFO  Starting the text and secrets analysis
+18:32:48.388 INFO  128 source files to be analyzed for the text and secrets analysis
+18:32:48.751 INFO  128/128 source files have been analyzed for the text and secrets analysis
+18:32:48.753 INFO  Sensor TextAndSecretsSensor [text] (done) | time=890ms
+18:32:48.759 INFO  ------------- Run sensors on project
+18:32:49.159 INFO  Sensor JaCoCo Aggregate XML Report Importer [jacoco]
+18:32:49.159 INFO  Sensor JaCoCo Aggregate XML Report Importer [jacoco] (done) | time=0ms
+18:32:49.159 INFO  Sensor JavaScript/TypeScript/CSS analysis [javascript]
+18:33:03.506 INFO  Detected os: Linux arch: amd64 alpine: false. Platform: LINUX_X64
+18:33:03.507 INFO  Deploy location /opt/sonar-scanner/.sonar/js/node-runtime, tagetRuntime: /opt/sonar-scanner/.sonar/js/node-runtime/node,  version: /opt/sonar-scanner/.sonar/js/node-runtime/version.txt
+18:33:03.659 INFO  Using embedded Node.js runtime.
+18:33:03.659 INFO  Using Node.js executable: '/opt/sonar-scanner/.sonar/js/node-runtime/node'.
+18:33:17.245 INFO  Memory configuration: OS (6860 MB), Node.js (2240 MB).
+18:33:17.362 INFO  gRPC analyze-project server listening on 127.0.0.1:44839
+18:33:17.853 INFO  Plugin version: [14.3.0.46350]
+18:33:30.082 INFO  Found 0 tsconfig.json file(s): []
+18:33:42.600 INFO  21 source files to be analyzed
+18:33:42.600 INFO  Analyzing 19 file(s) using default options [lib: lib.esnext.d.ts, lib.dom.d.ts]
+18:33:42.602 INFO  21/21 source files have been analyzed
+18:33:42.637 INFO  Hit the cache for 0 out of 20
+18:33:42.637 INFO  Miss the cache for 20 out of 20: ANALYSIS_MODE_INELIGIBLE [20/20]
+18:33:42.639 INFO  Sensor JavaScript/TypeScript/CSS analysis [javascript] (done) | time=53478ms
+18:33:42.641 INFO  Sensor IaC Project Sensor [iac]
+18:33:42.651 INFO  Sensor IaC Project Sensor [iac] (done) | time=10ms
+18:33:42.652 INFO  Sensor Java SpringContextModelSensor [java]
+18:33:42.719 INFO  Sensor Java SpringContextModelSensor [java] (done) | time=67ms
+18:33:42.719 INFO  Sensor Zero Coverage Sensor
+18:33:43.792 INFO  Sensor Zero Coverage Sensor (done) | time=1068ms
+18:33:43.792 INFO  Sensor Java CPD Block Indexer
+18:33:44.156 INFO  Sensor Java CPD Block Indexer (done) | time=366ms
+18:33:44.157 INFO  Sensor JavaProjectSensor [java]
+18:33:44.166 INFO  Sensor JavaProjectSensor [java] (done) | time=8ms
+18:33:44.167 INFO  ------------- Gather SCA dependencies on project
+18:33:44.213 INFO  Dependency analysis skipped
+18:33:44.217 INFO  SCM Publisher is disabled
+18:33:44.264 INFO  CPD Executor 17 files had no CPD blocks
+18:33:44.264 INFO  CPD Executor Calculating CPD for 85 files
+18:33:44.614 INFO  CPD Executor CPD calculation finished (done) | time=350ms
+18:33:48.517 INFO  Analysis report generated in 2745ms, dir size=2.4 MB
+18:34:31.047 INFO  Analysis report compressed in 42523ms, zip size=1.3 MB
+18:34:32.227 INFO  Analysis report uploaded in 1179ms
+18:34:32.248 INFO  ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=genairui-formacion2026
+18:34:32.248 INFO  Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+18:34:32.249 INFO  More about the report processing at http://localhost:9000/api/ce/task?id=5fbe2faf-cc50-4ff5-b5aa-d53560492a03
+18:34:38.756 INFO  Analysis total time: 2:31.680 min
+18:34:39.054 INFO  SonarScanner Engine completed successfully
+18:34:39.433 INFO  EXECUTION SUCCESS
+18:34:39.822 INFO  Total time: 2:36.537s

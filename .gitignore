@@ -3,6 +3,7 @@
 __pycache__/
 .idea/
 .local/
+evidencias/**/privado/
 # Los informes creados durante el uso quedan locales; las tres semillas ya versionadas se conservan.
 datos/historias/*.md
 datos/historias/.genai-shared

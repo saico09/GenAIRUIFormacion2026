@@ -1,2 +1,0 @@
-[pod/fastapi-79c45bb9cf-tpnwx/fastapi] {"timestamp": "2026-11-03T22:13:09.865285+00:00", "service": "fastapi", "event": "db_startup", "request_id": null, "status": "ready", "attempts": 1, "elapsed_seconds": 0.105}
-[pod/fastapi-79c45bb9cf-2wxfj/fastapi] {"timestamp": "2026-11-03T22:13:09.878945+00:00", "service": "fastapi", "event": "db_startup", "request_id": null, "status": "ready", "attempts": 1, "elapsed_seconds": 0.113}

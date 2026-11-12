@@ -1,0 +1,591 @@
+{
+  "at": "2026-11-12T18:35:15.724624+00:00",
+  "source": {
+    "at": "2026-11-12T18:32:15.430342+00:00",
+    "commit": "6173af2b7e77bb22111649d10697156c07bb85a1",
+    "sourceFiles": 152,
+    "snapshot": "C:\\Users\\marco\\Documents\\CONKORD\\SonarQube\\.local\\escaneos\\genairui-formacion2026-20261112T183132524Z-b733e6\\source",
+    "allSnapshotFilesMatchCommitIgnoringCRLF": true,
+    "differencesFromCommit": [],
+    "manifestChangesFromInitial": {
+      "added": [
+        "java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+        "python-api/tests/frontend_async.test.cjs",
+        "scripts/verificar_assets.py",
+        "scripts/verificar_backend_cruzado.py",
+        "scripts/verificar_conexion_minikube.ps1"
+      ],
+      "removed": [
+        "scripts/diagnosticar_rag.py",
+        "scripts/experimentar_formato_hipotesis.py",
+        "scripts/experimentar_fundamentacion_rag.py"
+      ],
+      "changed": [
+        "deploy/helm/fastapi/templates/deployment.yaml",
+        "deploy/helm/fastapi/values.yaml",
+        "java-api/pom.xml",
+        "java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+        "java-api/src/main/java/com/conkord/genai/PatientRequest.java",
+        "python-api/app/static/chat.js",
+        "python-api/app/static/history.js",
+        "python-api/app/static/index.html",
+        "python-api/app/static/patients.js",
+        "scripts/verificar_consultas_ui_real.cjs",
+        "scripts/verificar_historia_ui_real.cjs",
+        "scripts/verificar_portal_ui.cjs",
+        "scripts/verificar_registros_ui.cjs"
+      ]
+    },
+    "initialCaveat": "The initial snapshot was c2ee267 plus index.html/styles.css icon work already in progress; it was the only initial scan."
+  },
+  "before": {
+    "at": "2026-11-12T18:15:10.1581577Z",
+    "projectKey": "genairui-formacion2026",
+    "serverVersion": "26.11.0.134175",
+    "openIssues": 49,
+    "hotspots": 0,
+    "qualityGate": "ERROR",
+    "bySeverity": [
+      {
+        "Name": "CRITICAL",
+        "Count": 31
+      },
+      {
+        "Name": "MAJOR",
+        "Count": 18
+      }
+    ],
+    "byRule": [
+      {
+        "Name": "python:S5779",
+        "Count": 24
+      },
+      {
+        "Name": "javascript:S9383",
+        "Count": 10
+      },
+      {
+        "Name": "javascript:S2871",
+        "Count": 3
+      },
+      {
+        "Name": "java:S8786",
+        "Count": 2
+      },
+      {
+        "Name": "python:S5527",
+        "Count": 2
+      },
+      {
+        "Name": "java:S5850",
+        "Count": 1
+      },
+      {
+        "Name": "javascript:S1143",
+        "Count": 1
+      },
+      {
+        "Name": "kubernetes:S6865",
+        "Count": 1
+      },
+      {
+        "Name": "kubernetes:S6870",
+        "Count": 1
+      },
+      {
+        "Name": "kubernetes:S6897",
+        "Count": 1
+      },
+      {
+        "Name": "python:S4830",
+        "Count": 1
+      },
+      {
+        "Name": "python:S8786",
+        "Count": 1
+      },
+      {
+        "Name": "Web:S6850",
+        "Count": 1
+      }
+    ],
+    "byType": [
+      {
+        "Name": "BUG",
+        "Count": 39
+      },
+      {
+        "Name": "CODE_SMELL",
+        "Count": 5
+      },
+      {
+        "Name": "VULNERABILITY",
+        "Count": 5
+      }
+    ],
+    "byComponent": [
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+        "Count": 20
+      },
+      {
+        "Name": "genairui-formacion2026:python-api/app/static/history.js",
+        "Count": 5
+      },
+      {
+        "Name": "genairui-formacion2026:deploy/helm/fastapi/templates/deployment.yaml",
+        "Count": 3
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_componentes.py",
+        "Count": 3
+      },
+      {
+        "Name": "genairui-formacion2026:python-api/app/static/chat.js",
+        "Count": 3
+      },
+      {
+        "Name": "genairui-formacion2026:python-api/app/static/patients.js",
+        "Count": 2
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_repo_argocd.py",
+        "Count": 2
+      },
+      {
+        "Name": "genairui-formacion2026:java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+        "Count": 2
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/experimentar_fundamentacion_rag.py",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_registros_ui.cjs",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_auditoria_python.py",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:java-api/src/main/java/com/conkord/genai/PatientRequest.java",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_consultas_ui_real.cjs",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_historia_ui_real.cjs",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_portal_ui.cjs",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:python-api/app/static/index.html",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_arranque_db.py",
+        "Count": 1
+      }
+    ]
+  },
+  "after": {
+    "at": "2026-11-12T18:35:06.0773979Z",
+    "projectKey": "genairui-formacion2026",
+    "serverVersion": "26.11.0.134175",
+    "openIssues": 29,
+    "hotspots": 0,
+    "qualityGate": "ERROR",
+    "bySeverity": [
+      {
+        "Name": "CRITICAL",
+        "Count": 27
+      },
+      {
+        "Name": "MAJOR",
+        "Count": 1
+      },
+      {
+        "Name": "MINOR",
+        "Count": 1
+      }
+    ],
+    "byRule": [
+      {
+        "Name": "python:S5779",
+        "Count": 24
+      },
+      {
+        "Name": "python:S5527",
+        "Count": 2
+      },
+      {
+        "Name": "java:S8786",
+        "Count": 1
+      },
+      {
+        "Name": "python:S4830",
+        "Count": 1
+      },
+      {
+        "Name": "python:S5332",
+        "Count": 1
+      }
+    ],
+    "byType": [
+      {
+        "Name": "BUG",
+        "Count": 24
+      },
+      {
+        "Name": "VULNERABILITY",
+        "Count": 4
+      },
+      {
+        "Name": "CODE_SMELL",
+        "Count": 1
+      }
+    ],
+    "byComponent": [
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_historias_minikube.py",
+        "Count": 20
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_componentes.py",
+        "Count": 3
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_repo_argocd.py",
+        "Count": 2
+      },
+      {
+        "Name": "genairui-formacion2026:java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_arranque_db.py",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_assets.py",
+        "Count": 1
+      },
+      {
+        "Name": "genairui-formacion2026:scripts/verificar_auditoria_python.py",
+        "Count": 1
+      }
+    ]
+  },
+  "counts": {
+    "initial": 49,
+    "final": 29,
+    "correctedInRetainedCode": 21,
+    "removedWithObsoleteArchivedFiles": 1,
+    "persisting": 27,
+    "newFindings": 2
+  },
+  "correctedInRetainedCode": [
+    {
+      "key": "a52a2902-b95e-443d-9c91-14b1c3202010",
+      "rule": "kubernetes:S6870",
+      "component": "genairui-formacion2026:deploy/helm/fastapi/templates/deployment.yaml",
+      "line": 26,
+      "severity": "MAJOR",
+      "type": "VULNERABILITY",
+      "message": "Specify a storage limit for this container."
+    },
+    {
+      "key": "b3937a8c-7f2c-4078-aa59-7ba974a3bbf6",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/history.js",
+      "line": 206,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "1e9ad243-8842-4a07-8e6c-02747576fb16",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/history.js",
+      "line": 239,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "19f30086-b822-4072-b51f-a7dd227a09a3",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/history.js",
+      "line": 290,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "3d5ae94f-f580-435f-8c8e-ba1bcdd577b1",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/history.js",
+      "line": 323,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "9a42bd71-b516-4284-8531-66ca6a97ca49",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/history.js",
+      "line": 350,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "455458a6-2c81-4a68-9b82-43c47dcd3cb6",
+      "rule": "javascript:S1143",
+      "component": "genairui-formacion2026:scripts/verificar_consultas_ui_real.cjs",
+      "line": 137,
+      "severity": "CRITICAL",
+      "type": "BUG",
+      "message": "Unsafe usage of ThrowStatement."
+    },
+    {
+      "key": "96ceda90-575d-4518-b01f-3090239a72bc",
+      "rule": "javascript:S2871",
+      "component": "genairui-formacion2026:scripts/verificar_registros_ui.cjs",
+      "line": 16,
+      "severity": "CRITICAL",
+      "type": "BUG",
+      "message": "Provide a compare function that depends on \"String.localeCompare\", to reliably sort elements alphabetically."
+    },
+    {
+      "key": "4859f6a4-2b71-4b98-bb9f-931244238cc1",
+      "rule": "kubernetes:S6865",
+      "component": "genairui-formacion2026:deploy/helm/fastapi/templates/deployment.yaml",
+      "line": 25,
+      "severity": "MAJOR",
+      "type": "VULNERABILITY",
+      "message": "Bind this resource's automounted service account to RBAC or disable automounting."
+    },
+    {
+      "key": "7e4d8f14-74d5-4933-aba1-fa9322aa6716",
+      "rule": "kubernetes:S6897",
+      "component": "genairui-formacion2026:deploy/helm/fastapi/templates/deployment.yaml",
+      "line": 26,
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "message": "Specify a storage request for this container."
+    },
+    {
+      "key": "f87225df-c33c-4044-aeef-5335c60a0fb3",
+      "rule": "java:S8786",
+      "component": "genairui-formacion2026:java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+      "line": 45,
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking."
+    },
+    {
+      "key": "67279e77-2d33-489f-96ae-d6bd64a97bd9",
+      "rule": "java:S5850",
+      "component": "genairui-formacion2026:java-api/src/main/java/com/conkord/genai/PatientHistoryService.java",
+      "line": 413,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Group parts of the regex together to make the intended operator precedence explicit."
+    },
+    {
+      "key": "332c147f-46d8-43b8-8e82-335c08e6db41",
+      "rule": "java:S8786",
+      "component": "genairui-formacion2026:java-api/src/main/java/com/conkord/genai/PatientRequest.java",
+      "line": 20,
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking."
+    },
+    {
+      "key": "7ab8d3d4-ad84-4e5c-b66b-490a7f3322c1",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/chat.js",
+      "line": 41,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "8a4c706d-5660-4b45-a52a-95767f4ed959",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/chat.js",
+      "line": 116,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "2043571a-f063-4537-a780-174e45c1a6cc",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/chat.js",
+      "line": 147,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "cb3c8980-364e-464b-843b-ec6fee61133a",
+      "rule": "Web:S6850",
+      "component": "genairui-formacion2026:python-api/app/static/index.html",
+      "line": 57,
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "message": "Headings must have content and the content must be accessible by a screen reader."
+    },
+    {
+      "key": "c289199e-27a3-48da-bbcf-746690f99886",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/patients.js",
+      "line": 22,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "d5382199-e08e-4d5c-b198-5c3298b93d73",
+      "rule": "javascript:S9383",
+      "component": "genairui-formacion2026:python-api/app/static/patients.js",
+      "line": 183,
+      "severity": "MAJOR",
+      "type": "BUG",
+      "message": "Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator."
+    },
+    {
+      "key": "2bda2e6b-44a9-49eb-8d17-7e8821af6f82",
+      "rule": "javascript:S2871",
+      "component": "genairui-formacion2026:scripts/verificar_historia_ui_real.cjs",
+      "line": 21,
+      "severity": "CRITICAL",
+      "type": "BUG",
+      "message": "Provide a compare function that depends on \"String.localeCompare\", to reliably sort elements alphabetically."
+    },
+    {
+      "key": "8a317669-8524-42c0-8c2c-0585e261b24a",
+      "rule": "javascript:S2871",
+      "component": "genairui-formacion2026:scripts/verificar_portal_ui.cjs",
+      "line": 23,
+      "severity": "CRITICAL",
+      "type": "BUG",
+      "message": "Provide a compare function that depends on \"String.localeCompare\", to reliably sort elements alphabetically."
+    }
+  ],
+  "removedWithObsoleteArchivedFiles": [
+    {
+      "key": "f4dc768e-ff95-4d83-bfc2-d97935a15a3c",
+      "rule": "python:S8786",
+      "component": "genairui-formacion2026:scripts/experimentar_fundamentacion_rag.py",
+      "line": 62,
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking."
+    }
+  ],
+  "newFindings": [
+    {
+      "key": "492da381-4abb-48d5-8d83-11542081f290",
+      "rule": "java:S8786",
+      "component": "genairui-formacion2026:java-api/src/test/java/com/conkord/genai/ValidationRegressionTest.java",
+      "line": 86,
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking."
+    },
+    {
+      "key": "6d51fff8-5a0d-4dec-8d6e-75951d2d2663",
+      "rule": "python:S5332",
+      "component": "genairui-formacion2026:scripts/verificar_assets.py",
+      "line": 37,
+      "severity": "MINOR",
+      "type": "VULNERABILITY",
+      "message": "Using HTTP protocol is insecure. Use HTTPS instead."
+    }
+  ],
+  "remainingRules": {
+    "java:S8786": 1,
+    "python:S5332": 1,
+    "python:S5779": 24,
+    "python:S5527": 2,
+    "python:S4830": 1
+  },
+  "qualityGateBefore": {
+    "projectStatus": {
+      "status": "ERROR",
+      "conditions": [
+        {
+          "status": "ERROR",
+          "metricKey": "new_coverage",
+          "comparator": "LT",
+          "errorThreshold": "80",
+          "actualValue": "0.0"
+        },
+        {
+          "status": "OK",
+          "metricKey": "new_duplicated_lines_density",
+          "comparator": "GT",
+          "errorThreshold": "3",
+          "actualValue": "0.17874"
+        },
+        {
+          "status": "ERROR",
+          "metricKey": "new_violations",
+          "comparator": "GT",
+          "errorThreshold": "0",
+          "actualValue": "29"
+        }
+      ],
+      "ignoredConditions": false,
+      "period": {
+        "mode": "PREVIOUS_VERSION",
+        "date": "2026-11-07T18:33:39-03:00"
+      },
+      "caycStatus": "compliant"
+    }
+  },
+  "qualityGateAfter": {
+    "projectStatus": {
+      "status": "ERROR",
+      "conditions": [
+        {
+          "status": "ERROR",
+          "metricKey": "new_coverage",
+          "comparator": "LT",
+          "errorThreshold": "80",
+          "actualValue": "0.0"
+        },
+        {
+          "status": "OK",
+          "metricKey": "new_duplicated_lines_density",
+          "comparator": "GT",
+          "errorThreshold": "3",
+          "actualValue": "0.16502"
+        },
+        {
+          "status": "ERROR",
+          "metricKey": "new_violations",
+          "comparator": "GT",
+          "errorThreshold": "0",
+          "actualValue": "23"
+        }
+      ],
+      "ignoredConditions": false,
+      "period": {
+        "mode": "PREVIOUS_VERSION",
+        "date": "2026-11-07T18:33:39-03:00"
+      },
+      "caycStatus": "compliant"
+    }
+  },
+  "method": "Issue keys compared across the actual analyses; archived-file issues are separate from code corrections. No rules, gate thresholds or issue statuses changed."
+}
