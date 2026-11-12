@@ -150,7 +150,7 @@ export function initHistory(javaBase, onChanged) {
       await readHistory();
       document.querySelector('#history-patient-name').focus({preventScroll: true});
       notice(message, 'Historia guardada. Actualizando el índice RAG…', 'loading');
-      onChanged();
+      await onChanged();
       await synchronize();
     } catch (error) {
       if (saved) savedReadFailed(error);
@@ -194,7 +194,7 @@ export function initHistory(javaBase, onChanged) {
       // Una lectura fallida no debe dejar el formulario listo para repetir un alta ya guardada.
       await readHistory();
       document.querySelector('#history-patient-name').focus({preventScroll: true});
-      onChanged();
+      await onChanged();
       await synchronize();
     } catch (error) {
       if (saved) savedReadFailed(error);
@@ -203,7 +203,7 @@ export function initHistory(javaBase, onChanged) {
   }
 
   function deleteDisease(entry) {
-    saveDisease('DELETE', entry.id, null,
+    return saveDisease('DELETE', entry.id, null,
       `¿Eliminar el registro ${entry.id} de ${patient.name}?\n\n${entry.disease || 'Sin enfermedad indicada'}\n\nLas consultas guardadas se conservan.`,
       () => { if (editingDiseaseId === entry.id) diseaseForm.hidden = true; });
   }
@@ -228,7 +228,7 @@ export function initHistory(javaBase, onChanged) {
     const discard = document.createElement('button'); discard.type = 'button'; discard.className = 'button secondary'; discard.textContent = 'Descartar'; discard.addEventListener('click', () => form.remove());
     const save = document.createElement('button'); save.type = 'submit'; save.className = 'button primary'; save.dataset.saveEntry = ''; save.textContent = 'Guardar este registro';
     actions.append(discard, save); form.append(columns, localError, actions);
-    form.addEventListener('submit', event => {
+    form.addEventListener('submit', async event => {
       event.preventDefault();
       if (busy) return;
       const data = Object.fromEntries(Object.keys(fields).map(key => [key, form.elements.namedItem(key).value.trim()]));
@@ -236,7 +236,7 @@ export function initHistory(javaBase, onChanged) {
       if (!Object.values(data).some(Boolean)) { notice(localError, 'Completa al menos un campo con un hecho de la consulta.'); return; }
       if (history.entries.length >= 50) { notice(localError, 'La historia ya tiene 50 registros. Revisa su Markdown antes de añadir otro.'); return; }
       const summary = Object.entries(fields).map(([key, label]) => `${label}: ${data[key] || '(sin información)'}`).join('\n');
-      saveDisease('POST', null, data, `¿Guardar este registro para ${patient.name}?\n\n${summary}`, () => {
+      await saveDisease('POST', null, data, `¿Guardar este registro para ${patient.name}?\n\n${summary}`, () => {
         form.remove();
         notice(proposalNotice, proposals.children.length ? 'Registro guardado. Quedan propuestas por revisar.' : 'Registro guardado. No quedan propuestas pendientes.', 'success');
       });
@@ -279,7 +279,7 @@ export function initHistory(javaBase, onChanged) {
   document.querySelector('#new-consultation').addEventListener('click', () => showConsultation());
   document.querySelector('#new-disease').addEventListener('click', () => openDiseaseForm());
   document.querySelector('#cancel-disease').addEventListener('click', () => { diseaseForm.hidden = true; });
-  diseaseForm.addEventListener('submit', event => {
+  diseaseForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (busy) return;
     const data = Object.fromEntries(Object.keys(fields).map(key => [key, diseaseForm.elements.namedItem(key).value.trim()]));
@@ -287,7 +287,7 @@ export function initHistory(javaBase, onChanged) {
     if (!Object.values(data).some(Boolean)) { notice(diseaseNotice, 'Completa al menos un campo.'); return; }
     if (!editingDiseaseId && history.entries.length >= 50) { notice(diseaseNotice, 'Este paciente ya tiene 50 registros. Edita o elimina uno antes de agregar otro.'); return; }
     const summary = Object.entries(fields).map(([key, label]) => `${label}: ${data[key] || '(sin información)'}`).join('\n');
-    saveDisease(editingDiseaseId ? 'PUT' : 'POST', editingDiseaseId, data,
+    await saveDisease(editingDiseaseId ? 'PUT' : 'POST', editingDiseaseId, data,
       `¿Guardar este registro para ${patient.name}?\n\n${summary}`, () => { diseaseForm.hidden = true; });
   });
   document.querySelector('#consult-patient').addEventListener('click', () => {
@@ -317,10 +317,10 @@ export function initHistory(javaBase, onChanged) {
     markdownInput.value = history.markdown; markdownRevision = history.revision; markdownForm.hidden = false; markdownInput.focus();
   });
   document.querySelector('#cancel-markdown').addEventListener('click', () => { markdownForm.hidden = true; });
-  markdownForm.addEventListener('submit', event => {
+  markdownForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (new TextEncoder().encode(markdownInput.value).length > 1048576) { notice(message, 'El Markdown supera el límite de 1 MiB.'); return; }
-    saveHistory('PUT', '', {markdown: markdownInput.value, revision: markdownRevision}, `¿Reemplazar el Markdown de ${patient.name} con el contenido editado? Los cambios pueden modificar o eliminar registros existentes.`, () => { markdownForm.hidden = true; });
+    await saveHistory('PUT', '', {markdown: markdownInput.value, revision: markdownRevision}, `¿Reemplazar el Markdown de ${patient.name} con el contenido editado? Los cambios pueden modificar o eliminar registros existentes.`, () => { markdownForm.hidden = true; });
   });
   document.querySelector('#download-history').addEventListener('click', async () => {
     if (busy) return;
@@ -340,14 +340,14 @@ export function initHistory(javaBase, onChanged) {
     try { await synchronize(); }
     finally { busy = false; updateControls(); }
   });
-  document.addEventListener('clinical-history-changed', event => {
+  document.addEventListener('clinical-history-changed', async event => {
     if (patient?.id === event.detail.patient_id && history) {
       // La consulta puede haberse guardado mientras había un borrador de Markdown.
       // Conservamos ese borrador y pedimos recargar antes de sobrescribir su revisión.
       if (!markdownForm.hidden || !diseaseForm.hidden || proposals.children.length) {
         conflict = true; updateControls();
         notice(message, 'La historia cambió en otra operación. Actualízala antes de guardar tu borrador.', 'warning');
-      } else loadHistory();
+      } else await loadHistory();
     }
   });
   return {open};

@@ -24,6 +24,7 @@ async function main() {
   const before = await api(`${java}/patients`); assert.equal(before.status, 200);
   const temp = {name: 'Prueba UI consulta automática', birth_date: '1990-05-15', email: `ui-auto-${randomUUID()}@example.com`};
   let patient = null, browser = null, page = null;
+  const failures = [];
   try {
     const created = await api(`${java}/patients`, json('POST', temp)); assert.equal(created.status, 201);
     patient = created.data; report.patient = patient;
@@ -115,12 +116,16 @@ async function main() {
     assert.deepEqual(errors, []); check('Vista móvil real sin desbordamiento y sin errores JavaScript');
     report.result = 'passed';
   } catch (error) {
+    failures.push(error);
     report.result = 'failed'; report.error = error.message;
-    if (page) await page.screenshot({path: path.join(output, 'fallo.png'), fullPage: true});
-    throw error;
+    if (page) {
+      try { await page.screenshot({path: path.join(output, 'fallo.png'), fullPage: true}); }
+      catch (captureError) { report.screenshot_error = captureError.message; failures.push(captureError); }
+    }
   } finally {
+    try { if (browser) await browser.close(); }
+    catch (closeError) { report.browser_close_error = closeError.message; failures.push(closeError); }
     try {
-      if (browser) await browser.close();
       if (patient) {
         const actual = await api(`${java}/patients/${patient.id}`);
         assert.equal(actual.data.email, temp.email, 'Sólo borrar el temporal propio');
@@ -133,12 +138,13 @@ async function main() {
       for (const original of before.data) assert.deepEqual(after.data.find(row => row.id === original.id), original);
       report.original_patient_rows_preserved = true;
     } catch (error) {
-      report.cleanup_error = error.message; report.result = 'failed';
-      throw error;
-    } finally {
-      report.finished_at = new Date().toISOString();
-      fs.writeFileSync(path.join(output, 'resultados.json'), JSON.stringify(report, null, 2) + '\n');
+      report.cleanup_error = error.message; failures.push(error);
     }
+    report.finished_at = new Date().toISOString();
+    if (failures.length) report.result = 'failed';
+    try { fs.writeFileSync(path.join(output, 'resultados.json'), JSON.stringify(report, null, 2) + '\n'); }
+    catch (writeError) { failures.push(writeError); }
   }
+  if (failures.length) throw new AggregateError(failures, 'Falló la prueba o su limpieza; revisa los errores conservados.');
 }
 main().catch(error => {console.error(error); process.exitCode = 1;});

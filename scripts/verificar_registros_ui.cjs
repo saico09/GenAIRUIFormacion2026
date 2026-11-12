@@ -13,7 +13,10 @@ const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, '..
 const report = {started_at: new Date().toISOString(), mocks: [], llm_called: false, checks: []};
 const values = {disease: 'Rinitis alérgica de prueba', treatment: 'Evitar el polen', medication: 'Cetirizina'};
 const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object'
-  ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;
+  ? Object.fromEntries(Object.keys(value).sort((left, right) => {
+    if (left === right) return 0;
+    return left < right ? -1 : 1;
+  }).map(key => [key, canonical(value[key])])) : value;
 const hash = value => crypto.createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex');
 const check = name => { report.checks.push({name, passed: true}); console.log(`PASS ${name}`); };
 async function request(base, endpoint, method = 'GET', body) {

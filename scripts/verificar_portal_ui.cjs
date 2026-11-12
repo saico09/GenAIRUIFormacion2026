@@ -20,7 +20,10 @@ let before;
 
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical);
-  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])]));
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort((left, right) => {
+    if (left === right) return 0;
+    return left < right ? -1 : 1;
+  }).map(key => [key, canonical(value[key])]));
   return value;
 }
 function hash(rows) {

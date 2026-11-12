@@ -41,10 +41,11 @@ public class PatientHistoryService {
     private static final int MAX_ENTRIES = 50;
     private static final String EMPTY = "No registrado.";
     private static final String JOURNAL_HEADING = "\n## Consultas registradas\n";
-    private static final String UUID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-    private static final Pattern ENTRY = Pattern.compile(
-            "\\n## Registro (" + UUID_PATTERN + ")\\n\\n### Enfermedad\\n(.*?)"
-            + "\\n\\n### Tratamiento\\n(.*?)\\n\\n### Medicamento\\n(.*?)(?=\\n## Registro |\\z)", Pattern.DOTALL);
+    private static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+    private static final String ENTRY_HEADING = "\n## Registro ";
+    private static final String DISEASE_HEADING = "\n\n### Enfermedad\n";
+    private static final String TREATMENT_HEADING = "\n\n### Tratamiento\n";
+    private static final String MEDICATION_HEADING = "\n\n### Medicamento\n";
     private static final Pattern HEADING = Pattern.compile("(?m)^#{1,6}(?:\\s|$)");
     private final PatientRepository patients;
     private final MedicalConsultationRepository consultations;
@@ -321,7 +322,7 @@ public class PatientHistoryService {
         }
     }
 
-    private List<HistoryResponse.Entry> parse(Patient patient, String markdown, List<HistoryResponse.Consultation> journal) {
+    List<HistoryResponse.Entry> parse(Patient patient, String markdown, List<HistoryResponse.Consultation> journal) {
         checkSize(markdown);
         String normalized = markdown.replace("\r\n", "\n");
         String header = header(patient);
@@ -337,18 +338,38 @@ public class PatientHistoryService {
         }
         var entries = new ArrayList<HistoryResponse.Entry>();
         var ids = new HashSet<String>();
-        var matcher = ENTRY.matcher(body);
         int offset = 0;
-        while (matcher.find()) {
-            if (matcher.start() != offset) throw invalid("Estructura Markdown inválida");
-            String id = matcher.group(1);
-            if (!UUID.fromString(id).toString().equals(id) || !ids.add(id)) throw invalid("Cada registro requiere un UUID válido y único");
-            entries.add(entry(id, matcher.group(2), matcher.group(3), matcher.group(4)));
-            if (entries.size() > MAX_ENTRIES) throw invalid("La historia admite como máximo 50 registros");
-            offset = matcher.end();
+        while (offset < body.length()) {
+            if (entries.size() == MAX_ENTRIES) throw invalid("La historia admite como máximo 50 registros");
+            if (!body.startsWith(ENTRY_HEADING, offset)) throw invalid("Estructura Markdown inválida");
+            int idStart = offset + ENTRY_HEADING.length();
+            int idEnd = idStart + 36;
+            if (idEnd > body.length() || !body.startsWith(DISEASE_HEADING, idEnd)) {
+                throw invalid("Usa Registro, Enfermedad, Tratamiento y Medicamento con sus encabezados originales");
+            }
+            String id = body.substring(idStart, idEnd);
+            if (!UUID_PATTERN.matcher(id).matches() || !ids.add(id)) throw invalid("Cada registro requiere un UUID válido y único");
+            int diseaseStart = idEnd + DISEASE_HEADING.length();
+            int nextEntry = body.indexOf(ENTRY_HEADING, diseaseStart);
+            int end = nextEntry < 0 ? body.length() : nextEntry;
+            int treatment = sectionOffset(body, TREATMENT_HEADING, diseaseStart, end);
+            int treatmentStart = treatment + TREATMENT_HEADING.length();
+            int medication = sectionOffset(body, MEDICATION_HEADING, treatmentStart, end);
+            // Los separadores se recorren una vez: un informe mal formado no provoca backtracking.
+            entries.add(entry(id, body.substring(diseaseStart, treatment),
+                    body.substring(treatmentStart, medication),
+                    body.substring(medication + MEDICATION_HEADING.length(), end)));
+            offset = end;
         }
-        if (offset != body.length()) throw invalid("Usa Registro, Enfermedad, Tratamiento y Medicamento con sus encabezados originales");
         return entries;
+    }
+
+    private int sectionOffset(String body, String heading, int from, int end) {
+        int offset = body.indexOf(heading, from);
+        if (offset < 0 || offset + heading.length() > end) {
+            throw invalid("Usa Registro, Enfermedad, Tratamiento y Medicamento con sus encabezados originales");
+        }
+        return offset;
     }
 
     private HistoryResponse.Entry entry(String id, String disease, String treatment, String medication) {
@@ -410,7 +431,7 @@ public class PatientHistoryService {
     private Path filename(Patient patient) {
         String slug = Normalizer.normalize(patient.getName(), Normalizer.Form.NFD)
                 .replaceAll("\\p{M}+", "").toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
+                .replaceAll("(^-)|(-$)", "");
         if (slug.length() > 80) slug = slug.substring(0, 80).replaceAll("-$", "");
         if (slug.isEmpty()) slug = "paciente";
         return directory.resolve("paciente-" + patient.getId() + "-" + slug + ".md");

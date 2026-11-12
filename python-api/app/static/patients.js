@@ -18,8 +18,8 @@ export function initPatients(javaBase) {
   let loading = false;
   let busy = false;
   const pendingIndex = new Map();
-  const history = initHistory(javaBase, () => {
-    loadPatients({keepNotice: true});
+  const history = initHistory(javaBase, async () => {
+    await loadPatients({keepNotice: true});
     document.dispatchEvent(new Event('clinical-patients-changed'));
   });
 
@@ -179,8 +179,8 @@ export function initPatients(javaBase) {
   document.querySelector('#new-patient').addEventListener('click', () => openForm());
   document.querySelector('#refresh-java').addEventListener('click', () => loadPatients());
   search.addEventListener('input', renderRows);
-  document.addEventListener('patients-changed', () => {
-    if (!document.querySelector('#view-pacientes').hidden) loadPatients();
+  document.addEventListener('patients-changed', async () => {
+    if (!document.querySelector('#view-pacientes').hidden) await loadPatients();
   });
   async function openFromChat(event, prepare) {
     const {patient_id, note} = event.detail;

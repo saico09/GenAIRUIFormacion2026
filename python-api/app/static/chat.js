@@ -38,7 +38,7 @@ export function initChat(javaBase) {
     } catch (failure) { notice(error, failure.message); }
     finally {
       reload.disabled = false; patient.disabled = false; loadingPatients = false;
-      if (pendingReload) { pendingReload = false; loadPatients(); }
+      if (pendingReload) { pendingReload = false; await loadPatients(); }
     }
   }
 
@@ -113,7 +113,7 @@ export function initChat(javaBase) {
       submit.disabled = patient.disabled = question.disabled = reload.disabled = false;
       loading.hidden = true;
       answers.setAttribute('aria-busy', 'false');
-      if (pendingReload) { pendingReload = false; loadPatients(); }
+      if (pendingReload) { pendingReload = false; await loadPatients(); }
     }
   });
   reload.addEventListener('click', loadPatients);
@@ -144,5 +144,5 @@ export function initChat(javaBase) {
   });
   document.addEventListener('patients-changed', loadPatients);
   document.addEventListener('clinical-patients-changed', loadPatients);
-  loadPatients();
+  loadPatients().catch(failure => notice(error, failure.message));
 }

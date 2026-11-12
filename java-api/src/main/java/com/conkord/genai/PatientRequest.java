@@ -17,7 +17,8 @@ public record PatientRequest(
         @NotNull @JsonProperty("birth_date")
         @JsonDeserialize(using = BirthDateDeserializer.class) LocalDate birthDate,
         @NotBlank @Email @Size(max = 254)
-        @Pattern(regexp = ".+@[^@\\s]+\\.[^@\\s]+", message = "El dominio del email debe incluir un punto")
+        // Se fija el último @; el dominio se recorre sin repartir caracteres entre cuantificadores.
+        @Pattern(regexp = "(?>.+@)(?=[^@\\s][^@\\s]*\\.[^@\\s])[^@\\s]++", message = "El dominio del email debe incluir un punto")
         @JsonDeserialize(using = StrictTextDeserializer.class) String email) {
 
     public PatientRequest {

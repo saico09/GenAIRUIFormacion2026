@@ -18,7 +18,10 @@ const note = `Datos sintéticos. Enfermedad: ${values.disease}. Tratamiento: ${v
 const report = {started_at: new Date().toISOString(), real_services_used: true, real_llm: realLlm,
   mocks: realLlm ? [] : ['POST /clinical/proposals', 'POST /chat'], checks: []};
 const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object'
-  ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;
+  ? Object.fromEntries(Object.keys(value).sort((left, right) => {
+    if (left === right) return 0;
+    return left < right ? -1 : 1;
+  }).map(key => [key, canonical(value[key])])) : value;
 const hash = value => crypto.createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex');
 const check = (name, detail = {}) => { report.checks.push({name, passed: true, ...detail}); console.log(`PASS ${name}`); };
 async function request(base, endpoint, method = 'GET', body) {
