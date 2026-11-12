@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python-api"))
-from rag import source_label, validate_rag_answer
+from rag import source_label, validate_direct_answer, validate_rag_answer
 
 
 def get_json(url):
@@ -108,7 +108,7 @@ def main():
     assert outputs["respuesta"] == {"respuesta": validate_rag_answer(raw_rag, fragments, case["question"])} == {"respuesta": chat["rag_answer"]}
     llm_span = children[2]
     assert llm_span["span_kind"] == "LLM" and children[0]["span_kind"] == "RETRIEVER"
-    expected_options = {"temperature": 1, "num_ctx": 8192, "num_predict": 1024, "top_p": 0.95, "top_k": 64,
+    expected_options = {"temperature": 0.2, "num_ctx": 8192, "num_predict": 1024, "top_p": 0.95, "top_k": 64,
                         "draft_num_predict": 0}
     assert json.loads(attribute(llm_span, "llm.invocation_parameters")) == {**expected_options, "think": False}
 
@@ -137,8 +137,11 @@ def main():
     assert branches["direct"]["model"] == branches["rag"]["model"] == attribute(llm_span, "llm.model_name")
     assert branches["direct"]["prompt"] == case["question"] and branches["rag"]["prompt"] == prompt
     for branch, event in branches.items():
-        expected_raw = raw_rag if branch == "rag" else chat["direct_answer"]
-        assert event["status"] == "ok" and event["response"] == expected_raw
+        assert event["status"] == "ok"
+        if branch == "rag":
+            assert event["response"] == raw_rag
+        else:
+            assert validate_direct_answer(event["response"], case["question"]) == chat["direct_answer"]
         assert event["model_options"] == expected_options and event["think_requested"] is False
         assert type(event["thinking_returned"]) is bool and "thinking" not in event
     assert any(event["event"] == "http" and event["status"] == 200 for event in events)
@@ -152,7 +155,7 @@ def main():
         "checks": {"single_root_rag": True, "four_children_in_order": True,
                    "same_request_id": True, "inputs_outputs_match": True,
                    "loki_matches": True, "durations_positive": True,
-                   "rag_raw_to_validated_http": True},
+                   "rag_raw_to_validated_http": True, "direct_raw_to_validated_http": True},
     }
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)

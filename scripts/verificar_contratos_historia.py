@@ -20,6 +20,19 @@ USER_FIRST = "la paciente siente reflujos al comer masas, beber café y comer de
 USER_SECOND = USER_FIRST + "no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas"
 
 
+def guidance():
+    return {"possibilities": [{"cause": "dispepsia", "condition": "molestia tras comer"}],
+            "optional_details": ["localización", "duración"], "current_alert": None}
+
+
+def schema_variants(schema):
+    return schema.get("anyOf", [schema])
+
+
+def schema_modes(schema):
+    return sorted(mode for variant in schema_variants(schema) for mode in variant["properties"]["mode"]["enum"])
+
+
 def document(*, record=RECORD, disease="Enfermedad Prueba", treatment="Tratamiento Prueba",
              medication="Medicamento Prueba"):
     return ("# Historia clínica ficticia — Prueba Demo\n\n"
@@ -218,10 +231,10 @@ class OfflineContracts(unittest.TestCase):
         for fact in facts:
             self.assertIn(f"Respuesta: {fact['quote']}\nFuente: {fact['source']}", rendered)
             self.assertIn(RECORD, fact["source"])
-        schema = rag_response_schema(sources)
+        schema = schema_variants(rag_response_schema(sources))[0]
         self.assertEqual(schema["properties"]["facts"]["items"]["properties"]["source"]["enum"],
                          [source_label(source) for source in sources])
-        self.assertEqual(rag_response_schema([])["properties"]["facts"]["maxItems"], 0)
+        self.assertEqual(schema_variants(rag_response_schema([]))[0]["properties"]["facts"]["maxItems"], 0)
 
     def test_rag_rejects_fabricated_quote_source_and_non_json(self):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
@@ -233,7 +246,11 @@ class OfflineContracts(unittest.TestCase):
                json.dumps({"facts": [], "missing_information": "false"})]
         for answer in bad:
             with self.subTest(answer=answer):
-                self.assertEqual(validate_rag_answer(answer, sources), "No hay información suficiente")
+                if answer in (bad[0], bad[-1]):
+                    with self.assertRaises(ValueError):
+                        validate_rag_answer(answer, sources)
+                else:
+                    self.assertEqual(validate_rag_answer(answer, sources), "No hay información suficiente")
 
     def test_rag_abstains_on_missing_or_any_unrecorded_fact(self):
         sources = [point["payload"] for point in fragments_from_history(
@@ -272,7 +289,8 @@ class OfflineContracts(unittest.TestCase):
                 self.assertFalse(is_record_lookup(question))
                 properties = rag_response_schema([], question)["properties"]
                 self.assertEqual(properties["mode"]["enum"], ["symptom_guidance"])
-                self.assertEqual(properties["guidance"], {"type": "string", "minLength": 1, "maxLength": 1800})
+                self.assertEqual(properties["guidance"]["type"], "object")
+                self.assertEqual(properties["guidance"]["required"], ["possibilities", "optional_details", "current_alert"])
                 self.assertEqual(properties["questions"]["maxItems"], 0)
                 self.assertEqual(properties["facts"]["maxItems"], 0)
 
@@ -287,9 +305,11 @@ class OfflineContracts(unittest.TestCase):
             with self.subTest(question=question):
                 self.assertFalse(is_current_symptom_report(question))
                 self.assertTrue(is_record_lookup(question))
-                properties = rag_response_schema([], question)["properties"]
-                self.assertEqual(properties["mode"]["enum"], ["record_lookup", "symptom_guidance"])
-                self.assertEqual(properties["guidance"]["minLength"], 0)
+                schema = rag_response_schema([], question)
+                self.assertEqual(schema_modes(schema), ["record_lookup", "symptom_guidance"])
+                documentary = next(variant for variant in schema_variants(schema)
+                                   if variant["properties"]["mode"]["enum"] == ["record_lookup"])
+                self.assertEqual(documentary["properties"]["guidance"], {"type": "null"})
 
     def test_quoted_and_ambiguous_text_does_not_force_a_current_report(self):
         questions = ('¿Qué significa "tengo acidez" en el informe?',
@@ -300,14 +320,14 @@ class OfflineContracts(unittest.TestCase):
         for question in questions:
             with self.subTest(question=question):
                 self.assertFalse(is_current_symptom_report(question))
-                self.assertEqual(rag_response_schema([], question)["properties"]["mode"]["enum"],
+                self.assertEqual(schema_modes(rag_response_schema([], question)),
                                  ["record_lookup", "symptom_guidance"])
 
     def test_retrieved_narrative_never_decides_the_current_question_mode(self):
         source = {"source": FILENAME, "record_id": OTHER, "section": "Consulta", "text": USER_FIRST}
         schema = rag_response_schema([source], "¿Qué cirugía tiene programada?")
-        self.assertEqual(schema["properties"]["mode"]["enum"], ["record_lookup", "symptom_guidance"])
-        self.assertEqual(schema["properties"]["facts"]["items"]["properties"]["source"]["enum"],
+        self.assertEqual(schema_modes(schema), ["record_lookup", "symptom_guidance"])
+        self.assertEqual(schema_variants(schema)[0]["properties"]["facts"]["items"]["properties"]["source"]["enum"],
                          [source_label(source)])
         # Cambiar fuentes no decide si el texto actual relata síntomas.
         self.assertEqual(rag_response_schema([source], USER_SECOND)["properties"]["mode"],
@@ -322,7 +342,8 @@ class OfflineContracts(unittest.TestCase):
                    "facts": [{"source": source_label(source), "quote": USER_FIRST.strip()}], "questions": []}
         raw = json.dumps(payload)
         self.assertNotIn(payload["mode"], rag_response_schema([source], USER_SECOND)["properties"]["mode"]["enum"])
-        self.assertEqual(validate_rag_answer(raw, [source], USER_SECOND), "No hay información suficiente")
+        with self.assertRaises(ValueError):
+            validate_rag_answer(raw, [source], USER_SECOND)
         historical = validate_rag_answer(raw, [source], "¿Qué síntomas relató en consultas anteriores?")
         self.assertIn("Relato registrado (sin diagnóstico confirmado): " + USER_FIRST.strip(), historical)
         self.assertIn("Fuente: " + source_label(source), historical)
@@ -335,7 +356,8 @@ class OfflineContracts(unittest.TestCase):
             with self.subTest(length=len(guidance)):
                 raw = json.dumps({"mode": "symptom_guidance", "missing_information": True,
                                   "guidance": guidance, "facts": [], "questions": []})
-                self.assertEqual(validate_rag_answer(raw, [], USER_SECOND), "No hay información suficiente")
+                with self.assertRaises(ValueError):
+                    validate_rag_answer(raw, [], USER_SECOND)
 
     def test_missing_documentary_information_does_not_turn_into_general_guidance(self):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
@@ -351,20 +373,22 @@ class OfflineContracts(unittest.TestCase):
 
     def test_symptom_guidance_does_not_require_a_preexisting_diagnosis(self):
         raw = json.dumps({"mode": "symptom_guidance", "missing_information": True, "facts": [],
-                          "guidance": "Una posibilidad es dispepsia si predomina la molestia tras comer; faltan datos para priorizar una causa.",
+                          "guidance": guidance(),
                           "questions": []})
         rendered = validate_rag_answer(raw, [], "dolor de estómago desde ayer")
         self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
-        self.assertIn("Una posibilidad es dispepsia", rendered)
+        self.assertIn("Podría ser dispepsia", rendered)
         self.assertNotIn("?", rendered)
         self.assertNotIn("Fuente:", rendered)
 
     def test_guidance_schema_and_render_do_not_enable_a_questionnaire(self):
-        self.assertEqual(rag_response_schema([])["properties"]["questions"]["maxItems"], 0)
+        self.assertEqual(schema_variants(rag_response_schema([]))[0]["properties"]["questions"]["maxItems"], 0)
         raw = json.dumps({"mode": "symptom_guidance", "missing_information": True, "facts": [],
                           "guidance": "Podría ser reflujo por su relación con comidas.",
                           "questions": ["¿Tiene síntomas?", "¿Cuándo comenzó?"]})
-        rendered = validate_rag_answer(raw, [], "Acidez después de comer, sin otros síntomas.")
+        with self.assertRaises(ValueError):
+            validate_rag_answer(raw, [], "Acidez después de comer, sin otros síntomas.")
+        rendered = validate_rag_answer(raw, [], "Acidez después de comer, sin otros síntomas.", allow_legacy_guidance=True)
         self.assertNotIn("¿Tiene síntomas?", rendered)
         self.assertNotIn("¿Cuándo comenzó?", rendered)
         self.assertNotIn("Para aclarar la consulta", rendered)
@@ -382,7 +406,7 @@ class OfflineContracts(unittest.TestCase):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
         raw = json.dumps({"mode": "symptom_guidance", "missing_information": True,
                           "facts": [{"source": source_label(sources[0]), "quote": "Diagnóstico inventado"}],
-                          "guidance": "Conviene aclarar lo que describes [archivo-inventado.md].", "questions": []})
+                          "guidance": guidance(), "questions": []})
         rendered = validate_rag_answer(raw, sources, "dolor de cabeza")
         self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
         self.assertNotIn("Diagnóstico inventado", rendered)

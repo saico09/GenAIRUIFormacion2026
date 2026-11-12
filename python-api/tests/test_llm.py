@@ -127,6 +127,42 @@ class LLMTransportTests(unittest.TestCase):
         self.assertIsNone(event["done_reason"])
         self.assertIs(event["thinking_returned"], False)
 
+    def test_native_durations_use_milliseconds_and_keep_cache_count(self):
+        self.response.update(total_duration=91_234_567_890, load_duration=12_000_000_000,
+                             prompt_eval_duration=34_500_000_000, eval_duration=44_734_567_890,
+                             prompt_eval_cached_count=640)
+
+        llm.llamar_llm("Relato")
+
+        event = self.log.call_args.kwargs
+        self.assertEqual(event["ollama_total_duration_ms"], 91234.568)
+        self.assertEqual(event["ollama_load_duration_ms"], 12000.0)
+        self.assertEqual(event["ollama_prompt_eval_duration_ms"], 34500.0)
+        self.assertEqual(event["ollama_eval_duration_ms"], 44734.568)
+        self.assertEqual(event["prompt_eval_cached_count"], 640)
+        self.assertIn("duration_ms", event)  # Tiempo HTTP total medido por nuestra aplicación.
+
+    def test_missing_or_invalid_native_metrics_remain_unknown(self):
+        for value in (None, True, -1, "1000", 3.14):
+            with self.subTest(value=value):
+                self.response.update({name: value for name in (
+                    "total_duration", "load_duration", "prompt_eval_duration", "eval_duration", "prompt_eval_cached_count")})
+                llm.llamar_llm("Relato")
+                event = self.log.call_args.kwargs
+                for name in ("ollama_total_duration_ms", "ollama_load_duration_ms",
+                             "ollama_prompt_eval_duration_ms", "ollama_eval_duration_ms", "prompt_eval_cached_count"):
+                    self.assertIsNone(event[name])
+
+    def test_incomplete_response_keeps_timings_without_exposing_partial_text(self):
+        self.response.update(response="PARTIAL_SENTINEL_742", done_reason="length",
+                             load_duration=0, eval_duration=123_000_000)
+        with self.assertRaises(llm.LLMUnavailable):
+            llm.llamar_llm("Relato")
+        event = self.log.call_args.kwargs
+        self.assertEqual(event["ollama_load_duration_ms"], 0.0)
+        self.assertEqual(event["ollama_eval_duration_ms"], 123.0)
+        self.assertNotIn("PARTIAL_SENTINEL_742", repr(self.log.call_args_list))
+
     def test_transport_failure_logs_no_exception_body_or_fabricated_tokens(self):
         self.request.side_effect = OSError("PRIVATE_TRANSPORT_DETAIL_742")
 

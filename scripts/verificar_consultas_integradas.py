@@ -14,7 +14,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'evidencias/consultas-automaticas-2026-11-07/ana-consultas.json'
-CHAT_MODEL = os.getenv('CHAT_MODEL', 'gemma4:12b')
+CHAT_MODEL = os.getenv('CHAT_MODEL', 'qwen3.5:4b-q4_K_M')
 CASES = [
     ('c5a3b358-1e9d-468f-b29f-0bbe49cd4496', 'tiene indigestión aguda y le duele la cabeza'),
     ('aac69259-a232-4d86-be8a-58c50228f4fe', 'tiene dolor estomacal y diarrea'),

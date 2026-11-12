@@ -10,7 +10,7 @@ from urllib.request import Request, urlopen
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'python-api'))
 from rag import RAG_SYSTEM, build_rag_prompt, rag_response_schema, validate_rag_answer
 
-OPTIONS = {'temperature': 1, 'num_ctx': 8192, 'num_predict': 1024,
+OPTIONS = {'temperature': 0.2, 'num_ctx': 8192, 'num_predict': 1024,
            'top_p': 0.95, 'top_k': 64, 'draft_num_predict': 0}
 
 CASES = [
@@ -34,7 +34,7 @@ def http(url, data=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--models', nargs='+', default=['qwen3:4b-instruct-2507-q4_K_M', 'gemma4:12b'])
+    parser.add_argument('--models', nargs='+', default=['qwen3:4b-instruct-2507-q4_K_M', 'qwen3.5:4b-q4_K_M'])
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cases', nargs='*')
     args = parser.parse_args()

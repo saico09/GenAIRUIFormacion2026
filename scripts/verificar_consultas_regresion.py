@@ -23,7 +23,7 @@ def main():
     parser.add_argument("--java-url", default="http://127.0.0.1:8080")
     parser.add_argument("--qdrant-url", default="http://127.0.0.1:6333")
     parser.add_argument("--postgres-container", default="genairuiformacion2026-postgres-1")
-    parser.add_argument("--expected-model", default="gemma4:12b")
+    parser.add_argument("--expected-model", default="qwen3.5:4b-q4_K_M")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--trace", action="store_true", help="Comprueba además Phoenix/Loki con una quinta consulta del mismo temporal")
     args = parser.parse_args()
@@ -96,8 +96,9 @@ def main():
         print(json.dumps({"case": name, "passed": row["passed"], "seconds": row["seconds"]}, ensure_ascii=False), flush=True)
         return row
 
-    original_patients = {p["id"]: p for p in http(args.java_url, "GET", "/patients") if p["id"] in (1, 2, 3)}
-    protected_vectors = {pid: digest(points(pid)) for pid in (2, 3)}
+    original_patients = {p["id"]: p for p in http(args.java_url, "GET", "/patients") if p["id"] in (1, 2, 3, 4, 24)}
+    original_histories = {pid: http(args.java_url, "GET", f"/patients/{pid}/history") for pid in original_patients}
+    protected_vectors = {pid: digest(points(pid)) for pid in original_patients}
     try:
         patient = http(args.java_url, "POST", "/patients", {
             "name": f"Paciente QA {marker}", "birth_date": "1990-01-01", "email": f"consulta-{marker}@example.com",
@@ -203,10 +204,14 @@ def main():
             report["temporary_patient_and_points_removed"] = not points(patient["id"])
         after = {p["id"]: p for p in http(args.java_url, "GET", "/patients") if p["id"] in original_patients}
         report["original_patients_preserved"] = after == original_patients
-        report["bruno_carla_vectors_preserved"] = all(digest(points(pid)) == value for pid, value in protected_vectors.items())
+        report["original_histories_preserved"] = all(
+            http(args.java_url, "GET", f"/patients/{pid}/history") == value for pid, value in original_histories.items())
+        report["original_vectors_preserved"] = all(digest(points(pid)) == value for pid, value in protected_vectors.items())
+        report["protected_patient_ids"] = sorted(original_patients)
         report["finished_at"] = datetime.now(timezone.utc).isoformat()
         checkpoint()
-    assert report["temporary_patient_and_points_removed"] and report["original_patients_preserved"] and report["bruno_carla_vectors_preserved"]
+    assert all(report[key] for key in ("temporary_patient_and_points_removed", "original_patients_preserved",
+                                       "original_histories_preserved", "original_vectors_preserved"))
     print(json.dumps({"passed": True, "cases": len(report["cases"]), "checks": len(report["checks"]), "cleanup": True}, ensure_ascii=False), flush=True)
 
 

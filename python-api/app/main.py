@@ -21,7 +21,7 @@ from app.clinical import (ClinicalPatientMissing, ClinicalUnavailable, Consultat
                           get_clinical_patient, get_consultation, save_consultation, sync_history)
 from app.clinical_proposals import propose_entries
 from grafo import grafo
-from rag import DIRECT_SYSTEM
+from rag import DIRECT_SYSTEM, direct_response_schema, validate_direct_answer
 
 
 @asynccontextmanager
@@ -62,13 +62,16 @@ def chat(body: ChatIn, request: Request):
         existing = get_consultation(body.patient_id, execution_id, body.question)
         if existing is not None:
             return consultation_result(body.patient_id, existing)
-        direct_answer = llamar_llm(body.question, system=DIRECT_SYSTEM)
         with tracer.start_as_current_span("rag", attributes={
             "openinference.span.kind": "CHAIN", "request_id": request.state.request_id,
         }) as span:
             state = grafo.invoke({"pregunta": body.question, "patient_id": body.patient_id, "patient_name": patient["name"],
                                   "request_id": request.state.request_id})
             span.set_status(StatusCode.OK)
+        # Agrupar las dos generaciones evita alternar LLM → embeddings → LLM.
+        # La rama directa conserva la misma pregunta y no recibe el contexto RAG.
+        direct_raw = llamar_llm(body.question, system=DIRECT_SYSTEM, schema=direct_response_schema(body.question))
+        direct_answer = validate_direct_answer(direct_raw, body.question)
         result = {"direct_answer": direct_answer, "rag_answer": state["respuesta"], "sources": state["fragmentos"]}
         saved = save_consultation(body.patient_id, execution_id, body.question, result, CHAT_MODEL)
         return consultation_result(body.patient_id, saved)

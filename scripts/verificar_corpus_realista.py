@@ -65,7 +65,7 @@ def vector_snapshot():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--java-url", default="http://127.0.0.1:8080")
-    parser.add_argument("--model", default="gemma4:12b")
+    parser.add_argument("--model", default="qwen3.5:4b-q4_K_M")
     parser.add_argument("--cases", help="Nombres separados por coma; por defecto los catorce casos")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -92,7 +92,7 @@ def main():
         allowed[pid] = {source_label(p["payload"]): p["payload"]["text"] for p in fragments_from_history(parsed)}
     report = {"started_at": datetime.now(timezone.utc).isoformat(), "scope": __doc__,
               "corpus_version": corpus["version"], "model": args.model,
-              "options": {"temperature": 1, "num_ctx": 8192, "num_predict": 1024,
+              "options": {"temperature": 0.2, "num_ctx": 8192, "num_predict": 1024,
                           "top_p": 0.95, "top_k": 64, "draft_num_predict": 0},
               "think": False,
               "source_rag_sha256": hashlib.sha256((ROOT / "python-api/rag.py").read_bytes()).hexdigest(),
