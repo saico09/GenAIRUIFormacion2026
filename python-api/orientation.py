@@ -3,6 +3,15 @@ import re
 import unicodedata
 
 
+def _affirmative_quote(question: str, quote: str) -> bool:
+    # Revisar toda la cita, incluso si termina en puntuación o reúne varias frases.
+    # El prefijo conserva una negación que el modelo haya dejado fuera de la cita.
+    before = question[:question.index(quote)]
+    context = re.split(r"[.!?;,\n]|\bpero\b", before, flags=re.I)[-1] + quote
+    normalized = "".join(c for c in unicodedata.normalize("NFD", context.casefold()) if not unicodedata.combining(c))
+    return not re.search(r"\b(?:no|sin|niega|niego|si|hubiera|podria)\b", normalized)
+
+
 def orientation_schema(question: str = "") -> dict:
     def text(limit):
         return {"type": "string", "minLength": 1, "maxLength": limit,
@@ -12,7 +21,8 @@ def orientation_schema(question: str = "") -> dict:
     candidates = [question.strip(), *re.split(r"[.!?;\n]+", question)]
     quotes = list(dict.fromkeys(candidate.strip() for candidate in candidates
                                if 0 < len(candidate.strip()) <= 240
-                               and re.fullmatch(text(240)["pattern"], candidate.strip())))
+                               and re.fullmatch(text(240)["pattern"], candidate.strip())
+                               and _affirmative_quote(question, candidate.strip())))
     return {"type": "object", "properties": {
         "possibilities": {"type": "array", "maxItems": 3, "items": {
             "type": "object", "properties": {
@@ -47,10 +57,7 @@ def render_orientation(value: dict, question: str, *, background: str = "") -> s
         if alert not in question:
             raise ValueError("La alerta no cita el relato actual")
         # Una cita literal negada o hipotética tampoco acredita una alarma actual.
-        prefix = question[:question.index(alert) + len(alert)]
-        clause = re.split(r"[.!?;,\n]|\bpero\b", prefix, flags=re.I)[-1]
-        normalized = "".join(c for c in unicodedata.normalize("NFD", clause.casefold()) if not unicodedata.combining(c))
-        if re.search(r"\b(?:no|sin|niega|niego|si|hubiera|podria)\b", normalized):
+        if not _affirmative_quote(question, alert):
             raise ValueError("La evidencia de alarma es negativa o condicional")
         parts.append(f"Busca atención urgente por lo que relatas: «{alert}».")
     for possibility in possibilities:

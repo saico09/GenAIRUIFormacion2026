@@ -68,11 +68,30 @@ class OrientationTests(unittest.TestCase):
         question = "No vomito sangre, aunque me siento cansada. Me duele la cabeza."
         quotes = orientation_schema(question)["properties"]["current_alert"]["enum"]
         self.assertIn(None, quotes)
-        self.assertIn("No vomito sangre, aunque me siento cansada", quotes)
+        self.assertNotIn("No vomito sangre, aunque me siento cansada", quotes)
+        self.assertIn("Me duele la cabeza", quotes)
         self.assertNotIn("vomito sangre", quotes)
         self.assertTrue(all(quote is None or quote in question for quote in quotes))
         long_sentence = "No " + "dato " * 60 + "vomito sangre"
         self.assertEqual(orientation_schema(long_sentence)["properties"]["current_alert"]["enum"], [None])
+
+    def test_complete_negative_and_conditional_quotes_cannot_bypass_with_punctuation(self):
+        for question in ("No estoy vomitando sangre.", "Si vomitara sangre buscaría ayuda.",
+                         "No estoy vomitando sangre;", "No estoy vomitando sangre. Me siento cansada.",
+                         "Estoy vomitando sangre ahora y no tengo fiebre."):
+            for quote in (question, question.rstrip(".;")):
+                with self.subTest(question=question, quote=quote):
+                    self.assertNotIn(quote, orientation_schema(question)["properties"]["current_alert"]["enum"])
+                    with self.assertRaises(ValueError):
+                        render_orientation({**guidance(), "current_alert": quote}, question)
+
+    def test_affirmative_sentence_and_combined_quote_keep_urgent_action(self):
+        for question, quote in (("Estoy vomitando sangre ahora.", "Estoy vomitando sangre ahora."),
+                                ("Estoy vomitando sangre ahora. Me siento mareada.", "Estoy vomitando sangre ahora. Me siento mareada."),
+                                ("No tengo fiebre. Estoy vomitando sangre ahora.", "Estoy vomitando sangre ahora")):
+            with self.subTest(question=question):
+                self.assertIn(quote, orientation_schema(question)["properties"]["current_alert"]["enum"])
+                self.assertTrue(render_orientation({**guidance(), "current_alert": quote}, question).startswith("Busca atención urgente"))
 
     def test_current_alert_can_coexist_with_a_different_negated_fact(self):
         for question in ("No tengo fiebre, pero estoy vomitando sangre ahora.",

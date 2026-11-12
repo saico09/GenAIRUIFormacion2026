@@ -63,6 +63,28 @@ for branch in ("direct", "rag"):
         cases.append({"branch": branch, "case": label, "schema_valid": schema_valid,
                       "runtime_valid": runtime_valid, "passed": schema_valid == runtime_valid == expected})
 for branch in ("direct", "rag"):
+    for label, question, quote, expected in (
+            ("negative_final_period", "No estoy vomitando sangre.", "No estoy vomitando sangre.", False),
+            ("conditional_final_period", "Si vomitara sangre buscaría ayuda.", "Si vomitara sangre buscaría ayuda.", False),
+            ("negative_combined_quote", "No vomito sangre. Estoy cansada.", "No vomito sangre. Estoy cansada.", False),
+            ("negative_without_period", "No estoy vomitando sangre", "No estoy vomitando sangre", False),
+            ("affirmative_final_period", "Estoy vomitando sangre ahora.", "Estoy vomitando sangre ahora.", True),
+            ("affirmative_combined_quote", "Estoy vomitando sangre. Me siento mareada.", "Estoy vomitando sangre. Me siento mareada.", True),
+            ("separate_unrelated_negation", "No tengo fiebre. Estoy vomitando sangre.", "Estoy vomitando sangre", True),
+            ("mixed_clause_conservative_rejection", "Estoy vomitando sangre y no tengo fiebre.", "Estoy vomitando sangre y no tengo fiebre.", False)):
+        schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([], question)
+        extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
+        value = {"mode": "symptom_guidance", "guidance": {**guide, "current_alert": quote}, **extras}
+        try:
+            raw = json.dumps(value)
+            result = validate_direct_answer(raw, question) if branch == "direct" else validate_rag_answer(raw, [], question)
+            runtime_valid = bool(result)
+        except ValueError:
+            runtime_valid = False
+        schema_valid = Draft202012Validator(schema).is_valid(value)
+        cases.append({"branch": branch, "case": label, "schema_valid": schema_valid,
+                      "runtime_valid": runtime_valid, "passed": schema_valid == runtime_valid == expected})
+for branch in ("direct", "rag"):
     question = "¿Qué cirugía está registrada?"
     schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([], question)
     extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
