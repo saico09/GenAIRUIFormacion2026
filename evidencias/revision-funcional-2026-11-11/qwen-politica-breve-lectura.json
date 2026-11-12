@@ -1,0 +1,398 @@
+{
+  "started_at": "2026-11-12T01:03:14.053210+00:00",
+  "scope": "Comparación real en lectura, sin /chat ni persistencia; por defecto sólo muestra el plan.",
+  "cases": {
+    "agudo": "dolor de estómago agudo",
+    "estomago": "dolor de estómago"
+  },
+  "configuration": {
+    "CHAT_MODEL": "qwen3:4b-instruct-2507-q4_K_M",
+    "TEMPERATURE": 0.2,
+    "MODEL_OPTIONS": {
+      "temperature": 0.2,
+      "num_ctx": 8192,
+      "num_predict": 1024,
+      "top_p": 0.95,
+      "top_k": 64,
+      "draft_num_predict": 0
+    },
+    "THINK": false,
+    "TIMEOUT_SECONDS": 180
+  },
+  "model_override": "qwen3:4b-instruct-2507-q4_K_M",
+  "temperature_override": 0.2,
+  "experimental_policy": "Da una orientación provisional breve, sin preguntas. Ante un síntoma concreto, aunque sea breve, ofrece dos o tres causas frecuentes pertinentes: «Podría ser A si además hubiera X; B si hubiera Y». Cada posibilidad necesita una condición que la apoyaría; esa condición no es un hecho del paciente.\nPrioriza una causa sólo con datos realmente aportados. No uses una ubicación, desencadenante o síntoma meramente posible para justificarla como principal, ni atribuyas el cuadro a un antecedente por coincidir. No infieras intensidad, inicio súbito, localización, duración o desencadenantes. «Agudo» por sí solo no describe intensidad ni inicio súbito.\nIndica atención urgente como primera frase sólo ante una alarma actual inequívoca. Si la alarma no se relató, cualquier recomendación de urgencia debe quedar condicionada explícitamente a que aparezca. No descartes enfermedades ni prescribas medicamentos o dosis.\nSi sólo hay malestar general sin síntoma reconocible, explica ese límite sin adivinar causas. Termina la orientación sugiriendo dos o tres detalles faltantes que ayudarían a afinarla, sin exigir respuesta ni volver a pedir datos aportados. Máximo 180 palabras.",
+  "experimental_policy_sha256": "66313b640b57831aa1014ac5131526fd090c7a0066a103ce4adc0530760b0757",
+  "order": [
+    "retrieval",
+    "rag",
+    "direct"
+  ],
+  "llm_calls": 4,
+  "patient_id": 1,
+  "manual_semantic_review_required": true,
+  "source_sha256": {
+    "rag.py": "b1ef3ab20b369c1b7757a3fb57450779f47ab355df93713062f44a02517be216",
+    "app/llm.py": "8442915d28740633b8c9ba0903cc2e9e669e64c6fd436bcd46f71fa362148528",
+    "app/main.py": "cf619c4d19b7f5d46a69c274a28beb4f92349052444dc101e6344dc22e636d33"
+  },
+  "loaded_models_before": {
+    "models": []
+  },
+  "index_before": {
+    "count": 19,
+    "sha256": "72c39a965ed1c89aac6cd6875773414f46eaf064b956dad048fae58b0f1ac919"
+  },
+  "model_metadata": {
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen3",
+      "families": [
+        "qwen3"
+      ],
+      "parameter_size": "4.0B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "tools",
+      "thinking",
+      "completion"
+    ],
+    "thinking": null,
+    "parameters": "stop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.7\ntop_k                          20\ntop_p                          0.8\nrepeat_penalty                 1"
+  },
+  "cases_results": [
+    {
+      "case": "agudo",
+      "question": "dolor de estómago agudo",
+      "branch": "rag",
+      "elapsed_seconds": 13.693,
+      "retrieval_seconds": 8.478,
+      "thinking_returned": false,
+      "done_reason": "stop",
+      "metrics": {
+        "total_duration": 11662725900,
+        "load_duration": 5693401700,
+        "prompt_eval_duration": 590249000,
+        "eval_duration": 5348381000,
+        "prompt_eval_count": 1629,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 413
+      },
+      "complete": true,
+      "raw_final_response": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"guidance\": \"Podría ser una crisis de reflujo gastroesofágico si además hubiera regurgitación ácida o ardor detrás del esternón; una gastritis si hubiera sensación de hinchazón o malestar en el abdomen; o una obstrucción intestinal si hubiera vómitos frecuentes o distensión abdominal. El dolor de estómago agudo no está documentado en el historial, pero el paciente tiene ERGE, lo que aumenta la posibilidad de una exacerbación de esa condición. No se ha mencionado desencadenante, duración ni intensidad. Aunque el dolor es agudo, no se ha indicado si es nuevo, si se asocia con otros síntomas o si requiere atención médica inmediata. Si el dolor persiste o empeora, o si aparece vómito, fiebre o dificultad para tragar, debe evaluarse con atención urgente.\",\n  \"facts\": [\n    {\n      \"source\": \"[paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\",\n      \"quote\": \"Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo.\"\n    }\n  ],\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nPodría ser una crisis de reflujo gastroesofágico si además hubiera regurgitación ácida o ardor detrás del esternón; una gastritis si hubiera sensación de hinchazón o malestar en el abdomen; o una obstrucción intestinal si hubiera vómitos frecuentes o distensión abdominal. El dolor de estómago agudo no está documentado en el historial, pero el paciente tiene ERGE, lo que aumenta la posibilidad de una exacerbación de esa condición. No se ha mencionado desencadenante, duración ni intensidad. Aunque el dolor es agudo, no se ha indicado si es nuevo, si se asocia con otros síntomas o si requiere atención médica inmediata. Si el dolor persiste o empeora, o si aparece vómito, fiebre o dificultad para tragar, debe evaluarse con atención urgente.\n\nAntecedentes disponibles\nRespuesta: Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "sources": [
+        {
+          "score": 0.60525936,
+          "patient_id": 1,
+          "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+          "source": "paciente-1-ana-demo.md",
+          "section": "Enfermedad",
+          "text": "Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo."
+        },
+        {
+          "score": 0.59215546,
+          "patient_id": 1,
+          "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+          "source": "paciente-1-ana-demo.md",
+          "section": "Medicamento",
+          "text": "Ana Demo recibe omeprazol para el reflujo gastroesofágico, según el registro simulado del 2026-10-20. No constan dosis, frecuencia ni duración de la pauta en este informe. No se ha establecido que las molestias comunicadas en consultas posteriores sean causadas por ese medicamento."
+        },
+        {
+          "score": 0.6936847,
+          "patient_id": 1,
+          "record_id": "c22bbb4a-a949-45ff-843b-5ac483450cec",
+          "source": "paciente-1-ana-demo.md",
+          "section": "Consulta",
+          "text": "Consulta registrada el 2026-11-12T00:34:48.558190Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\ndolor de estómago agudo"
+        }
+      ],
+      "no_questions": true
+    },
+    {
+      "case": "agudo",
+      "question": "dolor de estómago agudo",
+      "branch": "direct",
+      "elapsed_seconds": 4.717,
+      "retrieval_seconds": 8.478,
+      "thinking_returned": false,
+      "done_reason": "stop",
+      "metrics": {
+        "total_duration": 2679698300,
+        "load_duration": 25420800,
+        "prompt_eval_duration": 228925000,
+        "eval_duration": 2227521000,
+        "prompt_eval_count": 457,
+        "prompt_eval_cached_count": 21,
+        "eval_count": 182
+      },
+      "complete": true,
+      "raw_final_response": "Atención urgente si el dolor es intenso, persiste más de 30 minutos o se asocia a vómitos, fiebre o dificultad para respirar.  \n\nPodría ser gastritis si hubiera consumo de alcohol o alimentos irritantes; pancreatitis si hubiera náuseas y vómitos; perforación intestinal si hubiera fiebre o sangrado gastrointestinal.  \n\nSin datos sobre intensidad, duración, localización o desencadenantes, no se puede establecer causa.  \n\nRequiere:  \n- Localización del dolor (epigastrio, bajo abdomen, etc.)  \n- ¿Ha habido vómitos, fiebre o sangrado?  \n- ¿Qué alimentos o medicamentos recientes?  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Atención urgente si el dolor es intenso, persiste más de 30 minutos o se asocia a vómitos, fiebre o dificultad para respirar.  \n\nPodría ser gastritis si hubiera consumo de alcohol o alimentos irritantes; pancreatitis si hubiera náuseas y vómitos; perforación intestinal si hubiera fiebre o sangrado gastrointestinal.  \n\nSin datos sobre intensidad, duración, localización o desencadenantes, no se puede establecer causa.  \n\nRequiere:  \n- Localización del dolor (epigastrio, bajo abdomen, etc.)  \n- ¿Ha habido vómitos, fiebre o sangrado?  \n- ¿Qué alimentos o medicamentos recientes?  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "sources": [],
+      "no_questions": false
+    },
+    {
+      "case": "estomago",
+      "question": "dolor de estómago",
+      "branch": "rag",
+      "elapsed_seconds": 12.679,
+      "retrieval_seconds": 8.825,
+      "thinking_returned": false,
+      "done_reason": "stop",
+      "metrics": {
+        "total_duration": 10657376900,
+        "load_duration": 5115174400,
+        "prompt_eval_duration": 593769000,
+        "eval_duration": 4906361000,
+        "prompt_eval_count": 1627,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 373
+      },
+      "complete": true,
+      "raw_final_response": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"guidance\": \"Podría ser una crisis de reflujo gastroesofágico si además hubiera regurgitación ácida o ardor detrás del esternón; una gastritis si hubiera sensación de distensión o malestar post-prandial; una obstrucción intestinal si hubiera vómitos o distensión abdominal. El dolor de estómago agudo no está documentado en el historial, pero el paciente tiene ERGE, lo que aumenta la posibilidad de que el síntoma esté relacionado con ese cuadro. No se ha mencionado desencadenante, duración ni intensidad. Aunque el dolor es agudo, no se especifica si es súbito, ni si se asocia a alimentos o posición corporal. Se requiere confirmación de localización, duración y desencadenantes para afinar el diagnóstico.\",\n  \"facts\": [\n    {\n      \"source\": \"[paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\",\n      \"quote\": \"Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01.\"\n    }\n  ],\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nPodría ser una crisis de reflujo gastroesofágico si además hubiera regurgitación ácida o ardor detrás del esternón; una gastritis si hubiera sensación de distensión o malestar post-prandial; una obstrucción intestinal si hubiera vómitos o distensión abdominal. El dolor de estómago agudo no está documentado en el historial, pero el paciente tiene ERGE, lo que aumenta la posibilidad de que el síntoma esté relacionado con ese cuadro. No se ha mencionado desencadenante, duración ni intensidad. Aunque el dolor es agudo, no se especifica si es súbito, ni si se asocia a alimentos o posición corporal. Se requiere confirmación de localización, duración y desencadenantes para afinar el diagnóstico.\n\nAntecedentes disponibles\nRespuesta: Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01.\nFuente: [paciente-1-ana-demo.md/263e4c3c-8db4-5b09-a711-bebc55a0828f/Enfermedad]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "sources": [
+        {
+          "score": 0.5985114,
+          "patient_id": 1,
+          "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+          "source": "paciente-1-ana-demo.md",
+          "section": "Enfermedad",
+          "text": "Ana Demo tiene enfermedad por reflujo gastroesofágico (ERGE), registrada en la consulta simulada del 2026-10-20. Refiere ardor detrás del esternón y regurgitación ácida después de cenas abundantes, sobre todo al acostarse, desde el 2026-10-01. En ese episodio negó dificultad para tragar, pérdida de peso involuntaria y sangrado digestivo."
+        },
+        {
+          "score": 0.5826118,
+          "patient_id": 1,
+          "record_id": "263e4c3c-8db4-5b09-a711-bebc55a0828f",
+          "source": "paciente-1-ana-demo.md",
+          "section": "Medicamento",
+          "text": "Ana Demo recibe omeprazol para el reflujo gastroesofágico, según el registro simulado del 2026-10-20. No constan dosis, frecuencia ni duración de la pauta en este informe. No se ha establecido que las molestias comunicadas en consultas posteriores sean causadas por ese medicamento."
+        },
+        {
+          "score": 0.6538024,
+          "patient_id": 1,
+          "record_id": "c22bbb4a-a949-45ff-843b-5ac483450cec",
+          "source": "paciente-1-ana-demo.md",
+          "section": "Consulta",
+          "text": "Consulta registrada el 2026-11-12T00:34:48.558190Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\ndolor de estómago agudo"
+        }
+      ],
+      "no_questions": true
+    },
+    {
+      "case": "estomago",
+      "question": "dolor de estómago",
+      "branch": "direct",
+      "elapsed_seconds": 4.652,
+      "retrieval_seconds": 8.825,
+      "thinking_returned": false,
+      "done_reason": "stop",
+      "metrics": {
+        "total_duration": 2624067100,
+        "load_duration": 10804900,
+        "prompt_eval_duration": 248505000,
+        "eval_duration": 2229716000,
+        "prompt_eval_count": 455,
+        "prompt_eval_cached_count": 21,
+        "eval_count": 179
+      },
+      "complete": true,
+      "raw_final_response": "Dolor de estómago podría ser gastritis si hubiera sensación de hinchazón o malestar después de comer; úlcera si hubiera dolor que empeora con el estómago vacío; infección por H. pylori si hubiera síntomas como náuseas o vómitos.  \n\nNo se puede evaluar sin más datos como localización, duración, empeoramiento o factores desencadenantes.  \n\nPara afinar la hipótesis, sería útil saber:  \n- Si el dolor es agudo o crónico  \n- Si se asocia con comidas o alimentos específicos  \n- Si hay vómitos, náuseas o alteración del hambre  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Dolor de estómago podría ser gastritis si hubiera sensación de hinchazón o malestar después de comer; úlcera si hubiera dolor que empeora con el estómago vacío; infección por H. pylori si hubiera síntomas como náuseas o vómitos.  \n\nNo se puede evaluar sin más datos como localización, duración, empeoramiento o factores desencadenantes.  \n\nPara afinar la hipótesis, sería útil saber:  \n- Si el dolor es agudo o crónico  \n- Si se asocia con comidas o alimentos específicos  \n- Si hay vómitos, náuseas o alteración del hambre  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "sources": [],
+      "no_questions": true
+    }
+  ],
+  "resource_samples": [
+    {
+      "at": "2026-11-12T01:03:16.080785+00:00",
+      "phase": "before_retrieval",
+      "ollama_ps": {
+        "models": []
+      },
+      "gpu_csv": "6144, 396, 33, 2",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:03:23.165933+00:00",
+      "phase": "agudo:retrieval",
+      "ollama_ps": {
+        "models": [
+          {
+            "name": "nomic-embed-text:latest",
+            "model": "nomic-embed-text:latest",
+            "size": 335743549,
+            "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "nomic-bert",
+              "families": [
+                "nomic-bert"
+              ],
+              "parameter_size": "137M",
+              "quantization_level": "F16"
+            },
+            "expires_at": "2026-11-11T22:04:20.4285764-03:00",
+            "size_vram": 335743549,
+            "context_length": 2048,
+            "runner": "llamacpp"
+          }
+        ]
+      },
+      "gpu_csv": "6144, 856, 4, 0",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:03:30.231716+00:00",
+      "phase": "agudo:rag",
+      "ollama_ps": {
+        "models": []
+      },
+      "gpu_csv": "6144, 4230, 4, 0",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:03:37.349373+00:00",
+      "phase": "agudo:rag",
+      "ollama_ps": {
+        "models": [
+          {
+            "name": "qwen3:4b-instruct-2507-q4_K_M",
+            "model": "qwen3:4b-instruct-2507-q4_K_M",
+            "size": 3877571133,
+            "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen3",
+              "families": [
+                "qwen3"
+              ],
+              "parameter_size": "4.0B",
+              "quantization_level": "Q4_K_M"
+            },
+            "expires_at": "2026-11-11T22:04:38.2515128-03:00",
+            "size_vram": 3877571133,
+            "context_length": 8192,
+            "runner": "llamacpp"
+          }
+        ]
+      },
+      "gpu_csv": "6144, 4238, 4, 0",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:03:44.434911+00:00",
+      "phase": "estomago:retrieval",
+      "ollama_ps": {
+        "models": []
+      },
+      "gpu_csv": "6144, 502, 10, 0",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:03:51.524254+00:00",
+      "phase": "estomago:retrieval",
+      "ollama_ps": {
+        "models": [
+          {
+            "name": "nomic-embed-text:latest",
+            "model": "nomic-embed-text:latest",
+            "size": 335743549,
+            "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "nomic-bert",
+              "families": [
+                "nomic-bert"
+              ],
+              "parameter_size": "137M",
+              "quantization_level": "F16"
+            },
+            "expires_at": "2026-11-11T22:04:47.6623151-03:00",
+            "size_vram": 335743549,
+            "context_length": 2048,
+            "runner": "llamacpp"
+          }
+        ]
+      },
+      "gpu_csv": "6144, 841, 10, 0",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:03:58.605946+00:00",
+      "phase": "estomago:rag",
+      "ollama_ps": {
+        "models": [
+          {
+            "name": "qwen3:4b-instruct-2507-q4_K_M",
+            "model": "qwen3:4b-instruct-2507-q4_K_M",
+            "size": 3877571133,
+            "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen3",
+              "families": [
+                "qwen3"
+              ],
+              "parameter_size": "4.0B",
+              "quantization_level": "Q4_K_M"
+            },
+            "expires_at": "2026-11-11T22:05:00.6413217-03:00",
+            "size_vram": 3877571133,
+            "context_length": 8192,
+            "runner": "llamacpp"
+          }
+        ]
+      },
+      "gpu_csv": "6144, 4239, 90, 79",
+      "gpu_exit_code": 0
+    },
+    {
+      "at": "2026-11-12T01:04:05.729228+00:00",
+      "phase": "estomago:direct",
+      "ollama_ps": {
+        "models": [
+          {
+            "name": "qwen3:4b-instruct-2507-q4_K_M",
+            "model": "qwen3:4b-instruct-2507-q4_K_M",
+            "size": 3877571133,
+            "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen3",
+              "families": [
+                "qwen3"
+              ],
+              "parameter_size": "4.0B",
+              "quantization_level": "Q4_K_M"
+            },
+            "expires_at": "2026-11-11T22:05:04.4747395-03:00",
+            "size_vram": 3877571133,
+            "context_length": 8192,
+            "runner": "llamacpp"
+          }
+        ]
+      },
+      "gpu_csv": "6144, 4238, 93, 80",
+      "gpu_exit_code": 0
+    }
+  ],
+  "checks": {
+    "markdown_unchanged": true,
+    "qdrant_unchanged": true
+  },
+  "technical_passed": true,
+  "index_after": {
+    "count": 19,
+    "sha256": "72c39a965ed1c89aac6cd6875773414f46eaf064b956dad048fae58b0f1ac919"
+  },
+  "finished_at": "2026-11-12T01:04:11.195525+00:00"
+}

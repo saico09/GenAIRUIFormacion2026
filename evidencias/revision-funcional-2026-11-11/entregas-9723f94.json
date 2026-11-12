@@ -1,0 +1,191 @@
+{
+  "closed_at": "2026-11-12T01:53:28.415345+00:00",
+  "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+  "status": "functional_checks_passed_with_documented_semantic_limits",
+  "model": "qwen3.5:4b-q4_K_M",
+  "temperature": 0.2,
+  "weeks": [
+    {
+      "week": 4,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "answer_rag",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "functional_pass_with_semantic_limits",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    },
+    {
+      "week": 5,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "answer_rag",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "not_performed",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    },
+    {
+      "week": 6,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "answer_rag",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "not_performed",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    },
+    {
+      "week": 7,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "answer_rag",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "not_performed",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    },
+    {
+      "week": 8,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "LangGraph",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "functional_pass_with_semantic_limits",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    },
+    {
+      "week": 9,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "LangGraph",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "not_performed",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    },
+    {
+      "week": 10,
+      "source_commit": "9723f942ca5769cd0fad56f28ed8a29a4451ed35",
+      "model": "qwen3.5:4b-q4_K_M",
+      "temperature": 0.2,
+      "comparison_order": "rag_then_direct",
+      "coordinator": "LangGraph",
+      "offline_tests": 58,
+      "offline_suites": {
+        "history_contracts": 32,
+        "llm_transport": 11,
+        "chat_order": 6,
+        "orientation": 9
+      },
+      "offline_passed": true,
+      "static_passed": true,
+      "real_model_integration": "not_performed",
+      "full_compose_runtime_tested": false,
+      "weekly_ui_retested": false,
+      "weekly_gitops_retested": false
+    }
+  ],
+  "offline_tests_total": 406,
+  "static_weeks_passed": 7,
+  "integration_weeks": [
+    4,
+    8
+  ],
+  "real_model_responses": 4,
+  "manual_limits": [
+    "S4 RAG omitió los antecedentes pese a recibir los tres fragmentos: facts=[] y texto «No hay un antecedente verificable…». La prueba automática de formato no detecta esa omisión contextual.",
+    "S4 presentó sensación de plenitud abdominal como causa; describe un síntoma y no un diagnóstico diferencial distinto.",
+    "S8 RAG citó los tres fragmentos literalmente, pero las condiciones para alergia/intolerancia alimentaria resultaron poco específicas.",
+    "Las respuestas pueden repetir datos relatados o mostrar redacción/puntuación imperfecta. Las hipótesis no son diagnósticos confirmados y esta muestra no acredita calidad clínica general."
+  ],
+  "preservation": {
+    "unchanged_files": 1977,
+    "s1_s3_unchanged_files": 223,
+    "daily_md_docx_unchanged": 20,
+    "ui_java_patient_files_unchanged": true,
+    "private_env_files_unchanged": true,
+    "ports_unchanged": true,
+    "drive_not_modified": true,
+    "previous_hypothesis_report_unchanged": true,
+    "gitops_source_preserved": "c66a595c0b3b21e95ac7e3a8e0a511988b4ae068"
+  },
+  "generator_idempotent": true,
+  "main_runtime_modified_by_weekly_tests": false,
+  "full_weekly_compose_or_gitops_tested": false,
+  "evidence": {
+    "offline": "../../../dailys/REVISION_FUNCIONAL_OFFLINE_2026-11-11.json",
+    "static": "../../../dailys/_herramientas/revision-funcional-estatica-2026-11-11.json",
+    "integration": "../../../dailys/REVISION_FUNCIONAL_COORDINADORES_2026-11-11.json",
+    "manual": "../../../dailys/REVISION_FUNCIONAL_COORDINADORES_REVISION_2026-11-11.json",
+    "adaptation": "../../../dailys/_herramientas/revision-funcional-aplicada-2026-11-11.json"
+  },
+  "weekly_summary": "../../../dailys/REVISION_FUNCIONAL_VERIFICADA_9723f94_2026-11-11.json"
+}

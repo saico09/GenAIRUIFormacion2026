@@ -1,0 +1,38 @@
+{
+  "scope": "Revisión manual separada de validez de formato; no evaluación clínica general.",
+  "reports": [
+    "cabeza-vago-final-lectura.json",
+    "relatos-alarma-final-lectura.json"
+  ],
+  "results": [
+    {
+      "case": "cabeza",
+      "format": "2/2 válido",
+      "semantic": "Parcial: alternativas condicionales útiles, junto a tautología «cefalea si además hubiera dolor en la cabeza». Sin atributos actuales inventados."
+    },
+    {
+      "case": "vago",
+      "format": "2/2 válido",
+      "semantic": "FALLO de pertinencia: propone causas específicas con base insuficiente, infección viral ligada a temblores y estrés ligado a pesadez en pecho. No se acepta como calidad semántica; son condicionales, no hechos actuales."
+    },
+    {
+      "case": "relatos_1_2",
+      "format": "4/4 válido",
+      "semantic": "Responde con reflujo y alternativas condicionales sin preguntas ni afirmación de síntomas nuevos. Citas RAG literales. Algunas alternativas son síntomas/desencadenantes y no diagnósticos; detalles sugeridos repiten o amplían elementos ya informados. No se afirma precisión clínica perfecta."
+    },
+    {
+      "case": "alarma_rag",
+      "format": "válido",
+      "semantic": "Urgencia aparece primero con cita exacta actual; no se atribuye automáticamente al reflujo previo. Alternativas amplias y técnicamente precisas no acreditan confirmación."
+    },
+    {
+      "case": "alarma_direct",
+      "format": "RECHAZADO",
+      "semantic": "current_alert es paráfrasis, no cita literal actual. El validador la rechazó; ninguna respuesta parcial se guardó."
+    }
+  ],
+  "markdown_preserved": true,
+  "no_api_chat_or_database_write": true,
+  "runtime_changed": false,
+  "full_semantic_pass": false
+}

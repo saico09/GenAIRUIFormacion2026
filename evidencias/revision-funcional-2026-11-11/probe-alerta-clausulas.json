@@ -1,0 +1,12 @@
+[
+  {
+    "question": "No vomito sangre, aunque me siento cansada",
+    "quote_offered_by_schema": "No vomito sangre, aunque me siento cansada",
+    "result": "ACCEPTED_URGENT"
+  },
+  {
+    "question": "No vomito sangre. Me duele la cabeza",
+    "quote_offered_by_schema": "No vomito sangre. Me duele la cabeza",
+    "result": "ACCEPTED_URGENT"
+  }
+]

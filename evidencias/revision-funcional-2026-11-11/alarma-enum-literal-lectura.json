@@ -1,0 +1,123 @@
+{
+  "started_at": "2026-11-12T01:39:25.178137+00:00",
+  "phase": "inference",
+  "model": "qwen3.5:4b-q4_K_M",
+  "options": {
+    "temperature": 0.2,
+    "num_ctx": 8192,
+    "num_predict": 1024,
+    "top_p": 0.95,
+    "top_k": 64,
+    "draft_num_predict": 0
+  },
+  "thinking_requested": false,
+  "inference_timeout_seconds": 180,
+  "scope": "Ensayo sintético de hipótesis: inferencias de lectura o /chat con temporal propio.\n\nLas comprobaciones de texto son heurísticas acotadas; se conservan todas las salidas\npara revisión semántica. No acreditan exactitud clínica general. Nunca consulta /chat\ncon Ana ni cambia los registros confirmados de pacientes existentes.\n",
+  "clinical_reference_urls": [
+    "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/",
+    "https://www.nhs.uk/symptoms/vomiting-blood/",
+    "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+  ],
+  "automatic_checks_are_heuristic": true,
+  "manual_semantic_review_required": true,
+  "semantic_criteria_version": 3,
+  "criteria_note": "Orientación estructurada: las condiciones son hipotéticas; no exige repetir desencadenantes ya aportados. Conserva revisión manual de pertinencia y negaciones.",
+  "source_sha256": {
+    "rag.py": "19cb7450696d29991904f8d29744dc931b6eb79570d4b200a953e7202bc8039f",
+    "app/llm.py": "eae5afbd90b22f513084291493f2d1d12f2443a9522c939f1e0987b8e172b8e5"
+  },
+  "verifier_sha256": "16a24c832cc64c42ce74597fe406328aa1aed2bc58a19214ae91dff842e5cc2f",
+  "branches": [
+    "rag",
+    "direct"
+  ],
+  "cases": [
+    {
+      "case": "alarma",
+      "kind": "urgent",
+      "branch": "rag",
+      "question": "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.",
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 503,
+      "prompt_eval_count": 1300,
+      "done_reason": "stop",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"guidance\": {\n    \"possibilities\": [\n      {\n        \"cause\": \"hemorragia digestiva alta\",\n        \"condition\": \"sangre roja en el vómito\"\n      },\n      {\n        \"cause\": \"perforación gástrica\",\n        \"condition\": \"dolor fuerte en el abdomen\"\n      },\n      {\n        \"cause\": \"descompensación hemodinámica\",\n        \"condition\": \"mareos\"\n      }\n    ],\n    \"optional_details\": [\n      \"color de la sangre\",\n      \"localización exacta del dolor\",\n      \"frecuencia de los vómitos\"\n    ],\n    \"current_alert\": \"Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.\"\n  },\n  \"missing_information\": false,\n  \"facts\": [\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\",\n      \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia.\"\n    },\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\",\n      \"quote\": \"Omeprazol registrado para el reflujo.\"\n    },\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\",\n      \"quote\": \"El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\"\n    }\n  ],\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nBusca atención urgente por lo que relatas: «Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.».\n\nPodría ser hemorragia digestiva alta si además hubiera sangre roja en el vómito.\n\nPodría ser perforación gástrica si además hubiera dolor fuerte en el abdomen.\n\nPodría ser descompensación hemodinámica si además hubiera mareos.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nRespuesta: Omeprazol registrado para el reflujo.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\n\nRespuesta: El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\n\nPara afinar la orientación, puedes añadir: color de la sangre; localización exacta del dolor; frecuencia de los vómitos.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "urgent_action_first": true,
+        "recognizes_reported_alarm": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "prompt_sha256": "8179a872b15ff5bf2b5d26d14bcc430940c1c256c7b5f5194c3745667d321256",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 16.457
+    },
+    {
+      "case": "alarma",
+      "kind": "urgent",
+      "branch": "direct",
+      "question": "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.",
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 222,
+      "prompt_eval_count": 438,
+      "done_reason": "stop",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"guidance\": {\n    \"possibilities\": [\n      {\n        \"cause\": \"hemorragia digestiva alta\",\n        \"condition\": \"sangre roja en la boca o vómitos con aspecto de café\"\n      },\n      {\n        \"cause\": \"ruptura de un órgano abdominal\",\n        \"condition\": \"dolor intenso que no cede ni cambia de lugar al moverse\"\n      },\n      {\n        \"cause\": \"shock hipovolémico\",\n        \"condition\": \"pérdida de fuerza, visión borrosa o palidez extrema\"\n      }\n    ],\n    \"optional_details\": [\n      \"color exacto del vómito\",\n      \"localización precisa del dolor\",\n      \"nivel de conciencia actual\"\n    ],\n    \"current_alert\": \"Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.\"\n  }\n}",
+      "answer": "Busca atención urgente por lo que relatas: «Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.».\n\nPodría ser hemorragia digestiva alta si además hubiera sangre roja en la boca o vómitos con aspecto de café.\n\nPodría ser ruptura de un órgano abdominal si además hubiera dolor intenso que no cede ni cambia de lugar al moverse.\n\nPodría ser shock hipovolémico si además hubiera pérdida de fuerza, visión borrosa o palidez extrema.\n\nPara afinar la orientación, puedes añadir: color exacto del vómito; localización precisa del dolor; nivel de conciencia actual.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "urgent_action_first": true,
+        "recognizes_reported_alarm": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "prompt_sha256": "60ba9d49e056db01548b210884e72cc9fffabc4a959517788547b01ec89bb73a",
+      "sources": [],
+      "seconds": 5.693
+    }
+  ],
+  "checks": {
+    "no_api_chat_or_database_write": true,
+    "existing_markdown_unchanged": true
+  },
+  "passed": true,
+  "markdown_before_hash": "a9e9de9ffb6ec057c4e6a2be99a9c3c9235f535a5b32c05b10d537004aaf9ef4",
+  "markdown_after_hash": "a9e9de9ffb6ec057c4e6a2be99a9c3c9235f535a5b32c05b10d537004aaf9ef4",
+  "finished_at": "2026-11-12T01:39:47.337699+00:00"
+}

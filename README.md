@@ -48,10 +48,10 @@ Para descargar los modelos de embeddings y chat, si todavía faltan:
 
 ```powershell
 & "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull nomic-embed-text
-& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull gemma4:12b
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3.5:4b-q4_K_M
 ```
 
-Ollama es el servidor local que ejecuta los modelos. Gemma 4 (`gemma4:12b`) es el modelo de chat configurado para ambas respuestas, con los mismos parámetros y `think=false`. Los [ensayos y sus límites](evidencias/hipotesis-2026-11-11/LEEME.md) sirven para revisar casos concretos; no miden exactitud clínica general.
+Ollama es el servidor local que ejecuta los modelos. Qwen 3.5 de 4B (`qwen3.5:4b-q4_K_M`) responde en ambas ramas con los mismos parámetros, temperatura `0.2` y `think=false`. El modelo propone causas y condiciones en una estructura que Python valida y presenta como texto. Los [ensayos y sus límites](evidencias/revision-funcional-2026-11-11/LEEME.md) corresponden a casos ficticios concretos.
 
 Para comprobar Python:
 

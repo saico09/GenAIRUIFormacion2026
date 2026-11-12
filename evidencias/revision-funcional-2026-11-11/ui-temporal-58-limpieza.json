@@ -1,0 +1,139 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-11-12T01:51:25.663605+00:00",
+  "patient_id": 58,
+  "identity_checked_before_delete": {
+    "id": 58,
+    "name": "QA Portal 20261111",
+    "birth_date": "1992-05-12",
+    "email": "qa-portal-20261111@example.com"
+  },
+  "http": [
+    {
+      "url": "http://localhost:8080/patients/58",
+      "method": "GET",
+      "status": 200,
+      "response": {
+        "id": 58,
+        "name": "QA Portal 20261111",
+        "birth_date": "1992-05-12",
+        "email": "qa-portal-20261111@example.com"
+      }
+    },
+    {
+      "url": "http://localhost:8080/patients/58",
+      "method": "DELETE",
+      "status": 204,
+      "response": null
+    },
+    {
+      "url": "http://localhost:8000/clinical/patients/58/sync",
+      "method": "POST",
+      "status": 200,
+      "response": {
+        "patient_id": 58,
+        "status": "removed",
+        "records": 0,
+        "fragments": 0
+      }
+    },
+    {
+      "url": "http://localhost:8080/patients/58",
+      "method": "GET",
+      "status": 404,
+      "response": {
+        "detail": "Paciente no encontrado"
+      }
+    },
+    {
+      "url": "http://localhost:8000/patients/58",
+      "method": "GET",
+      "status": 404,
+      "response": {
+        "detail": "Paciente no encontrado"
+      }
+    },
+    {
+      "url": "http://localhost:6333/collections/historias/points/scroll",
+      "method": "POST",
+      "status": 200,
+      "response": {
+        "result": {
+          "points": [],
+          "next_page_offset": null
+        },
+        "status": "ok",
+        "time": 0.001958946
+      }
+    }
+  ],
+  "after": {
+    "snapshot_hashes": {
+      "706a4b36-d322-4d3c-9928-20d4e8f0af0c": "8dbe0474fd41a1267e9564844cf1c246",
+      "4cbc97ca-226f-40df-acd7-698c1f0ba9d2": "ba0126f978a51aee54c728ff9f97c628",
+      "f48576ae-00e8-4d80-91eb-24a214d83f06": "daaf7ebc442958b764f263820e47d93a",
+      "cd0393fe-8d4c-4f84-b048-24b7b324ac08": "c96280ea4d16c3771783cd1d245079f0",
+      "e33794f7-ac0c-488f-885c-e8297ccd3c8a": "63aaf0023d2ae27e0a030091b64a5caf"
+    },
+    "log_hashes": {
+      "e76f8fef-cf28-4360-89c6-39da0c132288": "31fe5d1ba85428534a81f387cf10c593",
+      "93659643-861c-4859-b7ea-25cdd0f0111d": "64a6b5a4c457676aa0f75b5f08a846d0",
+      "a71ace06-64e3-456a-883a-f392e235308b": "9ed0726d139cf6a8c5165338c5e8bf0e",
+      "a9be72fa-004f-4318-86c8-d82d2b659605": "7c86437e98fe062f6bd6998048ebbe23",
+      "ecf8433b-fb01-4336-8686-53d61e181d34": "ef95740c4e29c63dae5f3fb850035421",
+      "76ead2ee-5055-4fde-8785-cbb543f42f15": "24427258e7150e9e27cde834e54c9e7a",
+      "8deaa43a-2506-4fdd-8a56-a28e0b4c4a48": "2e9caead761da27144efd27820929887",
+      "3a4817e0-836c-4662-bf23-a16847e6223c": "b9dc86f8d4bc9fa463f62b84882a7e11",
+      "cbd421e3-aad8-4dde-8fd9-257dc543fcb2": "337836f16163cab3e012c7d6d662e323",
+      "baa44a54-23e5-48a5-a736-b0a667b5d0ba": "d972c5523109e923f55fa77c7d4bf6bc",
+      "b7e31b8b-e44f-41e7-9cd7-d05868a31366": "c9828dc40fffb7fb1f212fdee9348f05",
+      "b6a56ebe-0c95-445b-a29b-94bbf4e43c7e": "cde01fae5441b969c3dfbf3ee2bc5105",
+      "c49acc81-66d9-430b-8ce2-5a82ee0938f3": "49f15843ebf05e883a0f6fc9f26ccea3",
+      "69e675e5-8794-4406-9384-86878e343d45": "823c8672b58bac585f019973e1a229d4",
+      "6b73596b-f562-45a3-a457-a690f5ccb68f": "9591be0f7899757aa11a91ace07fbc83",
+      "4a2bfead-4b1a-430f-9478-88ba006030c7": "bb9ce2509a92ad52e6dec692521065c8",
+      "cf7d653e-ca01-4738-880c-43c85fd7a6f1": "f66312cadbc711affaf26b2371f845c3",
+      "6e88acc7-20cd-4e9a-a9fb-b5fee00481b6": "def2af1f06982dff5e8f91eae532497a",
+      "2b5d27f3-4853-4e40-9e55-2e375819ee4d": "af7ef0f13429757eba3edbd7d675f05b",
+      "24855f77-e921-413e-8ea2-a0ad4dba2f39": "fa855af1fed6d4e522ac83dfcc6f7a2d",
+      "2f3a9c3f-c091-4781-9a9d-2d42fc38c2dd": "3b7ae581e1ba36c37a8e905a43b781b7",
+      "98d266c1-012b-42a0-aa61-a9b9e9664946": "27e41f1385d2adceb56652411813482e",
+      "8464ed42-ce1b-468f-bf31-842aedc3dd14": "19c10fdbd42fb17c7186ab8b35b6ee0e",
+      "1dc41194-5640-4502-8b18-9d9a96c7e460": "f8507d6fa749e2184bd8b32d8c34466a",
+      "c42618c8-3d88-4cb2-b988-6c945f85cbcd": "c299a84a42462a38cfeeca491b80e4f4",
+      "a8e691b9-fee5-4f7c-95a6-821dac015e5c": "8039f58653b68eeb4f212c7b110581a7",
+      "36c68b42-f493-40ed-866f-eb5123c57cad": "7fd82fc938d7bbbf4d6ab8258f2948b4",
+      "7f73d185-f797-4e36-8568-be5106174d24": "eaed2f4c10b6112ce258164a5859e829",
+      "10234fe0-193b-46e4-97b1-275fc216f8d1": "3f6ad48a2294438014a3e9246ba6c547",
+      "e5b13d21-44fb-489c-9b06-03551b63cb4e": "72d0f322bfef64cc02e97484d7c0931c",
+      "a26f214b-749b-40de-b4bf-56bce594d9d8": "0f17d74ebec24b8734bc247892d77ffb",
+      "eb2707ab-c5d4-4d12-85a2-5b5eb4e00d12": "5f65b1718c5534df4630e03defeda4cd",
+      "5213f0ea-b821-401d-9af5-ff703cd6515f": "b4ea27fb080d99ca88803aec1022ae0e",
+      "02edcb69-11dc-4ca9-8a21-f267dbbea621": "27fd57080e9839f52f21f97c0908700a",
+      "840429e0-1971-4246-9ceb-457de45b5366": "5d6d04fcfffe0fa081a6827b7491b6cd",
+      "e7fdc2ec-2fb3-4185-b249-0ff19078d515": "2c8f52625f7b618cefcd655016a27b49",
+      "9efcdd9c-26e0-4f97-95d8-286108814f82": "a2b3726c81f35ca3cdc1f1fbcf75748f",
+      "f20db067-5879-48e7-92ca-610a6d1cd7a6": "c697ccdecd12ca945166ced2bdaa7d69",
+      "52c61c06-f8c4-4562-b2ef-d209a8b2e777": "ba38eaa2ffe059bb5f45049099d98adf",
+      "4e5aa981-f5b1-4092-a933-14ae0e1fd531": "d8a58e2c548183e97042d4730aa78060",
+      "8b9fa0dc-1120-4db6-9b41-a0d54f968689": "1f36067d1354c4812894e41543a79d77",
+      "a939db25-4635-4bb6-b830-cab8c4082014": "6c89e590c09531cb24b9e692bf92c032",
+      "1879fd4f-0112-40fa-ad33-8caa411fc8ab": "f9b24b3abd056a6ee00ebd8899e412e9",
+      "e15aecb1-2d54-41c8-9697-d86200909f64": "2a8a315031f816f4e64ab5f7cbef6dea",
+      "7101bad7-02df-4039-ad0a-301c1ad19dd2": "1eb1c017bd1753ec328a38259bf9e02f"
+    },
+    "latest": {
+      "kind": "deleted",
+      "filename": "paciente-58-qa-portal-20261111.md",
+      "revision": "70d59fd041cd1736b7bbfba9ce6ac6ae338526822a6835f5a30842cb1ca809b4",
+      "content_sha256": "70d59fd041cd1736b7bbfba9ce6ac6ae338526822a6835f5a30842cb1ca809b4"
+    },
+    "patient_absent": true,
+    "diseases_absent": true,
+    "markdown_absent": true
+  },
+  "existing_snapshots_preserved": 4,
+  "existing_logs_preserved": 39,
+  "qdrant_temporary_points": 0,
+  "scope": "Sólo se eliminó58 por Java y su índice por syncPython allow_missing; respaldo y auditoría conservados. No se ejecutó LLM ni se controlaron servicios."
+}

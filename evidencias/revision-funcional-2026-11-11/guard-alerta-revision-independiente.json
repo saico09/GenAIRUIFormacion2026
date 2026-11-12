@@ -1,0 +1,98 @@
+{
+  "reviewed_at": "2026-11-12T01:56:08.670070+00:00",
+  "status": "PASS",
+  "checks": 11,
+  "results": [
+    {
+      "question": "No estoy vomitando sangre.",
+      "quote": "No estoy vomitando sangre.",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "No estoy vomitando sangre.",
+      "quote": "No estoy vomitando sangre",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "Si vomitara sangre buscaría ayuda.",
+      "quote": "Si vomitara sangre buscaría ayuda.",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "Si vomitara sangre buscaría ayuda.",
+      "quote": "Si vomitara sangre buscaría ayuda",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "Estoy vomitando sangre ahora y no tengo fiebre.",
+      "quote": "Estoy vomitando sangre ahora y no tengo fiebre.",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "Estoy vomitando sangre ahora y no tengo fiebre.",
+      "quote": "Estoy vomitando sangre ahora y no tengo fiebre",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "No vomito sangre, aunque me siento cansada",
+      "quote": "No vomito sangre, aunque me siento cansada",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "No vomito sangre. Me duele la cabeza",
+      "quote": "No vomito sangre. Me duele la cabeza",
+      "offered_by_schema": false,
+      "accepted_by_runtime": false,
+      "passed": true
+    },
+    {
+      "question": "Estoy vomitando sangre ahora.",
+      "quote": "Estoy vomitando sangre ahora.",
+      "offered_by_schema": true,
+      "accepted_by_runtime": true,
+      "passed": true
+    },
+    {
+      "question": "Estoy vomitando sangre ahora. Me siento mareada.",
+      "quote": "Estoy vomitando sangre ahora. Me siento mareada.",
+      "offered_by_schema": true,
+      "accepted_by_runtime": true,
+      "passed": true
+    },
+    {
+      "question": "No tengo fiebre. Estoy vomitando sangre ahora.",
+      "quote": "Estoy vomitando sangre ahora",
+      "offered_by_schema": true,
+      "accepted_by_runtime": true,
+      "passed": true
+    }
+  ],
+  "files_sha256": {
+    "orientation.py": "2d1702aea9f79321a3c6b25f0a76d84727fe0c6e9b9fcd9ef055929903110360",
+    "rag.py": "604a7e3c54fcaac75d526c1455a679e5bb26ef1e194f8362e92841b6a6fca535",
+    "app/main.py": "6dfa8a612805f4b39406406b114363adea555315397dffaf117f9e4ebe111a88",
+    "app/llm.py": "eae5afbd90b22f513084291493f2d1d12f2443a9522c939f1e0987b8e172b8e5",
+    "tests/test_orientation.py": "90ceeb5b0028c737031f19132341f2140a129eba9556b2f28a13a04bfe8de8b5"
+  },
+  "review": "El parche evalúa toda la cita y el prefijo de la misma cláusula; usa la misma guarda en enum y renderer. Los ocho casos adversos originales quedan rechazados y tres citas afirmativas conservan la urgencia.",
+  "limits": [
+    "No se ejecutó el LLM: son probes del formato y la guarda determinista.",
+    "Una cita mixta con afirmación de sangrado y negación de fiebre en la misma frase se rechaza conservadoramente; no se presenta como comprensión general de negaciones.",
+    "Una cita afirmativa literal no demuestra por sí sola una alarma. La elección y pertinencia siguen dependiendo del modelo y de la revisión semántica.",
+    "Las pruebas reales positivas previas corresponden a la versión anterior de esta guarda; no se presentan como inferencias repetidas."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "Comprobación acotada del fallo de paráfrasis en alerta; no certificación clínica.",
+  "before": "relatos-alarma-final-lectura.json",
+  "after": "alarma-enum-literal-lectura.json",
+  "change": "El schema sólo admite null o frases completas literales del relato actual; no trunca frases largas ni separa comas. Se conserva el validador de cita y negación.",
+  "cases": 2,
+  "technical_passed": true,
+  "manual_checks": {
+    "urgent_action_before_alternatives": true,
+    "exact_current_quote": true,
+    "no_confirmed_new_diagnoses": true,
+    "no_questions": true
+  },
+  "limits": [
+    "Las causas siguen siendo amplias y a veces técnicas; el enum sólo acredita literalidad, no interpretación médica.",
+    "Las sugerencias pueden repetir detalles ya relatados.",
+    "Las frases de más de240 caracteres no se truncan para producir una alarma; si no hay una frase completa apta, el campo sólo admite null.",
+    "Una cita negada o condicional permanece rechazada por el validador; el schema por sí solo no clasifica estas intenciones."
+  ],
+  "markdown_unchanged": true,
+  "source_sha256": {
+    "orientation.py": "438c9b2d332c3dd8d30062425c510446956f70123672baadbf8040cff49adb3b",
+    "rag.py": "19cb7450696d29991904f8d29744dc931b6eb79570d4b200a953e7202bc8039f",
+    "app/llm.py": "eae5afbd90b22f513084291493f2d1d12f2443a9522c939f1e0987b8e172b8e5",
+    "app/main.py": "6dfa8a612805f4b39406406b114363adea555315397dffaf117f9e4ebe111a88"
+  }
+}

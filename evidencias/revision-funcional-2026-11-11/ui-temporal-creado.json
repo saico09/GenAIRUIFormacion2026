@@ -1,0 +1,10 @@
+{
+  "patient_id": 58,
+  "actions": [
+    "Crear paciente desde formulario Java",
+    "Abrir detalle con MD automático",
+    "Crear registro enfermedad/tratamiento/medicamento y confirmar",
+    "Abrir contenido Markdown"
+  ],
+  "state": "Browser tab: 1, Title: \"Pacientes · GenAI Clínica\", URL: \"http://localhost:8000/#pacientes\".\nThere has been no change in the accessibility tree.\nThe focused UI element is 80 button (expanded) Ver archivo Markdown paciente-58-qa-portal-20261111.md, Secondary Actions: Collapse"
+}

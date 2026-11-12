@@ -1,0 +1,230 @@
+{
+  "started_at": "2026-11-12T01:59:44.119936+00:00",
+  "checks": [
+    {
+      "name": "patients_records_md",
+      "passed": true,
+      "details": {
+        "patient_ids": [
+          1,
+          2,
+          3,
+          4,
+          24
+        ],
+        "md_sha256": {
+          "paciente-1-ana-demo.md": "92af3ca192ac78298443dd1d04a35cccd9b5d8a3284d29d845409a8224e9c75a",
+          "paciente-2-bruno-demo.md": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+          "paciente-3-carla-demo.md": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+          "paciente-4-marco-contreras.md": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de",
+          "paciente-24-paciente-de-prueba.md": "20a2088040dcc456800bbd5abf271793cfdc5a655a8ded670c7539252a49f02d"
+        },
+        "alignment": [
+          {
+            "patient_id": 1,
+            "files": 1,
+            "filename": "paciente-1-ana-demo.md",
+            "sha256": "92af3ca192ac78298443dd1d04a35cccd9b5d8a3284d29d845409a8224e9c75a",
+            "record_count": 1,
+            "records_match_md": true,
+            "latest_snapshot_id": "c22bbb4a-a949-45ff-843b-5ac483450cec",
+            "latest_snapshot_kind": "consultation",
+            "latest_snapshot_matches": true
+          },
+          {
+            "patient_id": 2,
+            "files": 1,
+            "filename": "paciente-2-bruno-demo.md",
+            "sha256": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+            "record_count": 1,
+            "records_match_md": true,
+            "latest_snapshot_id": "7e7c17b4-c2a8-4748-8f94-fdfee1ea612b",
+            "latest_snapshot_kind": "snapshot",
+            "latest_snapshot_matches": true
+          },
+          {
+            "patient_id": 3,
+            "files": 1,
+            "filename": "paciente-3-carla-demo.md",
+            "sha256": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+            "record_count": 1,
+            "records_match_md": true,
+            "latest_snapshot_id": "f2be5269-0646-4213-88d8-87a324289b21",
+            "latest_snapshot_kind": "snapshot",
+            "latest_snapshot_matches": true
+          },
+          {
+            "patient_id": 4,
+            "files": 1,
+            "filename": "paciente-4-marco-contreras.md",
+            "sha256": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de",
+            "record_count": 0,
+            "records_match_md": true,
+            "latest_snapshot_id": "1647f1c7-c310-4fa7-940c-913db6dbc4f8",
+            "latest_snapshot_kind": "snapshot",
+            "latest_snapshot_matches": true
+          },
+          {
+            "patient_id": 24,
+            "files": 1,
+            "filename": "paciente-24-paciente-de-prueba.md",
+            "sha256": "20a2088040dcc456800bbd5abf271793cfdc5a655a8ded670c7539252a49f02d",
+            "record_count": 0,
+            "records_match_md": true,
+            "latest_snapshot_id": "a06a15b0-15b6-4426-9f84-4477b3f70b68",
+            "latest_snapshot_kind": "snapshot",
+            "latest_snapshot_matches": true
+          }
+        ],
+        "patients_preserved": true,
+        "diseases_preserved": true
+      }
+    },
+    {
+      "name": "existing_sql_and_audit",
+      "passed": true,
+      "details": {
+        "preexisting_rows_preserved": {
+          "patients": true,
+          "patient_diseases": true,
+          "medical_consultations": true,
+          "transaction_logs": true
+        },
+        "current_row_sets": {
+          "patients": {
+            "rows": 5,
+            "hash_sha256": "c355eb49c8f2a529f057063a3a06c955421c6aacea1f8820f9c2000d34fbaabb"
+          },
+          "patient_diseases": {
+            "rows": 3,
+            "hash_sha256": "e6187acec0965155d29bfc7069a0fc39baeafc1def454f01c6d7067da74d5d08"
+          },
+          "medical_consultations": {
+            "rows": 193,
+            "hash_sha256": "f4200ca8d55365ac399bfacd83ea97c6d2daebb43145108939190c20906d41ac"
+          },
+          "transaction_logs": {
+            "rows": 1355,
+            "hash_sha256": "d9c1c2090707fae8365c334d13004e1c3f5aa55f8484ce3bece12dcae04e2c6e"
+          }
+        },
+        "audit_uuid_columns": [
+          "id"
+        ],
+        "patient_id_column": true,
+        "unique_log_ids": true
+      }
+    },
+    {
+      "name": "local_markdown",
+      "passed": true,
+      "details": {
+        "files": 5,
+        "all_hashes_preserved": true,
+        "ana_sha256": "92af3ca192ac78298443dd1d04a35cccd9b5d8a3284d29d845409a8224e9c75a"
+      }
+    },
+    {
+      "name": "containers_and_stopped_copies",
+      "passed": true,
+      "details": {
+        "running_count": 11,
+        "unchanged_containers": 87,
+        "python_recreated": true,
+        "python_id": "dcee3d4adfe550a7930fb528b0aa0ad63e88a2b15965a9c5a045693f77eee9c1",
+        "weekly_containers_stopped": 58,
+        "genai_stopped": true
+      }
+    },
+    {
+      "name": "served_python",
+      "passed": true,
+      "details": {
+        "file_count": 34,
+        "source_sha256": "17b0dcce7df1cdc1da4b90a12b9d598d2b80ba416543b8fa29d88ea6ed15d3d8",
+        "source_matches": true,
+        "model": "qwen3.5:4b-q4_K_M",
+        "options": {
+          "temperature": 0.2,
+          "num_ctx": 8192,
+          "num_predict": 1024,
+          "top_p": 0.95,
+          "top_k": 64,
+          "draft_num_predict": 0
+        },
+        "think": false,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "http_health",
+      "passed": true,
+      "details": [
+        {
+          "url": "http://localhost:8000/",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:8000/health",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:8080/health",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:6333/healthz",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:9090/-/ready",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:3000/api/health",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:3100/ready",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:6006/",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:11434/api/tags",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "prometheus_targets",
+      "passed": true,
+      "details": [
+        {
+          "job": "fastapi",
+          "health": "up"
+        },
+        {
+          "job": "springboot",
+          "health": "up"
+        }
+      ]
+    },
+    {
+      "name": "qdrant_originals",
+      "passed": true,
+      "details": {
+        "collection": "historias",
+        "points": 16,
+        "sha256": "a1a11cf2871d30f6f401cd67471c9d9c5fe061ed80a48c8c7e0adfeb204d8927",
+        "matches_original_ids_payloads_vectors": true,
+        "temporary_points_remaining": 0
+      }
+    }
+  ],
+  "scope": "Lectura SQL READ ONLY, archivos, inventario, salud y Qdrant POST scroll. Sin inferencia, API de pacientes, escrituras SQL ni control de servicios.",
+  "status": "PASS",
+  "finished_at": "2026-11-12T02:00:12.006323+00:00"
+}

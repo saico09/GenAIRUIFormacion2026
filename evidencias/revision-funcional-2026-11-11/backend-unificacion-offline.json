@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "network_connect_blocked": true,
+  "source_sha256": "2cfce43a1b9cdaa3bc8c9cba71ac807e5c0c5cf230da0e9a102b6e4a9518c075",
+  "returncode": 0,
+  "stdout": "{\"result\": \"PASS\", \"checks\": [\"campos_vacios\", \"control_en_campo\", \"encabezado_en_campo\", \"limite_utf16\", \"nombre_invalido\", \"normalizar_campo\", \"nombre_representativo\", \"render_parse_sin_diario\", \"instant_compatible_java\", \"notas_journal\", \"compensacion_antes_unlock\", \"compensacion_commit_antes_unlock\", \"archivo_unico\", \"duplicado_no_sobrescribe\", \"auditoria_14\", \"auditoria_15\", \"auditoria_16\", \"auditoria_17\", \"auditoria_18\", \"auditoria_19\", \"auditoria_20\", \"auditoria_21\"], \"count\": 22}\n",
+  "stderr": "",
+  "scope": "Contratos offline; sesiones simuladas y archivos temporales, sin SQL/MD vivos ni modelo."
+}

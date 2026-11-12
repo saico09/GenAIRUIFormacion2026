@@ -57,7 +57,7 @@ Para actualizar una instalación que ya está funcionando:
 docker compose up -d --build --no-deps python-api java-api
 ```
 
-Recarga la página al terminar. En las copias semanales, usa la dirección de su `LEVANTAR.txt`.
+Recarga la pestaña al terminar o al cambiar de semana. Si sigues viendo la pantalla antigua sin las cuatro secciones, guarda lo que tengas escrito y pulsa **Ctrl+Shift+R**: una pestaña abierta puede conservar la interfaz anterior aunque el backend ya esté actualizado. En las copias semanales, sigue su `LEVANTAR.txt`.
 
 ## Historia clínica
 
@@ -212,12 +212,12 @@ Get-Content -Raw scripts/verificar_recuperacion.py | docker compose exec -T pyth
 Para descargar el modelo de chat, si falta:
 
 ```powershell
-& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull gemma4:12b
+& "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe" pull qwen3.5:4b-q4_K_M
 ```
 
-**Ollama** es el servidor local; **Gemma 4** es el modelo que responde (`gemma4:12b`). Ambas ramas usan ese mismo modelo, la misma pregunta y los mismos parámetros, con `think=false`. Puedes revisar los [ensayos de esta versión](evidencias/hipotesis-2026-11-11/LEEME.md); son casos concretos y no garantizan exactitud clínica general.
+**Ollama** es el servidor local; **Qwen 3.5 de 4B** es el modelo que responde (`qwen3.5:4b-q4_K_M`). Ambas ramas usan la misma pregunta y parámetros, con temperatura `0.2` y `think=false`. En este equipo entra completo en la GPU; Gemma 12B necesitaba también RAM y resultó mucho más lento. Los [ensayos y sus límites](evidencias/revision-funcional-2026-11-11/LEEME.md) corresponden a casos ficticios concretos.
 
-La comparación puede tardar unos minutos con este modelo local. Espera a que termine y aparezca la confirmación de guardado antes de enviar otra consulta.
+Las dos pruebas cortas desde la página tardaron unos 22–25 segundos en este equipo; la primera carga o una respuesta larga pueden demorar más. Espera la confirmación de guardado antes de enviar otra consulta.
 
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.
 
@@ -225,7 +225,13 @@ Ana tiene un caso simulado de reflujo con omeprazol; Bruno, diabetes tipo 2 con 
 
 «Con RAG» comprueba la historia vigente del paciente, sincroniza su índice y busca hasta tres fragmentos del paciente. «Sin RAG» recibe solo la pregunta; ambas usan el mismo modelo y parámetros. Cada fuente muestra el archivo, UUID, sección y texto para cotejar la respuesta.
 
-Puedes preguntar por datos registrados o describir síntomas de una consulta ficticia. Ante síntomas, ambas ramas plantean una hipótesis principal y alternativas condicionales con lo que escribiste, sin pedir más datos ni repetir preguntas. RAG separa los antecedentes del informe de esas posibilidades. No son diagnósticos confirmados ni recetas.
+Puedes preguntar por datos registrados o describir síntomas de una consulta ficticia, incluso con una frase corta como `dolor de estómago`. Ambas ramas deben ofrecer posibles causas y explicar qué datos apoyarían cada una. Si faltan detalles, los sugieren al final sin bloquear la orientación. RAG separa los antecedentes del informe de esas posibilidades. No son diagnósticos confirmados ni recetas.
+
+Para ajustar el prompt: abre `python-api/rag.py`. `SYMPTOM_GUIDANCE` contiene las reglas compartidas; `DIRECT_SYSTEM` y `RAG_SYSTEM`, las de cada rama. `build_rag_prompt` agrega la pregunta y los fragmentos del paciente. `python-api/orientation.py` valida y presenta las causas y condiciones como texto. El modelo y sus parámetros están en `python-api/app/llm.py`. Después de cambiar código Python:
+
+```powershell
+docker compose up -d --build --no-deps python-api
+```
 
 Si preguntas qué consta en la historia, RAG responde sólo con antecedentes respaldados. Cuando el dato no está registrado, lo reconoce; no completa el historial con una suposición.
 

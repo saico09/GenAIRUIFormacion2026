@@ -1,0 +1,57 @@
+{
+  "scope": "Revalida cuatro salidas guardadas; red bloqueada, sin inferencias ni HTTP.",
+  "is_new_inference": false,
+  "is_new_http_test": false,
+  "network_blocked": true,
+  "source_sha256": {
+    "orientation.py": "2d1702aea9f79321a3c6b25f0a76d84727fe0c6e9b9fcd9ef055929903110360",
+    "rag.py": "19cb7450696d29991904f8d29744dc931b6eb79570d4b200a953e7202bc8039f"
+  },
+  "input_sha256": {
+    "alarma-enum-literal-lectura.json": "87745fa0097f23a8985fa92709718133b3128a2531997a66a81b809c2467f79b",
+    "regresion-traza.json": "09c68f676bb9bb69ff39ce092919348452cd0731c05752cdc1566e69723e5a7b"
+  },
+  "cases": [
+    {
+      "source": "alarma-enum-literal-lectura.json",
+      "case": "alarma",
+      "branch": "rag",
+      "schema_valid": true,
+      "same_rendered_answer": true,
+      "raw_sha256": "0826d86b2d2e00006919113bce0b8c2add281f98cfca335bfcbbcf713f2180a2",
+      "answer_sha256": "ac518b315e5297364d2288c6f4aed14816aab803abf9b55b8f71a065c03d6c93",
+      "passed": true
+    },
+    {
+      "source": "alarma-enum-literal-lectura.json",
+      "case": "alarma",
+      "branch": "direct",
+      "schema_valid": true,
+      "same_rendered_answer": true,
+      "raw_sha256": "c2916293f79ba6c2c1962a98e6d15d7b114da870690cabe185c14ff879097252",
+      "answer_sha256": "cccb493d8829ff74158a28d6638d211a430cc4a79de3575d88a51fabe6ee4500",
+      "passed": true
+    },
+    {
+      "source": "regresion-traza.json",
+      "case": "dato_confirmado",
+      "branch": "rag",
+      "schema_valid": true,
+      "same_rendered_answer": true,
+      "raw_sha256": "2aecc5887439d029e64b5fee23ee26e95ebd48104bd9ff0e95dd2a3b8fab0748",
+      "answer_sha256": "591c2d61ccdbe7ca976825829a442fdca1a2c006968cf93f93750386a9a15297",
+      "passed": true
+    },
+    {
+      "source": "regresion-traza.json",
+      "case": "dato_confirmado",
+      "branch": "direct",
+      "schema_valid": true,
+      "same_rendered_answer": true,
+      "raw_sha256": "bfd177f3bce3f2d6148d517e867048da579f9dfbaa6bb62e5e86204f6789090d",
+      "answer_sha256": "f21240f32d588d1ddabdf4892f3b9941c0394668abf52e4f8775492873b31fc5",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

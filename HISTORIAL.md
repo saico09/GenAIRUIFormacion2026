@@ -1,5 +1,13 @@
 # Historial de la app
 
+## Síntomas breves y portal recuperado · 11/11/2026
+
+La pestaña abierta conservaba el HTML antiguo; al recargar reaparecieron las cuatro secciones. Los pacientes, CRUD clínicos, Markdown, respaldos y logs seguían en el servidor. Si actualizas el proyecto con la página abierta, recarga esa pestaña.
+
+El chat pasa a Qwen 3.5 de 4B mediante Ollama, con temperatura 0.2 y el mismo modelo y pregunta en ambas ramas. Las causas posibles, sus condiciones y los detalles opcionales salen en una estructura validada que la página muestra como texto. Las instrucciones siguen en `python-api/rag.py`; el formato compartido está en `python-api/orientation.py`. Las hipótesis no sustituyen los registros confirmados.
+
+RAG se ejecuta antes de la respuesta directa para agrupar las dos generaciones. Los logs separan carga del modelo, procesamiento y generación. [Pruebas, comparación y límites](evidencias/revision-funcional-2026-11-11/LEEME.md). La entrada siguiente conserva el corte anterior con Gemma.
+
 ## Hipótesis ante síntomas · 11/11/2026
 
 Al describir síntomas, el chat ofrece una hipótesis principal y alternativas condicionales con la información escrita, sin pedir más datos ni repetir preguntas. Las posibilidades quedan como orientación en las respuestas guardadas; no crean registros confirmados de enfermedad, tratamiento o medicamento. Las consultas sobre antecedentes siguen limitadas a lo documentado.
