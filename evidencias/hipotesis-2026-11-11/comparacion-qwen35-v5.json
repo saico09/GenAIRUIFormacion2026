@@ -1,0 +1,301 @@
+{
+  "started_at": "2026-11-11T22:20:04.157701+00:00",
+  "phase": "inference",
+  "model": "qwen3.5:4b-q4_K_M",
+  "options": {
+    "temperature": 0,
+    "num_ctx": 4096,
+    "num_predict": 1024
+  },
+  "thinking_requested": false,
+  "scope": "Ensayo sintético de hipótesis: inferencias de lectura o /chat con temporal propio.\n\nLas comprobaciones de texto son heurísticas acotadas; se conservan todas las salidas\npara revisión semántica. No acreditan exactitud clínica general. Nunca consulta /chat\ncon Ana ni cambia los registros confirmados de pacientes existentes.\n",
+  "clinical_reference_urls": [
+    "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/",
+    "https://www.nhs.uk/symptoms/vomiting-blood/",
+    "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+  ],
+  "automatic_checks_are_heuristic": true,
+  "manual_semantic_review_required": true,
+  "source_sha256": {
+    "rag.py": "d1e7d84e3e4d19a9c1f49f59cacf6a1f59226080a6d7ccff0e23f0b54a1418bd",
+    "app/llm.py": "b69bd01f5307ddc98b2d8519987645e3ff3bd974f64642f94c6b3e50b1790fbd"
+  },
+  "verifier_sha256": "2f97d1b91c7d99056d5461d6ab0c2c0e389c241fe8da1de5c77e23b94336b148",
+  "cases": [
+    {
+      "case": "relato_1",
+      "kind": "reflux",
+      "branch": "direct",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. ",
+      "raw": "Hipótesis principal: Reflujo gastroesofágico. Encaja por la presencia de reflujos desencadenados por comidas sólidas (masas), bebidas estimulantes (café) y el exceso de ingesta, con acidez nocturna que sugiere gravedad posicional o digestiva prolongada.\n\nOtras posibilidades: si además hubiera plenitud epigástrica, hinchazón abdominal o dolor difuso tras comer, podría coexistir dispepsia funcional; si los síntomas fueran muy frecuentes y persistentes a pesar de cambios en la dieta, podría tratarse de enfermedad por reflujo (ERGE) sintomática.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Hipótesis principal: Reflujo gastroesofágico. Encaja por la presencia de reflujos desencadenados por comidas sólidas (masas), bebidas estimulantes (café) y el exceso de ingesta, con acidez nocturna que sugiere gravedad posicional o digestiva prolongada.\n\nOtras posibilidades: si además hubiera plenitud epigástrica, hinchazón abdominal o dolor difuso tras comer, podría coexistir dispepsia funcional; si los síntomas fueran muy frecuentes y persistentes a pesar de cambios en la dieta, podría tratarse de enfermedad por reflujo (ERGE) sintomática.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 152,
+      "prompt_eval_count": 573,
+      "done_reason": "stop",
+      "prompt_sha256": "ff49aa3e5f718b3caf8eeaa4c71aa29ef793fa85fbdf7010512634e9188b06ee",
+      "sources": [],
+      "seconds": 9.85
+    },
+    {
+      "case": "relato_1",
+      "kind": "reflux",
+      "branch": "rag",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. ",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"guidance\": \"Hipótesis principal: Exacerbación de enfermedad por reflujo gastroesofágico (ERGE). Encaja por la presencia de reflujos y acidez nocturna desencadenados por comidas abundantes, masas y café, coincidiendo con antecedentes documentados de ardor y regurgitación post-cena. La ausencia de otros síntomas limita el diagnóstico a esta condición conocida.\\n\\nOtras posibilidades: si además hubiera plenitud epigástrica o hinchazón abdominal tras comer, podría coexistir dispepsia funcional. Si los episodios fueran frecuentes y persistentes a pesar del tratamiento con omeprazol (registrado pero sin dosis definida), se valoraría la adherencia terapéutica o la necesidad de ajuste.\",\n  \"facts\": [\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\",\n      \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"\n    },\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\",\n      \"quote\": \"Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\"\n    }\n  ],\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: Exacerbación de enfermedad por reflujo gastroesofágico (ERGE). Encaja por la presencia de reflujos y acidez nocturna desencadenados por comidas abundantes, masas y café, coincidiendo con antecedentes documentados de ardor y regurgitación post-cena. La ausencia de otros síntomas limita el diagnóstico a esta condición conocida.\n\nOtras posibilidades: si además hubiera plenitud epigástrica o hinchazón abdominal tras comer, podría coexistir dispepsia funcional. Si los episodios fueran frecuentes y persistentes a pesar del tratamiento con omeprazol (registrado pero sin dosis definida), se valoraría la adherencia terapéutica o la necesidad de ajuste.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nRespuesta: Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 415,
+      "prompt_eval_count": 1525,
+      "done_reason": "stop",
+      "prompt_sha256": "6146f053262541aaf75880d7328279b5ba52d3624517747b323628ee39949dbd",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 8.686
+    },
+    {
+      "case": "relato_2",
+      "kind": "reflux",
+      "branch": "direct",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "raw": "Hipótesis principal: Reflujo gastroesofágico. Encaja por regurgitación y acidez desencadenadas por comidas sólidas (masas), bebidas (café) y sobreingesta, con alivio al estar de pie. La aparición nocturna sugiere gravedad suficiente para considerar la enfermedad por reflujo (ERGE).\n\nOtras posibilidades: si además hubiera plenitud postprandial o dolor epigástrico, podría coexistir dispepsia; si el ardor fuera continuo sin relación con alimentos, se descartaría el factor alimentario como único desencadenante. No hay datos de dolor torácico ni signos de alarma en el relato actual.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Hipótesis principal: Reflujo gastroesofágico. Encaja por regurgitación y acidez desencadenadas por comidas sólidas (masas), bebidas (café) y sobreingesta, con alivio al estar de pie. La aparición nocturna sugiere gravedad suficiente para considerar la enfermedad por reflujo (ERGE).\n\nOtras posibilidades: si además hubiera plenitud postprandial o dolor epigástrico, podría coexistir dispepsia; si el ardor fuera continuo sin relación con alimentos, se descartaría el factor alimentario como único desencadenante. No hay datos de dolor torácico ni signos de alarma en el relato actual.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 159,
+      "prompt_eval_count": 602,
+      "done_reason": "stop",
+      "prompt_sha256": "ec1857ac740c54e5a2c9e61b330764d3283bcd2dc80cd3715d034dda13f4ac34",
+      "sources": [],
+      "seconds": 4.718
+    },
+    {
+      "case": "relato_2",
+      "kind": "reflux",
+      "branch": "rag",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"guidance\": \"Hipótesis principal: Enfermedad por reflujo gastroesofágico (ERGE). Encaja por reflujos tras comidas abundantes, acidez nocturna y mejora al estar de pie, coherente con antecedentes de ardor y regurgitación post-cena. Las masas y café son desencadenantes plausibles.\\n\\nOtras posibilidades: si además hubiera plenitud epigástrica o hinchazón, podría coexistir dispepsia funcional. Si el dolor fuera punzante en la parte alta del abdomen, se considerarían otras etiologías digestivas.\\n\\nNo hay signos de alarma (sangre, disfagia, pérdida de peso) ni urgencias documentadas.\",\n  \"facts\": [\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\",\n      \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia.\"\n    },\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\",\n      \"quote\": \"Omeprazol registrado para el reflujo.\"\n    },\n    {\n      \"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\",\n      \"quote\": \"El plan registrado consiste en evitar las cenas abundantes.\"\n    }\n  ],\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: Enfermedad por reflujo gastroesofágico (ERGE). Encaja por reflujos tras comidas abundantes, acidez nocturna y mejora al estar de pie, coherente con antecedentes de ardor y regurgitación post-cena. Las masas y café son desencadenantes plausibles.\n\nOtras posibilidades: si además hubiera plenitud epigástrica o hinchazón, podría coexistir dispepsia funcional. Si el dolor fuera punzante en la parte alta del abdomen, se considerarían otras etiologías digestivas.\n\nNo hay signos de alarma (sangre, disfagia, pérdida de peso) ni urgencias documentadas.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nRespuesta: Omeprazol registrado para el reflujo.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": true,
+        "generation_complete": true,
+        "facts_are_literal": false
+      },
+      "passed": false,
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 460,
+      "prompt_eval_count": 1554,
+      "done_reason": "stop",
+      "prompt_sha256": "34dc80f6ff2de5b5cbed978ff204529918d69dd37367a7d1463ce3768d3d0a6a",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 8.991
+    },
+    {
+      "case": "alarma",
+      "kind": "urgent",
+      "branch": "direct",
+      "question": "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.",
+      "raw": "Atención urgente AHORA. La presencia de hematemesis (vómito de sangre) junto con dolor abdominal intenso y mareos sugiere una posible hemorragia digestiva activa o un evento cardiovascular grave, lo que representa un riesgo inmediato para la vida del paciente.\n\nHipótesis principal: Hemorragia gastrointestinal superior aguda. Encaja por el vómito de sangre roja, el dolor fuerte en el abdomen y los mareos como signos de inestabilidad hemodinámica.\n\nOtras posibilidades: Si además hubiera taquicardia o hipotensión, podría ser shock hipovolémico; si el dolor fuera epigástrico con rigidez abdominal, podría coexistir perforación gástrica. No atribuyas esas condiciones adicionales si no se relataron.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Atención urgente AHORA. La presencia de hematemesis (vómito de sangre) junto con dolor abdominal intenso y mareos sugiere una posible hemorragia digestiva activa o un evento cardiovascular grave, lo que representa un riesgo inmediato para la vida del paciente.\n\nHipótesis principal: Hemorragia gastrointestinal superior aguda. Encaja por el vómito de sangre roja, el dolor fuerte en el abdomen y los mareos como signos de inestabilidad hemodinámica.\n\nOtras posibilidades: Si además hubiera taquicardia o hipotensión, podría ser shock hipovolémico; si el dolor fuera epigástrico con rigidez abdominal, podría coexistir perforación gástrica. No atribuyas esas condiciones adicionales si no se relataron.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "urgent_action_first": true,
+        "recognizes_reported_alarm": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 182,
+      "prompt_eval_count": 544,
+      "done_reason": "stop",
+      "prompt_sha256": "60ba9d49e056db01548b210884e72cc9fffabc4a959517788547b01ec89bb73a",
+      "sources": [],
+      "seconds": 5.056
+    },
+    {
+      "case": "alarma",
+      "kind": "urgent",
+      "branch": "rag",
+      "question": "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"guidance\": \"Atención urgente AHORA. El vómito de sangre roja junto con dolor abdominal intenso y mareos son señales de alarma que indican riesgo de hemorragia digestiva activa o perforación gástrica, condiciones potencialmente mortales que requieren evaluación inmediata en urgencias. Hipótesis principal: Hemorragia digestiva alta. Encaja por vómito de sangre roja actual, dolor fuerte abdominal y mareos (signos de shock hipovolémico). Las negaciones previas sobre ardor o regurgitación no descartan esta emergencia aguda. Otras posibilidades: si además hubiera fiebre alta o rigidez cervical, podría ser perforación gástrica; si predominara vómito negro sin sangre roja, podría ser hemorragia melénica crónica. No atribuir estas alternativas como hechos del paciente.\",\n  \"facts\": [],\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nAtención urgente AHORA. El vómito de sangre roja junto con dolor abdominal intenso y mareos son señales de alarma que indican riesgo de hemorragia digestiva activa o perforación gástrica, condiciones potencialmente mortales que requieren evaluación inmediata en urgencias. Hipótesis principal: Hemorragia digestiva alta. Encaja por vómito de sangre roja actual, dolor fuerte abdominal y mareos (signos de shock hipovolémico). Las negaciones previas sobre ardor o regurgitación no descartan esta emergencia aguda. Otras posibilidades: si además hubiera fiebre alta o rigidez cervical, podría ser perforación gástrica; si predominara vómito negro sin sangre roja, podría ser hemorragia melénica crónica. No atribuir estas alternativas como hechos del paciente.\n\nAntecedentes disponibles\nNo hay un antecedente verificable que explique lo que describes.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "urgent_action_first": true,
+        "recognizes_reported_alarm": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "thinking_requested": false,
+      "thinking_returned": false,
+      "eval_count": 216,
+      "prompt_eval_count": 1496,
+      "done_reason": "stop",
+      "prompt_sha256": "79a9ad2490c6d4f79a16ff5c2e3bfb5a61aa300324eb617547df9b41771184f4",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 5.585
+    }
+  ],
+  "checks": {
+    "no_api_chat_or_database_write": true,
+    "existing_markdown_unchanged": true
+  },
+  "passed": false,
+  "markdown_before_hash": "3dc9c55c53e24ae0c89a3c9356c8834ff7f0323b9d8c302b6c8599153d8ebb09",
+  "markdown_after_hash": "3dc9c55c53e24ae0c89a3c9356c8834ff7f0323b9d8c302b6c8599153d8ebb09",
+  "finished_at": "2026-11-11T22:20:47.059591+00:00"
+}

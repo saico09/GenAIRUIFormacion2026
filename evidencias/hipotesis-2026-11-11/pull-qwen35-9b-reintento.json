@@ -1,0 +1,232 @@
+{
+  "model": "qwen3.5:9b-q4_K_M",
+  "source": "https://ollama.com/library/qwen3.5:9b-q4_K_M",
+  "started_at": "2026-11-11T22:26:50.687967+00:00",
+  "initial_cli_attempt": "ollama no disponible en PATH; se usa API local existente",
+  "events": [
+    {
+      "status": "pulling manifest"
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 92212773
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 186540862
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 279897522
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 372012904
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 463443554
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 554008829
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 649039154
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 737438228
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 829978899
+    },
+    {
+      "status": "pulling f836f08f9211",
+      "digest": "sha256:f836f08f921193f4d6b6a6952dba0a6fb116759d26a757bcb395d570d73976ca",
+      "total": 921704832,
+      "completed": 921704832
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 567185297
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 1126317880
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 1693079081
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 2254712223
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 2819212007
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 3377737653
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 3942002006
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 4504708528
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 5070588833
+    },
+    {
+      "status": "pulling 02d45dc1cf45",
+      "digest": "sha256:02d45dc1cf451ba2475ac33b301c2dd8f985abe4c182ce04a1f2f5bf0260278d",
+      "total": 5629109120,
+      "completed": 5629109120
+    },
+    {
+      "status": "pulling b507b9c2f6ca",
+      "digest": "sha256:b507b9c2f6ca642bffcd06665ea7c91f235fd32daeefdf875a0f938db05fb315",
+      "total": 13,
+      "completed": 13
+    },
+    {
+      "status": "pulling 50cbab8a892c",
+      "digest": "sha256:50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32",
+      "total": 11343,
+      "completed": 11343
+    },
+    {
+      "status": "pulling 9371364b27a5",
+      "digest": "sha256:9371364b27a52acac9d87f88bd93c9db1174d8d6ec57f6888925cdc1788871ff",
+      "total": 65,
+      "completed": 65
+    },
+    {
+      "status": "pulling 08f9698c1116",
+      "digest": "sha256:08f9698c1116d2ba3d2c1751f6e98919823e13bb28ff5eb7451c7bc9b40907c5",
+      "total": 177,
+      "completed": 177
+    },
+    {
+      "status": "verifying sha256 digest"
+    },
+    {
+      "status": "writing manifest"
+    },
+    {
+      "status": "success"
+    }
+  ],
+  "success": true,
+  "installed_tag": {
+    "name": "qwen3.5:9b-q4_K_M",
+    "model": "qwen3.5:9b-q4_K_M",
+    "modified_at": "2026-11-11T19:28:26.1521576-03:00",
+    "size": 6550825550,
+    "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+    "details": {
+      "parent_model": "model.gguf",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "9.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 262144,
+      "embedding_length": 4096,
+      "runner": "llamacpp"
+    },
+    "capabilities": [
+      "completion",
+      "vision",
+      "tools",
+      "thinking"
+    ]
+  },
+  "show": {
+    "details": {
+      "parent_model": "model.gguf",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "9.0B",
+      "quantization_level": "Q4_K_M",
+      "runner": "llamacpp"
+    },
+    "parameters": "top_p                          0.95\npresence_penalty               1.5\ntemperature                    1\ntop_k                          20",
+    "capabilities": [
+      "completion",
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "thinking": {
+      "values": [
+        false,
+        true
+      ],
+      "default": true
+    }
+  },
+  "template_sha256": "b507b9c2f6ca642bffcd06665ea7c91f235fd32daeefdf875a0f938db05fb315",
+  "modelfile_sha256": "43f42db58c8eda1627a65968c53f1b0409460b518f2df709918b6845229fd831",
+  "api_show_sha256": "1d1cf41c617b0e2a31cf71223f34dc9ff8d8577bc6fb418295fccc5e74fb14c4",
+  "finished_at": "2026-11-11T22:28:30.426694+00:00"
+}

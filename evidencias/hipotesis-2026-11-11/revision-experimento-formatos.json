@@ -1,0 +1,33 @@
+{
+  "reviewed_at": "2026-11-11T22:14:05.799696+00:00",
+  "source_report": "experimento-formatos.json",
+  "source_sha256": "e40c739ba838fc49533d092d2fcbb0a9084fc7b87bee3824d0151d6d61648232",
+  "overall": "NO_CANDIDATE_ACCEPTED",
+  "scope": "Sólo relato2, dos estructuras y dos ramas; cuatro inferencias reales Qwen con opciones idénticas. No evaluación clínica general.",
+  "findings": [
+    {
+      "candidate": "tres_lineas",
+      "branch": "direct",
+      "finding": "Repite el dolor negado como condición para esofagitis y añade mecanismo de congestión gástrica no medido."
+    },
+    {
+      "candidate": "tres_lineas",
+      "branch": "rag",
+      "finding": "Recoge bien los indicios, pero vuelve a usar dolor de pecho negado como alternativa de angina."
+    },
+    {
+      "candidate": "ficha",
+      "branch": "direct",
+      "finding": "Hipótesis e indicios son precisos. La alternativa reutiliza dolor negado para proponer angina."
+    },
+    {
+      "candidate": "ficha",
+      "branch": "rag",
+      "finding": "Hipótesis e indicios son precisos. La alternativa repite como condición un hecho ya observado y nombra una sensibilidad genérica; no ofrece un diferencial condicionado nuevo."
+    }
+  ],
+  "bounded_recommendation": "La muestra no acredita diferenciales condicionales fiables con este modelo. Mantener una hipótesis principal provisional y sus datos; cuando no exista un diferencial justificado, expresar el límite sin inventarlo ni abrir un cuestionario. Ampliar capacidad exige evaluación independiente de otro modelo o alternativas revisadas previamente.",
+  "active_prompts_unchanged_by_experiment": true,
+  "clinical_data_unchanged_by_experiment": true,
+  "additional_candidates_run": false
+}

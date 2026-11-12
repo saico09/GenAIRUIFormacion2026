@@ -1,0 +1,88 @@
+{
+  "at": "2026-11-11T22:37:35.133123+00:00",
+  "health_python": {
+    "status": "ok"
+  },
+  "health_java": {
+    "status": "ok"
+  },
+  "checks": {
+    "patient_rows_preserved": true,
+    "python_java_same_rows": true,
+    "five_markdown_preserved": true,
+    "eleven_container_ids_preserved": true
+  },
+  "patient_ids": [
+    1,
+    2,
+    3,
+    4,
+    24
+  ],
+  "markdown_sha256": {
+    "paciente-1-ana-demo.md": "9d543db33abece0ab972acaefbe255e9978f9a4a22f36d6c08e16a8379d0fd5e",
+    "paciente-2-bruno-demo.md": "abea37122ceb18710d213da0a872852eba1ce77fd8e70845b2086c670e801ada",
+    "paciente-24-paciente-de-prueba.md": "20a2088040dcc456800bbd5abf271793cfdc5a655a8ded670c7539252a49f02d",
+    "paciente-3-carla-demo.md": "06e5f24e1e41e7923638267ed11dda58b2038ecaf9281801cc28e4ce5096be51",
+    "paciente-4-marco-contreras.md": "1c4bc21004807bea878ee24b279ada07562cae90cded576f723fdc9e650e41de"
+  },
+  "containers": [
+    {
+      "name": "genairuiformacion2026-python-api-1",
+      "id": "8782733ba3b9",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-java-api-1",
+      "id": "9900e7b3bf1b",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "conkord-sonarqube-sonarqube-1",
+      "id": "f1fca33d53ac",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "conkord-sonarqube-db-1",
+      "id": "a746096048ac",
+      "status": "Up 2 minutes (healthy)"
+    },
+    {
+      "name": "genairuiformacion2026-postgres-1",
+      "id": "4d75925996aa",
+      "status": "Up 2 minutes (healthy)"
+    },
+    {
+      "name": "genairuiformacion2026-phoenix-1",
+      "id": "80898f54c56a",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-grafana-1",
+      "id": "1ef0a8286fea",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-alloy-1",
+      "id": "8d9e369e945b",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-loki-1",
+      "id": "3d327ea7da24",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-prometheus-1",
+      "id": "95751c0af1c2",
+      "status": "Up 2 minutes"
+    },
+    {
+      "name": "genairuiformacion2026-qdrant-1",
+      "id": "4048b772794e",
+      "status": "Up 2 minutes"
+    }
+  ],
+  "socket_backup": "C:/Users/marco/AppData/Local/Docker/run-stale-20261111",
+  "scope": "Recuperación tras actualización WSL y sockets Docker inaccesibles. Imagen de aplicación anterior; no acredita despliegue de la corrección del prompt."
+}

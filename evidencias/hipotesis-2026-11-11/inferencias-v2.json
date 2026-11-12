@@ -1,0 +1,468 @@
+{
+  "started_at": "2026-11-11T21:55:13.890888+00:00",
+  "phase": "inference",
+  "model": "qwen3:4b-instruct-2507-q4_K_M",
+  "options": {
+    "temperature": 0,
+    "num_ctx": 4096,
+    "num_predict": 1024
+  },
+  "scope": "Ensayo sintético de hipótesis: inferencias de lectura o /chat con temporal propio.\n\nLas comprobaciones de texto son heurísticas acotadas; se conservan todas las salidas\npara revisión semántica. No acreditan exactitud clínica general. Nunca consulta /chat\ncon Ana ni cambia los registros confirmados de pacientes existentes.\n",
+  "clinical_reference_urls": [
+    "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/",
+    "https://www.nhs.uk/symptoms/vomiting-blood/"
+  ],
+  "automatic_checks_are_heuristic": true,
+  "manual_semantic_review_required": true,
+  "source_sha256": {
+    "rag.py": "daeccc0f3ae2b905e5387b949c093f92a3afe3bd260a43ad9eebeeaaf998ecc5",
+    "app/llm.py": "b69bd01f5307ddc98b2d8519987645e3ff3bd974f64642f94c6b3e50b1790fbd"
+  },
+  "cases": [
+    {
+      "case": "relato_1",
+      "kind": "reflux",
+      "branch": "direct",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. ",
+      "raw": "Hipótesis principal: reflujo gastroesofágico (ERGE) por congestión del esófago debido a la ingesta de alimentos y bebidas que aumentan la presión intragastrica, especialmente al comer en exceso o con alimentos grasos y café. La acidez nocturna sugiere que el esófago está expuesto a ácido durante el reposo, lo que puede estar relacionado con una disfunción del esfínter esofágico inferior.  \n\nSi además hubiera dolor torácico, náuseas o vómitos, podría ser una manifestación más severa o complicada del ERGE.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Hipótesis principal: reflujo gastroesofágico (ERGE) por congestión del esófago debido a la ingesta de alimentos y bebidas que aumentan la presión intragastrica, especialmente al comer en exceso o con alimentos grasos y café. La acidez nocturna sugiere que el esófago está expuesto a ácido durante el reposo, lo que puede estar relacionado con una disfunción del esfínter esofágico inferior.  \n\nSi además hubiera dolor torácico, náuseas o vómitos, podría ser una manifestación más severa o complicada del ERGE.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "generation_complete": true
+      },
+      "passed": false,
+      "eval_count": 166,
+      "done_reason": "stop",
+      "prompt_sha256": "ff49aa3e5f718b3caf8eeaa4c71aa29ef793fa85fbdf7010512634e9188b06ee",
+      "sources": [],
+      "seconds": 8.187
+    },
+    {
+      "case": "relato_1",
+      "kind": "reflux",
+      "branch": "rag",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. ",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"facts\": [\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\", \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"},\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\", \"quote\": \"El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\"},\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\", \"quote\": \"Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\"}\n  ],\n  \"guidance\": \"Hipótesis principal: La paciente presenta síntomas compatibles con reflujo gastroesofágico agudo, acentuado por alimentos y bebidas que desencadenan regurgitación y acidez nocturna. Los síntomas relatados (reflujo al comer masas, café y alimentos abundantes) coinciden con los desencadenantes documentados. Si además hubiera dolor torácico intenso o vómito con sangre, sería necesario atender con urgencia. La acidez nocturna podría indicar una exacerbación del cuadro, aunque no hay signos de alarma actuales.\",\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: La paciente presenta síntomas compatibles con reflujo gastroesofágico agudo, acentuado por alimentos y bebidas que desencadenan regurgitación y acidez nocturna. Los síntomas relatados (reflujo al comer masas, café y alimentos abundantes) coinciden con los desencadenantes documentados. Si además hubiera dolor torácico intenso o vómito con sangre, sería necesario atender con urgencia. La acidez nocturna podría indicar una exacerbación del cuadro, aunque no hay signos de alarma actuales.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nRespuesta: El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\n\nRespuesta: Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": false,
+      "eval_count": 482,
+      "done_reason": "stop",
+      "prompt_sha256": "3b1a79ff999baf72c6f40f5c2e821af3f271b1fdf45867389b878705e263c6fe",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 9.007
+    },
+    {
+      "case": "relato_2",
+      "kind": "reflux",
+      "branch": "direct",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "raw": "Hipótesis principal: reflujo gastroesofágico (ERGE) por disfunción del esfínter esofágico, exacerbado por el consumo de masas y café, y agravado por el volumen alimenticio excesivo. La acidez nocturna y la mejora al estar de pie apoyan esta hipótesis, ya que el reflujo se intensifica por la gravedad y la posición horizontal.  \n\nSi además hubiera dolor en el pecho o vómito, podría ser una complicación como esofagitis o obstrucción.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Hipótesis principal: reflujo gastroesofágico (ERGE) por disfunción del esfínter esofágico, exacerbado por el consumo de masas y café, y agravado por el volumen alimenticio excesivo. La acidez nocturna y la mejora al estar de pie apoyan esta hipótesis, ya que el reflujo se intensifica por la gravedad y la posición horizontal.  \n\nSi además hubiera dolor en el pecho o vómito, podría ser una complicación como esofagitis o obstrucción.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "eval_count": 153,
+      "done_reason": "stop",
+      "prompt_sha256": "ec1857ac740c54e5a2c9e61b330764d3283bcd2dc80cd3715d034dda13f4ac34",
+      "sources": [],
+      "seconds": 4.189
+    },
+    {
+      "case": "relato_2",
+      "kind": "reflux",
+      "branch": "rag",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"facts\": [\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\", \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"},\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\", \"quote\": \"El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\"},\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\", \"quote\": \"Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\"}\n  ],\n  \"guidance\": \"Hipótesis principal: La paciente presenta síntomas compatibles con reflujo gastroesofágico agudo, acentuado por alimentos y bebidas como café y masas, que son desencadenantes conocidos. La acidez nocturna y la mejora al estar de pie coinciden con el perfil clínico del reflujo. Si además hubiera dolor en el pecho o vómitos, podría considerarse una complicación como esofagitis o obstrucción. No hay signos de alarma actual como desmayo, vómito con sangre o dolor torácico intenso. El consumo constante de cafeína y masas potencia el cuadro, y el plan actual de evitar cenas abundantes y dejar tres horas entre cenar y dormir es adecuado.\",\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: La paciente presenta síntomas compatibles con reflujo gastroesofágico agudo, acentuado por alimentos y bebidas como café y masas, que son desencadenantes conocidos. La acidez nocturna y la mejora al estar de pie coinciden con el perfil clínico del reflujo. Si además hubiera dolor en el pecho o vómitos, podría considerarse una complicación como esofagitis o obstrucción. No hay signos de alarma actual como desmayo, vómito con sangre o dolor torácico intenso. El consumo constante de cafeína y masas potencia el cuadro, y el plan actual de evitar cenas abundantes y dejar tres horas entre cenar y dormir es adecuado.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nRespuesta: El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\n\nRespuesta: Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "eval_count": 522,
+      "done_reason": "stop",
+      "prompt_sha256": "8b69d52fadba70c73ac5fe95c1cef303236548ff54aac869a3dc58f89f1591db",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 8.976
+    },
+    {
+      "case": "insuficiente",
+      "kind": "insufficient",
+      "branch": "direct",
+      "question": "Me siento mal.",
+      "raw": "Primero, si tienes vómito con sangre, dolor torácico intenso, desmayo o dificultad para respirar, necesitas atención urgente ahora. Estos síntomas pueden indicar una emergencia médica, como una obstrucción gastrointestinal o un problema cardíaco, que requiere intervención inmediata.  \n\nSi no tienes esos síntomas, Hipótesis principal: malestar generalizado sin síntomas específicos, posiblemente relacionado con estrés o fatiga, aunque no hay datos sobre duración, frecuencia o empeoramiento.  \n\nSi además hubiera dolor abdominal intenso o fiebre, podría ser una infección gastrointestinal.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Primero, si tienes vómito con sangre, dolor torácico intenso, desmayo o dificultad para respirar, necesitas atención urgente ahora. Estos síntomas pueden indicar una emergencia médica, como una obstrucción gastrointestinal o un problema cardíaco, que requiere intervención inmediata.  \n\nSi no tienes esos síntomas, Hipótesis principal: malestar generalizado sin síntomas específicos, posiblemente relacionado con estrés o fatiga, aunque no hay datos sobre duración, frecuencia o empeoramiento.  \n\nSi además hubiera dolor abdominal intenso o fiebre, podría ser una infección gastrointestinal.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "states_evidence_limit": false,
+        "no_arbitrary_specific_diagnosis": true,
+        "generation_complete": true
+      },
+      "passed": false,
+      "eval_count": 171,
+      "done_reason": "stop",
+      "prompt_sha256": "9375ed96b32427d26b4eaf3e1b0ea9a5f31c362221612bf32edc9d8d66d7d389",
+      "sources": [],
+      "seconds": 4.366
+    },
+    {
+      "case": "insuficiente",
+      "kind": "insufficient",
+      "branch": "rag",
+      "question": "Me siento mal.",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"facts\": [],\n  \"guidance\": \"Me siento mal. Este relato es vago y no especifica síntomas concretos, ni su intensidad, duración ni contexto. No hay datos para formular una hipótesis diagnóstica razonada. La falta de detalles impide identificar una causa posible o evaluar riesgos. Se requiere más información para una valoración adecuada.\",\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nMe siento mal. Este relato es vago y no especifica síntomas concretos, ni su intensidad, duración ni contexto. No hay datos para formular una hipótesis diagnóstica razonada. La falta de detalles impide identificar una causa posible o evaluar riesgos. Se requiere más información para una valoración adecuada.\n\nAntecedentes disponibles\nNo hay un antecedente verificable que explique lo que describes.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "states_evidence_limit": true,
+        "no_arbitrary_specific_diagnosis": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "eval_count": 115,
+      "done_reason": "stop",
+      "prompt_sha256": "68e18c0e65e68be18b617be093a6af558bde2357a3cf46b3aeba9c1c14a4afb2",
+      "sources": [],
+      "seconds": 3.679
+    },
+    {
+      "case": "negaciones",
+      "kind": "reflux",
+      "branch": "direct",
+      "question": "Tengo acidez después de comer y regurgitación al acostarme desde hace dos semanas. No tengo dolor en el pecho, no vomito, no he perdido peso y no me cuesta tragar. Mejora al ponerme de pie.",
+      "raw": "Hipótesis principal: reflujo gastroesofágico leve, compatible con síntomas de acidez postprandial y regurgitación al acostarse, que mejoran al estar de pie, sin signos de complicaciones ni síntomas de alarma.  \n\nEl hecho de que los síntomas empeoren al acostarse y mejoren al ponerse de pie apoya una disfunción del esfínter esofágico inferior, común en reflujo. No hay dolor torácico, vómito ni pérdida de peso, lo que reduce el riesgo de complicaciones graves.  \n\nSi además hubiera dolor en el pecho o vómito, podría ser una manifestación más grave, como una lesión esofágica o una obstrucción.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Hipótesis principal: reflujo gastroesofágico leve, compatible con síntomas de acidez postprandial y regurgitación al acostarse, que mejoran al estar de pie, sin signos de complicaciones ni síntomas de alarma.  \n\nEl hecho de que los síntomas empeoren al acostarse y mejoren al ponerse de pie apoya una disfunción del esfínter esofágico inferior, común en reflujo. No hay dolor torácico, vómito ni pérdida de peso, lo que reduce el riesgo de complicaciones graves.  \n\nSi además hubiera dolor en el pecho o vómito, podría ser una manifestación más grave, como una lesión esofágica o una obstrucción.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": false,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "generation_complete": true
+      },
+      "passed": false,
+      "eval_count": 196,
+      "done_reason": "stop",
+      "prompt_sha256": "91b7a4d8db8ed241adad544a5178dd88617640ce24fcbe24909042272d60a9e2",
+      "sources": [],
+      "seconds": 4.69
+    },
+    {
+      "case": "negaciones",
+      "kind": "reflux",
+      "branch": "rag",
+      "question": "Tengo acidez después de comer y regurgitación al acostarme desde hace dos semanas. No tengo dolor en el pecho, no vomito, no he perdido peso y no me cuesta tragar. Mejora al ponerme de pie.",
+      "raw": "{\n  \"mode\": \"symptom_guidance\",\n  \"missing_information\": false,\n  \"facts\": [\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\", \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"}\n  ],\n  \"guidance\": \"Hipótesis principal: La paciente presenta síntomas compatibles con reflujo gastroesofágico, ya que reporta acidez y regurgitación después de comer y al acostarse, con mejora al ponerse de pie, como se ha documentado anteriormente. Si además hubiera dolor en el pecho o vómito, podría ser una complicación más grave, como esofagitis o obstrucción. No hay signos de alarma actuales.\",\n  \"questions\": []\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: La paciente presenta síntomas compatibles con reflujo gastroesofágico, ya que reporta acidez y regurgitación después de comer y al acostarse, con mejora al ponerse de pie, como se ha documentado anteriormente. Si además hubiera dolor en el pecho o vómito, podría ser una complicación más grave, como esofagitis o obstrucción. No hay signos de alarma actuales.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "eval_count": 260,
+      "done_reason": "stop",
+      "prompt_sha256": "370974607cd4e864f44b9fbf9038ab369abeb817f16631458285ad313e660c96",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 5.708
+    },
+    {
+      "case": "alarma",
+      "kind": "urgent",
+      "branch": "direct",
+      "question": "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.",
+      "raw": "Atención urgente ahora. Vomitar sangre roja, dolor abdominal intenso y mareo son señales de alarma que pueden indicar una hemorragia gastrointestinal o una lesión en el tracto digestivo, como úlceras o estrés gastrointestinal severo. Estos síntomas pueden progresar rápidamente y poner en riesgo la vida. Requiere evaluación médica inmediata para descartar complicaciones graves como obstrucción o perforación.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "Atención urgente ahora. Vomitar sangre roja, dolor abdominal intenso y mareo son señales de alarma que pueden indicar una hemorragia gastrointestinal o una lesión en el tracto digestivo, como úlceras o estrés gastrointestinal severo. Estos síntomas pueden progresar rápidamente y poner en riesgo la vida. Requiere evaluación médica inmediata para descartar complicaciones graves como obstrucción o perforación.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "urgent_action_first": true,
+        "recognizes_reported_alarm": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "eval_count": 126,
+      "done_reason": "stop",
+      "prompt_sha256": "60ba9d49e056db01548b210884e72cc9fffabc4a959517788547b01ec89bb73a",
+      "sources": [],
+      "seconds": 3.814
+    },
+    {
+      "case": "alarma",
+      "kind": "urgent",
+      "branch": "rag",
+      "question": "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada.",
+      "raw": "{\n  \"mode\": \"record_lookup\",\n  \"missing_information\": false,\n  \"facts\": [\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\", \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"}\n  ],\n  \"guidance\": \"\",\n  \"questions\": []\n}",
+      "answer": "Respuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": false,
+        "urgent_action_first": false,
+        "recognizes_reported_alarm": false,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": false,
+      "eval_count": 153,
+      "done_reason": "stop",
+      "prompt_sha256": "8a5badd653012c84182819dcbcbd0800879feccb3c9bb0a98249eef2ee4b84f8",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 4.303
+    },
+    {
+      "case": "dosis_ausente",
+      "kind": "lookup",
+      "branch": "direct",
+      "question": "¿Qué dosis de omeprazol tengo registrada en mi informe?",
+      "raw": "No tengo acceso a tu historial ni a los datos registrados en tu informe. No puedo indicarte la dosis de omeprazol que tengas registrada. Para obtener esa información, debes revisar tu archivo médico o consultar directamente con tu médico o farmacéutico.  \n\nSi tienes síntomas o preguntas sobre tu salud, puedo ayudarte con una evaluación basada en lo que me digas ahora.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "answer": "No tengo acceso a tu historial ni a los datos registrados en tu informe. No puedo indicarte la dosis de omeprazol que tengas registrada. Para obtener esa información, debes revisar tu archivo médico o consultar directamente con tu médico o farmacéutico.  \n\nSi tienes síntomas o preguntas sobre tu salud, puedo ayudarte con una evaluación basada en lo que me digas ahora.  \n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "unknown_record_not_invented": true,
+        "generation_complete": true
+      },
+      "passed": true,
+      "eval_count": 115,
+      "done_reason": "stop",
+      "prompt_sha256": "e74b6157fd3e98f02194e9c1d8201d09250115b04d8de2cad1373897f3f42f05",
+      "sources": [],
+      "seconds": 3.621
+    },
+    {
+      "case": "dosis_ausente",
+      "kind": "lookup",
+      "branch": "rag",
+      "question": "¿Qué dosis de omeprazol tengo registrada en mi informe?",
+      "raw": "{\n  \"mode\": \"record_lookup\",\n  \"missing_information\": true,\n  \"facts\": [],\n  \"guidance\": \"\",\n  \"questions\": []\n}",
+      "answer": "No hay información suficiente",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "unknown_record_not_invented": true,
+        "generation_complete": true,
+        "facts_are_literal": true
+      },
+      "passed": true,
+      "eval_count": 34,
+      "done_reason": "stop",
+      "prompt_sha256": "d3e66b0ec93cee55cdc3372156d4c05f1c40107fe7fa90c6703f99c1830f1751",
+      "sources": [
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Enfermedad",
+          "text": "La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Tratamiento",
+          "text": "El plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse."
+        },
+        {
+          "patient_id": 900001,
+          "record_id": "49b80291-754b-42af-b35f-aa2567405c82",
+          "source": "paciente-900001-prueba-hipotesis.md",
+          "section": "Medicamento",
+          "text": "Omeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta."
+        }
+      ],
+      "seconds": 2.765
+    }
+  ],
+  "checks": {
+    "no_api_chat_or_database_write": true,
+    "existing_markdown_unchanged": true
+  },
+  "passed": false,
+  "markdown_before_hash": "3dc9c55c53e24ae0c89a3c9356c8834ff7f0323b9d8c302b6c8599153d8ebb09",
+  "markdown_after_hash": "3dc9c55c53e24ae0c89a3c9356c8834ff7f0323b9d8c302b6c8599153d8ebb09",
+  "finished_at": "2026-11-11T21:56:17.214608+00:00"
+}

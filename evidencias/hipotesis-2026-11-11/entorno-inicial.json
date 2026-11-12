@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-11T21:52:00.387173+00:00",
+  "docker_version_error": "Docker Desktop is unable to start",
+  "docker_desktop_status": "stopped",
+  "docker_desktop_start_result": "already running",
+  "wsl_service_status": "StopPending",
+  "wsl_list_probe": "No devolvió respuesta; sólo se terminó la sonda propia, no la distribución",
+  "api_8000": "timeout8s",
+  "api_8080": "timeout8s",
+  "ollama_11434": 200,
+  "monitor_error_date": "2026-11-10",
+  "monitor_error": "Docker Desktop - WSL is unresponsive; listing WSL distros timed out",
+  "actions": "Diagnóstico de lectura y docker desktop start (sin efecto). No se reinició Docker, WSL ni el equipo; no se modificaron volúmenes."
+}

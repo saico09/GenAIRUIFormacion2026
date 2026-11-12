@@ -1,0 +1,38 @@
+{
+  "model": "qwen3.5:9b-q4_K_M",
+  "system": "La clave ficticia del ejercicio es LUCERO742. Responde sólo con la clave cuando se solicite.",
+  "user": "¿Cuál es la clave del ejercicio?",
+  "options": {
+    "temperature": 0,
+    "num_ctx": 4096,
+    "num_predict": 1024
+  },
+  "think": false,
+  "started_at": "2026-11-11T22:33:18.684282+00:00",
+  "cases": [
+    {
+      "api": "generate",
+      "request_sha256": "7decff0d0003dfa14d983df1cab49f5a0f0f82071098d8b0f6ad0b74965dba5c",
+      "prompt_eval_count": 50,
+      "eval_count": 7,
+      "done_reason": "stop",
+      "thinking_returned": false,
+      "answer": "LUCERO742",
+      "passed": true,
+      "seconds": 3.483
+    },
+    {
+      "api": "chat",
+      "request_sha256": "06496995261798d1f34a9aa2f36581591c2025f5fe7a95c805bb0f767489ea2f",
+      "prompt_eval_count": 50,
+      "eval_count": 7,
+      "done_reason": "stop",
+      "thinking_returned": false,
+      "answer": "LUCERO742",
+      "passed": true,
+      "seconds": 3.184
+    }
+  ],
+  "scope": "Sondeo artificial de transmisión del mensaje system; no evalúa calidad clínica.",
+  "finished_at": "2026-11-11T22:33:25.353346+00:00"
+}

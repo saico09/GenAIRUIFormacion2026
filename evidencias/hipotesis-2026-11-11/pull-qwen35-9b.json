@@ -1,0 +1,14 @@
+{
+  "model": "qwen3.5:9b-q4_K_M",
+  "source": "https://ollama.com/library/qwen3.5:9b-q4_K_M",
+  "started_at": "2026-11-11T22:26:27.168660+00:00",
+  "initial_cli_attempt": "ollama no disponible en PATH; se usa API local existente",
+  "events": [
+    {
+      "status": "pulling manifest"
+    }
+  ],
+  "success": false,
+  "error": "pull model manifest: 503: upstream connect error or disconnect/reset before headers. reset reason: connection timeout",
+  "finished_at": "2026-11-11T22:26:34.001691+00:00"
+}

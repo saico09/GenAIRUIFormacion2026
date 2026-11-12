@@ -1,0 +1,763 @@
+{
+  "started_at": "2026-11-11T23:59:38.203846+00:00",
+  "scope": "RAG, propuestas, guardado y auditoría reales con un paciente temporal propio.\n\nNo modifica Ana. Usa el modelo configurado en la API, sin simulaciones. Al terminar\nborra sólo su paciente/índice; conserva respaldos y auditoría, como exige la app.\n",
+  "cases": [
+    {
+      "name": "tres_campos",
+      "execution_id": "f077fdb2-bbdc-4e2c-a873-aa3adc9e5eb4",
+      "question": "Resume la enfermedad, el tratamiento y el medicamento registrados de Paciente QA b7b0154bdb9c.",
+      "seconds": 142.463,
+      "response": {
+        "direct_answer": "No tengo acceso a los registros ni al historial del paciente, por lo que no puedo proporcionar información sobre enfermedades, tratamientos o medicamentos previos.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+        "rag_answer": "Respuesta: Diagnóstico ficticio confirmado: Enfermedad Nube.\nFuente: [paciente-54-paciente-qa-b7b0154bdb9c.md/7d5030d2-5ba1-43eb-9820-38a55cd94795/Enfermedad]\n\nRespuesta: Medicamento ficticio registrado: Medicamento Nube.\nFuente: [paciente-54-paciente-qa-b7b0154bdb9c.md/7d5030d2-5ba1-43eb-9820-38a55cd94795/Medicamento]\n\nRespuesta: Plan ficticio registrado: Tratamiento Nube.\nFuente: [paciente-54-paciente-qa-b7b0154bdb9c.md/7d5030d2-5ba1-43eb-9820-38a55cd94795/Tratamiento]",
+        "sources": [
+          {
+            "score": 0.67445385,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Enfermedad",
+            "text": "Diagnóstico ficticio confirmado: Enfermedad Nube."
+          },
+          {
+            "score": 0.6571859,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Medicamento",
+            "text": "Medicamento ficticio registrado: Medicamento Nube."
+          },
+          {
+            "score": 0.64441526,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Tratamiento",
+            "text": "Plan ficticio registrado: Tratamiento Nube."
+          }
+        ],
+        "model": "gemma4:12b",
+        "consultation": {
+          "id": "f077fdb2-bbdc-4e2c-a873-aa3adc9e5eb4",
+          "patient_id": 54,
+          "created_at": "2026-11-12T00:01:57.092521Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "semantic_passed": true,
+      "passed": true
+    },
+    {
+      "name": "cirugia_ausente",
+      "execution_id": "aae233a2-2efa-4ba7-92a2-7211f812c808",
+      "question": "¿Cuál fue la última cirugía registrada de Paciente QA b7b0154bdb9c?",
+      "seconds": 67.029,
+      "response": {
+        "direct_answer": "No tengo acceso al historial del paciente ni a registros previos, por lo que no conozco información sobre cirugías anteriores.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+        "rag_answer": "No hay información suficiente",
+        "sources": [
+          {
+            "score": 0.5922545,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Tratamiento",
+            "text": "Plan ficticio registrado: Tratamiento Nube."
+          },
+          {
+            "score": 0.5672295,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Medicamento",
+            "text": "Medicamento ficticio registrado: Medicamento Nube."
+          },
+          {
+            "score": 0.56640416,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Enfermedad",
+            "text": "Diagnóstico ficticio confirmado: Enfermedad Nube."
+          }
+        ],
+        "model": "gemma4:12b",
+        "consultation": {
+          "id": "aae233a2-2efa-4ba7-92a2-7211f812c808",
+          "patient_id": 54,
+          "created_at": "2026-11-12T00:03:04.650353Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "semantic_passed": true,
+      "passed": true
+    },
+    {
+      "name": "sintomas_nuevos",
+      "execution_id": "690e78b4-2a08-45e3-8651-4ce438f4e18e",
+      "question": "Desde ayer refiere cansancio y dolor de cabeza leve.",
+      "seconds": 88.387,
+      "response": {
+        "direct_answer": "Ese malestar inespecífico no permite elegir una hipótesis, ya que faltan datos sobre la naturaleza del cansancio, la localización o características específicas del dolor de cabeza para diferenciar causas comunes.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+        "rag_answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: Cefalea tensional o fatiga general. Encaja por el reporte de dolor de cabeza leve y cansancio persistente desde ayer. Otras posibilidades: si además hubiera fiebre o rigidez en el cuello, podría ser una infección sistémica; si además hubiera visión borrosa o debilidad muscular, podría tratarse de un desequilibrio electrolítico o metabólico.\n\nAntecedentes disponibles\nNo hay un antecedente verificable que explique lo que describes.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+        "sources": [
+          {
+            "score": 0.5249935,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Enfermedad",
+            "text": "Diagnóstico ficticio confirmado: Enfermedad Nube."
+          },
+          {
+            "score": 0.51968145,
+            "patient_id": 54,
+            "record_id": "7d5030d2-5ba1-43eb-9820-38a55cd94795",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Medicamento",
+            "text": "Medicamento ficticio registrado: Medicamento Nube."
+          },
+          {
+            "score": 0.5386783,
+            "patient_id": 54,
+            "record_id": "f077fdb2-bbdc-4e2c-a873-aa3adc9e5eb4",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Consulta",
+            "text": "Consulta registrada el 2026-11-12T00:01:57.092521Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\nResume la enfermedad, el tratamiento y el medicamento registrados de Paciente QA b7b0154bdb9c."
+          }
+        ],
+        "model": "gemma4:12b",
+        "consultation": {
+          "id": "690e78b4-2a08-45e3-8651-4ce438f4e18e",
+          "patient_id": 54,
+          "created_at": "2026-11-12T00:04:33.392392Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "semantic_passed": true,
+      "passed": true
+    },
+    {
+      "name": "recuperar_consulta_anterior",
+      "execution_id": "65b316c2-8a1e-4bb7-80d2-a52dfdbd3e3d",
+      "question": "¿Qué síntomas relató el paciente en consultas anteriores?",
+      "seconds": 90.865,
+      "response": {
+        "direct_answer": "No tengo acceso al historial de consultas anteriores del paciente ni a información previa fuera del relato actual.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+        "rag_answer": "Relato registrado (sin diagnóstico confirmado): Desde ayer refiere cansancio y dolor de cabeza leve.\nFuente: [paciente-54-paciente-qa-b7b0154bdb9c.md/690e78b4-2a08-45e3-8651-4ce438f4e18e/Consulta]",
+        "sources": [
+          {
+            "score": 0.67394376,
+            "patient_id": 54,
+            "record_id": "f077fdb2-bbdc-4e2c-a873-aa3adc9e5eb4",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Consulta",
+            "text": "Consulta registrada el 2026-11-12T00:01:57.092521Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\nResume la enfermedad, el tratamiento y el medicamento registrados de Paciente QA b7b0154bdb9c."
+          },
+          {
+            "score": 0.6511173,
+            "patient_id": 54,
+            "record_id": "aae233a2-2efa-4ba7-92a2-7211f812c808",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Consulta",
+            "text": "Consulta registrada el 2026-11-12T00:03:04.650353Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\n¿Cuál fue la última cirugía registrada de Paciente QA b7b0154bdb9c?"
+          },
+          {
+            "score": 0.6403611,
+            "patient_id": 54,
+            "record_id": "690e78b4-2a08-45e3-8651-4ce438f4e18e",
+            "source": "paciente-54-paciente-qa-b7b0154bdb9c.md",
+            "section": "Consulta",
+            "text": "Consulta registrada el 2026-11-12T00:04:33.392392Z. Texto relatado o preguntado por el usuario, sin diagnóstico confirmado:\nDesde ayer refiere cansancio y dolor de cabeza leve."
+          }
+        ],
+        "model": "gemma4:12b",
+        "consultation": {
+          "id": "65b316c2-8a1e-4bb7-80d2-a52dfdbd3e3d",
+          "patient_id": 54,
+          "created_at": "2026-11-12T00:06:03.079492Z",
+          "saved": true
+        },
+        "index_synced": true
+      },
+      "semantic_passed": true,
+      "passed": true
+    }
+  ],
+  "checks": [
+    "Paciente y tres fragmentos confirmados propios, con UUID común",
+    "Se evaluaron datos confirmados, ausencia documental, orientación y síntomas reportados; resultado semántico por caso",
+    "Mismo UUID recupera respuestas originales; distinto contenido devuelve 409 sin duplicados",
+    "Propuesta real recupera tres campos con evidencia; negaciones no generan datos ni escrituras clínicas",
+    "SQL respalda MD completo y revisión; Qdrant conserva tres campos y cuatro notas, sin reingerir respuestas IA",
+    "Cada operación HTTP tiene un UUID único y patient_id; el reintento conserva una sola consulta clínica",
+    "Quinta consulta temporal: Phoenix raíz/cuatro nodos y Loki correlacionados"
+  ],
+  "temporary_patient_id": 54,
+  "proposals": {
+    "explicit": {
+      "patient_id": 54,
+      "entries": [
+        {
+          "disease": "Enfermedad Nube",
+          "treatment": "Tratamiento Nube",
+          "medication": "Medicamento Nube",
+          "evidence": {
+            "disease": "Diagnóstico registrado: Enfermedad Nube.",
+            "treatment": "Tratamiento: Tratamiento Nube.",
+            "medication": "Medicamento: Medicamento Nube."
+          }
+        }
+      ],
+      "message": "Revisa los datos y confirma antes de guardarlos."
+    },
+    "negative": {
+      "patient_id": 54,
+      "entries": [],
+      "message": "No encontré enfermedad, tratamiento o medicamento afirmados explícitamente. Añade una nota con datos confirmados o registra los campos manualmente."
+    }
+  },
+  "sql_backup": {
+    "revision": "6c0e1ff473eaf39169e064fc8192f086dbb29a32c7f05fc01e38108242d9c112",
+    "hash": "6c0e1ff473eaf39169e064fc8192f086dbb29a32c7f05fc01e38108242d9c112",
+    "bytes": 3798
+  },
+  "patient_logs": [
+    {
+      "id": "23c3e329-8a2b-4a9b-a388-86c00246f42e",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "POST /patients",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "46ac2516-e2ca-4699-8fdc-0cf2f3ca47df",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "b385ddb0-9924-4fc1-a7f8-39c270b7aa5f",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "POST /patients/{id}/history/entries",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "0a95f48a-6f97-4edb-aaa0-fff731777c30",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "252047bf-f7c2-4fc7-a882-bc7a264b734d",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "bb0f9eaf-0ba4-4c41-b49a-8d1bb2164d90",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /clinical/patients/{id}/sync",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "1483c97e-29ab-4176-a99f-55056c23e09a",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "0207b52b-4f82-4f04-afdc-a97364466ce3",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "3bce2e50-4671-4ed2-a1fc-b2ee00674c59",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "04b9200a-2256-47e9-ba26-265b6e800ae2",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "4a6ea040-39b0-4471-b039-c706dee7d608",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "200aa6c5-7a35-4592-bebf-b7d028e8f0ab",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "87a07df4-6d8f-4aeb-a13a-205365d69e64",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "530639b7-5e81-4c1f-995f-5d4a4ad12ded",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "33a1d716-fb1d-4e93-86ed-ca5b08889895",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "8a02fd82-ad12-46f6-bd93-fe906e8b6144",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "5ddb3a3f-e24f-45c9-9f20-7b715c294f0f",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "e38cc77a-e1ed-40e9-bd29-0aa602958958",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "8beff589-3a11-484a-a47e-b3ebc73885c0",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "830bc7b9-3292-4ee3-bb80-67e6d49c41f7",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "472825c5-f2ac-4733-bb5a-d7aa51b29f4b",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "bdaf1188-52cb-4a5a-b674-d192ec3ae0a7",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "d441f6e6-c399-4f84-9d4f-55b194ba0bf9",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "d758fa78-4d87-4325-9a57-f09b493b5c22",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "b2fe04fc-0270-46da-957f-545697a51084",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "21db8475-22b4-4a9c-bb1f-e55089ff544d",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "85022988-76d0-48b4-ae24-f66509dcb5af",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "ab919098-4604-42bd-9bef-63626efe3be5",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "8e8ca47a-a9a5-4a53-be91-9eb6288bc39d",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "62c24b5c-df36-4228-9d4b-96f35543100d",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "d921c465-15b5-4ee6-85a9-17d50e8cf34c",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "166b22fc-fbf8-49e0-bc27-4700e309c888",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "34ea94a7-7d79-4e7d-913c-9660a962fd47",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "db331595-fed2-4f4d-85fb-210cbcdb808c",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "a0d5bb96-bd42-4b78-bb12-5926d165244b",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 404,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "4fc4a219-d025-4e9e-b419-ef9957b300c1",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "d54d5077-fa02-45df-a2dc-d2602d20649e",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "4b496122-5402-477c-bd5c-9e263afd5935",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "POST /patients/{id}/consultations",
+      "http_status": 201,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "7ed39f05-04b5-44ce-8c14-f30a835896e5",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "c91c8a4d-9100-4d51-9267-ab8a4ba9ae46",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "68851f59-7209-4c79-b7a4-6aa9a021f43b",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "3cc31de2-eca8-47c0-a2f1-b8f2ae1ea70e",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "deb0a124-add0-42f0-8727-ec767548fbfc",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "6f89e94d-5245-4e7b-b1b8-48b63102b16f",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "3e4c8c5e-b2a7-4642-9ca7-69512094fc20",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "376ae177-446f-432d-ade0-68acb9c5d7d7",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "b63e2b60-454a-40ba-bc20-69a0dad4d5ad",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "e87d6803-a776-44a1-8186-d6ef20b8ceec",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "614dbc8d-7427-4004-ae89-d94a6ebac87a",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "d3a001fc-e359-4131-a4c4-e18b8aecf841",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/consultations/{consultationId}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "7080cc4a-8dfc-415c-93cf-682428b358ff",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /chat",
+      "http_status": 409,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "1ac93c3b-986a-4730-884f-1bc739524a54",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "7eb3bf1b-ff8b-4977-b9f9-89d9c501ca03",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "d144ce9f-77e9-4f5f-abfb-e16d1b6e10ff",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /clinical/proposals",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "e40b76a0-6aac-472d-b02c-a8458fcea110",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "f233cff7-1cbe-4196-aed9-31c22872d016",
+      "patient_id": 54,
+      "service": "python",
+      "operation": "POST /clinical/proposals",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "161f55c2-8349-4a57-98e6-7c9cd9d84cc1",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    },
+    {
+      "id": "44768183-448b-4431-a376-fc0e6d9a6c52",
+      "patient_id": 54,
+      "service": "java",
+      "operation": "GET /patients/{id}/history",
+      "http_status": 200,
+      "request_truncated": false,
+      "response_truncated": false
+    }
+  ],
+  "trace": {
+    "passed": true,
+    "output": "codigo\\evidencias\\hipotesis-2026-11-11\\regresion-http-enrutamiento\\regresion-traza.json",
+    "stdout": "OK raíz y cuatro hijos, entradas/salidas, duración y siete logs: consultas-regresion-bc8e384d41de4b688359c411b73b7f73\nhttp://localhost:6006/redirects/traces/d7e29c6b764f3169eac16ff109e93596\n",
+    "stderr": ""
+  },
+  "passed": true,
+  "temporary_patient_and_points_removed": true,
+  "original_patients_preserved": true,
+  "bruno_carla_vectors_preserved": true,
+  "finished_at": "2026-11-12T00:08:08.185892+00:00"
+}

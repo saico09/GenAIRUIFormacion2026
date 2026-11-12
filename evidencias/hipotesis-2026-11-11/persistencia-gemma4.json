@@ -1,0 +1,157 @@
+{
+  "started_at": "2026-11-11T23:30:39.515346+00:00",
+  "phase": "persistence",
+  "model": "gemma4:12b",
+  "options": {
+    "temperature": 1,
+    "num_ctx": 8192,
+    "num_predict": 1024,
+    "top_p": 0.95,
+    "top_k": 64,
+    "draft_num_predict": 0
+  },
+  "thinking_requested": false,
+  "inference_timeout_seconds": 180,
+  "scope": "Ensayo sintético de hipótesis: inferencias de lectura o /chat con temporal propio.\n\nLas comprobaciones de texto son heurísticas acotadas; se conservan todas las salidas\npara revisión semántica. No acreditan exactitud clínica general. Nunca consulta /chat\ncon Ana ni cambia los registros confirmados de pacientes existentes.\n",
+  "clinical_reference_urls": [
+    "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/",
+    "https://www.nhs.uk/symptoms/vomiting-blood/",
+    "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+  ],
+  "automatic_checks_are_heuristic": true,
+  "manual_semantic_review_required": true,
+  "semantic_criteria_version": 2,
+  "source_sha256": {
+    "rag.py": "d1e7d84e3e4d19a9c1f49f59cacf6a1f59226080a6d7ccff0e23f0b54a1418bd",
+    "app/llm.py": "e5bfd6275720015714d97719d0eb5dc77ea68ed167ed041596ea94f564802d73"
+  },
+  "verifier_sha256": "1a9f37cf92573cf88b41128751958c1593eb5c7f40ad701ed6e8aa3cd74e9d86",
+  "branches": [
+    "direct",
+    "rag"
+  ],
+  "cases": [
+    {
+      "case": "relato_1",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. ",
+      "branch": "direct",
+      "answer": "Hipótesis principal: Reflujo gastroesofágico. Encaja por la presencia de regurgitación vinculada a la ingesta de alimentos específicos (masas), bebidas (café) y grandes volúmenes de comida, junto con acidez nocturna.\n\nOtras posibilidades: si además hubiera dolor en la boca del estómago, hinchazón o sensación de llenura rápida, podría coexistir dispepsia.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true
+      },
+      "passed": true,
+      "execution_id": "a064ca57-00a5-4746-a338-b5c6b5ba4f70",
+      "pair_seconds": 148.186
+    },
+    {
+      "case": "relato_1",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. ",
+      "branch": "rag",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: enfermedad por reflujo gastroesofágico (ERGE). Encaja por la presencia de reflujo y acidez nocturna asociados a desencadenantes específicos como el consumo de café, masas y comidas abundantes. El historial confirma que la paciente ya presentaba ardor y regurgitación tras cenas abundantes y al acostarse, síntomas que se mantienen con los nuevos factores identificados. Otras posibilidades: si además hubiera dolor en la parte alta del abdomen o sensación de hinchazón, podría coexistir con dispepsia. El relato actual muestra una persistencia del cuadro clínico registrado en el historial ante estímulos dietéticos claros.\n\nAntecedentes disponibles\nRespuesta: refirió ardor y regurgitación después de cenas abundantes y al acostarse\nFuente: [paciente-52-paciente-hipotesis-qa-312ed3818683.md/0a14d15d-0dbc-4a70-afd5-1347b6fae0eb/Enfermedad]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true
+      },
+      "passed": true,
+      "execution_id": "a064ca57-00a5-4746-a338-b5c6b5ba4f70",
+      "pair_seconds": 148.186
+    },
+    {
+      "case": "relato_2",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "branch": "direct",
+      "answer": "Hipótesis principal: Enfermedad por reflujo gastroesofágico (ERGE). Encaja por la presencia de reflujo desencadenado por el consumo de comidas copiosas, masas y café, junto con la acidez nocturna. La mejoría al estar de pie también es compatible con este cuadro.\n\nOtras posibilidades: si además hubiera síntomas como hinchazón abdominal o pesadez tras las comidas, podría coexistir con dispepsia.\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "does_not_contradict_reported_posture": true,
+        "does_not_reask_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": true
+      },
+      "passed": true,
+      "execution_id": "aa5938e8-d146-438d-84a9-8fa62c07c7df",
+      "pair_seconds": 126.441
+    },
+    {
+      "case": "relato_2",
+      "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "branch": "rag",
+      "answer": "No hay información suficiente",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": false,
+        "guidance_mode": false,
+        "reflux_hypothesis": false,
+        "provisional_language": false,
+        "uses_reported_evidence": false,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "does_not_contradict_reported_posture": true,
+        "does_not_reask_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": true
+      },
+      "passed": false,
+      "execution_id": "aa5938e8-d146-438d-84a9-8fa62c07c7df",
+      "pair_seconds": 126.441
+    }
+  ],
+  "checks": {
+    "hypotheses_not_promoted_to_patient_diseases": true,
+    "markdown_sql_backup_equal": true,
+    "exact_questions_and_answers_persisted": true,
+    "retry_does_not_duplicate": true,
+    "vectors_index_notes_not_ai_answers": true,
+    "existing_patients_unchanged": true,
+    "qdrant_original_restored": true,
+    "existing_markdown_unchanged": true
+  },
+  "passed": false,
+  "temporary_patient_id": 52,
+  "cleanup": "Temporal y vectores retirados; respaldos/auditoría del temporal se conservan como requiere la aplicación.",
+  "markdown_before_hash": "3dc9c55c53e24ae0c89a3c9356c8834ff7f0323b9d8c302b6c8599153d8ebb09",
+  "markdown_after_hash": "3dc9c55c53e24ae0c89a3c9356c8834ff7f0323b9d8c302b6c8599153d8ebb09",
+  "finished_at": "2026-11-11T23:35:58.319761+00:00"
+}

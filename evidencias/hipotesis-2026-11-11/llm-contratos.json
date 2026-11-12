@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-11-11T22:40:40.692347+00:00",
+  "command": "python -m unittest discover -s tests -p test_llm.py -v",
+  "working_directory": "codigo/python-api",
+  "tests_run": 8,
+  "passed": true,
+  "exit_code": 0,
+  "scope": "Pruebas aisladas del código real llm.py con transporte y logger sustituidos. Sin inferencias, red ni SQL.",
+  "checks": [
+    "Metadatos de generación en éxito y error",
+    "Mismo modelo y opciones para ambas ramas",
+    "Respuestas vacías, incompletas o truncadas rechazadas",
+    "Thinking separado nunca se devuelve ni se registra como texto",
+    "Respuesta sin salida final y JSON malformado rechazados",
+    "Errores de transporte no registran el detalle de excepción"
+  ],
+  "source_sha256": {
+    "python-api/app/llm.py": "73cd44de0f5d2c5b9b4537045f1b2f7a9382519d2e63f7c05339edb37cd80728",
+    "python-api/tests/test_llm.py": "80d60e96568912d955397d493d3cec6e5dccb54bc5448dd33dc386ade1ff1c7d"
+  }
+}

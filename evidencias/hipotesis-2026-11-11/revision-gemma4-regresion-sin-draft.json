@@ -1,0 +1,128 @@
+{
+  "reviewed_at": "2026-11-11T23:14:13.034160+00:00",
+  "source": "gemma4-regresion-sin-draft.json",
+  "source_sha256": "12626d1d26d6d7c8100e35b07b3f170005fae4ef9df06e2f86971dd0df20affa",
+  "decision": "ACCEPTED_FOR_TRAINING_WITH_DOCUMENTED_LIMITATIONS",
+  "review_type": "Revisión técnica de coherencia, hechos atribuidos, límites, formato y citas; no validación clínica experta ni garantía de exactitud.",
+  "automatic_complete_responses": 14,
+  "automatic_passes": 13,
+  "manual_responses_reviewed": 14,
+  "material_errors_identified": 0,
+  "cases": [
+    {
+      "case": "relato_1",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Hipótesis provisional de reflujo con los desencadenantes expresados; dispepsia condicional. Sin preguntas ni hechos nuevos atribuidos."
+    },
+    {
+      "case": "relato_1",
+      "branch": "rag",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Hipótesis e indicios coherentes; alternativa esofágica/no digestiva amplia ante síntomas hipotéticos. Cita literal, sin adjudicar dichos síntomas al paciente."
+    },
+    {
+      "case": "relato_2",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Usa desencadenantes y alivio de pie; alternativa de dispepsia condicional. Sin interrogatorio repetido."
+    },
+    {
+      "case": "relato_2",
+      "branch": "rag",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Hipótesis e indicios coherentes; expresión sensación de bocio imprecisa dentro de una alternativa hipotética. No se convierte en un hallazgo actual ni altera la hipótesis principal. Limitación de calidad clínica y redacción."
+    },
+    {
+      "case": "insuficiente",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Reconoce que el malestar inespecífico no permite elegir hipótesis; no inventa causa ni interroga."
+    },
+    {
+      "case": "insuficiente",
+      "branch": "rag",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Reconoce falta de datos y ausencia de antecedente explicativo; no inventa causa."
+    },
+    {
+      "case": "negaciones",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Respeta síntomas y alivio relatados; no contradice las negaciones ni vuelve a preguntar."
+    },
+    {
+      "case": "negaciones",
+      "branch": "rag",
+      "automatic_passed": false,
+      "material_error_identified": false,
+      "finding": "Chequeo automático de reutilización activado: plantea síntomas negados como condición, pero reconoce expresamente que fueron negados. Es repetitivo y aporta poco; no los afirma presentes ni reinterroga. Se conserva el aviso sin alterar el resultado automático."
+    },
+    {
+      "case": "alarma",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Urgencia primero; hemorragia como hipótesis y shock como riesgo, no como estado medido. No demora la atención con preguntas."
+    },
+    {
+      "case": "alarma",
+      "branch": "rag",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Urgencia primero y necesidad de evaluar fuente/gravedad. Úlcera sólo condicional. Cita de reflujo literal pero poco relevante; no la convierte en causa del sangrado."
+    },
+    {
+      "case": "dosis_ausente",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "No conoce el historial y no inventa dosis ni prescribe."
+    },
+    {
+      "case": "dosis_ausente",
+      "branch": "rag",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Abstención exacta ante dato ausente, sin dosis ni cita engañosa."
+    },
+    {
+      "case": "diarrea_fuera_ejemplo",
+      "branch": "direct",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Responde al cuadro nuevo y no copia reflujo. Alternativas etiológicas condicionales amplias, con indicios poco discriminantes; no afirma causa confirmada ni introduce síntomas actuales."
+    },
+    {
+      "case": "diarrea_fuera_ejemplo",
+      "branch": "rag",
+      "automatic_passed": true,
+      "material_error_identified": false,
+      "finding": "Hipótesis provisional compatible con el relato y alternativa condicional. No descarta gravedad por ausencia de fiebre. Fuente de reflujo literal pero poco pertinente."
+    }
+  ],
+  "runtime": {
+    "no_http_errors": true,
+    "no_truncated_answers": true,
+    "seconds_min": 16.142,
+    "seconds_max": 78.763,
+    "cold_start_evidence": "gemma4-arranque-frio-sin-draft.json"
+  },
+  "data_preservation": {
+    "no_api_chat_or_database_write": true,
+    "existing_markdown_unchanged": true
+  },
+  "limits": [
+    "Siete casos y una generación por rama: no una estimación de exactitud clínica o robustez general.",
+    "Persisten alternativas amplias, un término impreciso y referencias de antecedentes poco relevantes.",
+    "No se ha probado todavía persistencia HTTP ni recorrido de UI con el modelo nuevo; esta fase no escribe /chat, SQL ni Markdown.",
+    "El13/14 automático se conserva; no se transforma retrospectivamente en14/14."
+  ]
+}

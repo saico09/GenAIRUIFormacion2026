@@ -1,0 +1,61 @@
+{
+  "captured_at": "2026-11-11T22:21:24.610612+00:00",
+  "operation": "POST /api/show only; no generation or configuration changes",
+  "models": [
+    {
+      "model": "qwen3:4b-instruct-2507-q4_K_M",
+      "parameters": "stop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.7\ntop_k                          20\ntop_p                          0.8\nrepeat_penalty                 1",
+      "capabilities": [
+        "tools",
+        "thinking",
+        "completion"
+      ],
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen3",
+        "families": [
+          "qwen3"
+        ],
+        "parameter_size": "4.0B",
+        "quantization_level": "Q4_K_M"
+      },
+      "thinking": null,
+      "template_sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "modelfile_sha256": "f6e00d7e825fdff382c0da09cb77c7192c0fb4ce82f3ea37fb684516f6c03c9d",
+      "api_show_sha256": "177c524a34bf9afca7ec50ba515f32acfd0d8dc7817fcd2c68eb1cb587bace2b"
+    },
+    {
+      "model": "qwen3.5:4b-q4_K_M",
+      "parameters": "top_p                          0.95\npresence_penalty               1.5\ntemperature                    1\ntop_k                          20",
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "parent_model": "model.gguf",
+        "format": "gguf",
+        "family": "qwen35",
+        "families": [
+          "qwen35"
+        ],
+        "parameter_size": "4.2B",
+        "quantization_level": "Q4_K_M",
+        "runner": "llamacpp"
+      },
+      "thinking": {
+        "values": [
+          false,
+          true
+        ],
+        "default": true
+      },
+      "template_sha256": "b507b9c2f6ca642bffcd06665ea7c91f235fd32daeefdf875a0f938db05fb315",
+      "modelfile_sha256": "75f52e436f5410c40b0d06d8163fef5471c6d99430a8ac1f50eb38d9fe8af173",
+      "api_show_sha256": "e3a20a89cd15d5323e70e9ec9c63a699566d77c562b86f805ae53db3184e1598"
+    }
+  ],
+  "note": "Overrides used in comparisons: temperature=0,num_ctx=4096,num_predict=1024; Qwen3.5 explicitly think=false. Qwen3.5 declares presence_penalty=1.5; old Qwen3 does not declare this parameter, so it does not explain the earlier failures."
+}

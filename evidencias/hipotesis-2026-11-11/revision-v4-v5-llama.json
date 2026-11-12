@@ -1,0 +1,48 @@
+{
+  "reviewed_at": "2026-11-11T22:06:44.752374+00:00",
+  "scope": "Revisión semántica técnica de salidas sintéticas; no validación clínica experta.",
+  "overall": "NEEDS_REVISION",
+  "variants": [
+    {
+      "source_report": "inferencias-v4-seleccion.json",
+      "source_sha256": "1b05565eb29dd7ebf8e7e8a33d6bfdf4660fb33ed7466c50f78bc6ba0e1f1ee9",
+      "model": "qwen3:4b-instruct-2507-q4_K_M",
+      "cases": 6,
+      "automatic_passes": 6,
+      "findings": [
+        "DIRECT mejora el vínculo entre hipótesis y desencadenantes aportados, pero usa dolor o malestar de pecho como condición para dispepsia.",
+        "RAG sigue añadiendo gravedad/agudización y dolor negado como diferencial; afirma ausencia de alarma con datos limitados.",
+        "Las dos respuestas de alarma priorizan atención urgente."
+      ],
+      "existing_markdown_unchanged": true
+    },
+    {
+      "source_report": "inferencias-v5-relatos.json",
+      "source_sha256": "2e2db297e2c890a104e4a18905e9ae409232654a462f6ca07243c6451a842c48",
+      "model": "qwen3:4b-instruct-2507-q4_K_M",
+      "cases": 4,
+      "automatic_passes": 0,
+      "findings": [
+        "El cambio de orden de generation no resolvió las alternativas basadas en dolor torácico ni la reutilización de una negación.",
+        "RAG del segundo relato infiere causa funcional y descarta estructural sin respaldo.",
+        "Los controles adicionales detectan estos fallos; el conteo no se compara directamente con V4, que tenía controles anteriores."
+      ],
+      "existing_markdown_unchanged": true
+    },
+    {
+      "source_report": "comparacion-llama-v5.json",
+      "source_sha256": "40e218ab559c019ccc108ecb932d9fc7770c256b0f7eb1c06e1789cec0b2b744",
+      "model": "llama3.2:3b",
+      "cases": 4,
+      "automatic_passes": 3,
+      "findings": [
+        "No se cambiaron modelo por defecto, infraestructura ni configuración Compose; se comparó sólo la inferencia local.",
+        "RAG propone dispepsia condicional por acidez nocturna, dato ya afirmado y vínculo insuficiente.",
+        "RAG del segundo relato omite el alivio al estar de pie y presenta medidas del plan como alivios observados.",
+        "DIRECT del segundo relato describe la mejoría al estar de pie como desencadenante, invirtiendo su significado.",
+        "El PASS automático parcial no justifica cambiar el modelo por considerarlo clínicamente mejor."
+      ],
+      "existing_markdown_unchanged": true
+    }
+  ]
+}

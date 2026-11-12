@@ -30,7 +30,7 @@ async function main() {
     browser = await chromium.launch({executablePath: process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: true});
     page = await browser.newPage({viewport: {width: 1440, height: 1050}});
     const errors = []; page.on('pageerror', error => errors.push(error.message));
-    page.setDefaultTimeout(15000);
+    page.setDefaultTimeout(30000);
     await page.goto(base);
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
     await page.locator('#patient').selectOption(String(patient.id));
@@ -87,13 +87,13 @@ async function main() {
 
     await page.locator('#new-consultation').click();
     await page.locator('#manual-entry').click();
-    await page.locator('.entry-draft [name="disease"]').fill('Enfermedad ficticia UI confirmada');
-    await page.locator('.entry-draft [data-save-entry]').click();
+    await page.locator('#disease-name').fill('Enfermedad ficticia UI confirmada');
+    await page.locator('#save-disease').click();
     await page.locator('#confirm-dialog').waitFor(); await page.locator('#confirm-cancel').click();
     assert.equal((await api(`${java}/patients/${patient.id}/history`)).data.entries.length, 0);
-    await page.locator('.entry-draft [data-save-entry]').click();
+    await page.locator('#save-disease').click();
     await page.locator('#confirm-dialog').waitFor(); await page.locator('#confirm-accept').click();
-    await page.waitForFunction(() => document.querySelector('#patient-detail').getAttribute('aria-busy') === 'false');
+    await page.waitForFunction(() => document.querySelector('#patient-detail').getAttribute('aria-busy') === 'false', undefined, {timeout: 180000});
     const confirmed = await api(`${java}/patients/${patient.id}/history`);
     assert.equal(confirmed.data.entries.length, 1); assert.equal(confirmed.data.consultations.length, 1);
     assert.equal(confirmed.data.consultations[0].rag_answer, data.rag_answer);
@@ -103,7 +103,7 @@ async function main() {
     await page.locator('#confirm-dialog').waitFor(); await page.locator('#confirm-cancel').click();
     assert.equal((await api(`${java}/patients/${patient.id}/history`)).data.revision, confirmed.data.revision);
     await page.locator('#save-markdown').click(); await page.locator('#confirm-dialog').waitFor(); await page.locator('#confirm-accept').click();
-    await page.waitForFunction(() => document.querySelector('#patient-detail').getAttribute('aria-busy') === 'false');
+    await page.waitForFunction(() => document.querySelector('#patient-detail').getAttribute('aria-busy') === 'false', undefined, {timeout: 180000});
     const final = await api(`${java}/patients/${patient.id}/history`);
     assert.equal(final.data.entries[0].disease, 'Enfermedad ficticia UI revisada');
     assert.equal(final.data.consultations.length, 1); assert.equal(final.data.consultations[0].rag_answer, data.rag_answer);

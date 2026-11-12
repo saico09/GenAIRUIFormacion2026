@@ -1,0 +1,313 @@
+{
+  "started_at": "2026-11-11T22:12:22.538929+00:00",
+  "scope": "Dos candidatos aislados sobre relato2; no modifica prompts activos ni datos.",
+  "model": "qwen3:4b-instruct-2507-q4_K_M",
+  "options": {
+    "temperature": 0,
+    "num_ctx": 4096,
+    "num_predict": 1024
+  },
+  "case": {
+    "id": "relato_2",
+    "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+    "kind": "reflux"
+  },
+  "system": "Eres un asistente de capacitación con pacientes ficticios. Ofrece una hipótesis clínica provisional, explicada únicamente mediante observaciones del relato actual. La explicación enumera datos, no mecanismos causales ni hallazgos de pruebas. Incluye una sola alternativa común y razonable, vinculada a una condición concreta que no se haya afirmado ni negado expresamente. No conviertas la condición en un síntoma presente. Si no puedes justificar una alternativa, omítela. Responde directamente, sin preguntas ni indicaciones de medicamentos. Prioriza atención urgente si el relato lo exige. Usa lenguaje sencillo y un máximo de 120 palabras para la valoración.",
+  "verifier_sha256": "0ae4ae6ccfdd0ef21c0d4aea6597690d214ca037d78fbf636c8a6113bfafa3aa",
+  "clinical_acceptance": "pending_manual_review",
+  "results": [
+    {
+      "candidate": "tres_lineas",
+      "branch": "direct",
+      "prompt": "Escribe sólo estas líneas: 'Hipótesis principal: ...', 'A favor: ...' y, si procede, 'Alternativa condicional: si apareciera ... podría tratarse de ...'. En A favor usa tres datos concretos del relato. No añadas otros apartados.\n\nRELATO ACTUAL:\nla paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "schema": null,
+      "raw": "Hipótesis principal: reflujos gastroesofágicos por congestión de contenido gástrico.  \nA favor: siente reflujos al comer masas, beber café y consumir cantidades grandes de alimentos, indica acidez nocturna y se siente mejor al estar de pie.  \nAlternativa condicional: si apareciera dolor en el pecho podría tratarse de esofagitis por reflujos.",
+      "answer": "Hipótesis principal: reflujos gastroesofágicos por congestión de contenido gástrico.  \nA favor: siente reflujos al comer masas, beber café y consumir cantidades grandes de alimentos, indica acidez nocturna y se siente mejor al estar de pie.  \nAlternativa condicional: si apareciera dolor en el pecho podría tratarse de esofagitis por reflujos.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": true,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": false,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": false,
+        "generation_complete": true
+      },
+      "automatic_passed": false,
+      "seconds": 8.617
+    },
+    {
+      "candidate": "tres_lineas",
+      "branch": "rag",
+      "prompt": "Escribe sólo estas líneas: 'Hipótesis principal: ...', 'A favor: ...' y, si procede, 'Alternativa condicional: si apareciera ... podría tratarse de ...'. En A favor usa tres datos concretos del relato. No añadas otros apartados. El historial sólo sirve como antecedente; la hipótesis y su explicación deben responder al relato actual. Cita a lo sumo un antecedente pertinente, copiando su texto literalmente con la etiqueta proporcionada, después de la valoración. Usa mode=symptom_guidance, escribe esas tres líneas en guidance; facts contiene las citas o []; missing_information=true si no consta una causa confirmada; questions=[].\n\nANTECEDENTES:\n[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\nLa paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\n\n[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\nEl plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\n\n[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\nOmeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\n\nRELATO ACTUAL:\nla paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "record_lookup",
+              "symptom_guidance"
+            ]
+          },
+          "missing_information": {
+            "type": "boolean"
+          },
+          "guidance": {
+            "type": "string",
+            "maxLength": 1800
+          },
+          "facts": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]",
+                    "[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]",
+                    "[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]"
+                  ]
+                },
+                "quote": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source",
+                "quote"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "questions": {
+            "type": "array",
+            "maxItems": 0,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "mode",
+          "missing_information",
+          "facts",
+          "guidance",
+          "questions"
+        ],
+        "additionalProperties": false
+      },
+      "raw": "{ \"mode\": \"symptom_guidance\", \"missing_information\": true, \"guidance\": \"Hipótesis principal: reflujo gastroesofágico.\\nA favor: 1) siente reflujos al comer masas y café; 2) presenta acidez nocturna; 3) se siente mejor al estar de pie.\\nAlternativa condicional: si apareciera dolor en el pecho podría tratarse de angina de pecho.\", \"facts\": [{\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\",\"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"}],\"questions\":[]}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: reflujo gastroesofágico.\nA favor: 1) siente reflujos al comer masas y café; 2) presenta acidez nocturna; 3) se siente mejor al estar de pie.\nAlternativa condicional: si apareciera dolor en el pecho podría tratarse de angina de pecho.\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": false,
+        "generation_complete": true
+      },
+      "automatic_passed": false,
+      "seconds": 5.245
+    },
+    {
+      "candidate": "ficha",
+      "branch": "direct",
+      "prompt": "Devuelve la ficha JSON solicitada. hipotesis es el nombre de una posibilidad, datos_a_favor recoge hasta tres observaciones ya relatadas. En alternativa, condicion describe un dato adicional hipotético y posibilidad nombra qué alternativa apoyaría ese dato. Si no hay alternativa razonable, usa alternativa=[]. No añadas explicaciones fuera de esos campos.\n\nRELATO ACTUAL:\nla paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "hipotesis": {
+            "type": "string",
+            "maxLength": 180
+          },
+          "datos_a_favor": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "alternativa": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "condicion": {
+                  "type": "string",
+                  "maxLength": 180
+                },
+                "posibilidad": {
+                  "type": "string",
+                  "maxLength": 180
+                }
+              },
+              "required": [
+                "condicion",
+                "posibilidad"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "hipotesis",
+          "datos_a_favor",
+          "alternativa"
+        ],
+        "additionalProperties": false
+      },
+      "raw": "{\n  \"hipotesis\": \"Reflujo gastroesofágico\",\n  \"datos_a_favor\": [\n    \"siente reflujos al comer masas, beber café y comer demasiado\",\n    \"indica acidez cuando llega la noche\",\n    \"se siente mejor al estar de pie\"\n  ],\n  \"alternativa\": [\n    {\n      \"condicion\": \"dolor en el pecho\",\n      \"posibilidad\": \"angina de pecho\"\n    }\n  ]\n}",
+      "answer": "Hipótesis principal: Reflujo gastroesofágico\nA favor: siente reflujos al comer masas, beber café y comer demasiado; indica acidez cuando llega la noche; se siente mejor al estar de pie\nAlternativa condicional: si dolor en el pecho, podría ser angina de pecho",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "not_lookup_abstention": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": false,
+        "generation_complete": true
+      },
+      "automatic_passed": false,
+      "seconds": 3.634
+    },
+    {
+      "candidate": "ficha",
+      "branch": "rag",
+      "prompt": "Devuelve la ficha JSON solicitada. hipotesis es el nombre de una posibilidad, datos_a_favor recoge hasta tres observaciones ya relatadas. En alternativa, condicion describe un dato adicional hipotético y posibilidad nombra qué alternativa apoyaría ese dato. Si no hay alternativa razonable, usa alternativa=[]. No añadas explicaciones fuera de esos campos. El historial sólo sirve como antecedente; la hipótesis y su explicación deben responder al relato actual. Cita a lo sumo un antecedente pertinente, copiando su texto literalmente con la etiqueta proporcionada, después de la valoración.\n\nANTECEDENTES:\n[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\nLa paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\n\n[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]\nEl plan registrado consiste en evitar las cenas abundantes, anotar desencadenantes y dejar tres horas entre cenar y acostarse.\n\n[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]\nOmeprazol registrado para el reflujo. No constan dosis, frecuencia ni duración de la pauta.\n\nRELATO ACTUAL:\nla paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "hipotesis": {
+            "type": "string",
+            "maxLength": 180
+          },
+          "datos_a_favor": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "alternativa": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "condicion": {
+                  "type": "string",
+                  "maxLength": 180
+                },
+                "posibilidad": {
+                  "type": "string",
+                  "maxLength": 180
+                }
+              },
+              "required": [
+                "condicion",
+                "posibilidad"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "antecedentes": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]",
+                    "[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Tratamiento]",
+                    "[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Medicamento]"
+                  ]
+                },
+                "quote": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source",
+                "quote"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "hipotesis",
+          "datos_a_favor",
+          "alternativa",
+          "antecedentes"
+        ],
+        "additionalProperties": false
+      },
+      "raw": "{\n  \"hipotesis\": \"Enfermedad por reflujo gastroesofágico\",\n  \"datos_a_favor\": [\n    \"la paciente siente reflujos al comer masas, beber café y comer demasiado\",\n    \"indica acidez cuando llega la noche\",\n    \"se siente mejor al estar de pie\"\n  ],\n  \"alternativa\": [\n    {\n      \"condicion\": \"presentación de síntomas al consumir ciertos alimentos y bebidas\",\n      \"posibilidad\": \"Sensibilidad gastrointestinal por consumo de cafeína y masas\"\n    }\n  ],\n  \"antecedentes\": [\n    {\"source\": \"[paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\", \"quote\": \"La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\"}\n  ]\n}",
+      "answer": "Diagnóstico orientativo (sin confirmar)\nHipótesis principal: Enfermedad por reflujo gastroesofágico\nA favor: la paciente siente reflujos al comer masas, beber café y comer demasiado; indica acidez cuando llega la noche; se siente mejor al estar de pie\nAlternativa condicional: si presentación de síntomas al consumir ciertos alimentos y bebidas, podría ser Sensibilidad gastrointestinal por consumo de cafeína y masas\n\nAntecedentes disponibles\nRespuesta: La paciente de prueba tiene enfermedad por reflujo gastroesofágico registrada en una consulta ficticia. En ese episodio refirió ardor y regurgitación después de cenas abundantes y al acostarse.\nFuente: [paciente-900001-prueba-hipotesis.md/49b80291-754b-42af-b35f-aa2567405c82/Enfermedad]\n\nHipótesis sin confirmar; requiere evaluación clínica para confirmarla.",
+      "checks": {
+        "not_empty": true,
+        "no_questions": true,
+        "no_dose_prescribed": true,
+        "no_invented_probability": true,
+        "empty_questions_array": true,
+        "not_lookup_abstention": true,
+        "guidance_mode": true,
+        "reflux_hypothesis": true,
+        "provisional_language": true,
+        "uses_reported_evidence": true,
+        "conditional_alternative": false,
+        "no_confirmed_diagnosis_claim": true,
+        "no_unmeasured_mechanism": true,
+        "no_unstated_severity_or_duration": true,
+        "chest_alarm_not_mapped_to_benign_alternative": true,
+        "uses_already_reported_posture": true,
+        "no_positive_chest_pain_claim": true,
+        "no_reuse_of_denied_chest_pain_as_differential": true,
+        "generation_complete": true
+      },
+      "automatic_passed": false,
+      "seconds": 5.742
+    }
+  ],
+  "finished_at": "2026-11-11T22:12:45.782536+00:00"
+}

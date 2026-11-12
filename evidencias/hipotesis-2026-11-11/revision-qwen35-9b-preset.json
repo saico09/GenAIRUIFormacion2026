@@ -1,0 +1,32 @@
+{
+  "reviewed_at": "2026-11-11T22:36:21.120702+00:00",
+  "source": "comparacion-qwen35-9b-preset.json",
+  "source_sha256": "8b5e5669c385db7c6597c3538ec459df1f91c05f1c5756490289552827e6b3ea",
+  "overall": "NEEDS_REVISION",
+  "automatic_passes": 2,
+  "total_answers": 2,
+  "cases": [
+    {
+      "case": "relato_2",
+      "branch": "direct",
+      "accepted": false,
+      "finding": "Atribuye interpretación funcional a mejoría postural y ausencia de dolor; no bastan para establecer ese mecanismo. Propone mayor avance de ERGE a partir de frecuencia/severidad sin comprobación. Sí mantiene la alternativa de dispepsia condicionada."
+    },
+    {
+      "case": "relato_2",
+      "branch": "rag",
+      "accepted": false,
+      "finding": "Califica como exacerbación sin comparación temporal y concluye que la urgencia no está indicada por ausencia de síntomas alarmantes no valorados. No se acepta esa tranquilidad categórica. Las fuentes mostradas sí son literales."
+    }
+  ],
+  "limits": [
+    "El preset cambia a la vez presence_penalty,temperature ytop_p; no permite aislar cuál causa cada cambio.",
+    "Una sola muestra por rama con muestreo no determinista; no estimación de fiabilidad.",
+    "Revisión técnica de coherencia, no validación clínica experta."
+  ],
+  "data_preservation": {
+    "no_api_chat_or_database_write": true,
+    "existing_markdown_unchanged": true
+  },
+  "decision": "No adoptar; ensayo posterior4B thinking con mayor presupuesto autorizado por separado."
+}

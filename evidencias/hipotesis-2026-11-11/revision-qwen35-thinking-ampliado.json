@@ -1,0 +1,37 @@
+{
+  "reviewed_at": "2026-11-11T22:40:11.004244+00:00",
+  "source": "comparacion-qwen35-thinking-ampliado.json",
+  "source_sha256": "d856503726fa49ed862e7d2a2557af7ae38369f6b107dd445c618f2907c89a49",
+  "overall": "NEEDS_REVISION",
+  "automatic_passes": 2,
+  "total_answers": 2,
+  "cases": [
+    {
+      "case": "relato_2",
+      "branch": "direct",
+      "accepted_for_this_case": true,
+      "finding": "Respuesta breve y provisional, apoya reflujo con datos expresados y alivio al estar de pie, dispepsia sólo condicionada a plenitud/hinchazón adicionales. No reinterroga ni inventa mecanismo o gravedad. Una sola muestra no acredita fiabilidad general.",
+      "seconds": 79.458,
+      "eval_count": 4634
+    },
+    {
+      "case": "relato_2",
+      "branch": "rag",
+      "accepted_for_this_case": false,
+      "finding": "La valoración conserva hipótesis e indicios útiles, pero añade exacerbación sin evolución comparativa y vincula falta de alivio nocturno con mayor gravedad sin soporte. No se acepta esa inferencia aunque complete el formato y las citas sean literales.",
+      "seconds": 137.644,
+      "eval_count": 8144
+    }
+  ],
+  "limits": [
+    "El ensayo2048 anterior se truncó y no permitía evaluar calidad; éste sí produjo finales completas.",
+    "Se cambian contexto, presupuesto y muestreo junto al razonamiento; la comparación no aísla cada efecto.",
+    "No se guarda ni muestra cadena de razonamiento, sólo presencia y métricas totales.",
+    "Revisión técnica de coherencia; no validación clínica experta."
+  ],
+  "data_preservation": {
+    "no_api_chat_or_database_write": true,
+    "existing_markdown_unchanged": true
+  },
+  "decision": "No congelar esta variante ni ejecutar regresión ampliada condicionada a la aceptación de ambas ramas. No hay nueva inferencia en los otros seis casos."
+}

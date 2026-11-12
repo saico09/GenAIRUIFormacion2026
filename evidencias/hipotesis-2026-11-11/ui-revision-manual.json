@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-11-12T00:16:04.457305+00:00",
+  "runtime_source": "1b614d3e269ac42542ad7f5ff817355d9defa4b9",
+  "browser": "Edge real mediante Playwright; no mocks",
+  "result": "passed_functional_with_clinical_limitations",
+  "ui_blocks_passed": 4,
+  "first_attempt": {
+    "evidence": "ui-real-01/resultados.json",
+    "outcome": "Chat/guardado/recarga/descarga correctos; falló un selector obsoleto del verificador. App sin cambios para corregirlo.",
+    "chat_seconds": 107.168,
+    "patient_id": 55,
+    "removed": true
+  },
+  "second_attempt": {
+    "evidence": "ui-real-02/resultados.json",
+    "chat_seconds": 108.292,
+    "patient_id": 56,
+    "removed": true
+  },
+  "manual_review": {
+    "principal_and_conditional_hypotheses": true,
+    "no_followup_questions": true,
+    "no_doses_or_confirmed_diagnosis_added": true,
+    "rag_without_history_does_not_fabricate_sources": true,
+    "visual_desktop_and_mobile_reviewed": true,
+    "limitations": [
+      "En el primer intento, la rama directa vinculó esteatorrea/colecistitis como alternativa poco precisa. Se conserva la respuesta; no se afirma exactitud clínica general.",
+      "En el segundo, las alternativas siguen condicionadas a síntomas que no se atribuyen como presentes. El ensayo valida el comportamiento y guardado, no una evaluación clínica experta."
+    ]
+  },
+  "original_markdown_hashes_preserved": true,
+  "original_patient_rows_preserved": true,
+  "confirmed_entries_and_md_edits_use_user_confirmation": true,
+  "sql_audit_and_backups_of_test_temporaries_retained": true,
+  "verifier_sha256": "e23b997b1413e5893b7debce868c639d04979b29cc706c4ea66d5afa8c33df75"
+}

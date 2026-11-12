@@ -219,8 +219,6 @@ Para descargar el modelo de chat, si falta:
 
 La comparación puede tardar unos minutos con este modelo local. Espera a que termine y aparezca la confirmación de guardado antes de enviar otra consulta.
 
-La optimización de generación especulativa queda desactivada (`draft_num_predict: 0`) por el fallo observado al cargar su asistente en GPU. Su recuperación tras un arranque en frío se comprueba por separado.
-
 Abre [el chatbot](http://localhost:8000). Elige Ana y pregunta «¿Qué enfermedad tiene Ana Demo?»; después «¿Cuál fue la última cirugía de Ana Demo?». RAG debe recuperar su reflujo gastroesofágico y citar la historia en la primera, y reconocer que falta información en la segunda.
 
 Ana tiene un caso simulado de reflujo con omeprazol; Bruno, diabetes tipo 2 con metformina; Carla, rinitis alérgica por polen con cetirizina. Los planes, preguntas para probar y fuentes están en [Casos de prueba](datos/CASOS.md). Las dosis y algunos antecedentes se dejan sin registrar para comprobar que el RAG no los invente.

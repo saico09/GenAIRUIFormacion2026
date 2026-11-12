@@ -4,7 +4,9 @@
 
 Al describir síntomas, el chat ofrece una hipótesis principal y alternativas condicionales con la información escrita, sin pedir más datos ni repetir preguntas. Las posibilidades quedan como orientación en las respuestas guardadas; no crean registros confirmados de enfermedad, tratamiento o medicamento. Las consultas sobre antecedentes siguen limitadas a lo documentado.
 
-Esta revisión configura Gemma 4 (`gemma4:12b`) mediante Ollama, con `think=false` y los mismos parámetros en ambas ramas. La comparación conserva la misma pregunta. Es un ajuste solicitado para la práctica; no añade HDU, horas ni cambia las fechas. Verificación de esta revisión en curso.
+Esta revisión configura Gemma 4 (`gemma4:12b`) mediante Ollama, con los mismos parámetros y la misma pregunta en ambas ramas. Se corrigió la confusión entre un relato actual y una consulta anterior parecida, incluida la palabra «constante», que se confundía con «consta en el historial».
+
+Pasaron los dos relatos originales con guardado y reintento, las consultas al historial, propuestas, trazas y el recorrido de la página. La comparación puede tardar unos minutos y el modelo aún puede usar términos imprecisos en sus alternativas: [pruebas y límites](evidencias/hipotesis-2026-11-11/LEEME.md). Este ajuste personal no añade HDU, horas ni cambia las fechas.
 
 ## Informes compartidos con Minikube · 08/11/2026
 

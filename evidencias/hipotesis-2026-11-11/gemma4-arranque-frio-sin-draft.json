@@ -1,0 +1,13 @@
+{
+  "started_at": "2026-11-11T23:00:23.077100+00:00",
+  "model": "gemma4:12b",
+  "action": "Descargar sólo este modelo de la memoria con keep_alive=0 antes de la batería; no elimina pesos ni reinicia servicios.",
+  "unload_result": {
+    "model": "gemma4:12b",
+    "done": true,
+    "done_reason": "unload"
+  },
+  "resident_models_after": [],
+  "gemma_unloaded": true,
+  "finished_at": "2026-11-11T23:00:27.240837+00:00"
+}

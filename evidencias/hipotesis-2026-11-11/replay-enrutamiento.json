@@ -1,0 +1,33 @@
+{
+  "at": "2026-11-11T23:51:43.045230+00:00",
+  "scope": "Replay offline del JSON final real; cero inferencias y cero escrituras clínicas.",
+  "evidence": "evidencias/hipotesis-2026-11-11/persistencia-relato2-loki.json",
+  "evidence_sha256": "7f459922b7845b7fb4f008f86bd3fd1da7b384cceffaea6a1be42bcb83b2cfe5",
+  "runtime_source_sha256": "8aff169df4c1253b7044ccec8a9522e5a94f8065ebf0b7334d73f35c74e5d341",
+  "captured_mode": "record_lookup",
+  "captured_raw_sha256": "d69d3a410d61c67cf2dda94a536b23a8d66e8786a4fe62572dd2803002cb1835",
+  "question": "la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche. no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas",
+  "before": {
+    "original_note_is_documentary": true,
+    "current_answer": "No hay información suficiente",
+    "previous_symptoms_answer": "No hay información suficiente"
+  },
+  "after": {
+    "original_note_is_documentary": false,
+    "current_allowed_modes": [
+      "symptom_guidance"
+    ],
+    "current_answer": "No hay información suficiente",
+    "previous_symptoms_answer": "Relato registrado (sin diagnóstico confirmado): la paciente siente reflujos al comer masas, beber café y comer demasiado. Esto ocurre al comer demasiado, comer ciertos alimentos y ciertas bebidas. Además del reflujo no tiene otros síntomas, pero indica acidez cuando llega la noche.\nFuente: [paciente-52-paciente-hipotesis-qa-312ed3818683.md/a064ca57-00a5-4746-a338-b5c6b5ba4f70/Consulta]"
+  },
+  "checks": {
+    "original_quote_is_literal": true,
+    "previous_bug_reproduced": true,
+    "original_note_now_recognized_as_report": true,
+    "incompatible_mode_excluded_by_schema": true,
+    "incompatible_mode_rejected_without_reinterpretation": true,
+    "historical_report_recovered_only_for_documentary_question": true,
+    "raw_and_original_evidence_unchanged": true
+  },
+  "passed": true
+}

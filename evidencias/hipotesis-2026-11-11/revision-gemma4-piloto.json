@@ -1,0 +1,48 @@
+{
+  "reviewed_at": "2026-11-11T22:51:23.077473+00:00",
+  "sources": [
+    {
+      "file": "comparacion-gemma4-12b.json",
+      "sha256": "07d0507cae893d9ef4bacb87bec629bf63fe77568fbf928e9395948df885147f"
+    },
+    {
+      "file": "comparacion-gemma4-12b-reintento-directo.json",
+      "sha256": "dd8012fde726878cdba1fbccd22433bcc32f71245e3fff8dfdba829a137e2a01"
+    }
+  ],
+  "overall": "CANDIDATE_FOR_BROADER_REGRESSION",
+  "scope": "Revisión técnica de formato, fidelidad al relato y errores materiales; no validación clínica experta.",
+  "cases": [
+    {
+      "case": "relato_2",
+      "branch": "direct",
+      "finding": "Reintento completo: hipótesis de reflujo con indicios relatados y alivio de pie, dispepsia condicionada a plenitud/hinchazón. No se identificó afirmación material falsa en esta muestra."
+    },
+    {
+      "case": "relato_2",
+      "branch": "rag",
+      "finding": "Hipótesis e indicios coherentes, cita literal, alternativa condicional de estenosis si disfagia/pérdida de peso. El chequeo de alternativa falla por una lista cerrada que no incluye estenosis; conservar el fallo automático separado de la lectura manual."
+    },
+    {
+      "case": "diarrea_fuera_ejemplo",
+      "branch": "direct",
+      "finding": "Hipótesis de gastroenteritis coherente; la alternativa bacteriana condicionada a vómitos/deshidratación es poco discriminante, pero se presenta como posibilidad y no como etiología confirmada. No convierte esos síntomas hipotéticos en actuales."
+    },
+    {
+      "case": "diarrea_fuera_ejemplo",
+      "branch": "rag",
+      "finding": "Orientación provisional útil, con evidencia etiológica débil al mencionar ausencia de fiebre/tolerancia a líquidos. Fuente literal de reflujo poco relevante. No descarta categóricamente riesgo ni inventa síntomas presentes; limitaciones de calidad pendientes de valoración clínica."
+    }
+  ],
+  "technical_error": {
+    "initial_http_status": 500,
+    "detail": "El primer verificador sólo conservó el código; causa no identificada.",
+    "subsequent_calls": "Tres llamadas posteriores y un reintento directo completaron sin cambiar infraestructura."
+  },
+  "limits": [
+    "Alternativas condicionales amplias no equivalen a diagnóstico confirmado; no se presentan como exactitud clínica.",
+    "Una muestra por caso con muestreo; no acredita estabilidad ni calidad general.",
+    "No se relajan validaciones de citas ni se corrige retrospectivamente el resultado automático."
+  ],
+  "decision": "Candidato principal para los siete casos completos con contexto8192; todavía sin adopción en la aplicación."
+}

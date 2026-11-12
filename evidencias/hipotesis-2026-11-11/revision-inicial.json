@@ -1,0 +1,88 @@
+{
+  "reviewed_at": "2026-11-11T21:55:03.810550+00:00",
+  "source_report": "inferencias-iniciales.json",
+  "source_sha256": "2ac5a67782800d7eac98c2c1ddb78c0b681496447f468b1e6d4c385be6b4583e",
+  "scope": "Revisión técnica/manual acotada de las salidas sintéticas; no sustituye una validación clínica experta.",
+  "overall": "NEEDS_REVISION",
+  "automatic_passes": 9,
+  "automatic_cases": 12,
+  "no_questionnaires": true,
+  "manual_findings": [
+    {
+      "case": "relato_1",
+      "branch": "direct",
+      "finding": "Atribuye disfunción del esfínter como mecanismo sin prueba; la hipótesis de reflujo es plausible, pero el mecanismo no está medido."
+    },
+    {
+      "case": "relato_1",
+      "branch": "rag",
+      "finding": "Relaciona pérdida de peso con alteración funcional gastrointestinal; ese dato requiere valorar señales de alarma, no asignar una causa funcional por defecto."
+    },
+    {
+      "case": "relato_2",
+      "branch": "direct",
+      "finding": "Usa el alivio postural y no pregunta, pero presenta un mecanismo esfinteriano como explicación establecida y alternativas poco justificadas."
+    },
+    {
+      "case": "relato_2",
+      "branch": "rag",
+      "finding": "La asociación entre mayor intensidad/persistencia del reflujo e infección por H. pylori no está sustentada por la información del caso."
+    },
+    {
+      "case": "insuficiente",
+      "branch": "direct",
+      "finding": "Enumera estrés, fatiga, infección leve, gastroenteritis y ansiedad a partir de un malestar inespecífico; no hay datos para priorizar esas etiologías."
+    },
+    {
+      "case": "insuficiente",
+      "branch": "rag",
+      "finding": "Reconoce los límites, pero añade disfunción generalizada/ansiedad sin anclaje específico suficiente; PASS heurístico no equivale a aceptación semántica."
+    },
+    {
+      "case": "negaciones",
+      "branch": "direct",
+      "finding": "Llama al cuadro gastroesofagitis/GERD leve sin medición de gravedad ni prueba de esofagitis. Propone hiperestimulación/disfunción de motilidad con justificación débil."
+    },
+    {
+      "case": "negaciones",
+      "branch": "rag",
+      "finding": "Respeta negaciones y aporta hipótesis compatible; la revisión de alternativas y de la frase que reduce gravedad debe mantenerse separada del chequeo literal."
+    },
+    {
+      "case": "alarma",
+      "branch": "direct",
+      "finding": "Prioriza atención urgente correctamente; las alternativas condicionales adicionales no son necesarias para la decisión inmediata y requieren revisión de pertinencia."
+    },
+    {
+      "case": "alarma",
+      "branch": "rag",
+      "finding": "Fallo crítico del caso sintético: no indica acudir a atención urgente pese a vómito de sangre, dolor intenso y mareo. Añade asociación extraña de vómito con material fecal y gastritis/úlcera."
+    },
+    {
+      "case": "dosis_ausente",
+      "branch": "direct",
+      "finding": "Reconoce que desconoce el historial y no inventa la dosis; el cierre sobre hipótesis es innecesario en esta consulta documental."
+    },
+    {
+      "case": "dosis_ausente",
+      "branch": "rag",
+      "finding": "Abstención documental correcta, sin dosis ni citas engañosas."
+    }
+  ],
+  "heuristic_limits": [
+    "GERD/reflux y postprandial son variantes que los patrones iniciales no reconocen; no se modificó ni reetiquetó ese ensayo para obtener verde.",
+    "El chequeo de palabras no detecta adecuadamente mecanismos no demostrados ni alternativas etiológicas arbitrarias; la revisión manual identifica estos fallos aunque un caso marque PASS."
+  ],
+  "references": [
+    {
+      "url": "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/",
+      "supports": "Relación del reflujo con comidas/café/acostarse; síntomas persistentes, dificultad para tragar o pérdida de peso requieren valoración."
+    },
+    {
+      "url": "https://www.nhs.uk/symptoms/vomiting-blood/",
+      "supports": "Vómito de sangre junto con dolor abdominal o mareo requiere atención de emergencia."
+    }
+  ],
+  "data_preserved": true,
+  "no_persistence_test": "Docker/WSL no disponible; esta tanda no llamó a /chat."
+}

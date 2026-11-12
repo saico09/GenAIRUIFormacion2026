@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-11-11T19:27:55.2699397-03:00",
+  "finding": "Windows Installer instaló WSL 3.0.5.0 a las 19:15–19:17 locales, coincidiendo con la segunda interrupción; RestartManager no pudo reiniciar procesos WSL. No se atribuye la parada a memoria ni al modelo.",
+  "events": [
+    {
+      "TimeCreated": "2026-11-11T19:17:12.6105735-03:00",
+      "Id": 1042,
+      "Message": "Finalizando una transacción de Windows Installer: C:\\WINDOWS\\SoftwareDistribution\\Download\\05a7f8f17a8c4e87\\img\\wsl.3.0.5.0.x64.msi. Id. de proceso del cliente: 39356."
+    },
+    {
+      "TimeCreated": "2026-11-11T19:17:12.5312205-03:00",
+      "Id": 1033,
+      "Message": "Windows Installer instaló el producto. Nombre del producto: Windows Subsystem for Linux. Versión del producto: 3.0.5.0. Idioma del producto: 1033. Fabricante: Microsoft Corporation. Resultado de la instalación: 0."
+    },
+    {
+      "TimeCreated": "2026-11-11T19:17:12.5302201-03:00",
+      "Id": 11707,
+      "Message": "Product: Windows Subsystem for Linux -- Installation completed successfully."
+    },
+    {
+      "TimeCreated": "2026-11-11T19:15:16.3836916-03:00",
+      "Id": 1040,
+      "Message": "Iniciando una transacción de Windows Installer: C:\\WINDOWS\\SoftwareDistribution\\Download\\05a7f8f17a8c4e87\\img\\wsl.3.0.5.0.x64.msi. Id. de proceso del cliente: 39356."
+    }
+  ]
+}
