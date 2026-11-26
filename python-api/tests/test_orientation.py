@@ -596,7 +596,8 @@ class OrientationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_direct_answer(json.dumps({"mode": "out_of_scope", "guidance": None}), "dolor de estómago")
         # El prompt no debe crecer de forma relevante.
-        self.assertLessEqual(len((RAG_SYSTEM + build_rag_prompt("x", [])).split()), 710)
+        # Presupuesto breve con ejemplo de pertinencia; no certifica calidad clínica ni equivale a tokens.
+        self.assertLessEqual(len((RAG_SYSTEM + build_rag_prompt("x", [])).split()), 800)
 
     def test_previous_note_cited_for_a_record_question_is_dropped_but_valid_records_remain(self):
         def source(section, text):
@@ -619,6 +620,23 @@ class OrientationTests(unittest.TestCase):
         self.assertIn("No tengo acceso al historial", validate_direct_answer(raw, question))
         self.assertTrue(any(variant["properties"]["mode"]["enum"] == ["record_lookup"]
                             for variant in direct_response_schema(question)["anyOf"]))
+
+    def test_redundant_conditional_prefix_is_removed_without_weakening_guards(self):
+        question = "Tengo dolor de estómago"
+        for condition in ("si hubiera fiebre", "si hay fiebre", "si además hubiera fiebre", "en caso de fiebre"):
+            with self.subTest(condition=condition):
+                value = {"possibilities": [
+                    {"cause": "gastritis", "evidence": [question], "condition": None},
+                    {"cause": "infección", "evidence": [question], "condition": condition}],
+                    "optional_details": [], "current_alert": None}
+                rendered = render_orientation(value, question)
+                self.assertIn("Podría ser infección si además hubiera fiebre.", rendered)
+                self.assertNotIn("si además hubiera si", rendered)
+        value["possibilities"][1]["condition"] = "si hubiera dolor abdominal"
+        with self.assertLogs("orientation", level="WARNING"):
+            self.assertNotIn("Podría ser infección", render_orientation(value, question))
+        value["possibilities"][1]["condition"] = "exposición a polvo si hubiera viento"
+        self.assertIn("si además hubiera exposición a polvo si hubiera viento.", render_orientation(value, question))
 
     def test_legacy_guidance_is_explicit_and_not_enabled_by_runtime(self):
         raw = json.dumps({"mode": "symptom_guidance", "guidance": "Texto histórico sin modificar",

@@ -261,6 +261,9 @@ def _render_possibility(possibility: dict, index: int, question: str) -> str:
         raise ValueError("Una alternativa necesita una condición adicional no relatada")
     if condition is not None:
         condition = _phrase(condition, 220)
+        # El renderer ya añade «si además hubiera»: retirar sólo ese inicio redundante del modelo.
+        condition = _phrase(re.sub(r"^(?:si (?:adem[aá]s )?(?:hubiera|hay)\s+|en caso de\s+)",
+                                  "", condition, flags=re.I), 220)
         if not _new_condition(condition, question):
             raise ValueError("La condición repite un dato ya relatado o negado")
         return f"Podría ser {cause} si además hubiera {condition}."
