@@ -20,8 +20,8 @@ USER_FIRST = "la paciente siente reflujos al comer masas, beber café y comer de
 USER_SECOND = USER_FIRST + "no siente dolor en el pecho, se siente mejor al estar de pie y no tiene otros hábitos además de consumo constante de cafeina y masas"
 
 
-def guidance():
-    return {"possibilities": [{"cause": "dispepsia", "condition": "molestia tras comer"}],
+def guidance(evidence="dolor de estómago"):
+    return {"possibilities": [{"cause": "dispepsia", "evidence": [evidence], "condition": None}],
             "optional_details": ["localización", "duración"], "current_alert": None}
 
 
@@ -306,7 +306,9 @@ class OfflineContracts(unittest.TestCase):
                 self.assertFalse(is_current_symptom_report(question))
                 self.assertTrue(is_record_lookup(question))
                 schema = rag_response_schema([], question)
-                self.assertEqual(schema_modes(schema), ["out_of_scope", "record_lookup", "symptom_guidance"])
+                expected_modes = (["record_lookup"] if question == "¿Qué síntomas relató en consultas anteriores?"
+                                  else ["out_of_scope", "record_lookup", "symptom_guidance"])
+                self.assertEqual(schema_modes(schema), expected_modes)
                 documentary = next(variant for variant in schema_variants(schema)
                                    if variant["properties"]["mode"]["enum"] == ["record_lookup"])
                 self.assertEqual(documentary["properties"]["guidance"], {"type": "null"})
@@ -377,7 +379,7 @@ class OfflineContracts(unittest.TestCase):
                           "questions": []})
         rendered = validate_rag_answer(raw, [], "dolor de estómago desde ayer")
         self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
-        self.assertIn("Podría ser dispepsia", rendered)
+        self.assertIn("dispepsia", rendered)
         self.assertNotIn("?", rendered)
         self.assertNotIn("Fuente:", rendered)
 
@@ -406,7 +408,7 @@ class OfflineContracts(unittest.TestCase):
         sources = [point["payload"] for point in fragments_from_history(parse_history(document(), FILENAME))]
         raw = json.dumps({"mode": "symptom_guidance", "missing_information": True,
                           "facts": [{"source": source_label(sources[0]), "quote": "Diagnóstico inventado"}],
-                          "guidance": guidance(), "questions": []})
+                          "guidance": guidance("dolor de cabeza"), "questions": []})
         rendered = validate_rag_answer(raw, sources, "dolor de cabeza")
         self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
         self.assertNotIn("Diagnóstico inventado", rendered)

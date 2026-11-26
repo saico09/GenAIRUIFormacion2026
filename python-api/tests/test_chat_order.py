@@ -35,7 +35,7 @@ class ChatOrderTests(unittest.TestCase):
         def run_direct(*args, **kwargs):
             self.steps.append("direct")
             return json.dumps({"mode": "symptom_guidance", "guidance": {
-                "possibilities": [{"cause": "posibilidad de prueba", "condition": "un dato adicional"}],
+                "possibilities": [{"cause": "posibilidad de prueba", "evidence": [self.body.question.strip()], "condition": None}],
                 "optional_details": ["localización", "duración"], "current_alert": None}})
 
         def save(patient_id, execution_id, question, result, model):
@@ -56,7 +56,8 @@ class ChatOrderTests(unittest.TestCase):
         self.direct.assert_called_once_with(self.body.question, system=main.DIRECT_SYSTEM,
                                             schema=main.direct_response_schema(self.body.question))
         self.assertNotIn("Sólo para RAG", repr(self.direct.call_args))
-        self.assertIn("Podría ser posibilidad de prueba si además hubiera un dato adicional", result["direct_answer"])
+        self.assertIn("posibilidad de prueba", result["direct_answer"])
+        self.assertIn("dolor de estómago agudo", result["direct_answer"])
         self.assertIn("Para afinar la orientación, puedes añadir", result["direct_answer"])
         self.assertEqual(result["rag_answer"], "Orientación RAG")
         self.assertEqual(result["consultation"]["id"], self.execution_id)
@@ -80,7 +81,7 @@ class ChatOrderTests(unittest.TestCase):
         retrieved = [disease, treatment, note]
         context = [disease, treatment, medication, note]
         self.body = main.ChatIn(patient_id=71, question="Tengo acidez al comer.")
-        guide = {"possibilities": [{"cause": "posibilidad de prueba", "condition": "otro dato"}],
+        guide = {"possibilities": [{"cause": "posibilidad de prueba", "evidence": ["acidez al comer"], "condition": None}],
                  "optional_details": ["duración", "localización"], "current_alert": None}
         rag_answer = validate_rag_answer(json.dumps({"mode": "symptom_guidance", "guidance": guide,
             "missing_information": False, "facts": [{"source": source_label(medication), "quote": medication["text"]}],
@@ -139,7 +140,7 @@ class ChatOrderTests(unittest.TestCase):
         self.assertEqual(self.steps, ["rag", "direct-invalid", "direct", "save", "index"])
         self.assertEqual(self.direct.call_count, 2)
         self.assertEqual(self.direct.call_args_list[0], self.direct.call_args_list[1])
-        self.assertIn("Podría ser posibilidad de prueba", result["direct_answer"])
+        self.assertIn("posibilidad de prueba", result["direct_answer"])
 
     def test_conflicting_execution_id_does_not_generate_or_overwrite(self):
         self.existing.side_effect = main.ConsultationConflict("UUID de otra consulta")

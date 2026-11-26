@@ -166,7 +166,7 @@ class RagNodeRetryTests(unittest.TestCase):
         self.state = {"pregunta": "dolor de estómago", "patient_id": 1, "request_id": "request-qa",
                       "contexto": [fragment("Enfermedad", "ERGE")], "prompt": "PROMPT"}
         self.valid = json.dumps({"mode": "symptom_guidance", "missing_information": False, "facts": [], "questions": [],
-                                 "guidance": {"possibilities": [{"cause": "gastritis", "condition": "ardor al comer"}],
+                                 "guidance": {"possibilities": [{"cause": "gastritis", "evidence": ["dolor de estómago"], "condition": None}],
                                               "optional_details": ["desde cuándo", "qué comió"], "current_alert": None}})
 
     def test_invalid_rag_output_gets_one_more_attempt_with_the_same_prompt(self):
@@ -175,7 +175,8 @@ class RagNodeRetryTests(unittest.TestCase):
         self.assertEqual(llm.call_count, 2)
         self.assertEqual(llm.call_args_list[0], llm.call_args_list[1])
         answer = grafo.respuesta({**self.state, "respuesta": self.valid})["respuesta"]
-        self.assertIn("Podría ser gastritis", answer)
+        self.assertIn("gastritis", answer)
+        self.assertNotIn("si además hubiera dolor de estómago", answer)
         self.assertIn("ERGE\nFuente: [paciente-1-ana-demo.md/" + RECORD + "/Enfermedad]", answer)
 
     def test_two_invalid_outputs_fail_without_a_third_attempt(self):

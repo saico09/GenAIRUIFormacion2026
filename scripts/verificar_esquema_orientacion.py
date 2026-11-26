@@ -18,10 +18,19 @@ from jsonschema import Draft202012Validator
 from rag import (OUT_OF_SCOPE, direct_response_schema, rag_response_schema, source_label, validate_direct_answer,
                  validate_rag_answer)
 
-guide = {"possibilities": [{"cause": "posibilidad A", "condition": "dato A"}],
+guide = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None}],
          "optional_details": ["ubicación", "duración"], "current_alert": None}
+
+
+def with_evidence(quote):
+    value = deepcopy(guide)
+    value["possibilities"][0]["evidence"] = [quote]
+    return value
+
+
 cases = []
 for question in ("dolor de estómago", "Tengo dolor de estómago"):
+    case_guide = with_evidence(question)
     for branch in ("direct", "rag"):
         schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([], question)
         Draft202012Validator.check_schema(schema)
@@ -29,20 +38,20 @@ for question in ("dolor de estómago", "Tengo dolor de estómago"):
         extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
         # (caso, valor, válido en esquema, válido en servidor). El texto sólo lo valida el servidor:
         # Ollama 0.40 ignora todo el esquema si un texto lleva "pattern".
-        fixtures = [("orientation", {"mode": "symptom_guidance", "guidance": guide, **extras}, True, True),
+        fixtures = [("orientation", {"mode": "symptom_guidance", "guidance": case_guide, **extras}, True, True),
                     ("null_orientation", {"mode": "symptom_guidance", "guidance": None, **extras}, False, False),
                     ("free_narrative", {"mode": "symptom_guidance", "guidance": "texto libre", **extras}, False, False)]
         for name, change, schema_expected, runtime_expected in (
                 ("question_detail_shown_as_detail", {"optional_details": ["¿Dónde?", "duración"]}, True, True),
-                ("question_cause", {"possibilities": [{"cause": "¿gastritis?", "condition": "dato"}]}, True, False),
+                ("question_cause", {"possibilities": [{"cause": "¿gastritis?", "evidence": [question], "condition": None}]}, True, False),
                 ("control", {"optional_details": ["dato\notro", "duración"]}, True, False),
                 ("blank", {"optional_details": ["   ", "duración"]}, True, False),
                 ("variable_name", {"optional_details": ["frecuencia_dia", "duración"]}, True, False),
                 ("too_long", {"optional_details": ["x" * 121, "duración"]}, True, False),
                 ("no_causes", {"possibilities": []}, False, False),
-                ("four_causes", {"possibilities": guide["possibilities"] * 4}, False, False),
-                ("non_string", {"possibilities": [{"cause": 42, "condition": "dato"}]}, False, False)):
-            fixtures.append((name, {"mode": "symptom_guidance", "guidance": {**guide, **change}, **extras},
+                ("four_causes", {"possibilities": case_guide["possibilities"] * 4}, False, False),
+                ("non_string", {"possibilities": [{"cause": 42, "evidence": [question], "condition": None}]}, False, False)):
+            fixtures.append((name, {"mode": "symptom_guidance", "guidance": {**case_guide, **change}, **extras},
                              schema_expected, runtime_expected))
         for name, value, schema_expected, runtime_expected in fixtures:
             schema_valid = validator.is_valid(value)
@@ -63,7 +72,7 @@ for branch in ("direct", "rag"):
     extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
     for label, quote, expected in (("alert_literal", question, True),
                                    ("alert_paraphrase_replay", "sangre roja en vómito, dolor abdominal intenso y mareos", False)):
-        value = {"mode": "symptom_guidance", "guidance": {**guide, "current_alert": quote}, **extras}
+        value = {"mode": "symptom_guidance", "guidance": {**with_evidence("Estoy vomitando sangre roja ahora"), "current_alert": quote}, **extras}
         raw = json.dumps(value)
         try:
             result = validate_direct_answer(raw, question) if branch == "direct" else validate_rag_answer(raw, [], question)
@@ -90,7 +99,7 @@ for branch in ("direct", "rag"):
             ("mixed_clause_conservative_rejection", "Estoy vomitando sangre y no tengo fiebre.", "Estoy vomitando sangre y no tengo fiebre.", False)):
         schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([], question)
         extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
-        value = {"mode": "symptom_guidance", "guidance": {**guide, "current_alert": quote}, **extras}
+        value = {"mode": "symptom_guidance", "guidance": {**with_evidence(quote), "current_alert": quote}, **extras}
         try:
             raw = json.dumps(value)
             result = validate_direct_answer(raw, question) if branch == "direct" else validate_rag_answer(raw, [], question)
