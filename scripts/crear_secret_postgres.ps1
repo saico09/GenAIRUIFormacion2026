@@ -1,9 +1,11 @@
+param([string]$EnvFile)
 # Lee el .env local y envia el Secret por stdin; no guarda ni imprime credenciales.
 $ErrorActionPreference = 'Stop'
 $repoDir = Split-Path -Parent $PSScriptRoot
 $kubectlPath = Join-Path $repoDir '.local/bin/kubectl.exe'
 $settings = @{}
-foreach ($line in Get-Content -LiteralPath (Join-Path $repoDir '.env')) {
+if ([string]::IsNullOrWhiteSpace($EnvFile)) { $EnvFile = Join-Path $repoDir '.env' }
+foreach ($line in Get-Content -LiteralPath $EnvFile) {
     if ($line -match '^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$') {
         $value = $Matches[2].Trim()
         if ($value.Length -ge 2 -and (($value.StartsWith('"') -and $value.EndsWith('"')) -or ($value.StartsWith("'") -and $value.EndsWith("'")))) {

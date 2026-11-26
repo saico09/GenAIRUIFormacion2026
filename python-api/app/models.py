@@ -27,7 +27,7 @@ class PatientDisease(Base):
     __tablename__ = "patient_diseases"
     __table_args__ = (
         CheckConstraint("btrim(disease) <> '' OR btrim(treatment) <> '' OR btrim(medication) <> ''",
-                        name="patient_diseases_nonempty"),
+                        name="patient_diseases_has_content"),
         Index("patient_diseases_patient_id", "patient_id"),
         {"schema": "public"},
     )

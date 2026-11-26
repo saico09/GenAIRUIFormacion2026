@@ -8,12 +8,36 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 
+class RevalidatedStaticFiles(StaticFiles):
+    """Los módulos se revalidan siempre: tras actualizar no se mezcla HTML nuevo con JS o CSS viejos."""
+
+    def file_response(self, *args, **kwargs):
+        response = super().file_response(*args, **kwargs)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
+def portal_enabled() -> bool:
+    value = os.getenv("PORTAL_ENABLED", "true").strip().lower()
+    if value not in {"true", "false"}:
+        raise ValueError("PORTAL_ENABLED debe ser true o false")
+    return value == "true"
+
+
 def install_ui(app: FastAPI) -> None:
+    if not portal_enabled():
+        # GitOps (Minikube) sólo despliega el CRUD: el portal completo vive en Compose.
+        @app.get("/", include_in_schema=False)
+        def crud_only():
+            return {"message": "El portal web corre en Docker Compose en http://localhost:8000. "
+                               "Este servicio expone el CRUD /patients (documentación en /docs)."}
+        return
+
     static_dir = Path(__file__).parent / "static"
     java_port = int(os.getenv("JAVA_API_PUBLIC_PORT", "8080"))
     if not 1 <= java_port <= 65535:
         raise ValueError("JAVA_API_PUBLIC_PORT debe ser un puerto entre 1 y 65535")
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+    app.mount("/static", RevalidatedStaticFiles(directory=static_dir), name="static")
 
     @app.get("/", include_in_schema=False)
     def index():

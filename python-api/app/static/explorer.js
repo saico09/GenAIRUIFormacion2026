@@ -1,13 +1,14 @@
-import {request, notice, confirmDelete, confirmAction} from './api.js';
+import {request, errorMessage, notice, confirmDelete, confirmAction, newId, syncIndex, indexError, indexSyncing, setIndexState} from './api.js';
 
 const samplePatient = {name: 'Paciente de prueba', birth_date: '1990-05-15', email: 'prueba@example.com'};
 const sampleDisease = {disease: 'Rinitis alérgica', treatment: 'Evitar la exposición al polen', medication: 'Cetirizina'};
+const SYNC_PATH = '/clinical/patients/{id}/sync';
 const operations = [
   {method: 'GET', path: '/health', title: 'Comprobar disponibilidad'},
   {method: 'GET', path: '/patients', title: 'Listar pacientes'},
   {method: 'POST', path: '/patients', title: 'Crear un paciente', body: samplePatient},
   {method: 'GET', path: '/patients/{id}', title: 'Consultar un paciente por ID'},
-  {method: 'PUT', path: '/patients/{id}', title: 'Actualizar los datos de un paciente', body: samplePatient},
+  {method: 'PUT', path: '/patients/{id}', title: 'Actualizar los datos de un paciente', body: samplePatient, confirmPatient: true},
   {method: 'DELETE', path: '/patients/{id}', title: 'Eliminar un paciente'},
   {method: 'GET', path: '/patients/{id}/diseases', title: 'Listar los registros confirmados de un paciente'},
   {method: 'POST', path: '/patients/{id}/diseases', title: 'Agregar enfermedad, tratamiento y medicamento', body: sampleDisease, clinicalRecord: true},
@@ -30,18 +31,18 @@ export function initExplorer(api, baseUrl, metricsEnabled) {
   root.append(base, node('p', 'api-intro', 'Python y Java usan los mismos pacientes y registros. POST agrega, PUT modifica y DELETE elimina. Los cambios clínicos actualizan la tabla y el Markdown del paciente.'));
   const entries = [...operations];
   if (api === 'python') entries.push(
-    {method: 'POST', path: '/chat', title: 'Comparar respuestas y guardar la consulta en el informe', timeout: 420000,
+    {method: 'POST', path: '/chat', title: 'Comparar respuestas y guardar la consulta en el informe', timeout: 900000, saveConsultation: true,
       body: {patient_id: 1, question: '¿Qué enfermedad tiene Ana Demo?'}},
     {method: 'POST', path: '/clinical/proposals', title: 'Preparar un borrador clínico sin guardarlo', timeout: 420000,
       body: {patient_id: 1, note: 'Enfermedad: Enfermedad ficticia de prueba. Tratamiento: Tratamiento ficticio de prueba.'}},
-    {method: 'POST', path: '/clinical/patients/{id}/sync', title: 'Actualizar o retirar el índice RAG del paciente', timeout: 180000},
+    {method: 'POST', path: SYNC_PATH, title: 'Actualizar o retirar el índice RAG del paciente', timeout: 180000},
   );
   else entries.push(
     {method: 'GET', path: '/patients/{id}/history', title: 'Leer informe, registros y revisión vigente'},
     {method: 'GET', path: '/patients/{id}/history.md', title: 'Leer el archivo Markdown'},
     {method: 'GET', path: '/patients/{id}/consultations/{uuid}', title: 'Consultar una ejecución guardada por UUID'},
     {method: 'POST', path: '/patients/{id}/consultations', title: 'Guardar una comparación en el informe', confirmHistory: true,
-      body: {id: crypto.randomUUID(), question: 'Consulta ficticia de prueba', direct_answer: 'Respuesta directa ficticia',
+      body: {id: newId(), question: 'Consulta ficticia de prueba', direct_answer: 'Respuesta directa ficticia',
         rag_answer: 'Respuesta contextual ficticia', model: 'prueba-manual', sources: []}},
     {method: 'PUT', path: '/patients/{id}/history', title: 'Reemplazar el Markdown con revisión y confirmación', confirmHistory: true,
       body: {revision: 'COPIA_LA_REVISION_DEL_GET', markdown: 'PEGA_EL_MARKDOWN_DEL_GET_Y_EDITA_SUS_CAMPOS', confirmed: true}},
@@ -53,6 +54,26 @@ export function initExplorer(api, baseUrl, metricsEnabled) {
     entries.push({method: 'GET', path: api === 'java' ? '/actuator/prometheus' : '/metrics', title: 'Consultar métricas Prometheus'});
   }
   entries.forEach((operation, index) => root.append(endpoint(api, baseUrl, operation, index)));
+}
+
+function confirmRequest(api, operation, endpointPath, patientId, chatPatient) {
+  const {method} = operation;
+  const apiLabel = api === 'java' ? 'Java' : 'Python';
+  if (method === 'DELETE') {
+    const description = `¿Quieres ejecutar DELETE ${endpointPath} en la API ${apiLabel}?`;
+    return operation.recordUuid
+      ? confirmAction(description, {title: 'Eliminar registro', label: 'Eliminar registro', danger: true, hint: 'Sólo se elimina este registro confirmado. El paciente y las consultas guardadas se conservan.'})
+      : confirmDelete(description);
+  }
+  if (operation.confirmHistory) return confirmAction(`¿Enviar ${method} ${endpointPath} y guardar estos cambios en la historia clínica?`,
+    {title: 'Guardar historia clínica', label: 'Confirmar y enviar', hint: 'Revisa el JSON, los datos y la revisión vigente. Esta operación modifica el informe del paciente.'});
+  if (operation.clinicalRecord) return confirmAction(`¿Guardar estos datos en el registro de ${endpointPath}?`,
+    {title: 'Guardar registro confirmado', label: 'Confirmar y enviar', hint: 'Revisa los tres campos del JSON. El cambio se reflejará en el Markdown.'});
+  if (operation.confirmPatient) return confirmAction(`¿Actualizar el paciente ${patientId} con los datos del JSON en la API ${apiLabel}?`,
+    {title: 'Actualizar paciente', label: 'Confirmar y enviar', hint: 'Sobrescribe nombre, fecha de nacimiento y correo. Si cambia el nombre, también se renombra su informe Markdown.'});
+  if (operation.saveConsultation) return confirmAction(`¿Ejecutar POST /chat y guardar la consulta en el informe del paciente ${Number.isSafeInteger(chatPatient) ? chatPatient : 'indicado en el JSON'}?`,
+    {title: 'Guardar consulta', label: 'Consultar y guardar', hint: 'Ejecuta el modelo con y sin RAG; puede tardar varios minutos. La comparación queda en el Markdown y en PostgreSQL.'});
+  return Promise.resolve(true);
 }
 
 function endpoint(api, base, operation, index) {
@@ -100,12 +121,14 @@ function endpoint(api, base, operation, index) {
       ? 'Guarda estos textos como una consulta, sin ejecutar un modelo. Reutiliza el mismo UUID sólo para reintentar el mismo contenido. Confirmarás antes de enviar.'
       : 'Copia la revisión de GET history. Para editar Markdown conserva los UUID existentes y el historial de consultas. Las altas usan POST entries. Confirmarás antes de enviar.'));
   } else form.append(node('p', 'helper', 'Esta operación no necesita un cuerpo JSON.'));
+  if (operation.saveConsultation) form.append(node('p', 'helper', 'Ejecuta el modelo con y sin RAG y guarda la comparación en el informe. Si falla, repetir el mismo cuerpo reutiliza su ID de ejecución y no la duplica. Confirmarás antes de enviar.'));
   const run = node('button', 'button primary', 'Ejecutar petición'); run.type = 'submit';
   const formNotice = node('p', 'notice error'); formNotice.hidden = true; formNotice.setAttribute('role', 'alert');
   const retrySync = node('button', 'button secondary', 'Reintentar sincronización'); retrySync.type = 'button'; retrySync.hidden = true;
   form.append(run, formNotice, retrySync);
-  const response = node('div', 'endpoint-response'); response.setAttribute('aria-live', 'polite');
+  const response = node('div', 'endpoint-response');
   const responseHeading = node('div', 'response-heading');
+  responseHeading.setAttribute('aria-live', 'polite');
   const status = node('span', 'http-status'); status.hidden = true;
   const duration = node('span', 'helper');
   responseHeading.append(node('h3', '', 'Respuesta'), status, duration);
@@ -114,13 +137,14 @@ function endpoint(api, base, operation, index) {
   response.append(responseHeading, output, metadata); columns.append(form, response); content.append(columns); details.append(content);
   let busy = false;
   let pendingSyncId = null;
+  let execution = null;   // ID de /chat reutilizable mientras el cuerpo no cambie y no se haya guardado.
   async function synchronize() {
+    const id = pendingSyncId;
     try {
-      const result = await request(`/clinical/patients/${pendingSyncId}/sync`, {method: 'POST'}, 180000);
-      if (!result.ok) throw new Error('No se pudo actualizar el índice RAG.');
+      await syncIndex(id);
       pendingSyncId = null; retrySync.hidden = true; notice(formNotice, 'Índice RAG sincronizado.', 'success');
     } catch (error) {
-      notice(formNotice, `El cambio está guardado, pero el índice del paciente ${pendingSyncId} sigue pendiente. Reintentar no repite ${method}. ${error.message}`, 'warning');
+      notice(formNotice, `El cambio está guardado, pero el índice del paciente ${id} sigue pendiente. Reintentar no repite ${method}. ${error.message}`, 'warning');
       retrySync.hidden = false;
     }
   }
@@ -128,7 +152,11 @@ function endpoint(api, base, operation, index) {
     if (busy || pendingSyncId === null) return;
     busy = true; run.disabled = true; retrySync.disabled = true;
     try { await synchronize(); }
-    finally { busy = false; run.disabled = pendingSyncId !== null; retrySync.disabled = false; }
+    finally { busy = false; run.disabled = false; retrySync.disabled = false; }
+  });
+  document.addEventListener('index-sync-changed', event => {
+    if (pendingSyncId === null || event.detail.patient_id !== pendingSyncId || indexError(pendingSyncId) !== undefined) return;
+    pendingSyncId = null; retrySync.hidden = true; notice(formNotice, 'Índice RAG sincronizado.', 'success');
   });
   function clearResponse() {
     status.hidden = true; duration.textContent = ''; metadata.textContent = '';
@@ -138,7 +166,7 @@ function endpoint(api, base, operation, index) {
   for (const input of [bodyInput, idInput, uuidInput].filter(Boolean)) input.addEventListener('input', clearResponse);
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (busy || pendingSyncId !== null) return;
+    if (busy) return;
     notice(formNotice, '');
     clearResponse();
     if (bodyInput) {
@@ -151,17 +179,9 @@ function endpoint(api, base, operation, index) {
       notice(formNotice, 'El identificador debe tener formato UUID.'); return;
     }
     const endpointPath = resolvedPath();
-    if (method === 'DELETE') {
-      const description = `¿Quieres ejecutar DELETE ${endpointPath} en la API ${api === 'java' ? 'Java' : 'Python'}?`;
-      const accepted = operation.recordUuid
-        ? await confirmAction(description, {title: 'Eliminar registro', label: 'Eliminar registro', danger: true, hint: 'Sólo se elimina este registro confirmado. El paciente y las consultas guardadas se conservan.'})
-        : await confirmDelete(description);
-      if (!accepted) return;
-    }
-    if (operation.confirmHistory && !await confirmAction(`¿Enviar ${method} ${endpointPath} y guardar estos cambios en la historia clínica?`,
-      {title: 'Guardar historia clínica', label: 'Confirmar y enviar', hint: 'Revisa el JSON, los datos y la revisión vigente. Esta operación modifica el informe del paciente.'})) return;
-    if (operation.clinicalRecord && !await confirmAction(`¿Guardar estos datos en el registro de ${endpointPath}?`,
-      {title: 'Guardar registro confirmado', label: 'Confirmar y enviar', hint: 'Revisa los tres campos del JSON. El cambio se reflejará en el Markdown.'})) return;
+    const chatPatient = operation.saveConsultation ? Number(JSON.parse(bodyInput.value)?.patient_id) : null;
+    if (!await confirmRequest(api, operation, endpointPath, idInput?.value, chatPatient)) return;
+    if (operation.saveConsultation && execution?.body !== bodyInput.value) execution = {body: bodyInput.value, id: newId()};
     busy = true; run.disabled = true; run.textContent = 'Ejecutando…';
     if (bodyInput) bodyInput.disabled = true;
     if (idInput) idInput.disabled = true;
@@ -171,6 +191,7 @@ function endpoint(api, base, operation, index) {
     try {
       const options = {method};
       if (bodyInput) { options.headers = {'Content-Type': 'application/json'}; options.body = bodyInput.value; }
+      if (operation.saveConsultation) options.headers['X-Execution-ID'] = execution.id;
       const result = await request(`${base}${endpointPath}`, options, operation.timeout || 20000);
       const state = result.status >= 500 ? 'server-error' : result.status >= 400 ? 'client-error' : 'ok';
       const description = result.status >= 500 ? 'Error del servidor' : result.status >= 400 ? 'Petición rechazada' : 'Correcto';
@@ -179,8 +200,20 @@ function endpoint(api, base, operation, index) {
       output.textContent = result.status === 204 ? 'Sin contenido (204). El registro fue eliminado.'
         : result.data !== null ? JSON.stringify(result.data, null, 2) : result.text || '(Respuesta vacía)';
       metadata.textContent = [result.contentType, result.requestId && `Request ID: ${result.requestId}`, result.executionId && `Ejecución: ${result.executionId}`].filter(Boolean).join(' · ');
+      if (path === SYNC_PATH) setIndexState(idInput.value, result.ok ? undefined : errorMessage(result));
+      if (operation.saveConsultation) {
+        // Guardada o con su UUID ya usado por otra consulta: la próxima ejecución lleva un ID nuevo.
+        if (result.ok || result.status === 409) execution = null;
+        if (result.ok) {
+          document.dispatchEvent(new CustomEvent('clinical-history-changed', {detail: {patient_id: chatPatient}}));
+          if (result.data?.index_synced === false) {
+            pendingSyncId = chatPatient; setIndexState(chatPatient, ''); retrySync.hidden = false;
+            notice(formNotice, 'La consulta quedó guardada, pero el índice RAG sigue pendiente. Reintentar no repite /chat.', 'warning');
+          } else if (!indexSyncing(chatPatient)) setIndexState(chatPatient, undefined);
+        }
+      }
       if (result.ok && path.startsWith('/patients') && method !== 'GET') {
-        document.dispatchEvent(new Event('patients-changed'));
+        if (path === '/patients' || path === '/patients/{id}') document.dispatchEvent(new Event('patients-changed'));
         const patientId = Number(idInput?.value || result.data?.id);
         document.dispatchEvent(new CustomEvent('clinical-history-changed', {detail: {patient_id: patientId}}));
         if (Number.isSafeInteger(patientId) && patientId > 0) {
@@ -192,7 +225,7 @@ function endpoint(api, base, operation, index) {
       status.className = 'http-status network-error'; status.textContent = 'Error de conexión'; status.hidden = false;
       output.textContent = error.message;
     } finally {
-      busy = false; run.disabled = pendingSyncId !== null; run.textContent = 'Ejecutar petición';
+      busy = false; run.disabled = false; run.textContent = 'Ejecutar petición';
       if (bodyInput) bodyInput.disabled = false;
       if (idInput) idInput.disabled = false;
       if (uuidInput) uuidInput.disabled = false;

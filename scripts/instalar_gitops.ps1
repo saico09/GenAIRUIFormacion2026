@@ -63,18 +63,5 @@ if ($LASTEXITCODE -ne 0) { throw 'No se pudo consultar kubectl.' }
 $kubectlData = $kubectlVersion | ConvertFrom-Json
 if ($kubectlData.clientVersion.gitVersion -ne 'v1.36.6') { throw 'Version inesperada de kubectl.' }
 
-$evidenceDir = Join-Path $repoDir 'evidencias/s09'
-New-Item -ItemType Directory -Force -Path $evidenceDir | Out-Null
-@{
-    checked_at = [DateTime]::UtcNow.ToString('o')
-    phase = 'Preparacion de binarios; este script no inicia el cluster'
-    platform = 'windows/amd64'
-    downloads = $downloads
-    versions = @{ minikube = $minikubeVersion.Trim(); helm = $helmVersion.Trim(); kubectl = $kubectlData.clientVersion.gitVersion }
-    executable_sha256 = @{
-        minikube = (Get-FileHash -LiteralPath (Join-Path $binDir 'minikube.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
-        helm = (Get-FileHash -LiteralPath (Join-Path $binDir 'helm.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
-        kubectl = (Get-FileHash -LiteralPath (Join-Path $binDir 'kubectl.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
-    }
-} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $evidenceDir '039-herramientas.json') -Encoding utf8
+Write-Output "Versiones: minikube $($minikubeVersion.Trim()), helm $($helmVersion.Trim()), kubectl $($kubectlData.clientVersion.gitVersion)"
 Write-Output "Herramientas listas en $binDir. No se cambio el PATH ni se inicio Minikube."

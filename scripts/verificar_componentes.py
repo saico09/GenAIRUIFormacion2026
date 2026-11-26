@@ -7,10 +7,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import urlopen
 
+OUTPUT = Path(__file__).resolve().parents[1] / ".local" / "verificaciones" / f"{Path(__file__).stem}-{datetime.now():%Y%m%dT%H%M%S}.json"
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", required=True)
+    parser.add_argument("--output", type=Path, default=OUTPUT)
+    parser.add_argument("--argo-ca", type=Path, help="Certificado CA de Argo CD para verificar su HTTPS local")
     args = parser.parse_args()
     endpoints = (
         ("FastAPI", "http://localhost:8000/health"),
@@ -26,16 +29,18 @@ def main():
     for component, url in endpoints:
         check = {"component": component, "url": url, "status": None}
         try:
-            # Solo el servidor local de esta práctica usa certificado autofirmado.
-            context = ssl._create_unverified_context() if url == "https://localhost:8443/" else None
+            # Con CA propia se valida tanto la cadena como el nombre del servidor.
+            context = ssl.create_default_context(cafile=args.argo_ca) if url.startswith("https://") else None
             with urlopen(url, timeout=15, context=context) as response:
                 check["status"] = response.status
-                assert response.status == 200, f"HTTP {response.status}"
-                assert response.read(), "Respuesta vacía"
+                if response.status != 200:
+                    check["error"] = f"HTTP {response.status}"
+                elif not response.read():
+                    check["error"] = "Respuesta vacía"
         except Exception as error:
             check["error"] = str(error)
         checks.append(check)
-    output = Path(args.output)
+    output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({
         "checked_at": datetime.now(timezone.utc).isoformat(), "checks": checks,

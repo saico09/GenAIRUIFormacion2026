@@ -3,7 +3,7 @@
 import os
 from time import perf_counter
 
-from app.knowledge import OLLAMA_BASE_URL, request_json
+from app.knowledge import OLLAMA_BASE_URL, OLLAMA_KEEP_ALIVE, request_json
 from app.observability import log_event
 
 CHAT_MODEL = os.getenv("CHAT_MODEL", "qwen3.5:4b-q4_K_M")
@@ -19,6 +19,19 @@ class LLMUnavailable(Exception):
     """No se pudo obtener una respuesta válida del modelo local."""
 
 
+class LLMInvalidOutput(LLMUnavailable):
+    """El modelo respondió, pero la salida llegó vacía o incompleta."""
+
+
+def con_un_reintento(generar, validar, *, branch: str):
+    """Repite una vez si la salida no pasa la validación; un fallo de conexión con Ollama no se repite."""
+    try:
+        return validar(generar())
+    except (LLMInvalidOutput, ValueError) as error:
+        log_event("llm_retry", branch=branch, reason=str(error))
+        return validar(generar())
+
+
 def llamar_llm(prompt: str, *, branch: str = "direct", schema: dict | None = None, system: str | None = None) -> str:
     start = perf_counter()
     body = {
@@ -27,7 +40,7 @@ def llamar_llm(prompt: str, *, branch: str = "direct", schema: dict | None = Non
         "stream": False,
         "think": THINK,
         "options": dict(MODEL_OPTIONS),
-        "keep_alive": "1m",
+        "keep_alive": OLLAMA_KEEP_ALIVE,
     }
     if schema is not None:
         body["format"] = schema
@@ -71,7 +84,10 @@ def llamar_llm(prompt: str, *, branch: str = "direct", schema: dict | None = Non
     except (OSError, ValueError, KeyError) as error:
         log_event("llm", branch=branch, model=CHAT_MODEL, prompt=prompt, system=system, response=None,
                   duration_ms=round((perf_counter() - start) * 1000, 3), status="error", **diagnostics)
-        raise LLMUnavailable("LLM no disponible") from error
+        # Sin conexión no tiene sentido reintentar; una salida vacía o cortada sí.
+        if isinstance(error, OSError):
+            raise LLMUnavailable("LLM no disponible") from error
+        raise LLMInvalidOutput("LLM no disponible") from error
     log_event("llm", branch=branch, model=CHAT_MODEL, prompt=prompt, system=system, response=answer,
               duration_ms=round((perf_counter() - start) * 1000, 3), status="ok", **diagnostics)
     return answer

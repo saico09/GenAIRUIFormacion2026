@@ -7,8 +7,12 @@ spec:
   project: default
   source:
     repoURL: https://github.com/saico09/GenAIRUIFormacion2026.git
-    targetRevision: main
+    targetRevision: revision/correcciones-2026-11-26
     path: deploy/helm/fastapi
+    helm:
+      parameters:
+        - name: image.tag
+          value: "correcciones-20261126"
   destination:
     server: https://kubernetes.default.svc
     namespace: genai
@@ -16,3 +20,11 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

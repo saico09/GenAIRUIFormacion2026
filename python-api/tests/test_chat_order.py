@@ -26,10 +26,11 @@ class ChatOrderTests(unittest.TestCase):
         self.sync = self.enterContext(patch.object(main, "sync_history"))
         self.tracer = self.enterContext(patch.object(main, "tracer"))
         self.sources = [{"source": "fixture.md", "section": "Enfermedad", "text": "Sólo para RAG"}]
+        self.context = self.sources
 
         def run_graph(state):
             self.steps.append("rag")
-            return {**state, "respuesta": "Orientación RAG", "fragmentos": self.sources}
+            return {**state, "respuesta": "Orientación RAG", "fragmentos": self.sources, "contexto": self.context}
 
         def run_direct(*args, **kwargs):
             self.steps.append("direct")
@@ -67,6 +68,34 @@ class ChatOrderTests(unittest.TestCase):
         self.tracer.start_as_current_span.assert_called_once_with("rag", attributes={
             "openinference.span.kind": "CHAIN", "request_id": "request-qa"})
 
+    def test_sources_preserve_the_complete_context_used_for_the_answer(self):
+        from rag import source_label, validate_rag_answer
+
+        record_id = str(uuid4())
+        metadata = {"patient_id": 71, "record_id": record_id, "source": "paciente-71-prueba.md"}
+        disease = {**metadata, "section": "Enfermedad", "text": "ERGE"}
+        treatment = {**metadata, "section": "Tratamiento", "text": "Cenar tres horas antes."}
+        medication = {**metadata, "section": "Medicamento", "text": "Omeprazol."}
+        note = {**metadata, "record_id": str(uuid4()), "section": "Consulta", "text": "Acidez reportada."}
+        retrieved = [disease, treatment, note]
+        context = [disease, treatment, medication, note]
+        self.body = main.ChatIn(patient_id=71, question="Tengo acidez al comer.")
+        guide = {"possibilities": [{"cause": "posibilidad de prueba", "condition": "otro dato"}],
+                 "optional_details": ["duración", "localización"], "current_alert": None}
+        rag_answer = validate_rag_answer(json.dumps({"mode": "symptom_guidance", "guidance": guide,
+            "missing_information": False, "facts": [{"source": source_label(medication), "quote": medication["text"]}],
+            "questions": []}), context, self.body.question)
+        self.graph.invoke.side_effect = None
+        self.graph.invoke.return_value = {"fragmentos": retrieved, "contexto": context, "respuesta": rag_answer}
+
+        result = main.chat(self.body, self.request)
+
+        self.assertEqual(len(retrieved), 3)
+        self.assertEqual(result["sources"], context)
+        self.assertEqual(self.save.call_args.args[3]["sources"], context)
+        self.assertIn(source_label(medication), result["rag_answer"])
+        self.assertIn(medication, result["sources"])
+
     def test_retry_uses_original_pair_without_generating_or_saving_again(self):
         self.existing.return_value = {"id": self.execution_id, "created_at": "2026-11-11T12:00:00Z",
                                       "direct_answer": "Original directa", "rag_answer": "Original RAG",
@@ -93,8 +122,24 @@ class ChatOrderTests(unittest.TestCase):
             main.chat(self.body, self.request)
         self.assertEqual(raised.exception.status_code, 503)
         self.assertEqual(self.steps, ["rag"])
+        self.assertEqual(self.direct.call_count, 1)
         self.save.assert_not_called()
         self.sync.assert_not_called()
+
+    def test_invalid_direct_output_is_retried_once_and_then_the_pair_is_saved(self):
+        valid = self.direct.side_effect
+
+        def flaky(*args, **kwargs):
+            if self.direct.call_count == 1:
+                self.steps.append("direct-invalid")
+                return json.dumps({"mode": "symptom_guidance", "guidance": "Narración libre"})
+            return valid(*args, **kwargs)
+        self.direct.side_effect = flaky
+        result = main.chat(self.body, self.request)
+        self.assertEqual(self.steps, ["rag", "direct-invalid", "direct", "save", "index"])
+        self.assertEqual(self.direct.call_count, 2)
+        self.assertEqual(self.direct.call_args_list[0], self.direct.call_args_list[1])
+        self.assertIn("Podría ser posibilidad de prueba", result["direct_answer"])
 
     def test_conflicting_execution_id_does_not_generate_or_overwrite(self):
         self.existing.side_effect = main.ConsultationConflict("UUID de otra consulta")
@@ -112,6 +157,7 @@ class ChatOrderTests(unittest.TestCase):
         with self.assertRaises(HTTPException) as raised:
             main.chat(self.body, self.request)
         self.assertEqual(raised.exception.status_code, 503)
+        self.assertEqual(self.direct.call_count, 2)
         self.save.assert_not_called()
         self.sync.assert_not_called()
 

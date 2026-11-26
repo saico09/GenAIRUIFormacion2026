@@ -1,5 +1,5 @@
 :root {
-  --ink: #203834; --muted: #667873; --line: #dce5df; --paper: #fff;
+  --ink: #203834; --muted: #5f716c; --line: #dce5df; --paper: #fff;
   --green: #176851; --forest: #133f3b; --soft: #edf6f0; --bg: #f5f7f4;
   --red: #ad293c; --blue: #1956a6; --amber: #895112;
   font-family: "Segoe UI", system-ui, sans-serif; color: var(--ink); background: var(--bg);
@@ -35,7 +35,7 @@ code, pre, .method, .endpoint-path { font-family: "Cascadia Code", Consolas, mon
 .environment > span { width: 6px; height: 6px; border-radius: 50%; background: #729281; }
 .nav-inner { display: flex; gap: 30px; overflow-x: auto; }
 .nav-inner a { display: flex; gap: 10px; padding: 16px 2px 15px; align-items: center; text-decoration: none; white-space: nowrap; color: var(--muted); border-bottom: 3px solid transparent; font-size: 14px; font-weight: 600; }
-.nav-inner a > span { font-size: 10px; font-weight: 500; color: #84948c; }
+.nav-inner a > span { font-size: 10px; font-weight: 500; color: #68786f; }
 .nav-inner a:hover { color: var(--forest); }
 .nav-inner a[aria-current="page"] { color: var(--forest); border-color: var(--green); }
 .nav-inner a[aria-current="page"] > span { color: var(--green); }
@@ -46,7 +46,7 @@ main { padding-top: 38px; padding-bottom: 20px; outline: none; }
 .pill, .small-pill { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; font-size: 11px; font-weight: 600; border-radius: 24px; background: #e9eee8; padding: 7px 12px; color: #536851; }
 .pill { border: 1px solid #d7e3d6; }
 .java-pill { background: #fff4e5; color: #825122; border-color: #efddc2; }
-.small-pill { padding: 4px 9px; font-size: 10px; background: #f0f3f4; color: #68777c; }
+.small-pill { padding: 4px 9px; font-size: 10px; background: #f0f3f4; color: #5f6d72; }
 .small-pill.green { background: #e8f5ec; color: #28764f; }
 .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 2px 4px #193a2f03; }
 .query-form { padding: 26px; margin-bottom: 25px; }
@@ -55,7 +55,7 @@ label { display: block; font-size: 13px; font-weight: 650; margin-bottom: 8px; }
 input, select, textarea { width: 100%; min-width: 0; color: var(--ink); background: #fff; border: 1px solid #cbd8ce; border-radius: 7px; padding: 11px 13px; line-height: 1.5; font-size: 14px; }
 input:hover, select:hover, textarea:hover { border-color: #a7bdb0; }
 textarea { resize: vertical; min-height: 94px; }
-input::placeholder, textarea::placeholder { color: #7e8f87; }
+input::placeholder, textarea::placeholder { color: #69796f; }
 .button { display: inline-flex; gap: 12px; justify-content: center; align-items: center; padding: 10px 17px; border: 1px solid transparent; border-radius: 7px; font-size: 13px; font-weight: 600; text-decoration: none; line-height: 1.5; white-space: nowrap; }
 .primary { background: var(--forest); color: white; }
 .primary:hover:not(:disabled) { background: #215b51; }
@@ -86,7 +86,7 @@ input::placeholder, textarea::placeholder { color: #7e8f87; }
 .rag-panel { border-color: #bcd8c3; }
 .rag-panel .answer-heading { background: #f6fbf6; border-color: #dceadd; }
 .answer { padding: 24px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; flex: 1; min-height: 118px; line-height: 1.85; }
-.empty-answer { color: #7a8981; font-size: 13px; }
+.empty-answer { color: #66756e; font-size: 13px; }
 .answer-note, .sources-block { margin: 0 24px; padding: 15px 0 20px; border-top: 1px solid #edf0eb; font-size: 12px; color: var(--muted); }
 .sources-block h3 { font-size: 12px; margin-bottom: 6px; color: var(--ink); }
 #sources { padding-left: 17px; margin: 5px 0 0; color: var(--green); overflow-wrap: anywhere; }
@@ -96,7 +96,7 @@ input::placeholder, textarea::placeholder { color: #7e8f87; }
 .info-symbol .icon { width: 16px; height: 16px; }
 .rag-explainer h2 { font-size: 14px; margin-bottom: 5px; }
 .rag-explainer p { font-size: 12px; color: var(--muted); max-width: 1000px; line-height: 1.8; }
-.app-footer { display: flex; justify-content: space-between; gap: 20px; color: #7e8e83; font-size: 10px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 32px; }
+.app-footer { display: flex; justify-content: space-between; gap: 20px; color: #62726a; font-size: 10px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 32px; }
 .panel-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 25px; border-bottom: 1px solid var(--line); }
 .panel-toolbar h2 { font-size: 18px; }
 .count { font: 11px Consolas, monospace; display: inline-block; background: var(--soft); color: var(--green); padding: 4px 7px; border-radius: 6px; vertical-align: middle; margin-left: 5px; }
@@ -113,7 +113,7 @@ th { padding: 13px 25px; font-size: 10px; text-transform: uppercase; letter-spac
 td { padding: 19px 25px; border-bottom: 1px solid #edf1e9; overflow-wrap: anywhere; }
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:hover { background: #f9fcf9; }
-td:first-child { color: #7d8e81; font-family: Consolas, monospace; }
+td:first-child { color: #647569; font-family: Consolas, monospace; }
 td:nth-child(2) { font-weight: 650; min-width: 165px; }
 .row-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .row-actions button { font-size: 12px; padding: 6px 11px; background: #fff; border: 1px solid #d9e4da; border-radius: 6px; color: var(--green); }
@@ -130,7 +130,7 @@ dialog::backdrop { background: #102c32a6; backdrop-filter: blur(3px); }
 dialog label:not(:first-child) { margin-top: 17px; }
 .icon-button { display: inline-grid; place-items: center; padding: 0; background: #f1f5ef; border: none; border-radius: 50%; width: 30px; height: 30px; color: var(--muted); flex-shrink: 0; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 26px; }
-#confirm-description { overflow-wrap: anywhere; margin-bottom: 10px; }
+#confirm-description { overflow-wrap: anywhere; margin-bottom: 10px; white-space: pre-wrap; }
 .api-base { display: flex; align-items: center; gap: 10px; padding: 16px 20px; margin-bottom: 19px; background: white; border: 1px solid var(--line); border-radius: 9px; }
 .api-base code { font-size: 13px; overflow-wrap: anywhere; }
 .api-intro { margin: -2px 0 22px; font-size: 12px; color: var(--muted); }
@@ -205,7 +205,6 @@ dialog label:not(:first-child) { margin-top: 17px; }
 #sources details { margin: 8px 0; }
 #sources summary { cursor: pointer; font-size: 12px; }
 .source-fragment { white-space: pre-wrap; color: var(--ink); background: var(--soft); padding: 12px; margin-top: 8px; border-radius: 6px; }
-#confirm-description { white-space: pre-wrap; }
 @media (max-width: 1080px) {
   .answer-heading { padding: 18px; gap: 9px; flex-wrap: wrap; }
   .answer-heading .small-pill { margin-left: 47px; }

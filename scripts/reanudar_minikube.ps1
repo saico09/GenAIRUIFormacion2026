@@ -1,6 +1,8 @@
 #Requires -Version 7
+param([string]$HistoryDirectory, [switch]$SkipTunnels)
 # Reanuda el perfil principal existente; no instala ni cambia el despliegue de Git.
 $ErrorActionPreference = 'Stop'
+$profileName = 'genai'
 $repoDir = Split-Path -Parent $PSScriptRoot
 $minikubePath = Join-Path $repoDir '.local/bin/minikube.exe'
 $kubectlPath = Join-Path $repoDir '.local/bin/kubectl.exe'
@@ -18,25 +20,29 @@ try {
     $profilesJson = & $minikubePath profile list --output=json
     if ($LASTEXITCODE -ne 0) { throw 'No se pudieron consultar los perfiles de Minikube.' }
     $profiles = $profilesJson | ConvertFrom-Json
-    if (-not (@($profiles.valid) | Where-Object { $_.Name -eq 'genai' })) {
+    if (-not (@($profiles.valid) | Where-Object { $_.Name -eq $profileName })) {
         throw 'El perfil genai no existe o no es valido; sigue la preparacion inicial de GUIA.md.'
     }
 
     Write-Output '1/5 Esperando PostgreSQL de Compose...'
     docker compose up -d --wait --wait-timeout 120 postgres
     if ($LASTEXITCODE -ne 0) { throw 'PostgreSQL no quedo saludable; revisar docker compose logs postgres.' }
-    & (Join-Path $PSScriptRoot 'conectar_postgres_minikube.ps1')
+    $postgresConnection = & (Join-Path $PSScriptRoot 'conectar_postgres_minikube.ps1') -ProfileName $profileName
 
     Write-Output '2/5 Reanudando el perfil genai...'
-    & $minikubePath start --profile=genai --keep-context --wait=all --wait-timeout=6m
+    & $minikubePath start --profile=$profileName --keep-context --wait=all --wait-timeout=6m
     if ($LASTEXITCODE -ne 0) { throw 'Minikube no termino de arrancar; no se abrieron tuneles.' }
-    $historyMount = & (Join-Path $PSScriptRoot 'montar_historias_minikube.ps1')
+    $historyMount = & (Join-Path $PSScriptRoot 'montar_historias_minikube.ps1') -ProfileName $profileName -HistoryDirectory $HistoryDirectory
 
-    $deploymentJson = & $kubectlPath --context=genai -n genai get deployment fastapi -o json
+    $deploymentJson = & $kubectlPath --context=$profileName -n genai get deployment fastapi -o json
     if ($LASTEXITCODE -ne 0) { throw 'No se encontro el Deployment fastapi; revisar la Application de Argo CD.' }
     $deployment = $deploymentJson | ConvertFrom-Json
     $container = @($deployment.spec.template.spec.containers | Where-Object { $_.name -eq 'fastapi' })[0]
     if ($null -eq $container) { throw 'El Deployment no contiene el contenedor fastapi.' }
+    $deployedHost = @($container.env | Where-Object { $_.name -eq 'POSTGRES_HOST' })[0].value
+    if ($deployedHost -ne $postgresConnection.Address) {
+        throw 'El Deployment no usa la conexion directa de este perfil; prepara de nuevo GitOps y aplica su Application antes de reanudar.'
+    }
 
     Write-Output '3/5 Comprobando SQL desde un pod temporal del perfil...'
     $podName = 'postgres-reanudar-' + [guid]::NewGuid().ToString('N')
@@ -89,52 +95,57 @@ while True:
         time.sleep(2)
 '@)
     }
+    if ($container.securityContext) { $sqlContainer.securityContext = $container.securityContext }
     if ($container.env) { $sqlContainer.env = $container.env }
     if ($container.envFrom) { $sqlContainer.envFrom = $container.envFrom }
     if ($container.volumeMounts) { $sqlContainer.volumeMounts = $container.volumeMounts }
     $pod = @{
         apiVersion = 'v1'; kind = 'Pod'
         metadata = @{ name = $podName; namespace = 'genai' }
-        spec = @{ restartPolicy = 'Never'; activeDeadlineSeconds = 150; containers = @($sqlContainer) }
+        spec = @{ automountServiceAccountToken = $false; restartPolicy = 'Never'; activeDeadlineSeconds = 150; containers = @($sqlContainer) }
     }
     if ($deployment.spec.template.spec.volumes) { $pod.spec.volumes = $deployment.spec.template.spec.volumes }
     if ($deployment.spec.template.spec.securityContext) { $pod.spec.securityContext = $deployment.spec.template.spec.securityContext }
     try {
-        $pod | ConvertTo-Json -Depth 20 -Compress | & $kubectlPath --context=genai -n genai create -f -
+        $pod | ConvertTo-Json -Depth 20 -Compress | & $kubectlPath --context=$profileName -n genai create -f -
         if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear el pod temporal de comprobacion SQL.' }
-        & $kubectlPath --context=genai -n genai wait '--for=jsonpath={.status.phase}=Succeeded' "pod/$podName" --timeout=160s
+        & $kubectlPath --context=$profileName -n genai wait '--for=jsonpath={.status.phase}=Succeeded' "pod/$podName" --timeout=160s
         if ($LASTEXITCODE -ne 0) {
             throw 'El pod no pudo comprobar SQL; revisar la conexion PostgreSQL del Deployment. No se abrieron tuneles.'
         }
-        $sqlResult = & $kubectlPath --context=genai -n genai logs "pod/$podName"
+        $sqlResult = & $kubectlPath --context=$profileName -n genai logs "pod/$podName"
         if ($LASTEXITCODE -ne 0 -or ($sqlResult -join "`n").Trim() -ne '1') {
             throw 'No se obtuvo SELECT 1 = 1 desde el perfil.'
         }
         Write-Output 'SQL desde Minikube: SELECT 1 = 1.'
     } finally {
         # Nombre nuevo por ejecucion: solo se elimina el pod que este comando acaba de crear.
-        & $kubectlPath --context=genai -n genai delete pod $podName --ignore-not-found --wait=true --timeout=20s
+        & $kubectlPath --context=$profileName -n genai delete pod $podName --ignore-not-found --wait=true --timeout=20s
         if ($LASTEXITCODE -ne 0) { Write-Warning "No se pudo limpiar el pod temporal $podName." }
     }
 
     Write-Output '4/5 Esperando las replicas deseadas de FastAPI...'
     if (-not $historyMount.Reused) {
         # Un pod anterior puede conservar el bind de un montaje perdido. No cambia el chart ni las replicas.
-        & $kubectlPath --context=genai -n genai rollout restart deployment/fastapi
+        & $kubectlPath --context=$profileName -n genai rollout restart deployment/fastapi
         if ($LASTEXITCODE -ne 0) { throw 'No se pudieron renovar los pods tras recuperar el montaje.' }
     }
-    & $kubectlPath --context=genai -n genai rollout status deployment/fastapi --timeout=300s
+    & $kubectlPath --context=$profileName -n genai rollout status deployment/fastapi --timeout=300s
     if ($LASTEXITCODE -ne 0) { throw 'FastAPI no quedo Ready; revisar sus eventos y logs antes de abrir tuneles.' }
-    $readyJson = & $kubectlPath --context=genai -n genai get deployment fastapi -o json
+    $readyJson = & $kubectlPath --context=$profileName -n genai get deployment fastapi -o json
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo comprobar el numero de replicas listas.' }
     $ready = $readyJson | ConvertFrom-Json
     if ($ready.spec.replicas -lt 1 -or $ready.status.readyReplicas -ne $ready.spec.replicas) {
         throw 'Las replicas Ready no coinciden con las deseadas; no se abrieron tuneles.'
     }
 
-    Write-Output '5/5 Abriendo los accesos locales...'
-    & $kubectlPath --context=genai -n argocd rollout status deployment/argocd-server --timeout=180s
+    Write-Output '5/5 Comprobando Argo CD...'
+    & $kubectlPath --context=$profileName -n argocd rollout status deployment/argocd-server --timeout=180s
     if ($LASTEXITCODE -ne 0) { throw 'Argo CD no quedo disponible; revisar su Deployment.' }
+    if ($SkipTunnels) {
+        Write-Output "OK: SQL, montaje y $($ready.status.readyReplicas) replicas Ready; no se abrieron tuneles."
+        return
+    }
     & (Join-Path $PSScriptRoot 'abrir_argocd.ps1')
     & (Join-Path $PSScriptRoot 'abrir_fastapi_minikube.ps1')
     $response = Invoke-WebRequest -Uri 'http://127.0.0.1:8002/patients' -TimeoutSec 10

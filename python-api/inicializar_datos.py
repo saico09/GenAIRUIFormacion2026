@@ -36,7 +36,8 @@ def load_demo(data_dir: Path) -> list[tuple]:
             if history["patient_id"] not in (1, 2, 3):
                 raise ValueError("Hay informes ajenos a la demo; no se asignaron identidades")
             name = rows[history["patient_id"] - 1][1]
-            if history["markdown"].splitlines()[0] != f"# Historia clínica ficticia — {name}":
+            # Sólo LF separa líneas: splitlines() también cortaría en U+2028 dentro del nombre.
+            if history["markdown"].split("\n", 1)[0].rstrip("\r") != f"# Historia clínica ficticia — {name}":
                 raise ValueError("El nombre del informe no corresponde al paciente de la demo")
             if history["consultations"]:
                 raise ValueError("No se importa un diario clínico sin su respaldo SQL")

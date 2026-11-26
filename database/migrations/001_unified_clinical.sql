@@ -1,5 +1,6 @@
+-- MIGRACIÓN MANUAL E HISTÓRICA: solo para un volumen anterior a la unificación; las APIs no la ejecutan.
 -- Migración idempotente. Antes de aplicarla sobre datos existentes, conservar un pg_dump.
--- Las dos APIs empaquetan este SQL; se serializa incluso si arrancan a la vez.
+-- Las dos llaves la serializan con el esquema y las escrituras clínicas de las APIs.
 BEGIN;
 SELECT pg_advisory_xact_lock(71420261107);
 SELECT pg_advisory_xact_lock(71420261109);

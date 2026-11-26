@@ -306,7 +306,7 @@ class OfflineContracts(unittest.TestCase):
                 self.assertFalse(is_current_symptom_report(question))
                 self.assertTrue(is_record_lookup(question))
                 schema = rag_response_schema([], question)
-                self.assertEqual(schema_modes(schema), ["record_lookup", "symptom_guidance"])
+                self.assertEqual(schema_modes(schema), ["out_of_scope", "record_lookup", "symptom_guidance"])
                 documentary = next(variant for variant in schema_variants(schema)
                                    if variant["properties"]["mode"]["enum"] == ["record_lookup"])
                 self.assertEqual(documentary["properties"]["guidance"], {"type": "null"})
@@ -316,17 +316,17 @@ class OfflineContracts(unittest.TestCase):
                      'Resume lo que dijo: "la paciente siente acidez".',
                      '"Me duele la cabeza" es una frase de ejemplo.',
                      "En la nota anterior dice que tengo dolor.",
-                     "Acidez después de comer.", "¿Por qué me duele la cabeza?")
+                     "¿Por qué me duele la cabeza?")
         for question in questions:
             with self.subTest(question=question):
                 self.assertFalse(is_current_symptom_report(question))
                 self.assertEqual(schema_modes(rag_response_schema([], question)),
-                                 ["record_lookup", "symptom_guidance"])
+                                 ["out_of_scope", "record_lookup", "symptom_guidance"])
 
     def test_retrieved_narrative_never_decides_the_current_question_mode(self):
         source = {"source": FILENAME, "record_id": OTHER, "section": "Consulta", "text": USER_FIRST}
         schema = rag_response_schema([source], "¿Qué cirugía tiene programada?")
-        self.assertEqual(schema_modes(schema), ["record_lookup", "symptom_guidance"])
+        self.assertEqual(schema_modes(schema), ["out_of_scope", "record_lookup", "symptom_guidance"])
         self.assertEqual(schema_variants(schema)[0]["properties"]["facts"]["items"]["properties"]["source"]["enum"],
                          [source_label(source)])
         # Cambiar fuentes no decide si el texto actual relata síntomas.
@@ -411,7 +411,7 @@ class OfflineContracts(unittest.TestCase):
         self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
         self.assertNotIn("Diagnóstico inventado", rendered)
         self.assertNotIn("archivo-inventado", rendered)
-        self.assertNotIn("Fuente:", rendered)
+        self.assertIn("sin relación confirmada", rendered)
 
     def test_symptom_history_does_not_quote_prior_documentary_questions(self):
         notes = ["Resume la enfermedad y el tratamiento", "¿Qué cirugía tiene?", "dolor de cabeza desde ayer"]

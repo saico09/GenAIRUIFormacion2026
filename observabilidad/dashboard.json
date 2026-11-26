@@ -1,12 +1,12 @@
 {
   "uid": "genai-apis",
   "title": "APIs GenAI",
-  "description": "Tráfico, errores y latencia p95 por API. Ventana de cálculo 5 minutos.",
+  "description": "Tráfico, errores y latencia p95 por API, sin el scrape de Prometheus ni /health. Ventana de 5 minutos; la latencia de /chat usa 30 minutos.",
   "tags": [
     "genai"
   ],
   "schemaVersion": 41,
-  "version": 2,
+  "version": 3,
   "timezone": "browser",
   "time": {
     "from": "now-15m",
@@ -30,6 +30,7 @@
     {
       "id": 2,
       "title": "Tráfico",
+      "description": "Peticiones/s de la aplicación; sin el scrape de Prometheus (/metrics) ni /health.",
       "type": "timeseries",
       "datasource": {
         "type": "prometheus",
@@ -38,13 +39,13 @@
       "gridPos": {
         "x": 0,
         "y": 1,
-        "w": 8,
+        "w": 6,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(http_requests_total{service=\"fastapi\"}[5m]))",
+          "expr": "sum(rate(http_requests_total{service=\"fastapi\",route!~\"/metrics|/health\"}[5m]))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -78,22 +79,23 @@
     },
     {
       "id": 3,
-      "title": "Errores 4xx/5xx",
+      "title": "Errores 5xx",
+      "description": "Porcentaje de respuestas 5xx sobre el total de la aplicación.",
       "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "x": 8,
+        "x": 6,
         "y": 1,
-        "w": 8,
+        "w": 6,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(http_requests_total{service=\"fastapi\"}[5m]))",
+          "expr": "100 * (sum(rate(http_requests_total{service=\"fastapi\",route!~\"/metrics|/health\",status=~\"5..\"}[5m])) or vector(0)) / sum(rate(http_requests_total{service=\"fastapi\",route!~\"/metrics|/health\"}[5m]))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -101,28 +103,6 @@
           "range": true,
           "instant": false,
           "editorMode": "code",
-          "hide": true
-        },
-        {
-          "refId": "B",
-          "expr": "sum(rate(http_requests_total{service=\"fastapi\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_requests_total{service=\"fastapi\"}[5m])))",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "range": true,
-          "instant": false,
-          "editorMode": "code",
-          "hide": true
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "__expr__",
-            "uid": "__expr__"
-          },
-          "type": "math",
-          "expression": "100 * $B / $A",
           "hide": false
         }
       ],
@@ -130,7 +110,7 @@
         "defaults": {
           "unit": "percent",
           "min": 0,
-          "displayName": "Errores 4xx/5xx"
+          "displayName": "Errores 5xx"
         },
         "overrides": []
       },
@@ -149,22 +129,73 @@
     },
     {
       "id": 4,
-      "title": "Latencia p95",
+      "title": "Respuestas 4xx",
+      "description": "Porcentaje de 4xx (404, 422...): errores del cliente, aparte de los 5xx.",
       "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "x": 16,
+        "x": 12,
         "y": 1,
-        "w": 8,
+        "w": 6,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95,sum by(le)(rate(http_request_duration_seconds_bucket{service=\"fastapi\"}[5m])))",
+          "expr": "100 * (sum(rate(http_requests_total{service=\"fastapi\",route!~\"/metrics|/health\",status=~\"4..\"}[5m])) or vector(0)) / sum(rate(http_requests_total{service=\"fastapi\",route!~\"/metrics|/health\"}[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "hide": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "displayName": "Respuestas 4xx"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Latencia p95 (sin /chat)",
+      "description": "p95 del CRUD y demás rutas; /chat tiene su propio panel.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 1,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"fastapi\",route!~\"/metrics|/health|/chat\"}[5m])))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -179,7 +210,57 @@
         "defaults": {
           "unit": "s",
           "min": 0,
-          "displayName": "Latencia p95"
+          "displayName": "Latencia p95 (sin /chat)"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Latencia p95 de /chat",
+      "description": "p95 de /chat (dos llamadas al LLM). Ventana de 30 minutos porque hay pocas consultas; buckets hasta 300 s.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"fastapi\",route=\"/chat\"}[30m])))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "hide": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "displayName": "Latencia p95 de /chat"
         },
         "overrides": []
       },
@@ -204,7 +285,7 @@
       "panels": [],
       "gridPos": {
         "x": 0,
-        "y": 9,
+        "y": 17,
         "w": 24,
         "h": 1
       }
@@ -212,6 +293,7 @@
     {
       "id": 12,
       "title": "Tráfico",
+      "description": "Peticiones/s de la aplicación; sin /actuator (scrape de Prometheus) ni /health.",
       "type": "timeseries",
       "datasource": {
         "type": "prometheus",
@@ -219,14 +301,14 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 10,
-        "w": 8,
+        "y": 18,
+        "w": 6,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(http_server_requests_seconds_count{service=\"springboot\"}[5m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{service=\"springboot\",uri!~\"/actuator.*|/health\"}[5m]))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -260,22 +342,23 @@
     },
     {
       "id": 13,
-      "title": "Errores 4xx/5xx",
+      "title": "Errores 5xx",
+      "description": "Porcentaje de respuestas 5xx sobre el total de la aplicación.",
       "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "x": 8,
-        "y": 10,
-        "w": 8,
+        "x": 6,
+        "y": 18,
+        "w": 6,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(http_server_requests_seconds_count{service=\"springboot\"}[5m]))",
+          "expr": "100 * (sum(rate(http_server_requests_seconds_count{service=\"springboot\",uri!~\"/actuator.*|/health\",status=~\"5..\"}[5m])) or vector(0)) / sum(rate(http_server_requests_seconds_count{service=\"springboot\",uri!~\"/actuator.*|/health\"}[5m]))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -283,28 +366,6 @@
           "range": true,
           "instant": false,
           "editorMode": "code",
-          "hide": true
-        },
-        {
-          "refId": "B",
-          "expr": "sum(rate(http_server_requests_seconds_count{service=\"springboot\",status=~\"4..|5..\"}[5m])) or (0 * sum(rate(http_server_requests_seconds_count{service=\"springboot\"}[5m])))",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "range": true,
-          "instant": false,
-          "editorMode": "code",
-          "hide": true
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "__expr__",
-            "uid": "__expr__"
-          },
-          "type": "math",
-          "expression": "100 * $B / $A",
           "hide": false
         }
       ],
@@ -312,7 +373,7 @@
         "defaults": {
           "unit": "percent",
           "min": 0,
-          "displayName": "Errores 4xx/5xx"
+          "displayName": "Errores 5xx"
         },
         "overrides": []
       },
@@ -331,22 +392,73 @@
     },
     {
       "id": 14,
-      "title": "Latencia p95",
+      "title": "Respuestas 4xx",
+      "description": "Porcentaje de 4xx (404, 422...): errores del cliente, aparte de los 5xx.",
       "type": "timeseries",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "x": 16,
-        "y": 10,
-        "w": 8,
+        "x": 12,
+        "y": 18,
+        "w": 6,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95,sum by(le)(rate(http_server_requests_seconds_bucket{service=\"springboot\"}[5m])))",
+          "expr": "100 * (sum(rate(http_server_requests_seconds_count{service=\"springboot\",uri!~\"/actuator.*|/health\",status=~\"4..\"}[5m])) or vector(0)) / sum(rate(http_server_requests_seconds_count{service=\"springboot\",uri!~\"/actuator.*|/health\"}[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "hide": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "displayName": "Respuestas 4xx"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "title": "Latencia p95",
+      "description": "p95 de la aplicación, sin /actuator ni /health.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 18,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_requests_seconds_bucket{service=\"springboot\",uri!~\"/actuator.*|/health\"}[5m])))",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"

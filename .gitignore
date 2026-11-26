@@ -8,3 +8,6 @@ evidencias/**/privado/
 datos/historias/*.md
 datos/historias/.genai-shared
 datos/historias/.mount-probe-*
+datos/historias/.history-*.tmp
+datos/historias/*.rechazado-*
+ejecuciones/

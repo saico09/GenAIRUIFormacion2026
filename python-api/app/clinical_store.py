@@ -2,11 +2,12 @@
 
 Funciona sin Java, Ollama ni Qdrant. Ambas APIs toman la misma llave PostgreSQL
 antes de leer/modificar un informe. Los errores normales restauran los archivos;
-SQL y filesystem no constituyen una transacción distribuida ante un cierre forzado.
+SQL y filesystem no constituyen una transacción distribuida ante un cierre forzado:
+ese caso lo recupera load() desde el último respaldo válido.
 """
 
 from contextlib import contextmanager
-from datetime import timezone
+from datetime import datetime, timezone
 import hashlib
 import os
 from pathlib import Path
@@ -17,10 +18,11 @@ from uuid import UUID, uuid4
 
 from fastapi import HTTPException
 from sqlalchemy import delete, select, text
-from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import Session, load_only
 
 from app.db import SessionLocal
-from app.history_documents import parse_history, UNRECORDED
+from app.history_documents import MAX_BYTES, MAX_ENTRIES, SIZE_MESSAGE, UNRECORDED, check_history, check_size
 from app.models import MedicalConsultation, Patient, PatientDisease
 from app.observability import execution_id_context, log_event
 from app.schemas import DiseaseIn, PatientIn
@@ -28,7 +30,7 @@ from app.schemas import DiseaseIn, PatientIn
 CLINICAL_LOCK = 71420261109
 DIRECTORY = Path(os.getenv("HISTORY_DIR", "/datos/historias")).absolute()
 JOURNAL_HEADING = "\n## Consultas registradas\n"
-MAX_BYTES = 1048576
+BUSY = "La historia está ocupada por otra operación; reintenta."
 
 
 def require_shared_history():
@@ -78,7 +80,11 @@ def render(patient: Patient, entries: list[dict], journal: str) -> str:
 
 
 def render_journal(db: Session, patient_id: int) -> str:
-    rows = db.scalars(select(MedicalConsultation).where(
+    # Sin markdown_content: cada consulta guarda el informe entero y aquí sólo hace falta el diario.
+    rows = db.scalars(select(MedicalConsultation).options(load_only(
+        MedicalConsultation.id, MedicalConsultation.created_at, MedicalConsultation.model,
+        MedicalConsultation.question, MedicalConsultation.direct_answer, MedicalConsultation.rag_answer,
+    )).where(
         MedicalConsultation.patient_id == patient_id, MedicalConsultation.kind == "consultation"
     ).order_by(MedicalConsultation.storage_order)).all()
     if not rows:
@@ -112,16 +118,18 @@ def find_file(patient_id: int) -> Path | None:
 
 
 def read(path: Path) -> str:
+    """Lee como máximo 1 MiB en UTF-8 estricto: un archivo inválido es ValueError, no un fallo de disco."""
     require_shared_history()
     if path.stat().st_size > MAX_BYTES:
-        raise invalid("El Markdown admite como máximo 1 MiB UTF-8")
-    return path.read_bytes().decode("utf-8")
+        raise ValueError(SIZE_MESSAGE)
+    try:
+        return path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        raise ValueError("El informe no es texto UTF-8 válido") from None
 
 
 def atomic_write(path: Path, content: bytes):
     require_shared_history()
-    if len(content) > MAX_BYTES:
-        raise invalid("El Markdown admite como máximo 1 MiB UTF-8")
     DIRECTORY.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(prefix=".history-", suffix=".tmp", dir=DIRECTORY)
     try:
@@ -133,6 +141,8 @@ def atomic_write(path: Path, content: bytes):
 
 
 class FileChanges:
+    """Bytes previos de cada archivo tocado: también se restauran archivos ilegibles o de más de 1 MiB."""
+
     def __init__(self):
         self.previous: dict[Path, bytes | None] = {}
 
@@ -143,8 +153,18 @@ class FileChanges:
             self.previous[path] = path.read_bytes() if path.exists() else None
 
     def write(self, path: Path, markdown: str):
+        try:
+            check_size(markdown)
+        except ValueError as error:
+            raise invalid(str(error)) from None
         self.remember(path)
         atomic_write(path, markdown.encode("utf-8"))
+
+    def move(self, source: Path, target: Path):
+        require_shared_history()
+        self.remember(source)
+        self.remember(target)
+        os.rename(source, target)
 
     def remove(self, path: Path):
         require_shared_history()
@@ -161,17 +181,18 @@ class FileChanges:
 
 @contextmanager
 def clinical_transaction(db: Session):
+    """Misma llave que Java; la de sesión sigue tomada si el COMMIT falla, para restaurar antes de que entre la otra API."""
     changes = FileChanges()
     previous_bind = db.get_bind()
     # Mantener esta conexión fuera de Session evita devolver al pool una conexión
-    # con un bloqueo de sesión. El lock sobrevive al rollback/commit fallido para
-    # compensar antes de permitir escrituras de la otra API.
+    # con un bloqueo de sesión.
     with previous_bind.connect() as connection:
         db.bind = connection
         locked = False
         try:
             try:
                 with db.begin():
+                    db.execute(text("SET LOCAL lock_timeout = '5s'"))
                     db.execute(text("SELECT pg_advisory_lock(:key)"), {"key": CLINICAL_LOCK})
                     locked = True
                     db.execute(text("SELECT pg_advisory_xact_lock(:key)"), {"key": CLINICAL_LOCK})
@@ -183,6 +204,8 @@ def clinical_transaction(db: Session):
                 except Exception as recovery:
                     log_event("history_recovery", status="error", error_type=type(recovery).__name__)
                     error.add_note("No se pudo restaurar el archivo tras el error; revisar el respaldo SQL")
+                if isinstance(error, OperationalError) and getattr(error.orig, "sqlstate", None) == "55P03":
+                    raise HTTPException(status_code=503, detail=BUSY) from error
                 if isinstance(error, (OSError, UnicodeError)):
                     raise HTTPException(status_code=503, detail="No se pudo leer o guardar el informe Markdown") from error
                 raise
@@ -206,20 +229,22 @@ def patient_or_404(db: Session, patient_id: int) -> Patient:
     return patient
 
 
-def latest_backup(db: Session, patient_id: int):
-    return db.scalars(select(MedicalConsultation).where(MedicalConsultation.patient_id == patient_id)
-                      .order_by(MedicalConsultation.storage_order.desc()).limit(1)).first()
+def latest_backup(db: Session, patient_id: int, *, recoverable: bool = False):
+    query = select(MedicalConsultation).where(MedicalConsultation.patient_id == patient_id)
+    if recoverable:
+        query = query.where(MedicalConsultation.kind != "deleted")
+    return db.scalars(query.order_by(MedicalConsultation.storage_order.desc()).limit(1)).first()
 
 
-def snapshot(db: Session, patient: Patient, path: Path, markdown: str, kind="snapshot"):
+def snapshot(db: Session, patient: Patient, name: str, markdown: str, kind="snapshot"):
     previous = latest_backup(db, patient.id)
     digest = revision(markdown)
     if (kind != "deleted" and previous is not None and previous.revision == digest
-            and previous.filename == path.name):
+            and previous.filename == name):
         return
     identifier = execution_id_context.get()
     db.add(MedicalConsultation(id=uuid4(), execution_id=UUID(identifier) if identifier else uuid4(),
-                              patient_id=patient.id, kind=kind, filename=path.name,
+                              patient_id=patient.id, kind=kind, filename=name,
                               markdown_content=markdown, revision=digest, sources=[]))
 
 
@@ -230,7 +255,7 @@ def sync_entries(db: Session, patient_id: int, entries: list[dict]):
     for entry, identifier in zip(entries, identifiers, strict=True):
         row = db.get(PatientDisease, identifier)
         if row is not None and row.patient_id != patient_id:
-            raise conflict("El UUID de un registro pertenece a otro paciente")
+            raise conflict("El UUID del registro pertenece a otro paciente")
         if row is None:
             row = PatientDisease(id=identifier, patient_id=patient_id)
             db.add(row)
@@ -239,47 +264,75 @@ def sync_entries(db: Session, patient_id: int, entries: list[dict]):
     db.flush()
 
 
-def load(db: Session, patient: Patient, changes: FileChanges):
+def usable(patient: Patient, backup, journal: str) -> bool:
+    if backup is None or revision(backup.markdown_content) != backup.revision:
+        return False
+    try:
+        check_history(backup.markdown_content, header(patient), journal)
+        return True
+    except ValueError:
+        return False
+
+
+def recover(db: Session, patient: Patient, path: Path, journal: str, reason: str, changes: FileChanges) -> str:
+    """Un corte entre escribir el archivo y el COMMIT deja un informe que SQL no reconoce: se aparta y se restaura."""
+    backup = latest_backup(db, patient.id, recoverable=True)
+    if not usable(patient, backup, journal):
+        raise conflict(f"El informe Markdown no es válido ({reason}) y no hay un respaldo válido; corrígelo o restáuralo")
+    name = f"{path.name}.rechazado-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
+    rejected = path.with_name(name)
+    copy = 2
+    while rejected.exists() or rejected.is_symlink():
+        rejected = path.with_name(f"{name}-{copy}")
+        copy += 1
+    changes.move(path, rejected)
+    changes.write(path, backup.markdown_content)
+    log_event("history_recovered", patient_id=patient.id, rejected=rejected.name, reason=reason)
+    return backup.markdown_content
+
+
+def load(db: Session, patient: Patient, changes: FileChanges, *, check_name: bool = True):
+    # Un nombre guardado con saltos o controles rompería el título del informe.
+    if check_name and any(unicodedata.category(char) == "Cc" for char in patient.name):
+        raise conflict("El nombre guardado del paciente tiene caracteres de control; "
+                       f"corrígelo con PUT /patients/{patient.id}")
     path = find_file(patient.id)
     journal = render_journal(db, patient.id)
     if path is None:
         path = filename(patient)
         backup = latest_backup(db, patient.id)
+        if backup is not None and not usable(patient, backup, journal):
+            raise conflict("El respaldo del informe no supera la comprobación de integridad")
         if backup is not None:
-            if revision(backup.markdown_content) != backup.revision:
-                raise conflict("El respaldo del informe no supera la comprobación de integridad")
             markdown = backup.markdown_content
         else:
-            entries = [disease_response(row) for row in db.scalars(select(PatientDisease).where(
-                PatientDisease.patient_id == patient.id).order_by(PatientDisease.id))]
-            markdown = render(patient, entries, journal)
+            markdown = render(patient, [disease_response(row) for row in db.scalars(select(PatientDisease).where(
+                PatientDisease.patient_id == patient.id).order_by(PatientDisease.id))], journal)
+        try:
+            entries, _ = check_history(markdown, header(patient), journal)
+        except ValueError as error:
+            raise conflict(f"El informe regenerado desde SQL no es válido ({error})") from error
         changes.write(path, markdown)
     else:
-        markdown = read(path)
-    normalized = markdown.replace("\r\n", "\n")
-    if not normalized.startswith(header(patient)):
-        raise conflict("El título y patient_id deben conservar el propietario del informe")
-    _, separator, actual_journal = normalized.partition(JOURNAL_HEADING)
-    if (separator + actual_journal if separator else "") != journal:
-        raise conflict("Las consultas automáticas son históricas; conserva su contenido")
-    try:
-        history = parse_history(markdown, path.name)
-        for entry in history["entries"]:
-            DiseaseIn.model_validate(entry)
-    except ValueError as error:
-        raise invalid(str(error)) from error
-    sync_entries(db, patient.id, history["entries"])
-    snapshot(db, patient, path, markdown)
-    return path, history["entries"], journal
+        try:
+            markdown = read(path)
+            entries, _ = check_history(markdown, header(patient), journal)
+        except ValueError as error:
+            # Sólo un archivo inválido se intenta recuperar; un fallo de disco sigue siendo 503.
+            markdown = recover(db, patient, path, journal, str(error), changes)
+            entries, _ = check_history(markdown, header(patient), journal)
+    sync_entries(db, patient.id, entries)
+    snapshot(db, patient, path.name, markdown)
+    return path, entries, journal
 
 
 def save(db: Session, patient: Patient, path: Path, entries: list[dict], journal: str, changes: FileChanges):
-    if len(entries) > 50:
+    if len(entries) > MAX_ENTRIES:
         raise invalid("La historia admite como máximo 50 registros")
     markdown = render(patient, entries, journal)
     sync_entries(db, patient.id, entries)
     changes.write(path, markdown)
-    snapshot(db, patient, path, markdown)
+    snapshot(db, patient, path.name, markdown)
 
 
 def bootstrap_histories():
@@ -307,26 +360,41 @@ def create_patient(db: Session, data: PatientIn):
 def update_patient(db: Session, patient_id: int, data: PatientIn):
     with clinical_transaction(db) as changes:
         patient = patient_or_404(db, patient_id)
-        old_path, entries, journal = load(db, patient, changes)
+        # Sólo se valida el nombre nuevo: así un nombre heredado inválido se puede corregir.
+        old_path, entries, journal = load(db, patient, changes, check_name=False)
         for field, value in data.model_dump().items():
             setattr(patient, field, value)
         new_path = filename(patient)
         if new_path != old_path and new_path.exists():
             raise conflict("Ya existe otro archivo con el nombre nuevo")
-        save(db, patient, new_path, entries, journal, changes)
         if new_path != old_path:
-            changes.remove(old_path)
+            # Se mueve antes de reescribir (como Java): un corte entre ambos pasos deja un único
+            # informe, válido o recuperable desde el respaldo, nunca dos del mismo paciente.
+            changes.move(old_path, new_path)
+        save(db, patient, new_path, entries, journal, changes)
     return patient
 
 
 def delete_patient(db: Session, patient_id: int):
     with clinical_transaction(db) as changes:
         patient = patient_or_404(db, patient_id)
-        path, _, _ = load(db, patient, changes)
-        snapshot(db, patient, path, read(path), "deleted")
+        path = find_file(patient.id)
+        if path is not None:
+            # Se borra aunque el informe sea ilegible o supere 1 MiB; el respaldo guarda
+            # sus bytes con reemplazo (PostgreSQL no admite U+0000 ni UTF-8 inválido).
+            content = path.read_bytes().decode("utf-8", errors="replace").replace("\x00", "\ufffd")
+            snapshot(db, patient, path.name, content, "deleted")
+        elif (backup := latest_backup(db, patient.id)) is not None:
+            snapshot(db, patient, backup.filename, backup.markdown_content, "deleted")
+        else:
+            entries = [disease_response(row) for row in db.scalars(select(PatientDisease).where(
+                PatientDisease.patient_id == patient.id).order_by(PatientDisease.id))]
+            snapshot(db, patient, filename(patient).name, render(patient, entries, render_journal(db, patient.id)),
+                     "deleted")
         db.delete(patient)
         db.flush()
-        changes.remove(path)
+        if path is not None:
+            changes.remove(path)
 
 
 def disease_response(row):
@@ -334,29 +402,29 @@ def disease_response(row):
             "treatment": row.treatment, "medication": row.medication}
 
 
-def diseases(db: Session, patient_id: int, identifier: UUID | None = None):
+def diseases(db: Session, patient_id: int, identifier: str | None = None):
     with clinical_transaction(db) as changes:
         _, entries, _ = load(db, patient_or_404(db, patient_id), changes)
         result = [{**entry, "patient_id": patient_id} for entry in entries]
         if identifier is None:
             return result
-        return next((entry for entry in result if entry["id"] == str(identifier)), None)
+        return next((entry for entry in result if entry["id"] == identifier), None)
 
 
-def mutate_disease(db: Session, patient_id: int, data: DiseaseIn | None, identifier: UUID | None = None):
+def mutate_disease(db: Session, patient_id: int, data: DiseaseIn | None, identifier: str | None = None):
     with clinical_transaction(db) as changes:
         patient = patient_or_404(db, patient_id)
         path, entries, journal = load(db, patient, changes)
         if identifier is None:
-            identifier = uuid4()
-            entries.append({"id": str(identifier), **data.model_dump()})
+            identifier = str(uuid4())
+            entries.append({"id": identifier, **data.model_dump()})
         else:
-            position = next((i for i, entry in enumerate(entries) if entry["id"] == str(identifier)), None)
+            position = next((i for i, entry in enumerate(entries) if entry["id"] == identifier), None)
             if position is None:
                 raise HTTPException(status_code=404, detail="Registro no encontrado para este paciente")
             if data is None:
                 entries.pop(position)
             else:
-                entries[position] = {"id": str(identifier), **data.model_dump()}
+                entries[position] = {"id": identifier, **data.model_dump()}
         save(db, patient, path, entries, journal, changes)
-        return {"id": str(identifier), "patient_id": patient_id, **data.model_dump()} if data else None
+        return {"id": identifier, "patient_id": patient_id, **data.model_dump()} if data else None

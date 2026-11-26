@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- request_id y execution_id del MDC; se omiten fuera de una petición. -->
+    <property name="LOG_CORRELATION_PATTERN"
+              value="%replace(request_id=%X{request_id} execution_id=%X{execution_id} ){'^request_id= execution_id= $', ''}"/>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
+    <!-- http_json conserva exactamente su formato: Loki y los verificadores lo leen como JSON. -->
     <appender name="HTTP_JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>

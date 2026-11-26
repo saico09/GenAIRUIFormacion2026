@@ -65,6 +65,33 @@ class RealisticCorpusContracts(unittest.TestCase):
         quote = "El plan incluye actividad física y un control el 2026-11-12."
         self.assertFalse(documentary_topic_is_supported("¿Cuál fue la última cirugía?", quote))
 
+    def test_quote_with_other_spacing_case_or_accents_shows_the_literal_record(self):
+        quote = "Carla Demo recibe cetirizina para aliviar los síntomas de la rinitis alérgica estacional."
+        source = {"source": "paciente-3-carla-demo.md", "record_id": "record", "section": "Medicamento", "text": quote}
+        raw = json.dumps({"mode": "record_lookup", "missing_information": False, "guidance": None, "questions": [],
+                          "facts": [{"source": source_label(source), "quote": "carla demo  recibe CETIRIZINA para "
+                                     "aliviar los sintomas de la rinitis alergica estacional"},
+                                    {"source": source_label(source), "quote": "Carla recibe un fármaco inventado"}]})
+        self.assertEqual(validate_rag_answer(raw, [source], "¿Qué medicamento recibe Carla?"),
+                         f"Respuesta: {quote}\nFuente: {source_label(source)}")
+
+    def test_symptom_guidance_shows_each_demo_record_literally_when_not_cited(self):
+        path = Path(__file__).resolve().parents[1] / "datos/casos_clinicos.json"
+        guidance = {"possibilities": [{"cause": "posibilidad A", "condition": "dato A"}],
+                    "optional_details": ["desde cuándo ocurre", "qué lo alivia"], "current_alert": None}
+        for case in json.loads(path.read_text(encoding="utf-8"))["cases"]:
+            sources = [{"source": f"paciente-{case['patient_id']}.md", "record_id": "record", "section": section,
+                        "text": case[field]} for section, field in
+                       (("Enfermedad", "disease"), ("Tratamiento", "treatment"), ("Medicamento", "medication"))]
+            raw = json.dumps({"mode": "symptom_guidance", "missing_information": False, "guidance": guidance,
+                              "facts": [], "questions": []})
+            with self.subTest(patient_id=case["patient_id"]):
+                shown = validate_rag_answer(raw, sources, "dolor de estómago")
+                self.assertIn("Antecedentes registrados del paciente (sin relación confirmada con este relato)", shown)
+                for source in sources:
+                    self.assertIn(f"{source['text'].strip()}\nFuente: {source_label(source)}", shown)
+                self.assertNotIn("No hay un antecedente verificable", shown)
+
     def test_actual_corpus_preserves_the_distinction_and_missing_doses(self):
         path = Path(__file__).resolve().parents[1] / "datos/casos_clinicos.json"
         cases = json.loads(path.read_text(encoding="utf-8"))["cases"]

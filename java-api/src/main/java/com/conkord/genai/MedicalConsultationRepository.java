@@ -30,6 +30,16 @@ public class MedicalConsultationRepository {
                         row.getTimestamp("created_at").toInstant().toString(), sources(row.getString("sources"))), patientId);
     }
 
+    public HistoryResponse.Consultation findConsultation(Integer patientId, UUID id) {
+        var rows = jdbc.query("""
+                SELECT id, question, direct_answer, rag_answer, model, created_at, sources::text AS sources
+                FROM public.medical_consultations WHERE id = ? AND patient_id = ? AND kind = 'consultation'
+                """, (row, n) -> new HistoryResponse.Consultation(row.getString("id"), row.getString("question"),
+                        row.getString("direct_answer"), row.getString("rag_answer"), row.getString("model"),
+                        row.getTimestamp("created_at").toInstant().toString(), sources(row.getString("sources"))), id, patientId);
+        return rows.isEmpty() ? null : rows.getFirst();
+    }
+
     public Stored find(UUID id) {
         var rows = jdbc.query("""
                 SELECT patient_id, kind, question, direct_answer, rag_answer, model, sources::text AS sources
@@ -65,11 +75,21 @@ public class MedicalConsultationRepository {
     }
 
     public Backup latest(Integer patientId) {
+        return latest(patientId, true);
+    }
+
+    /** Último respaldo que puede restaurar un informe: nunca la copia de un borrado. */
+    public Backup latestRecoverable(Integer patientId) {
+        return latest(patientId, false);
+    }
+
+    private Backup latest(Integer patientId, boolean includeDeleted) {
         var rows = jdbc.query("""
-                SELECT filename, markdown_content, revision FROM public.medical_consultations
-                WHERE patient_id = ? ORDER BY storage_order DESC LIMIT 1
-                """, (row, n) -> new Backup(row.getString("filename"), row.getString("markdown_content"),
-                        row.getString("revision")), patientId);
+                SELECT kind, filename, markdown_content, revision FROM public.medical_consultations
+                WHERE patient_id = ? AND (? OR kind <> 'deleted')
+                ORDER BY storage_order DESC LIMIT 1""",
+                (row, n) -> new Backup(row.getString("kind"), row.getString("filename"),
+                        row.getString("markdown_content"), row.getString("revision")), patientId, includeDeleted);
         return rows.isEmpty() ? null : rows.getFirst();
     }
 
@@ -92,5 +112,5 @@ public class MedicalConsultationRepository {
                     && model.equals(request.model()) && sources.equals(request.sources());
         }
     }
-    public record Backup(String filename, String markdown, String revision) {}
+    public record Backup(String kind, String filename, String markdown, String revision) {}
 }

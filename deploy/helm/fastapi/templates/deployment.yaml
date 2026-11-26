@@ -27,6 +27,10 @@ spec:
         - name: fastapi
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
           ports:
             - name: http
               containerPort: 8000
@@ -38,6 +42,9 @@ spec:
               value: /datos/historias
             - name: HISTORY_SHARED_MARKER
               value: /datos/historias/.genai-shared
+            # Minikube solo expone el CRUD; el portal web se usa desde Compose.
+            - name: PORTAL_ENABLED
+              value: "false"
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.host | quote }}
             - name: POSTGRES_PORT
@@ -60,5 +67,14 @@ spec:
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 3
+          # Reinicia solo si el proceso deja de aceptar conexiones. El margen cubre
+          # los 120 s que la API espera a PostgreSQL antes de abrir el puerto.
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 8
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

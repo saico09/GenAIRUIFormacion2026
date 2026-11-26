@@ -7,7 +7,8 @@ const {chromium} = require('playwright');
 const base = process.env.PYTHON_URL || 'http://localhost:8000';
 const java = process.env.JAVA_URL || 'http://localhost:8080';
 const expectedModel = process.env.EXPECTED_CHAT_MODEL || 'qwen3.5:4b-q4_K_M';
-const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, '../evidencias/consultas-automaticas-2026-11-07/ui-real'));
+const stamp = new Date().toLocaleString('sv-SE').replace(/[-:]/g, '').replace(' ', 'T');
+const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, `../.local/verificaciones/verificar_consultas_ui_real-${stamp}`));
 const report = {mode: 'real_browser_real_apis_real_llm', mocks: false, started_at: new Date().toISOString(), checks: []};
 const check = name => {report.checks.push({name, passed: true}); console.log(`PASS ${name}`);};
 async function api(url, options = {}) {

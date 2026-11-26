@@ -1,11 +1,12 @@
 #Requires -Version 7
-param([Alias('Profile')][ValidatePattern('^[a-z0-9][a-z0-9-]*$')][string]$ProfileName = 'genai')
+param([Alias('Profile')][ValidatePattern('^[a-z0-9][a-z0-9-]*$')][string]$ProfileName = 'genai', [string]$HistoryDirectory)
 # Mantiene vivo el servidor 9p; comparte solamente datos/historias.
 $ErrorActionPreference = 'Stop'
 $repoDir = Split-Path -Parent $PSScriptRoot
 $minikubePath = Join-Path $repoDir '.local/bin/minikube.exe'
 $localDir = Join-Path $repoDir '.local'
-$sourceDir = [IO.Path]::GetFullPath((Join-Path $repoDir 'datos/historias'))
+if ([string]::IsNullOrWhiteSpace($HistoryDirectory)) { $HistoryDirectory = Join-Path $repoDir 'datos/historias' }
+$sourceDir = [IO.Path]::GetFullPath($HistoryDirectory)
 $targetDir = '/mnt/genai-historias'
 $stateFile = Join-Path $localDir "historias-mount-$ProfileName.json"
 $marker = Join-Path $sourceDir '.genai-shared'

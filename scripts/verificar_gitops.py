@@ -8,12 +8,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import urlopen
 
+OUTPUT = Path(__file__).resolve().parents[1] / ".local" / "verificaciones" / f"{Path(__file__).stem}-{datetime.now():%Y%m%dT%H%M%S}.json"
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--commit", required=True)
     parser.add_argument("--replicas", required=True, type=int)
-    parser.add_argument("--output", required=True)
+    parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--timeout", type=int, default=300)
     args = parser.parse_args()
     kubectl = Path(__file__).resolve().parents[1] / ".local/bin/kubectl.exe"
@@ -74,7 +76,7 @@ def main():
                   "image": pod["spec"]["containers"][0]["image"]} for pod in ready],
         "responses": responses,
     }
-    output = Path(args.output)
+    output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"OK {args.commit}: Synced/Healthy, operación Succeeded, {len(ready)} pods Ready y paciente HTTP 200")

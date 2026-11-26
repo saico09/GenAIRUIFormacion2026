@@ -16,11 +16,12 @@ public final class HistoryRequest {
             @JsonDeserialize(using = StrictTextDeserializer.class) String markdown,
             @NotNull @AssertTrue @JsonDeserialize(using = StrictBooleanDeserializer.class) Boolean confirmed) {}
 
+    // Los tres campos clínicos se validan en InputRules.clinical (2000 puntos de código, como Python).
     public record Append(
             @NotNull @Pattern(regexp = "[0-9a-f]{64}")
             @JsonDeserialize(using = StrictTextDeserializer.class) String revision,
-            @NotNull @Size(max = 2000) @JsonDeserialize(using = StrictTextDeserializer.class) String disease,
-            @NotNull @Size(max = 2000) @JsonDeserialize(using = StrictTextDeserializer.class) String treatment,
-            @NotNull @Size(max = 2000) @JsonDeserialize(using = StrictTextDeserializer.class) String medication,
+            @NotNull @JsonDeserialize(using = StrictTextDeserializer.class) String disease,
+            @NotNull @JsonDeserialize(using = StrictTextDeserializer.class) String treatment,
+            @NotNull @JsonDeserialize(using = StrictTextDeserializer.class) String medication,
             @NotNull @AssertTrue @JsonDeserialize(using = StrictBooleanDeserializer.class) Boolean confirmed) {}
 }

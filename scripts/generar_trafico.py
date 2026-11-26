@@ -8,8 +8,9 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
+OUTPUT = Path(__file__).resolve().parents[1] / ".local" / "verificaciones" / f"{Path(__file__).stem}-{datetime.now():%Y%m%dT%H%M%S}.json"
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--output", default="evidencias/s06/028-peticiones.json")
+parser.add_argument("--output", type=Path, default=OUTPUT)
 args = parser.parse_args()
 requests = []
 start = time.monotonic()
@@ -32,7 +33,7 @@ try:
             })
             assert status == (404 if patient_id == 999999 else 200), requests[-1]
 finally:
-    output = Path(args.output)
+    output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(requests, indent=2) + "\n", encoding="utf-8")
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Los IDs llegan como texto y se validan como en Python; las rutas conservan {id} para Loki y Prometheus. */
 @RestController
 @RequestMapping("/patients")
 public class PatientController {
@@ -45,82 +46,86 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public PatientResponse get(@PathVariable Integer id) {
-        return PatientResponse.from(findPatient(id));
+    public PatientResponse get(@PathVariable String id) {
+        return PatientResponse.from(findPatient(InputRules.patientId(id)));
     }
 
     @PutMapping("/{id}")
-    public PatientResponse update(@PathVariable Integer id, @Valid @RequestBody PatientRequest input) {
-        return histories.update(id, input);
+    public PatientResponse update(@PathVariable String id, @Valid @RequestBody PatientRequest input) {
+        return histories.update(InputRules.patientId(id), input);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
-        histories.delete(id);
+    public void delete(@PathVariable String id) {
+        histories.delete(InputRules.patientId(id));
     }
 
     @GetMapping("/{id}/history")
-    public HistoryResponse history(@PathVariable Integer id) { return histories.get(id); }
+    public HistoryResponse history(@PathVariable String id) { return histories.get(InputRules.patientId(id)); }
 
     @GetMapping("/{id}/diseases")
-    public List<DiseaseResponse> diseases(@PathVariable Integer id) { return histories.listDiseases(id); }
+    public List<DiseaseResponse> diseases(@PathVariable String id) { return histories.listDiseases(InputRules.patientId(id)); }
 
     @GetMapping("/{id}/diseases/{diseaseId}")
-    public DiseaseResponse disease(@PathVariable Integer id, @PathVariable String diseaseId) {
-        return histories.getDisease(id, diseaseId);
+    public DiseaseResponse disease(@PathVariable String id, @PathVariable String diseaseId) {
+        int patientId = InputRules.patientId(id);
+        return histories.getDisease(patientId, InputRules.uuid(diseaseId, "disease_id"));
     }
 
     @PostMapping("/{id}/diseases")
     @ResponseStatus(HttpStatus.CREATED)
-    public DiseaseResponse addDisease(@PathVariable Integer id, @Valid @RequestBody DiseaseRequest input) {
-        return histories.addDisease(id, input);
+    public DiseaseResponse addDisease(@PathVariable String id, @Valid @RequestBody DiseaseRequest input) {
+        return histories.addDisease(InputRules.patientId(id), input);
     }
 
     @PutMapping("/{id}/diseases/{diseaseId}")
-    public DiseaseResponse updateDisease(@PathVariable Integer id, @PathVariable String diseaseId,
+    public DiseaseResponse updateDisease(@PathVariable String id, @PathVariable String diseaseId,
             @Valid @RequestBody DiseaseRequest input) {
-        return histories.updateDisease(id, diseaseId, input);
+        int patientId = InputRules.patientId(id);
+        return histories.updateDisease(patientId, InputRules.uuid(diseaseId, "disease_id"), input);
     }
 
     @DeleteMapping("/{id}/diseases/{diseaseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDisease(@PathVariable Integer id, @PathVariable String diseaseId) {
-        histories.deleteDisease(id, diseaseId);
+    public void deleteDisease(@PathVariable String id, @PathVariable String diseaseId) {
+        int patientId = InputRules.patientId(id);
+        histories.deleteDisease(patientId, InputRules.uuid(diseaseId, "disease_id"));
     }
 
     @GetMapping("/{id}/history.md")
-    public ResponseEntity<String> downloadHistory(@PathVariable Integer id) {
-        HistoryResponse history = histories.get(id);
+    public ResponseEntity<String> downloadHistory(@PathVariable String id) {
+        HistoryResponse history = histories.get(InputRules.patientId(id));
         return ResponseEntity.ok().contentType(new MediaType("text", "markdown", StandardCharsets.UTF_8))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(history.filename()).build().toString())
                 .body(history.markdown());
     }
 
     @PutMapping("/{id}/history")
-    public HistoryResponse replaceHistory(@PathVariable Integer id, @Valid @RequestBody HistoryRequest.Replace input) {
-        return histories.replace(id, input);
+    public HistoryResponse replaceHistory(@PathVariable String id, @Valid @RequestBody HistoryRequest.Replace input) {
+        return histories.replace(InputRules.patientId(id), input);
     }
 
     @PostMapping("/{id}/history/entries")
     @ResponseStatus(HttpStatus.CREATED)
-    public HistoryResponse appendHistory(@PathVariable Integer id, @Valid @RequestBody HistoryRequest.Append input) {
-        return histories.append(id, input);
+    public HistoryResponse appendHistory(@PathVariable String id, @Valid @RequestBody HistoryRequest.Append input) {
+        return histories.append(InputRules.patientId(id), input);
     }
 
     @PostMapping("/{id}/consultations")
-    public ResponseEntity<HistoryResponse> addConsultation(@PathVariable Integer id,
+    public ResponseEntity<HistoryResponse> addConsultation(@PathVariable String id,
             @Valid @RequestBody ConsultationRequest input) {
-        var saved = histories.consult(id, input);
+        var saved = histories.consult(InputRules.patientId(id), input);
         return ResponseEntity.status(saved.created() ? HttpStatus.CREATED : HttpStatus.OK).body(saved.history());
     }
 
     @GetMapping("/{id}/consultations/{consultationId}")
-    public HistoryResponse.Consultation consultation(@PathVariable Integer id, @PathVariable String consultationId) {
-        return histories.getConsultation(id, consultationId);
+    public HistoryResponse.Consultation consultation(@PathVariable String id, @PathVariable String consultationId) {
+        int patientId = InputRules.patientId(id);
+        return histories.getConsultation(patientId, InputRules.uuid(consultationId, "consultation_id"));
     }
 
-    private Patient findPatient(Integer id) {
+    private Patient findPatient(int id) {
         return patients.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
     }

@@ -9,7 +9,8 @@ RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp package
 FROM eclipse-temurin:27-jre@sha256:0dd0465f90d398fa3226b56a3973f5d3c47ac323934dceebdab45ac8910bee6e
 WORKDIR /app
 COPY --from=build /build/target/java-api.jar ./app.jar
-ENV JAVA_TOOL_OPTIONS="-Xms64m -Xmx256m"
+# Acotado para caber en mem_limit 512m; MALLOC_ARENA_MAX limita la memoria nativa de glibc.
+ENV JAVA_TOOL_OPTIONS="-Xms64m -Xmx256m -XX:MaxMetaspaceSize=160m -XX:ReservedCodeCacheSize=64m -Xss512k -XX:+ExitOnOutOfMemoryError"     MALLOC_ARENA_MAX=2
 USER 10001:10001
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

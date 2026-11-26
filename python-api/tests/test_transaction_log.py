@@ -177,8 +177,8 @@ class TransactionLogTests(unittest.IsolatedAsyncioTestCase):
         from app.metrics import install_metrics
 
         app = FastAPI(telemetry={"tracing": False, "operation_spans": False})
-        install_metrics(app)
         observability.install_request_logging(app)
+        install_metrics(app)
 
         @app.post("/clinical/middleware-check")
         async def stream(request: Request):
@@ -189,9 +189,53 @@ class TransactionLogTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual((status, body), (200, b"firstsecond"))
         self.assertEqual(self.rows[0]["request_body"], "firstsecond")
         self.assertEqual(self.rows[0]["response_body"], "firstsecond")
+        status, _, _, _ = await call_asgi(app, path="/clinical/middleware-check",
+                                          headers=[(b"content-length", str(observability.MAX_REQUEST_BYTES + 1).encode())])
+        self.assertEqual(status, 413)
         _, _, metrics, _ = await call_asgi(app, path="/metrics", method="GET")
         self.assertIn(b'route="/clinical/middleware-check",status="200"} 1.0', metrics)
-        self.assertEqual(len(self.rows), 1)
+        self.assertIn(b'status="413"} 1.0', metrics)
+        self.assertEqual(len(self.rows), 2)
+
+    async def test_body_over_one_mib_is_413_without_reading_it(self):
+        headers = [(b"content-length", str(observability.MAX_REQUEST_BYTES + 1).encode())]
+        status, response_headers, body, _ = await call_asgi(self.app, body=b"{}", headers=headers)
+        self.assertEqual(status, 413)
+        self.assertEqual(json.loads(body), {"detail": "El cuerpo de la petición supera los límites permitidos"})
+        UUID(response_headers[b"x-execution-id"].decode())
+        row, = self.rows
+        self.assertEqual((row["http_status"], row["request_body"], row["operation"]), (413, "", "POST unmatched"))
+        status, _, _, _ = await call_asgi(self.app, body=b'{"a":1}',
+                                          headers=[(b"content-length", str(observability.MAX_REQUEST_BYTES).encode())])
+        self.assertEqual(status, 200)
+
+    async def test_body_without_length_over_one_mib_is_413(self):
+        part = b" " * 600000
+        status, _, body, _ = await call_asgi(self.app, chunks=[b"{", part, part, b"}"])
+        self.assertEqual(status, 413)
+        self.assertEqual(json.loads(body), {"detail": "El cuerpo de la petición supera los límites permitidos"})
+        row, = self.rows
+        self.assertEqual(row["http_status"], 413)
+        status, _, body, _ = await call_asgi(self.app, chunks=[b'{"name":', b'"Demo"}'])
+        self.assertEqual((status, json.loads(body)["echo"]), (200, {"name": "Demo"}))
+
+    def test_audited_patient_follows_the_same_r1_rule_as_the_route(self):
+        for path, expected in (("/patients/01", 1), ("/patients/1/diseases", 1), ("/clinical/patients/7/sync", 7),
+                               ("/patients/0", None), ("/patients/2147483648", None), ("/patients/0x1", None),
+                               ("/patients/5\n", None)):
+            with self.subTest(path=path):
+                self.assertEqual(observability.transaction_patient_id(path, "GET", 200, "", ""), expected)
+
+    async def test_path_with_nul_still_gets_its_row(self):
+        await call_asgi(self.app, path="/patients/" + chr(0), method="GET")
+        row, = self.rows
+        self.assertEqual(row["path"], "/patients/" + chr(92) + "u0000")
+
+    def test_operation_uses_the_same_route_names_as_java(self):
+        from types import SimpleNamespace
+        scope = {"route": SimpleNamespace(path="/patients/{patient_id}/diseases/{disease_id}")}
+        self.assertEqual(observability.route_template(scope), "/patients/{id}/diseases/{diseaseId}")
+        self.assertEqual(observability.route_template({}), "unmatched")
 
     def test_nul_is_visible_without_breaking_postgres_text(self):
         capture = BodyCapture()

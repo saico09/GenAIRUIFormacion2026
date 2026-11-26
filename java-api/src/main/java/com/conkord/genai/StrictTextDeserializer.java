@@ -13,6 +13,11 @@ public class StrictTextDeserializer extends ValueDeserializer<String> {
         if (parser.currentToken() != JsonToken.VALUE_STRING) {
             return (String) context.handleUnexpectedToken(String.class, parser);
         }
-        return parser.getString();
+        String value = parser.getString();
+        // Un surrogate suelto ("\ud800") no es UTF-8 válido: 422 en vez de fallar al guardar.
+        if (InputRules.hasLoneSurrogate(value)) {
+            throw context.weirdStringException(value, String.class, "Contiene caracteres Unicode inválidos");
+        }
+        return value;
     }
 }

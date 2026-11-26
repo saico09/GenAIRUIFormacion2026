@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: genai-fastapi
-  tag: s09-pacientes-compartidos-20261107
+  tag: s09-refinamiento-20261114
   pullPolicy: IfNotPresent
 
 postgres:

@@ -1,7 +1,7 @@
 """Sincronización idempotente por paciente; conserva colecciones y pacientes ajenos."""
 
 from app.history_documents import fragments_from_history
-from app.knowledge import COLLECTION, embed, prepare_collection, qdrant
+from app.knowledge import COLLECTION, embed, forget_collection, prepare_collection, qdrant
 
 
 def patient_points(patient_id: int, *, with_vectors: bool = False) -> list[dict]:
@@ -45,9 +45,10 @@ def index_history(history: dict) -> dict:
         removed = sorted(old.keys() - wanted.keys())
         if removed:
             qdrant("POST", f"/collections/{COLLECTION}/points/delete?wait=true", {"points": removed})
-    stored = {point["id"]: point["payload"] for point in patient_points(history["patient_id"])}
-    if stored != wanted:
-        raise ValueError("El índice no coincide con la revisión confirmada del informe")
+        # Sólo se relee tras escribir; sin cambios, la lectura anterior ya lo comprobó.
+        stored = {point["id"]: point["payload"] for point in patient_points(history["patient_id"])}
+        if stored != wanted:
+            raise ValueError("El índice no coincide con la revisión confirmada del informe")
     return {"patient_id": history["patient_id"], "filename": history["filename"],
             "revision": history["revision"], "records": len(history["entries"]),
             "consultations": len(history.get("consultations", [])),
@@ -60,4 +61,7 @@ def remove_patient_index(patient_id: int) -> dict:
         identifiers = [point["id"] for point in patient_points(patient_id)]
         if identifiers:
             qdrant("POST", f"/collections/{COLLECTION}/points/delete?wait=true", {"points": identifiers})
+    else:
+        # Sin colección no sirve la validación guardada: se rehace en la próxima sincronización.
+        forget_collection()
     return {"patient_id": patient_id, "status": "removed", "records": 0, "fragments": 0}

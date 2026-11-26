@@ -18,6 +18,8 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.transaction_log import BodyCapture, write_transaction
 
+MAX_REQUEST_BYTES = 1048576
+BODY_TOO_LARGE = "El cuerpo de la petición supera los límites permitidos"
 request_id_context: ContextVar[str | None] = ContextVar("request_id", default=None)
 execution_id_context: ContextVar[str | None] = ContextVar("execution_id", default=None)
 logger = logging.getLogger("genai_json")
@@ -48,6 +50,17 @@ def install_request_logging(app: FastAPI) -> None:
     app.add_middleware(RequestLoggingMiddleware)
 
 
+def too_large(headers: Headers) -> bool:
+    length = headers.get("content-length", "")
+    return re.fullmatch(r"[0-9]+", length) is not None and int(length) > MAX_REQUEST_BYTES
+
+
+def route_template(scope: Scope) -> str:
+    """Plantilla de la ruta con los mismos nombres que Java: /patients/{id}/diseases/{diseaseId}."""
+    route = getattr(scope.get("route"), "path", "unmatched")
+    return route.replace("{patient_id}", "{id}").replace("{disease_id}", "{diseaseId}")
+
+
 def is_audited_path(path: str) -> bool:
     # Las sondas y los assets no son transacciones de la aplicación.
     return any(path == prefix or path.startswith(prefix + "/")
@@ -56,10 +69,11 @@ def is_audited_path(path: str) -> bool:
 
 def transaction_patient_id(path: str, method: str, status: int, request_body: str, response_body: str) -> int | None:
     """Conserva también el objetivo de un 404/DELETE, aunque ya no exista en patients."""
-    match = re.match(r"^(?:/clinical)?/patients/([1-9][0-9]*)(?:/|$)", path)
+    # Igual que la ruta: «/patients/01» es el paciente 1. \Z y no $: «/patients/5\n» no es el 5.
+    match = re.match(r"^(?:/clinical)?/patients/([0-9]{1,10})(?:/|\Z)", path)
     if match:
         value = int(match[1])
-        return value if value <= 2147483647 else None
+        return value if 1 <= value <= 2147483647 else None
     candidate = None
     try:
         if path == "/patients" and method == "POST" and 200 <= status < 300:
@@ -111,13 +125,13 @@ class RequestLoggingMiddleware:
             if not audited or audit_attempted:
                 return
             audit_attempted = True
-            route = getattr(scope.get("route"), "path", "unmatched").replace("{patient_id}", "{id}")
+            route = route_template(scope)
             try:
                 await run_in_threadpool(write_transaction, {
                     "patient_id": transaction_patient_id(scope["path"], scope["method"], status,
                                                           incoming.text(), outgoing.text()), "service": "python",
                     "operation": f"{scope['method']} {route}", "method": scope["method"],
-                    "path": scope["path"], "http_status": status,
+                    "path": scope["path"].replace(chr(0), "\\u0000"), "http_status": status,
                     "request_body": incoming.text(), "response_body": outgoing.text(),
                     "request_truncated": incoming.truncated, "response_truncated": outgoing.truncated,
                     "duration_ms": round((perf_counter() - start) * 1000, 3),
@@ -152,7 +166,27 @@ class RequestLoggingMiddleware:
             await send(message)
 
         try:
-            if audited:
+            if too_large(headers):
+                await JSONResponse(status_code=413, content={"detail": BODY_TOO_LARGE})(scope, receive, capture_send)
+                return
+            if "content-length" not in headers and scope["method"] in ("POST", "PUT", "PATCH"):
+                # Sin Content-Length (envío por partes) se lee sólo hasta el límite.
+                received = 0
+                while True:
+                    message = await receive()
+                    buffered.append(message)
+                    if message["type"] != "http.request":
+                        break
+                    received += len(message.get("body", b""))
+                    if audited:
+                        incoming.add(message.get("body", b""))
+                    if received > MAX_REQUEST_BYTES:
+                        await JSONResponse(status_code=413, content={"detail": BODY_TOO_LARGE})(
+                            scope, receive, capture_send)
+                        return
+                    if not message.get("more_body", False):
+                        break
+            elif audited:
                 # Captura también el body de rutas que lo rechazan sin leerlo (404/405).
                 # Sólo anticipa un prefijo; el resto sigue fluyendo sin buffer completo.
                 while True:
@@ -176,7 +210,7 @@ class RequestLoggingMiddleware:
                 await JSONResponse(status_code=500, content={"detail": "Error interno"})(
                     scope, capture_receive, capture_send)
         finally:
-            route = getattr(scope.get("route"), "path", "unmatched").replace("{patient_id}", "{id}")
+            route = route_template(scope)
             try:
                 await record_transaction()
                 log_event("http", method=scope["method"], route=route, status=status,

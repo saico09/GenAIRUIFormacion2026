@@ -10,8 +10,9 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from uuid import uuid4
 
+OUTPUT = Path(__file__).resolve().parents[1] / ".local" / "verificaciones" / f"{Path(__file__).stem}-{datetime.now():%Y%m%dT%H%M%S}.json"
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--output", default="evidencias/s07/031-loki.json")
+parser.add_argument("--output", type=Path, default=OUTPUT)
 args = parser.parse_args()
 
 
@@ -76,7 +77,7 @@ for check in checks:
 series = loki("series", {"match[]": '{service=~".+"}', "start": start, "end": time.time_ns()})
 assert {stream["service"] for stream in series} == {"fastapi", "springboot"}, series
 assert all("request_id" not in stream for stream in series), series
-output = Path(args.output)
+output = args.output
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps({"checked_at": utc(time.time_ns()), "checks": checks,
                               "stored_stream_labels": series}, ensure_ascii=False, indent=2) + "\n",

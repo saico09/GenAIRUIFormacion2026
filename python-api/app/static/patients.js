@@ -1,5 +1,7 @@
-import {request, errorMessage, notice, confirmDelete} from './api.js';
+import {request, errorMessage, notice, confirmDelete, syncIndex, indexError} from './api.js';
 import {initHistory} from './history.js';
+
+const plain = text => String(text).normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase('es');
 
 export function initPatients(javaBase) {
   const body = document.querySelector('#patients-body');
@@ -16,12 +18,11 @@ export function initPatients(javaBase) {
   let rows = [];
   let editingId = null;
   let loading = false;
+  let loadFailed = false;
   let busy = false;
+  // Avisos de índice pendiente de esta vista; el estado real es el compartido de api.js.
   const pendingIndex = new Map();
-  const history = initHistory(javaBase, async () => {
-    await loadPatients({keepNotice: true});
-    document.dispatchEvent(new Event('clinical-patients-changed'));
-  });
+  const history = initHistory(javaBase);
 
   function updateButtons() {
     document.querySelectorAll('#patient-list button').forEach(button => { button.disabled = busy || loading; });
@@ -29,12 +30,13 @@ export function initPatients(javaBase) {
   }
 
   function renderIndexNotices() {
+    for (const id of pendingIndex.keys()) if (indexError(id) === undefined) pendingIndex.delete(id);
     const container = document.querySelector('#patient-index-notices');
     container.hidden = pendingIndex.size === 0;
     container.replaceChildren(...[...pendingIndex.values()].map(item => {
       const section = document.createElement('div'); section.className = 'sync-state';
       const text = document.createElement('p'); text.className = 'notice warning'; text.setAttribute('role', 'status');
-      text.textContent = `El paciente ${item.name} ya fue ${item.action === 'delete' ? 'eliminado' : 'actualizado'}, pero falta sincronizar su índice RAG. ${item.error || ''}`;
+      text.textContent = `El paciente ${item.name} ya fue ${item.action === 'delete' ? 'eliminado' : 'actualizado'}, pero falta sincronizar su índice RAG. ${indexError(item.id) || ''}`;
       const retry = document.createElement('button'); retry.type = 'button'; retry.className = 'button secondary';
       retry.textContent = 'Reintentar sincronización'; retry.dataset.syncPatient = item.id;
       retry.addEventListener('click', async () => {
@@ -51,18 +53,15 @@ export function initPatients(javaBase) {
   async function synchronizePatient(row, action) {
     pendingIndex.set(row.id, {id: row.id, name: row.name, action});
     try {
-      const result = await request(`/clinical/patients/${row.id}/sync`, {method: 'POST'}, 180000);
-      if (!result.ok) throw new Error(errorMessage(result));
-      pendingIndex.delete(row.id);
+      await syncIndex(row.id);
       notice(message, `Paciente ${row.name} ${action === 'delete' ? 'eliminado' : 'actualizado'}. Índice RAG sincronizado.`, 'success');
-    } catch (error) {
-      pendingIndex.get(row.id).error = error.message;
-    } finally { renderIndexNotices(); }
+    } catch { /* El aviso con su reintento queda visible. */ }
+    finally { renderIndexNotices(); }
   }
 
   function renderRows() {
-    const filter = search.value.trim().toLocaleLowerCase('es');
-    const shown = rows.filter(row => `${row.id} ${row.name} ${row.email}`.toLocaleLowerCase('es').includes(filter));
+    const filter = plain(search.value.trim());
+    const shown = rows.filter(row => plain(`${row.id} ${row.name} ${row.email}`).includes(filter));
     body.replaceChildren(...shown.map(row => {
       const tr = document.createElement('tr');
       tr.dataset.patientId = row.id;
@@ -90,8 +89,9 @@ export function initPatients(javaBase) {
       actionsCell.append(actions); tr.append(actionsCell); return tr;
     }));
     document.querySelector('#patient-count').textContent = rows.length;
-    document.querySelector('#patient-empty').hidden = shown.length > 0 || loading;
-    status.textContent = `${shown.length} de ${rows.length} pacientes`;
+    document.querySelector('#patient-empty').hidden = loading || shown.length > 0 || (loadFailed && rows.length === 0);
+    status.textContent = loadFailed ? (rows.length ? 'No se pudo actualizar el listado' : 'No se pudo cargar el listado')
+      : `${shown.length} de ${rows.length} pacientes`;
     updateButtons();
   }
 
@@ -104,16 +104,11 @@ export function initPatients(javaBase) {
     try {
       const result = await request(`${javaBase}/patients`);
       if (!result.ok) throw new Error(errorMessage(result));
-      rows = result.data;
-      renderRows();
+      rows = result.data; loadFailed = false;
     } catch (failure) {
       // Se conserva la última tabla visible, pero nunca se presenta como actualizada.
-      notice(message, failure.message);
-      status.textContent = rows.length ? 'No se pudo actualizar el listado' : 'No se pudo cargar el listado';
-    } finally {
-      loading = false; updateButtons();
-      if (rows.length === 0 && !message.textContent) document.querySelector('#patient-empty').hidden = false;
-    }
+      notice(message, failure.message); loadFailed = true;
+    } finally { loading = false; renderRows(); }
   }
 
   function openForm(row = null) {
@@ -145,7 +140,7 @@ export function initPatients(javaBase) {
       if (!result.ok) throw new Error(errorMessage(result));
       notice(message, `Paciente ${row.name} eliminado.`, 'success');
       await loadPatients({keepNotice: true});
-      document.dispatchEvent(new Event('clinical-patients-changed'));
+      document.dispatchEvent(new Event('patients-changed'));
       await synchronizePatient(row, 'delete');
     } catch (failure) { notice(message, failure.message); }
     finally { busy = false; updateButtons(); }
@@ -168,7 +163,7 @@ export function initPatients(javaBase) {
       dialog.close();
       notice(message, `Paciente ${result.data.name} ${isEdit ? 'actualizado' : 'agregado'}.`, 'success');
       await loadPatients({keepNotice: true});
-      document.dispatchEvent(new Event('clinical-patients-changed'));
+      document.dispatchEvent(new Event('patients-changed'));
       if (isEdit) await synchronizePatient(result.data, 'update');
     } catch (failure) { notice(formError, failure.message); }
     finally { busy = false; updateButtons(); save.textContent = isEdit ? 'Guardar cambios' : 'Guardar paciente'; }
@@ -179,8 +174,8 @@ export function initPatients(javaBase) {
   document.querySelector('#new-patient').addEventListener('click', () => openForm());
   document.querySelector('#refresh-java').addEventListener('click', () => loadPatients());
   search.addEventListener('input', renderRows);
-  document.addEventListener('patients-changed', async () => {
-    if (!document.querySelector('#view-pacientes').hidden) await loadPatients();
+  document.addEventListener('index-sync-changed', () => {
+    if ([...pendingIndex.keys()].some(id => indexError(id) === undefined)) renderIndexNotices();
   });
   async function openFromChat(event, prepare) {
     const {patient_id, note} = event.detail;

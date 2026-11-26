@@ -1,6 +1,7 @@
 """Contrato aislado del transporte LLM; no necesita Ollama, FastAPI ni PostgreSQL."""
 
 import importlib.util
+import json
 from pathlib import Path
 from types import ModuleType
 import unittest
@@ -11,6 +12,7 @@ from unittest.mock import Mock, patch
 # Así la prueba no abre conexiones ni depende del entorno de la base de datos.
 knowledge = ModuleType("app.knowledge")
 knowledge.OLLAMA_BASE_URL = "http://unused.invalid:11434"
+knowledge.OLLAMA_KEEP_ALIVE = "10m"
 knowledge.request_json = Mock()
 observability = ModuleType("app.observability")
 observability.log_event = Mock()
@@ -39,7 +41,7 @@ class LLMTransportTests(unittest.TestCase):
         self.assertEqual((method, url), ("POST", "http://unused.invalid:11434/api/generate"))
         self.assertEqual(body, {
             "model": llm.CHAT_MODEL, "prompt": "Relato", "system": "Instrucciones",
-            "stream": False, "think": llm.THINK, "options": llm.MODEL_OPTIONS, "keep_alive": "1m",
+            "stream": False, "think": llm.THINK, "options": llm.MODEL_OPTIONS, "keep_alive": "10m",
         })
         self.assertEqual(self.request.call_args.kwargs, {"timeout": llm.TIMEOUT_SECONDS})
         self.log.assert_called_once()
@@ -186,6 +188,39 @@ class LLMTransportTests(unittest.TestCase):
                     llm.llamar_llm("Relato")
                 self.log.assert_called_once()
                 self.assertEqual(self.log.call_args.kwargs["status"], "error")
+
+    def test_invalid_output_can_be_retried_but_transport_failure_cannot(self):
+        self.request.return_value = {**self.response, "done_reason": "length"}
+        with self.assertRaises(llm.LLMInvalidOutput):
+            llm.llamar_llm("Relato")
+        self.request.side_effect = OSError("sin conexión")
+        with self.assertRaises(llm.LLMUnavailable) as raised:
+            llm.llamar_llm("Relato")
+        self.assertNotIsInstance(raised.exception, llm.LLMInvalidOutput)
+
+
+class RetryTests(unittest.TestCase):
+    def setUp(self):
+        self.log = self.enterContext(patch.object(llm, "log_event"))
+
+    def test_invalid_output_gets_exactly_one_more_attempt(self):
+        generate = Mock(side_effect=["no es JSON", '{"ok": true}'])
+        self.assertEqual(llm.con_un_reintento(generate, json.loads, branch="direct"), {"ok": True})
+        self.assertEqual(generate.call_count, 2)
+        self.assertEqual(self.log.call_args.args[0], "llm_retry")
+        self.assertEqual(self.log.call_args.kwargs["branch"], "direct")
+
+    def test_second_failure_is_raised_and_transport_failure_is_not_retried(self):
+        generate = Mock(return_value="inválido")
+        with self.assertRaises(ValueError):
+            llm.con_un_reintento(generate, Mock(side_effect=ValueError("formato")), branch="rag")
+        self.assertEqual(generate.call_count, 2)
+        down = Mock(side_effect=llm.LLMUnavailable("LLM no disponible"))
+        with self.assertRaises(llm.LLMUnavailable):
+            llm.con_un_reintento(down, Mock(), branch="rag")
+        self.assertEqual(down.call_count, 1)
+        incomplete = Mock(side_effect=[llm.LLMInvalidOutput("LLM no disponible"), "ok"])
+        self.assertEqual(llm.con_un_reintento(incomplete, lambda raw: raw, branch="rag"), "ok")
 
 
 if __name__ == "__main__":

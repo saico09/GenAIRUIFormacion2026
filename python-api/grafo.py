@@ -5,8 +5,8 @@ from typing import NotRequired, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from app.knowledge import search_fragments
-from app.llm import CHAT_MODEL, MODEL_OPTIONS, THINK, llamar_llm
+from app.knowledge import record_context, search_fragments
+from app.llm import CHAT_MODEL, MODEL_OPTIONS, THINK, con_un_reintento, llamar_llm
 from app.observability import log_event, request_id_context
 from app.tracing import trace_node
 from rag import RAG_SYSTEM, build_rag_prompt, rag_response_schema, validate_rag_answer
@@ -18,6 +18,7 @@ class EstadoRag(TypedDict):
     request_id: str
     patient_name: NotRequired[str]
     fragmentos: NotRequired[list[dict]]
+    contexto: NotRequired[list[dict]]
     prompt: NotRequired[str]
     respuesta: NotRequired[str]
 
@@ -31,7 +32,8 @@ def retrieval(state: EstadoRag) -> dict:
 @trace_node("pregunta", "fragmentos")
 def prompt(state: EstadoRag) -> dict:
     log_event("rag_node", node="prompt", request_id=state["request_id"])
-    return {"prompt": build_rag_prompt(state["pregunta"], state["fragmentos"], state.get("patient_name"))}
+    contexto = record_context(state["patient_id"], state["fragmentos"])
+    return {"prompt": build_rag_prompt(state["pregunta"], contexto, state.get("patient_name")), "contexto": contexto}
 
 
 @trace_node("prompt", kind="LLM", attributes={
@@ -41,10 +43,17 @@ def prompt(state: EstadoRag) -> dict:
 def llamada_llm(state: EstadoRag) -> dict:
     log_event("rag_node", node="llamada_llm", request_id=state["request_id"])
     # El estado conserva el id incluso si el ejecutor del grafo cambia de hilo.
+    def comprobar(raw: str) -> str:
+        # Sólo comprueba; el nodo respuesta presenta la misma salida.
+        validate_rag_answer(raw, state["contexto"], state["pregunta"])
+        return raw
+
     token = request_id_context.set(state["request_id"])
     try:
-        return {"respuesta": llamar_llm(state["prompt"], branch="rag",
-                                       schema=rag_response_schema(state["fragmentos"], state["pregunta"]), system=RAG_SYSTEM)}
+        schema = rag_response_schema(state["contexto"], state["pregunta"])
+        return {"respuesta": con_un_reintento(
+            lambda: llamar_llm(state["prompt"], branch="rag", schema=schema, system=RAG_SYSTEM),
+            comprobar, branch="rag")}
     finally:
         request_id_context.reset(token)
 
@@ -53,7 +62,7 @@ def llamada_llm(state: EstadoRag) -> dict:
 def respuesta(state: EstadoRag) -> dict:
     log_event("rag_node", node="respuesta", request_id=state["request_id"])
     # No atribuir hechos a un documento que el recuperador no entregó.
-    return {"respuesta": validate_rag_answer(state["respuesta"], state["fragmentos"], state["pregunta"])}
+    return {"respuesta": validate_rag_answer(state["respuesta"], state["contexto"], state["pregunta"])}
 
 
 builder = StateGraph(EstadoRag)

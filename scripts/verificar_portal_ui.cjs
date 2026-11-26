@@ -9,7 +9,8 @@ const path = require('node:path');
 const chatUrl = process.env.CHAT_URL || 'http://127.0.0.1:8000/';
 const pythonUrl = new URL(chatUrl).origin;
 const javaUrl = (process.env.JAVA_URL || `${new URL(chatUrl).protocol}//${new URL(chatUrl).hostname}:8080`).replace(/\/$/, '');
-const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, '../evidencias/ui-2026-11-07'));
+const stamp = new Date().toLocaleString('sv-SE').replace(/[-:]/g, '').replace(' ', 'T');
+const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, `../.local/verificaciones/verificar_portal_ui-${stamp}`));
 const marker = `Portal QA ${crypto.randomUUID()}`;
 const original = { name: marker, birth_date: '1995-05-05', email: 'portal-qa@example.com' };
 const edited = { name: `${marker} editado`, birth_date: '1996-06-06', email: 'portal-editado@example.com' };
@@ -111,7 +112,9 @@ async function main() {
     await page.goto(chatUrl);
     await page.locator('#explorer-java details').first().waitFor({ state: 'attached' });
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
-    assert.deepEqual(await page.locator('#patient option').evaluateAll(nodes => nodes.map(node => ({id: Number(node.value), name: node.textContent}))),
+    const options = await page.locator('#patient option').evaluateAll(nodes => nodes.map(node => ({value: node.value, name: node.textContent})));
+    assert.equal(options[0].value, '', 'Opción fija sin paciente');
+    assert.deepEqual(options.slice(1).map(option => ({id: Number(option.value), name: option.name})),
       before.java.map(row => ({id: row.id, name: row.name})), 'Selector clínico leído de Java');
     assert.equal(await page.locator('#config-error').isVisible(), false);
     assert.deepEqual(await page.locator('[data-nav]').evaluateAll(nodes => nodes.map(node => node.dataset.nav)), ['consultas', 'pacientes', 'api-python', 'api-java']);
@@ -309,7 +312,7 @@ async function main() {
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
     assert.match(await page.locator('#direct').textContent(), /simulada/);
     assert.ok((await page.locator('#rag').textContent()).includes(mockSources[0].text));
-    assert.deepEqual(await page.locator('#sources summary').allTextContents(), mockSources.map(source => `${source.source} / ${source.section} · Registro ${source.record_id}`));
+    assert.deepEqual(await page.locator('#sources summary').allTextContents(), mockSources.map(source => `${source.source} / ${source.section} · ${source.section === 'Consulta' ? 'Consulta reportada' : 'Registro confirmado'} ${source.record_id}`));
     assert.deepEqual(await page.locator('#sources .source-fragment').allTextContents(), mockSources.map(source => source.text));
     assert.match(await page.locator('#used-question').textContent(), /¿Qué enfermedad tiene Ana Demo\?/);
     assert.equal(await page.locator('#question').inputValue(), question);

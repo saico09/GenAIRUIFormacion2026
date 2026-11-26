@@ -1,38 +1,32 @@
 package com.conkord.genai;
 
 import java.time.LocalDate;
-import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
+/** Mismas reglas que la API Python; los límites cuentan puntos de código, no UTF-16. */
 public record PatientRequest(
-        @NotBlank @Size(max = 200)
+        @NotNull(message = "El nombre es obligatorio")
+        @Pattern(regexp = InputRules.NAME,
+                message = "Usa entre 1 y 200 caracteres, sin tabuladores, saltos de línea ni caracteres de control o formato")
         @JsonDeserialize(using = StrictTextDeserializer.class) String name,
-        @NotNull @JsonProperty("birth_date")
+        @NotNull(message = "La fecha de nacimiento es obligatoria")
+        @PastOrPresent(message = "La fecha de nacimiento no puede ser posterior a hoy")
+        @JsonProperty("birth_date")
         @JsonDeserialize(using = BirthDateDeserializer.class) LocalDate birthDate,
-        @NotBlank @Email @Size(max = 254)
-        // Se fija el último @; el dominio se recorre sin repartir caracteres entre cuantificadores.
-        @Pattern(regexp = "(?>.+@)(?=[^@\\s][^@\\s]*\\.[^@\\s])[^@\\s]++", message = "El dominio del email debe incluir un punto")
+        @NotNull(message = "El email es obligatorio")
+        @Email(message = "Email inválido")
+        @Pattern(regexp = InputRules.EMAIL_PATTERN,
+                message = "Usa nombre@dominio.tld: una sola @, sin espacios ni IP y un dominio con letras tras el último punto (máximo 254)")
         @JsonDeserialize(using = StrictTextDeserializer.class) String email) {
 
     public PatientRequest {
-        if (name != null) {
-            name = name.strip();
-        }
-        if (email != null) {
-            email = email.strip();
-            // El dominio no distingue mayúsculas; conservamos la parte anterior a @.
-            int separator = email.lastIndexOf('@');
-            if (separator >= 0) {
-                email = email.substring(0, separator + 1)
-                        + email.substring(separator + 1).toLowerCase(Locale.ROOT);
-            }
-        }
+        name = InputRules.trim(name);
+        email = InputRules.email(email);
     }
 }

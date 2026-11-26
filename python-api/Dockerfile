@@ -1,4 +1,4 @@
-FROM python:3.15.2-slim AS dependencies
+FROM python:3.15.2-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928 AS dependencies
 
 WORKDIR /build
 COPY requirements.txt .
@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends build-essential
     && rm -rf /var/lib/apt/lists/*
 RUN pip wheel --no-cache-dir --wheel-dir=/wheels -r requirements.txt
 
-FROM python:3.15.2-slim
+FROM python:3.15.2-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928
 
 WORKDIR /code
 

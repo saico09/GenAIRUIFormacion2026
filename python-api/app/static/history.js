@@ -1,9 +1,11 @@
-import {request, errorMessage, notice, confirmAction} from './api.js';
+import {request, errorMessage, notice, confirmAction, syncIndex, indexError, indexSyncing, setIndexState} from './api.js';
+import {fields, readEntry, describeEntry, rebuildDraft, missingRecords, changedRecords} from './records.js';
+import {entryRows, consultationRows, draftForm} from './history-view.js';
 
-const fields = {disease: 'Enfermedad', treatment: 'Tratamiento', medication: 'Medicamento'};
-const jsonOptions = (method, data) => ({method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+const PROPOSAL_TIMEOUT = 420000;
+const jsonOptions = (method, data, signal) => ({method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data), signal});
 
-export function initHistory(javaBase, onChanged) {
+export function initHistory(javaBase) {
   const detail = document.querySelector('#patient-detail');
   const list = document.querySelector('#patient-list');
   const message = document.querySelector('#history-notice');
@@ -12,194 +14,177 @@ export function initHistory(javaBase, onChanged) {
   note.maxLength = 6000;
   const proposals = document.querySelector('#proposed-entries');
   const proposalNotice = document.querySelector('#proposal-notice');
+  const cancelProposal = document.querySelector('#cancel-proposal');
   const markdownForm = document.querySelector('#history-markdown-form');
   const markdownInput = document.querySelector('#history-markdown-input');
   const diseaseForm = document.querySelector('#disease-form');
   const diseaseNotice = document.querySelector('#disease-form-notice');
-  const pendingSync = new Set();
   let patient = null;
   let history = null;
   let busy = false;
-  let conflict = false;
+  let conflict = false;   // El archivo cambió con el editor Markdown abierto: sólo bloquea ese editor.
+  let stale = false;      // Un cambio guardado no se pudo releer: se bloquean las escrituras hasta actualizar.
   let nextDraft = 0;
   let editingDiseaseId = null;
+  let diseaseBase = '';
   let markdownRevision = null;
+  let markdownBase = '';
+  let proposalRequest = null;
+
+  const canWrite = () => !busy && history && !stale;
+  const diseaseDirty = () => !diseaseForm.hidden && JSON.stringify(readEntry(diseaseForm)) !== diseaseBase;
+  const noteDirty = () => !editor.hidden && (note.value.trim() !== '' || proposals.children.length > 0);
+  const hasDrafts = () => (!markdownForm.hidden && markdownInput.value !== markdownBase) || diseaseDirty() || noteDirty();
 
   function updateControls() {
     detail.setAttribute('aria-busy', String(busy));
     detail.querySelectorAll('button, textarea').forEach(control => {
       control.disabled = busy || (!history && !['history-back', 'refresh-history'].includes(control.id));
     });
-    if (conflict) detail.querySelectorAll('[data-save-entry], #save-markdown, #save-disease').forEach(button => { button.disabled = true; });
+    cancelProposal.disabled = !proposalRequest;
+    if (stale) detail.querySelectorAll('[data-save-entry], #save-markdown, #save-disease').forEach(button => { button.disabled = true; });
+    else if (conflict) document.querySelector('#save-markdown').disabled = true;
+  }
+
+  // Si el control que inició la acción perdió el foco al deshabilitarse, se le devuelve.
+  function restoreFocus(element) {
+    const active = document.activeElement;
+    if (element?.isConnected && !element.disabled && (!active || active === document.body)) element.focus({preventScroll: true});
   }
 
   function syncStatus() {
-    const pending = pendingSync.has(patient?.id);
-    document.querySelector('#history-sync').hidden = !pending;
-    if (pending) notice(document.querySelector('#history-sync-message'), 'La historia está guardada, pero su índice RAG sigue pendiente. Puedes reintentar la sincronización.', 'warning');
+    const error = patient && !indexSyncing(patient.id) ? indexError(patient.id) : undefined;
+    document.querySelector('#history-sync').hidden = error === undefined;
+    if (error !== undefined) notice(document.querySelector('#history-sync-message'),
+      `La historia está guardada, pero su índice RAG sigue pendiente.${error ? ` ${error.trimEnd().replace(/\.$/, '')}.` : ''} Puedes reintentar la sincronización.`, 'warning');
   }
 
   function renderHistory(data) {
     history = data;
-    document.querySelector('#history-body').replaceChildren(...data.entries.map(entry => {
-      const row = document.createElement('tr');
-      row.dataset.diseaseId = entry.id;
-      for (const value of [entry.id, ...Object.keys(fields).map(key => entry[key])]) {
-        const cell = document.createElement('td'); cell.textContent = value || '—'; row.append(cell);
-      }
-      const cell = document.createElement('td');
-      const actions = document.createElement('div'); actions.className = 'row-actions';
-      for (const [action, label] of [['edit', 'Editar'], ['delete', 'Eliminar']]) {
-        const button = document.createElement('button'); button.type = 'button'; button.className = `${action}-action`;
-        button.dataset.diseaseAction = action; button.textContent = label;
-        button.setAttribute('aria-label', `${label} registro ${entry.id}`);
-        button.addEventListener('click', () => action === 'edit' ? openDiseaseForm(entry) : deleteDisease(entry));
-        actions.append(button);
-      }
-      cell.append(actions); row.append(cell);
-      return row;
-    }));
+    document.querySelector('#history-body').replaceChildren(...entryRows(data.entries, openDiseaseForm, deleteDisease));
     document.querySelector('#history-count').textContent = data.entries.length;
     document.querySelector('#history-empty').hidden = data.entries.length > 0;
     document.querySelector('#history-markdown-text').textContent = data.markdown;
     document.querySelector('#history-filename').textContent = data.filename;
-    const consultations = [...(data.consultations || [])].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+    const consultations = consultationRows(data.consultations);
     document.querySelector('#consultations-count').textContent = consultations.length;
     document.querySelector('#consultations-empty').hidden = consultations.length > 0;
-    document.querySelector('#consultations-body').replaceChildren(...consultations.map(consultation => {
-      const row = document.createElement('tr');
-      const dateCell = document.createElement('td');
-      const date = new Date(consultation.created_at);
-      const time = document.createElement('time');
-      if (Number.isNaN(date.getTime())) time.textContent = 'Fecha no disponible';
-      else {
-        time.dateTime = date.toISOString();
-        time.textContent = date.toLocaleString('es-CL', {dateStyle: 'short', timeStyle: 'short'});
-        time.title = date.toISOString();
-      }
-      dateCell.append(time);
-      const content = document.createElement('td');
-      const question = document.createElement('p'); question.className = 'consultation-question'; question.textContent = consultation.question;
-      const identifier = document.createElement('p'); identifier.className = 'helper execution-id'; identifier.textContent = `ID: ${consultation.id}`;
-      const details = document.createElement('details'); details.className = 'saved-consultation';
-      const summary = document.createElement('summary'); summary.textContent = 'Ver las dos respuestas'; details.append(summary);
-      if (consultation.model) {
-        const model = document.createElement('p'); model.className = 'helper'; model.textContent = `Modelo: ${consultation.model}`; details.append(model);
-      }
-      for (const [title, answer] of [['Sin RAG', consultation.direct_answer], ['Con RAG', consultation.rag_answer]]) {
-        const heading = document.createElement('h3'); heading.textContent = title;
-        const text = document.createElement('p'); text.className = 'saved-answer'; text.textContent = answer || 'Sin respuesta registrada.';
-        details.append(heading, text);
-      }
-      content.append(question, identifier, details); row.append(dateCell, content); return row;
-    }));
+    document.querySelector('#consultations-body').replaceChildren(...consultations);
     syncStatus();
+    // Las filas nuevas nacen habilitadas: se ajustan al estado actual.
+    updateControls();
   }
 
+  function draftRisks() {
+    const missing = missingRecords(history.markdown, markdownInput.value);
+    const changed = changedRecords(markdownBase, history.markdown, markdownInput.value);
+    return {missing, changed};
+  }
+
+  function refreshDraft() {
+    if (markdownForm.hidden || markdownRevision === history.revision) return '';
+    markdownInput.value = rebuildDraft(markdownInput.value, history.markdown);
+    markdownRevision = history.revision;
+    const {missing, changed} = draftRisks();
+    return 'Historia actualizada. Tu borrador conserva sus registros con la cabecera y las consultas vigentes; revísalo antes de guardar.'
+      + (missing.length ? ` El archivo tiene registros que tu borrador no incluye y se eliminarían al guardar: ${missing.join(', ')}.` : '')
+      + (changed.length ? ` Estos registros cambiaron en el archivo y tu borrador conserva su versión anterior: ${changed.join(', ')}.` : '');
+  }
+
+  // /history ya incluye los registros: una sola lectura auditada por refresco.
   async function readHistory() {
-    const [report, records] = await Promise.all([
-      request(`${javaBase}/patients/${patient.id}/history`),
-      request(`${javaBase}/patients/${patient.id}/diseases`),
-    ]);
+    const report = await request(`${javaBase}/patients/${patient.id}/history`);
     if (!report.ok) throw new Error(errorMessage(report));
-    if (!records.ok) throw new Error(errorMessage(records));
-    renderHistory({...report.data, entries: records.data});
+    renderHistory(report.data);
+    return refreshDraft();
   }
 
   async function loadHistory() {
     if (busy || !patient) return;
+    const focused = document.activeElement;
     busy = true; updateControls(); notice(message, 'Cargando historia…', 'loading');
     try {
-      await readHistory();
-      const hadConflict = conflict;
-      conflict = false;
-      if (hadConflict && !markdownForm.hidden) markdownRevision = history.revision;
-      notice(message, hadConflict ? 'Historia actualizada. Conservamos tu borrador: compáralo con el archivo actual antes de confirmar de nuevo.' : '', 'warning');
+      const draftNote = await readHistory();
+      conflict = false; stale = false;
+      notice(message, draftNote, 'warning');
     } catch (error) { notice(message, error.message); }
-    finally { busy = false; updateControls(); }
+    finally { busy = false; updateControls(); restoreFocus(focused); }
   }
 
   async function synchronize() {
-    pendingSync.add(patient.id); syncStatus();
+    const id = patient.id;
     try {
-      const result = await request(`/clinical/patients/${patient.id}/sync`, {method: 'POST'}, 180000);
-      if (!result.ok) throw new Error(errorMessage(result));
-      pendingSync.delete(patient.id); syncStatus();
-      notice(message, 'Historia guardada y disponible para las consultas RAG.', 'success');
-    } catch (error) {
-      notice(message, 'La historia está guardada; su sincronización quedó pendiente.', 'warning');
-      notice(document.querySelector('#history-sync-message'), `La historia está guardada, pero falta actualizar su índice RAG. ${error.message}`, 'warning');
-    }
+      await syncIndex(id);
+      if (patient?.id === id) notice(message, 'Historia guardada y disponible para las consultas RAG.', 'success');
+    } catch {
+      if (patient?.id === id) notice(message, 'La historia está guardada; su sincronización quedó pendiente.', 'warning');
+    } finally { syncStatus(); }
   }
 
-  async function saveHistory(method, path, data, description, afterSave) {
-    if (busy || !history || conflict) return;
+  async function afterWrite() {
+    const draftNote = await readHistory();
+    document.querySelector('#history-patient-name').focus({preventScroll: true});
+    notice(message, 'Historia guardada. Actualizando el índice RAG…', 'loading');
+    await synchronize();
+    if (draftNote) notice(message, draftNote, 'warning');
+  }
+
+  function savedReadFailed(error) {
+    stale = true;
+    setIndexState(patient.id, ''); syncStatus();
+    notice(message, `El cambio quedó guardado, pero no se pudo actualizar la vista. Pulsa «Actualizar historia». ${error.message}`, 'warning');
+  }
+
+  // Confirmar antes de bloquear: al cancelar, el foco vuelve a un botón todavía habilitado.
+  async function write(url, options, description, confirmOptions, afterSave, canSave = canWrite, errorTarget = message) {
+    if (!canSave()) return;
+    const trigger = document.activeElement;
+    if (!await confirmAction(description, confirmOptions) || !canSave()) return;
     busy = true; updateControls();
     let saved = false;
+    let focusTarget = trigger;
     try {
-      if (!await confirmAction(description, {title: 'Guardar en la historia', label: 'Confirmar y guardar', hint: 'Revisa los datos antes de confirmar. Esto modifica el archivo clínico del paciente.'})) return;
-      notice(message, 'Guardando historia…', 'loading');
-      const result = await request(`${javaBase}/patients/${patient.id}/history${path}`, jsonOptions(method, {revision: history.revision, ...data, confirmed: true}));
-      if (result.status === 409) {
-        conflict = true;
-        throw new Error('Otra operación cambió la historia. Pulsa «Actualizar historia» y revisa tu borrador antes de volver a guardar.');
+      notice(message, url.includes('/diseases') ? 'Guardando registro…' : 'Guardando historia…', 'loading');
+      const result = await request(url, options);
+      if (result.status === 409 && options.method === 'PUT' && url.endsWith('/history')) {
+        conflict = true; focusTarget = document.querySelector('#refresh-history');
+        throw new Error(`${errorMessage(result)} Pulsa «Actualizar historia»: tu borrador se conserva y se combina con la versión actual antes de volver a guardar.`);
       }
       if (!result.ok) throw new Error(errorMessage(result));
       saved = true;
       afterSave();
-      await readHistory();
-      document.querySelector('#history-patient-name').focus({preventScroll: true});
-      notice(message, 'Historia guardada. Actualizando el índice RAG…', 'loading');
-      await onChanged();
-      await synchronize();
+      // Una lectura fallida no debe dejar el formulario listo para repetir un alta ya guardada.
+      await afterWrite();
     } catch (error) {
       if (saved) savedReadFailed(error);
-      else notice(message, error.message);
-    }
-    finally { busy = false; updateControls(); }
+      else {
+        if (errorTarget !== message) notice(message, '');
+        notice(errorTarget, error.message);
+      }
+    } finally { busy = false; updateControls(); restoreFocus(focusTarget); }
   }
 
-  function savedReadFailed(error) {
-    conflict = true;
-    pendingSync.add(patient.id); syncStatus();
-    notice(message, `El cambio quedó guardado, pero no se pudo actualizar la vista. Pulsa «Actualizar historia». ${error.message}`, 'warning');
+  function saveDisease(method, id, data, description, afterSave = () => {}, errorTarget = message) {
+    return write(`${javaBase}/patients/${patient?.id}/diseases${id ? `/${id}` : ''}`, data ? jsonOptions(method, data) : {method}, description,
+      {title: method === 'DELETE' ? 'Eliminar registro' : 'Guardar registro', label: method === 'DELETE' ? 'Eliminar registro' : 'Confirmar y guardar',
+        danger: method === 'DELETE', hint: 'El cambio se reflejará en la tabla y en el Markdown de este paciente.'}, afterSave, canWrite, errorTarget);
   }
 
-  function openDiseaseForm(entry = null) {
+  async function openDiseaseForm(entry = null) {
     if (busy || !history) return;
-    editingDiseaseId = entry?.id ?? null;
+    const id = entry?.id ?? null;
+    if (!diseaseForm.hidden && editingDiseaseId === id) { diseaseForm.elements.namedItem('disease').focus(); return; }
+    if (diseaseDirty() && !await confirmAction('¿Descartar los cambios sin guardar del registro que estás editando?',
+      {title: 'Cambios sin guardar', label: 'Descartar cambios'})) return;
+    editingDiseaseId = id;
     diseaseForm.reset(); notice(diseaseNotice, '');
     document.querySelector('#disease-form-title').textContent = entry ? 'Editar registro confirmado' : 'Agregar registro confirmado';
     document.querySelector('#disease-record-id').textContent = entry ? `ID: ${entry.id}` : 'El ID se asigna al guardar.';
     for (const key of Object.keys(fields)) diseaseForm.elements.namedItem(key).value = entry?.[key] || '';
+    diseaseBase = JSON.stringify(readEntry(diseaseForm));
     diseaseForm.hidden = false;
     diseaseForm.elements.namedItem('disease').focus();
     diseaseForm.scrollIntoView({behavior: 'smooth', block: 'center'});
-  }
-
-  async function saveDisease(method, id, data, description, afterSave = () => {}) {
-    if (busy || !history || conflict) return;
-    busy = true; updateControls();
-    let saved = false;
-    try {
-      if (!await confirmAction(description, {title: method === 'DELETE' ? 'Eliminar registro' : 'Guardar registro',
-        label: method === 'DELETE' ? 'Eliminar registro' : 'Confirmar y guardar', danger: method === 'DELETE',
-        hint: 'El cambio se reflejará en la tabla y en el Markdown de este paciente.'})) return;
-      notice(message, 'Guardando registro…', 'loading');
-      const result = await request(`${javaBase}/patients/${patient.id}/diseases${id ? `/${id}` : ''}`,
-        data ? jsonOptions(method, data) : {method});
-      if (!result.ok) throw new Error(errorMessage(result));
-      saved = true;
-      afterSave();
-      // Una lectura fallida no debe dejar el formulario listo para repetir un alta ya guardada.
-      await readHistory();
-      document.querySelector('#history-patient-name').focus({preventScroll: true});
-      await onChanged();
-      await synchronize();
-    } catch (error) {
-      if (saved) savedReadFailed(error);
-      else notice(message, error.message);
-    } finally { busy = false; updateControls(); }
   }
 
   function deleteDisease(entry) {
@@ -209,50 +194,53 @@ export function initHistory(javaBase, onChanged) {
   }
 
   function addDraft(entry = {}) {
-    const id = ++nextDraft;
-    const form = document.createElement('form'); form.className = 'entry-draft';
-    const heading = document.createElement('h3'); heading.textContent = 'Propuesta para revisar'; form.append(heading);
-    const columns = document.createElement('div'); columns.className = 'entry-fields';
-    for (const [key, labelText] of Object.entries(fields)) {
-      const group = document.createElement('div');
-      const label = document.createElement('label'); label.htmlFor = `draft-${id}-${key}`; label.textContent = labelText;
-      const input = document.createElement('textarea'); input.id = label.htmlFor; input.name = key; input.rows = 2; input.maxLength = 2000; input.value = typeof entry[key] === 'string' ? entry[key] : '';
-      group.append(label, input);
-      const evidence = document.createElement('p'); evidence.className = 'field-evidence';
-      const quote = entry.evidence?.[key];
-      evidence.textContent = `Texto de la nota: ${typeof quote === 'string' && quote ? quote : Array.isArray(quote) && quote.length ? quote.join(' · ') : 'No identificado; se deja vacío.'}`;
-      group.append(evidence); columns.append(group);
-    }
-    const localError = document.createElement('p'); localError.className = 'notice error'; localError.hidden = true; localError.setAttribute('role', 'alert');
-    const actions = document.createElement('div'); actions.className = 'dialog-actions';
-    const discard = document.createElement('button'); discard.type = 'button'; discard.className = 'button secondary'; discard.textContent = 'Descartar'; discard.addEventListener('click', () => form.remove());
-    const save = document.createElement('button'); save.type = 'submit'; save.className = 'button primary'; save.dataset.saveEntry = ''; save.textContent = 'Guardar este registro';
-    actions.append(discard, save); form.append(columns, localError, actions);
+    const {form, localError} = draftForm(++nextDraft, entry);
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (busy) return;
-      const data = Object.fromEntries(Object.keys(fields).map(key => [key, form.elements.namedItem(key).value.trim()]));
+      const data = readEntry(form);
       notice(localError, '');
       if (!Object.values(data).some(Boolean)) { notice(localError, 'Completa al menos un campo con un hecho de la consulta.'); return; }
       if (history.entries.length >= 50) { notice(localError, 'La historia ya tiene 50 registros. Revisa su Markdown antes de añadir otro.'); return; }
-      const summary = Object.entries(fields).map(([key, label]) => `${label}: ${data[key] || '(sin información)'}`).join('\n');
-      await saveDisease('POST', null, data, `¿Guardar este registro para ${patient.name}?\n\n${summary}`, () => {
+      await saveDisease('POST', null, data, `¿Guardar este registro para ${patient.name}?\n\n${describeEntry(data)}`, () => {
         form.remove();
         notice(proposalNotice, proposals.children.length ? 'Registro guardado. Quedan propuestas por revisar.' : 'Registro guardado. No quedan propuestas pendientes.', 'success');
-      });
+      }, localError);
     });
     proposals.append(form); updateControls();
   }
 
-  function showConsultation(draft = '') {
+  async function showConsultation(draft = '') {
+    if (noteDirty() && note.value !== draft && !await confirmAction('¿Descartar la nota y las propuestas sin guardar para empezar de nuevo?',
+      {title: 'Borrador sin guardar', label: 'Descartar borrador'})) { note.focus(); return; }
     editor.hidden = false; note.value = draft; proposals.replaceChildren(); notice(proposalNotice, '');
     note.focus(); editor.scrollIntoView({behavior: 'smooth', block: 'start'});
   }
 
   async function open(row, draft = null) {
+    if (busy) {
+      notice(message, `Espera a que termine la operación en curso en la historia de ${patient?.name || 'otro paciente'} antes de abrir otra.`, 'warning');
+      return false;
+    }
+    list.hidden = true; detail.hidden = false;
+    const showIdentity = () => {
+      document.querySelector('#history-patient-name').textContent = row.name;
+      document.querySelector('#history-patient-info').textContent = `Paciente #${row.id} · ${row.email || ''}`;
+    };
+    if (patient?.id === row.id && history) {
+      patient = row; showIdentity();
+      await loadHistory();
+      if (draft !== null) await showConsultation(draft);
+      else document.querySelector('#history-patient-name').focus();
+      return true;
+    }
+    if (patient && hasDrafts() && !await confirmAction(`¿Descartar los borradores sin guardar de ${patient.name} y abrir la historia de ${row.name}?`,
+      {title: 'Borradores sin guardar', label: 'Descartar y abrir', hint: 'Se pierden el Markdown, el registro o la nota que no guardaste.'})) return false;
     if (busy) return false;
-    patient = row; history = null; conflict = false;
-    list.hidden = true; detail.hidden = false; editor.hidden = true; markdownForm.hidden = true; diseaseForm.hidden = true;
+    patient = row; history = null; conflict = false; stale = false;
+    editingDiseaseId = null; markdownRevision = null; markdownInput.value = markdownBase = ''; note.value = '';
+    proposals.replaceChildren(); notice(proposalNotice, '');
+    editor.hidden = true; markdownForm.hidden = true; diseaseForm.hidden = true;
     document.querySelector('#history-markdown').open = false;
     document.querySelector('#history-body').replaceChildren();
     document.querySelector('#history-markdown-text').textContent = '';
@@ -262,11 +250,12 @@ export function initHistory(javaBase, onChanged) {
     document.querySelector('#consultations-body').replaceChildren();
     document.querySelector('#consultations-count').textContent = '—';
     document.querySelector('#consultations-empty').hidden = true;
-    document.querySelector('#history-patient-name').textContent = row.name;
-    document.querySelector('#history-patient-info').textContent = `Paciente #${row.id} · ${row.email || ''}`;
-    document.querySelector('#history-patient-name').focus(); syncStatus();
+    showIdentity();
+    syncStatus();
     await loadHistory();
-    if (draft !== null && history) showConsultation(draft);
+    // El foco se mueve cuando la vista ya está visible (al abrir desde Consultas cambia el hash antes).
+    if (draft !== null && history) await showConsultation(draft);
+    else document.querySelector('#history-patient-name').focus();
     return true;
   }
 
@@ -275,52 +264,83 @@ export function initHistory(javaBase, onChanged) {
     detail.hidden = true; list.hidden = false;
     list.querySelector(`[data-patient-id="${patient.id}"] [data-action="history"]`)?.focus();
   });
-  document.querySelector('#refresh-history').addEventListener('click', loadHistory);
-  document.querySelector('#new-consultation').addEventListener('click', () => showConsultation());
+  document.querySelector('#refresh-history').addEventListener('click', () => void loadHistory());
+  document.querySelector('#new-consultation').addEventListener('click', () => {
+    if (editor.hidden) void showConsultation();
+    else { note.focus(); editor.scrollIntoView({behavior: 'smooth', block: 'start'}); }
+  });
   document.querySelector('#new-disease').addEventListener('click', () => openDiseaseForm());
   document.querySelector('#cancel-disease').addEventListener('click', () => { diseaseForm.hidden = true; });
   diseaseForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (busy) return;
-    const data = Object.fromEntries(Object.keys(fields).map(key => [key, diseaseForm.elements.namedItem(key).value.trim()]));
+    const data = readEntry(diseaseForm);
     notice(diseaseNotice, '');
     if (!Object.values(data).some(Boolean)) { notice(diseaseNotice, 'Completa al menos un campo.'); return; }
     if (!editingDiseaseId && history.entries.length >= 50) { notice(diseaseNotice, 'Este paciente ya tiene 50 registros. Edita o elimina uno antes de agregar otro.'); return; }
-    const summary = Object.entries(fields).map(([key, label]) => `${label}: ${data[key] || '(sin información)'}`).join('\n');
     await saveDisease(editingDiseaseId ? 'PUT' : 'POST', editingDiseaseId, data,
-      `¿Guardar este registro para ${patient.name}?\n\n${summary}`, () => { diseaseForm.hidden = true; });
+      `¿Guardar este registro para ${patient.name}?\n\n${describeEntry(data)}`, () => { diseaseForm.hidden = true; }, diseaseNotice);
   });
   document.querySelector('#consult-patient').addEventListener('click', () => {
     if (patient) document.dispatchEvent(new CustomEvent('select-clinical-patient', {detail: {patient_id: patient.id}}));
   });
-  document.querySelector('#close-consultation').addEventListener('click', () => { editor.hidden = true; });
-  document.querySelector('#manual-entry').addEventListener('click', () => {
-    openDiseaseForm();
+  document.querySelector('#close-consultation').addEventListener('click', async () => {
+    if (noteDirty() && !await confirmAction('¿Cerrar y descartar la nota y las propuestas sin guardar?',
+      {title: 'Borrador sin guardar', label: 'Descartar borrador'})) return;
+    editor.hidden = true; note.value = ''; proposals.replaceChildren(); notice(proposalNotice, '');
+    document.querySelector('#new-consultation').focus();
   });
+  document.querySelector('#manual-entry').addEventListener('click', () => openDiseaseForm());
   document.querySelector('#proposal-form').addEventListener('submit', async event => {
     event.preventDefault();
     if (busy) return;
     if (!note.value.trim()) { notice(proposalNotice, 'Escribe una nota o usa «Crear registro manual».'); note.focus(); return; }
     if (proposals.children.length && !await confirmAction('¿Reemplazar las propuestas sin guardar por una nueva extracción?', {label: 'Preparar de nuevo'})) return;
+    if (busy) return;
+    const controller = new AbortController();
+    proposalRequest = controller; cancelProposal.hidden = false;
     busy = true; updateControls(); notice(proposalNotice, 'Preparando una propuesta a partir de tu nota…', 'loading');
+    let cancelled = false;
     try {
-      const result = await request('/clinical/proposals', jsonOptions('POST', {patient_id: patient.id, note: note.value}), 420000);
+      const result = await request('/clinical/proposals', jsonOptions('POST', {patient_id: patient.id, note: note.value}, controller.signal), PROPOSAL_TIMEOUT);
       if (!result.ok) throw new Error(errorMessage(result));
       if (result.data.patient_id !== patient.id) throw new Error('La propuesta corresponde a otro paciente. No se preparó ningún registro.');
       proposals.replaceChildren();
       for (const entry of result.data.entries) addDraft(entry);
       notice(proposalNotice, result.data.message || (result.data.entries.length ? 'Revisa los campos y el texto de origen antes de guardar.' : 'No se identificaron datos para registrar. Puedes crear un registro manual.'), result.data.entries.length ? 'neutral' : 'warning');
-    } catch (error) { notice(proposalNotice, `${error.message} Puedes crear un registro manual.`); }
-    finally { busy = false; updateControls(); }
+    } catch (error) {
+      cancelled = error.name === 'AbortError';
+      if (cancelled) notice(proposalNotice, 'Preparación cancelada. Tu nota se conserva: puedes prepararla de nuevo o crear un registro manual.', 'warning');
+      else notice(proposalNotice, `${error.message} Puedes crear un registro manual.`);
+    } finally {
+      proposalRequest = null; cancelProposal.hidden = true;
+      busy = false; updateControls();
+      if (cancelled) note.focus();
+    }
   });
+  cancelProposal.addEventListener('click', () => proposalRequest?.abort());
   document.querySelector('#edit-history').addEventListener('click', () => {
-    markdownInput.value = history.markdown; markdownRevision = history.revision; markdownForm.hidden = false; markdownInput.focus();
+    if (!history) return;
+    if (markdownForm.hidden) {
+      markdownInput.value = markdownBase = history.markdown; markdownRevision = history.revision; markdownForm.hidden = false;
+    }
+    markdownInput.focus();
   });
   document.querySelector('#cancel-markdown').addEventListener('click', () => { markdownForm.hidden = true; });
   markdownForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (new TextEncoder().encode(markdownInput.value).length > 1048576) { notice(message, 'El Markdown supera el límite de 1 MiB.'); return; }
-    await saveHistory('PUT', '', {markdown: markdownInput.value, revision: markdownRevision}, `¿Reemplazar el Markdown de ${patient.name} con el contenido editado? Los cambios pueden modificar o eliminar registros existentes.`, () => { markdownForm.hidden = true; });
+    const {missing, changed} = history ? draftRisks() : {missing: [], changed: []};
+    const removal = missing.length
+      ? `\n\nSe eliminarán del archivo actual ${missing.length === 1 ? 'este registro' : 'estos registros'}: ${missing.join(', ')}.`
+      : ' Los cambios pueden modificar o eliminar registros existentes.';
+    const reverted = changed.length
+      ? `\n\nVolverán a la versión de tu borrador (cambiaron en el archivo después de abrir el editor): ${changed.join(', ')}.` : '';
+    await write(`${javaBase}/patients/${patient?.id}/history`,
+      jsonOptions('PUT', {revision: markdownRevision, markdown: markdownInput.value, confirmed: true}),
+      `¿Reemplazar el Markdown de ${patient?.name} con el contenido editado?${removal}${reverted}`,
+      {title: 'Guardar en la historia', label: 'Confirmar y guardar', hint: 'Revisa los datos antes de confirmar. Esto modifica el archivo clínico del paciente.'},
+      () => { markdownForm.hidden = true; }, () => canWrite() && !conflict);
   });
   document.querySelector('#download-history').addEventListener('click', async () => {
     if (busy) return;
@@ -335,20 +355,20 @@ export function initHistory(javaBase, onChanged) {
     finally { busy = false; updateControls(); }
   });
   document.querySelector('#retry-history-sync').addEventListener('click', async () => {
-    if (busy) return;
+    if (busy || !patient) return;
     busy = true; updateControls();
+    notice(message, 'Reintentando la sincronización del índice RAG…', 'loading');
     try { await synchronize(); }
     finally { busy = false; updateControls(); }
   });
   document.addEventListener('clinical-history-changed', async event => {
-    if (patient?.id === event.detail.patient_id && history) {
-      // La consulta puede haberse guardado mientras había un borrador de Markdown.
-      // Conservamos ese borrador y pedimos recargar antes de sobrescribir su revisión.
-      if (!markdownForm.hidden || !diseaseForm.hidden || proposals.children.length) {
-        conflict = true; updateControls();
-        notice(message, 'La historia cambió en otra operación. Actualízala antes de guardar tu borrador.', 'warning');
-      } else await loadHistory();
-    }
+    if (patient?.id !== event.detail.patient_id || !history) return;
+    // Recargar cambiaría un borrador Markdown abierto: se rearma sólo al pulsar «Actualizar historia».
+    if (!markdownForm.hidden) {
+      conflict = true; updateControls();
+      notice(message, 'La historia cambió en otra operación. Pulsa «Actualizar historia»: tu borrador Markdown se conserva y se combina con la versión actual.', 'warning');
+    } else await loadHistory();
   });
+  document.addEventListener('index-sync-changed', event => { if (event.detail.patient_id === patient?.id) syncStatus(); });
   return {open};
 }

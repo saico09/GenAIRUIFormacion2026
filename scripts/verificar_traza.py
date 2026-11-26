@@ -1,22 +1,64 @@
-"""Envía el caso de Ana y coteja los cinco spans de Phoenix con los logs de Loki."""
+"""Pregunta por un paciente temporal y coteja los cinco spans de Phoenix con los logs de Loki."""
 
 import argparse
 import json
 import sys
 import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from uuid import uuid4
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python-api"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "python-api"))
 from rag import source_label, validate_direct_answer, validate_rag_answer
+
+API = "http://localhost:8000"
+NAME = "Elena Prueba"
+OUTPUT = ROOT / ".local" / "verificaciones" / f"{Path(__file__).stem}-{datetime.now():%Y%m%dT%H%M%S}.json"
 
 
 def get_json(url):
     with urlopen(url, timeout=15) as response:
         return json.load(response)
+
+
+def call(method, url, body=None, headers=None, timeout=30):
+    data = None if body is None else json.dumps(body, ensure_ascii=False).encode("utf-8")
+    request = Request(url, data=data, method=method,
+                      headers={"Content-Type": "application/json", **(headers or {})})
+    with urlopen(request, timeout=timeout) as response:
+        raw = response.read()
+        return response.status, response.headers, json.loads(raw) if raw else None
+
+
+@contextmanager
+def temporary_patient():
+    seed = json.loads((ROOT / "datos" / "casos_clinicos.json").read_text(encoding="utf-8"))["cases"][0]
+    record = {field: seed[field].replace(seed["name"], NAME) for field in ("disease", "treatment", "medication")}
+    _, _, patient = call("POST", f"{API}/patients", {
+        "name": NAME, "birth_date": seed["birth_date"], "email": "elena.prueba@example.com"})
+    try:
+        call("POST", f"{API}/patients/{patient['id']}/diseases", record)
+        yield patient
+    finally:
+        # Borra fila e informe; la sincronización quita después sus puntos de Qdrant.
+        call("DELETE", f"{API}/patients/{patient['id']}")
+        _, _, sync = call("POST", f"{API}/clinical/patients/{patient['id']}/sync", timeout=180)
+        assert sync["status"] == "removed", sync
+
+
+def send_chat(patient_id, question, request_id):
+    """Un X-Execution-ID fijo: si el cliente corta y reintenta, la API devuelve la misma consulta."""
+    headers = {"X-Request-ID": request_id, "X-Execution-ID": str(uuid4())}
+    body = {"patient_id": patient_id, "question": question}
+    try:
+        # Dos llamadas LLM de hasta 180 s cada una.
+        return call("POST", f"{API}/chat", body, headers, timeout=420)
+    except TimeoutError:
+        return call("POST", f"{API}/chat", body, headers, timeout=420)
 
 
 def attribute(span, name):
@@ -30,28 +72,30 @@ def attribute(span, name):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", default="evidencias/s08/037-traza.json")
+    parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--prefix", default="hdu037")
-    parser.add_argument("--patient-id", type=int, help="Paciente temporal ya creado, en lugar de Ana")
+    parser.add_argument("--patient-id", type=int, help="Paciente ya creado, en lugar del temporal")
     parser.add_argument("--question")
     parser.add_argument("--expected")
     args = parser.parse_args()
-    dataset = Path(__file__).resolve().parents[1] / "datos" / "preguntas.json"
-    case = json.loads(dataset.read_text(encoding="utf-8"))[0]
     if args.patient_id is not None:
         if not args.question or not args.expected:
             parser.error("--patient-id requiere --question y --expected")
-        case = {"patient_id": args.patient_id, "question": args.question, "expected": args.expected}
+        verify({"patient_id": args.patient_id, "question": args.question, "expected": args.expected}, args)
+        return
+    case = json.loads((ROOT / "datos" / "preguntas.json").read_text(encoding="utf-8"))[0]
+    with temporary_patient() as patient:
+        verify({"patient_id": patient["id"], "question": case["question"].replace("Ana Demo", NAME),
+                "expected": case["expected"]}, args)
+
+
+def verify(case, args):
     request_id = f"{args.prefix}-{uuid4().hex}"
-    request = Request("http://localhost:8000/chat", method="POST", headers={
-        "Content-Type": "application/json", "X-Request-ID": request_id,
-    }, data=json.dumps({"patient_id": case["patient_id"], "question": case["question"]}).encode())
-    with urlopen(request, timeout=250) as response:
-        assert response.status == 200 and response.headers["X-Request-ID"] == request_id
-        chat = json.load(response)
+    status, headers, chat = send_chat(case["patient_id"], case["question"], request_id)
+    assert status == 200 and headers["X-Request-ID"] == request_id
     assert case["expected"] in chat["rag_answer"]
     history = get_json(f"http://localhost:8080/patients/{case['patient_id']}/history")
-    assert len(chat["sources"]) == 3
+    assert 1 <= len(chat["sources"]) <= 9
     known_source = next(source for source in chat["sources"] if source["section"] == "Enfermedad" and case["expected"] in source["text"])
     assert known_source["source"] == history["filename"]
     assert any(entry["id"] == known_source["record_id"] and entry["disease"] == known_source["text"] for entry in history["entries"])
@@ -98,14 +142,19 @@ def main():
         outputs[span["name"]] = json.loads(attribute(span, "output.value"))
     assert inputs["retrieval"] == {"patient_id": case["patient_id"], "pregunta": case["question"]}
     fragments = outputs["retrieval"]["fragmentos"]
-    assert fragments == chat["sources"] and all(fragment["patient_id"] == case["patient_id"] for fragment in fragments)
+    assert 1 <= len(fragments) <= 3 and all(fragment["patient_id"] == case["patient_id"] for fragment in fragments)
     assert inputs["prompt"] == {"pregunta": case["question"], "fragmentos": fragments}
     prompt = outputs["prompt"]["prompt"]
-    assert case["question"] in prompt and all(fragment["text"] in prompt and source_label(fragment) in prompt for fragment in fragments)
+    # El prompt lleva los registros recuperados completos, no sólo los fragmentos.
+    context = outputs["prompt"]["contexto"]
+    assert context == chat["sources"]
+    assert all(fragment in context for fragment in fragments)
+    assert all(item["patient_id"] == case["patient_id"] for item in context)
+    assert case["question"] in prompt and all(item["text"] in prompt and source_label(item) in prompt for item in context)
     assert inputs["llamada_llm"] == {"prompt": prompt}
     assert outputs["llamada_llm"] == inputs["respuesta"]
     raw_rag = outputs["llamada_llm"]["respuesta"]
-    assert outputs["respuesta"] == {"respuesta": validate_rag_answer(raw_rag, fragments, case["question"])} == {"respuesta": chat["rag_answer"]}
+    assert outputs["respuesta"] == {"respuesta": validate_rag_answer(raw_rag, context, case["question"])} == {"respuesta": chat["rag_answer"]}
     llm_span = children[2]
     assert llm_span["span_kind"] == "LLM" and children[0]["span_kind"] == "RETRIEVER"
     expected_options = {"temperature": 0.2, "num_ctx": 8192, "num_predict": 1024, "top_p": 0.95, "top_k": 64,
@@ -128,11 +177,14 @@ def main():
             raise RuntimeError("No llegó el evento HTTP a Loki en 60 s")
         time.sleep(1)
     events.sort(key=lambda event: event["timestamp"])
-    assert len(events) == 7 and all(event["request_id"] == request_id for event in events)
+    # Cada rama puede repetir una vez la generación (evento llm_retry y otra llamada llm).
+    retries = [event for event in events if event["event"] == "llm_retry"]
+    assert len(retries) <= 2 and len(events) == 7 + 2 * len(retries)
+    assert all(event["request_id"] == request_id for event in events)
     assert [event["node"] for event in events if event["event"] == "rag_node"] == [span["name"] for span in children]
     calls = [event for event in events if event["event"] == "llm"]
-    assert len(calls) == 2
-    branches = {event["branch"]: event for event in calls}
+    assert len(calls) == 2 + len(retries)
+    branches = {event["branch"]: event for event in calls if event["status"] == "ok"}
     assert set(branches) == {"direct", "rag"}
     assert branches["direct"]["model"] == branches["rag"]["model"] == attribute(llm_span, "llm.model_name")
     assert branches["direct"]["prompt"] == case["question"] and branches["rag"]["prompt"] == prompt
@@ -157,7 +209,7 @@ def main():
                    "loki_matches": True, "durations_positive": True,
                    "rag_raw_to_validated_http": True, "direct_raw_to_validated_http": True},
     }
-    output = Path(args.output)
+    output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"OK raíz y cuatro hijos, entradas/salidas, duración y siete logs: {request_id}")

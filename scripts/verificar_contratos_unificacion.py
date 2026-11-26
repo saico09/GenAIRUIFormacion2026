@@ -40,7 +40,9 @@ def equal(actual, expected):
 case("campos_vacios", lambda: expect_invalid(lambda: DiseaseIn(disease="", treatment=" ", medication="No registrado.")))
 case("control_en_campo", lambda: expect_invalid(lambda: DiseaseIn(disease="dolor\x00", treatment="", medication="")))
 case("encabezado_en_campo", lambda: expect_invalid(lambda: DiseaseIn(disease="x\n### Consulta", treatment="", medication="")))
-case("limite_utf16", lambda: expect_invalid(lambda: DiseaseIn(disease="😀" * 1001, treatment="", medication="")))
+# 2000 puntos de código, como Java: un emoji cuenta 1, no 2 unidades UTF-16.
+case("limite_puntos_codigo", lambda: (equal(len(DiseaseIn(disease="😀" * 2000, treatment="", medication="").disease), 2000),
+                                      expect_invalid(lambda: DiseaseIn(disease="😀" * 2001, treatment="", medication=""))))
 case("nombre_invalido", lambda: expect_invalid(lambda: PatientIn(name="Ana\nDemo", birth_date="2000-01-01", email="a@example.com")))
 case("normalizar_campo", lambda: equal(DiseaseIn(disease="  Dolor\r\nleve ", treatment="No registrado.", medication="").model_dump(),
                                        {"disease": "Dolor\nleve", "treatment": "", "medication": ""}))

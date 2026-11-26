@@ -57,12 +57,12 @@ def initialize_database(*, timeout_seconds: float = 120) -> None:
 
         attempts += 1
         try:
-            # Mismo SQL que Spring: migra volúmenes anteriores y crea una base
-            # vacía. La transacción y sus locks se conservan hasta completar DDL.
+            # Mismo SQL que Spring: sólo crea lo que falte (nunca migra ni borra datos).
+            # La transacción y su lock serializan el arranque simultáneo de ambas APIs.
             with engine.begin() as connection:
                 source = Path(__file__).with_name("schema.sql").read_text(encoding="utf-8")
                 sql = "\n".join(line for line in source.splitlines() if line.strip() not in {"BEGIN;", "COMMIT;"})
-                # El SQL contiene format('%s', ...): no son placeholders del driver.
+                # El SQL se envía tal cual: un '%' nunca es placeholder del driver.
                 connection.exec_driver_sql(sql, execution_options={"no_parameters": True})
         except OperationalError as error:
             sqlstate = getattr(error.orig, "sqlstate", None)

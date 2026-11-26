@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 STATIC = ROOT / 'python-api/app/static'
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--output',type=Path,default=ROOT/'.local/verificaciones/assets-http.json')
+parser.add_argument('--output',type=Path,default=ROOT/'.local/verificaciones'/f"{Path(__file__).stem}-{datetime.now():%Y%m%dT%H%M%S}.json")
 args=parser.parse_args()
 
 def sha(data):
