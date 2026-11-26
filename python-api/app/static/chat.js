@@ -1,4 +1,5 @@
 import {request, errorMessage, notice, newId, syncIndex, indexError, indexSyncing, setIndexState} from './api.js';
+import {renderAnswer} from './answer-view.js';
 
 // El peor caso del servidor (dos generaciones y el índice) supera los 7 minutos; «Cancelar» corta antes.
 const CHAT_TIMEOUT = 900000;
@@ -94,6 +95,7 @@ export function initChat(javaBase) {
     for (const id of ['direct', 'rag']) {
       const area = document.getElementById(id);
       area.textContent = 'Esperando la respuesta de esta consulta…';
+      area.classList.remove('formatted-answer');
       area.classList.add('empty-answer');
     }
     document.querySelector('#sources').replaceChildren();
@@ -108,7 +110,7 @@ export function initChat(javaBase) {
       if (!result.ok) throw new Error(errorMessage(result));
       const data = result.data;
       for (const [id, text] of [['direct', data.direct_answer], ['rag', data.rag_answer]]) {
-        document.getElementById(id).textContent = text;
+        renderAnswer(document.getElementById(id), text);
         document.getElementById(id).classList.remove('empty-answer');
       }
       document.querySelector('#used-question').textContent = `Paciente consultado: ${sentPatientName}. Consulta enviada: ${sentQuestion}`;

@@ -35,7 +35,8 @@ class ChatOrderTests(unittest.TestCase):
         def run_direct(*args, **kwargs):
             self.steps.append("direct")
             return json.dumps({"mode": "symptom_guidance", "guidance": {
-                "possibilities": [{"cause": "posibilidad de prueba", "evidence": [self.body.question.strip()], "condition": None}],
+                "possibilities": [{"cause": "posibilidad de prueba", "evidence": [self.body.question.strip()], "condition": None},
+                                  {"cause": "alternativa de prueba", "evidence": [self.body.question.strip()], "condition": None}],
                 "optional_details": ["localización", "duración"], "current_alert": None}})
 
         def save(patient_id, execution_id, question, result, model):
@@ -81,10 +82,12 @@ class ChatOrderTests(unittest.TestCase):
         retrieved = [disease, treatment, note]
         context = [disease, treatment, medication, note]
         self.body = main.ChatIn(patient_id=71, question="Tengo acidez al comer.")
-        guide = {"possibilities": [{"cause": "posibilidad de prueba", "evidence": ["acidez al comer"], "condition": None}],
+        guide = {"possibilities": [{"cause": "posibilidad de prueba", "evidence": ["acidez al comer"], "condition": None},
+                                   {"cause": "alternativa de prueba", "evidence": ["acidez al comer"], "condition": None}],
                  "optional_details": ["duración", "localización"], "current_alert": None}
         rag_answer = validate_rag_answer(json.dumps({"mode": "symptom_guidance", "guidance": guide,
-            "missing_information": False, "facts": [{"source": source_label(medication), "quote": medication["text"]}],
+            "missing_information": False, "facts": [{"source": source_label(medication), "quote": medication["text"],
+                "symptom": "acidez al comer", "cause_index": 0}],
             "questions": []}), context, self.body.question)
         self.graph.invoke.side_effect = None
         self.graph.invoke.return_value = {"fragmentos": retrieved, "contexto": context, "respuesta": rag_answer}
@@ -139,7 +142,11 @@ class ChatOrderTests(unittest.TestCase):
         result = main.chat(self.body, self.request)
         self.assertEqual(self.steps, ["rag", "direct-invalid", "direct", "save", "index"])
         self.assertEqual(self.direct.call_count, 2)
-        self.assertEqual(self.direct.call_args_list[0], self.direct.call_args_list[1])
+        initial, retry = self.direct.call_args_list
+        self.assertEqual(initial.args, retry.args)
+        self.assertEqual(initial.kwargs["schema"], retry.kwargs["schema"])
+        self.assertTrue(retry.kwargs["system"].startswith(initial.kwargs["system"]))
+        self.assertIn("Formato de orientación inválido", retry.kwargs["system"])
         self.assertIn("posibilidad de prueba", result["direct_answer"])
 
     def test_conflicting_execution_id_does_not_generate_or_overwrite(self):

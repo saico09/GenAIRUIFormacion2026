@@ -166,14 +166,20 @@ class RagNodeRetryTests(unittest.TestCase):
         self.state = {"pregunta": "dolor de estómago", "patient_id": 1, "request_id": "request-qa",
                       "contexto": [fragment("Enfermedad", "ERGE")], "prompt": "PROMPT"}
         self.valid = json.dumps({"mode": "symptom_guidance", "missing_information": False, "facts": [], "questions": [],
-                                 "guidance": {"possibilities": [{"cause": "gastritis", "evidence": ["dolor de estómago"], "condition": None}],
+                                 "guidance": {"possibilities": [{"cause": "gastritis", "evidence": ["dolor de estómago"], "condition": None},
+                                                               {"cause": "dispepsia", "evidence": ["dolor de estómago"], "condition": None}],
                                               "optional_details": ["desde cuándo", "qué comió"], "current_alert": None}})
 
     def test_invalid_rag_output_gets_one_more_attempt_with_the_same_prompt(self):
         with patch.object(grafo, "llamar_llm", side_effect=["{no es JSON", self.valid]) as llm:
             self.assertEqual(grafo.llamada_llm(self.state), {"respuesta": self.valid})
         self.assertEqual(llm.call_count, 2)
-        self.assertEqual(llm.call_args_list[0], llm.call_args_list[1])
+        initial, retry = llm.call_args_list
+        self.assertEqual(initial.args, retry.args)
+        self.assertEqual(initial.kwargs["schema"], retry.kwargs["schema"])
+        self.assertEqual(initial.kwargs["branch"], retry.kwargs["branch"])
+        self.assertTrue(retry.kwargs["system"].startswith(initial.kwargs["system"]))
+        self.assertIn("Expecting property name", retry.kwargs["system"])
         answer = grafo.respuesta({**self.state, "respuesta": self.valid})["respuesta"]
         self.assertIn("gastritis", answer)
         self.assertNotIn("si además hubiera dolor de estómago", answer)
@@ -183,6 +189,25 @@ class RagNodeRetryTests(unittest.TestCase):
         with patch.object(grafo, "llamar_llm", return_value="{no es JSON") as llm, self.assertRaises(ValueError):
             grafo.llamada_llm(self.state)
         self.assertEqual(llm.call_count, 2)
+
+    def test_previous_symptom_lookup_uses_documentary_system_including_its_retry(self):
+        from rag import DOCUMENTARY_SYSTEM, source_label
+        source = fragment("Consulta", "Relató acidez después del café.", record="consulta-anterior")
+        state = {**self.state, "pregunta": "¿Qué síntomas relató Ana Demo en su consulta anterior?",
+                 "contexto": [source]}
+        valid = json.dumps({"mode": "record_lookup", "missing_information": False, "guidance": None,
+                            "facts": [{"source": source_label(source), "quote": source["text"]}], "questions": []})
+        with patch.object(grafo, "llamar_llm", side_effect=["{mal formado", valid]) as llm:
+            self.assertEqual(grafo.llamada_llm(state), {"respuesta": valid})
+        initial, retry = llm.call_args_list
+        self.assertEqual(initial.kwargs["schema"]["properties"]["mode"]["enum"], ["record_lookup"])
+        self.assertEqual(initial.kwargs["system"], DOCUMENTARY_SYSTEM)
+        self.assertTrue(retry.kwargs["system"].startswith(DOCUMENTARY_SYSTEM))
+        self.assertEqual(initial.kwargs["schema"], retry.kwargs["schema"])
+        self.assertEqual(initial.args, retry.args)
+        shown = grafo.respuesta({**state, "respuesta": valid})["respuesta"]
+        self.assertIn(source["text"], shown)
+        self.assertNotIn("Diagnóstico orientativo", shown)
 
 
 if __name__ == "__main__":

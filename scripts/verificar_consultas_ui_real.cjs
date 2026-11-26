@@ -6,11 +6,15 @@ const {randomUUID, createHash} = require('node:crypto');
 const {chromium} = require('playwright');
 const base = process.env.PYTHON_URL || 'http://localhost:8000';
 const java = process.env.JAVA_URL || 'http://localhost:8080';
-const expectedModel = process.env.EXPECTED_CHAT_MODEL || 'qwen3.5:4b-q4_K_M';
+const expectedModel = process.env.EXPECTED_CHAT_MODEL || 'qwen3.5:9b-q4_K_M';
 const stamp = new Date().toLocaleString('sv-SE').replace(/[-:]/g, '').replace(' ', 'T');
 const output = path.resolve(process.env.EVIDENCE_DIR || path.join(__dirname, `../.local/verificaciones/verificar_consultas_ui_real-${stamp}`));
 const report = {mode: 'real_browser_real_apis_real_llm', mocks: false, started_at: new Date().toISOString(), checks: []};
 const check = name => {report.checks.push({name, passed: true}); console.log(`PASS ${name}`);};
+// El DOM conserva el texto y representa los marcadores de negrita con <strong>.
+const visibleAnswer = text => text
+  .replace(/(?:^|\r?\n)Para completar la orientación(?=\s*(?:Respuesta generada por un chatbot|$))/g, '')
+  .replace(/\*\*([^*\n]+)\*\*/g, '$1').replace(/\s+/g, ' ').trim();
 async function api(url, options = {}) {
   const response = await fetch(url, {...options, signal: AbortSignal.timeout(420000)});
   const text = await response.text();
@@ -55,8 +59,8 @@ async function main() {
     assert.match(data.rag_answer, /Diagnóstico orientativo \(sin confirmar\)/);
     assert.doesNotMatch(data.direct_answer, /[¿?]/);
     assert.doesNotMatch(data.rag_answer, /[¿?]/);
-    assert.equal(await page.locator('#direct').textContent(), data.direct_answer);
-    assert.equal(await page.locator('#rag').textContent(), data.rag_answer);
+    assert.equal(visibleAnswer(await page.locator('#direct').innerText()), visibleAnswer(data.direct_answer));
+    assert.equal(visibleAnswer(await page.locator('#rag').innerText()), visibleAnswer(data.rag_answer));
     await page.screenshot({path: path.join(output, 'comparacion-guardada.png'), fullPage: true});
     assert.match(await page.locator('#chat-save-status').textContent(), /guardada.*PostgreSQL/);
     const saved = await api(`${java}/patients/${patient.id}/history`); assert.equal(saved.status, 200);
@@ -72,7 +76,7 @@ async function main() {
     assert.equal(await page.locator('#history-patient-name').textContent(), patient.name);
     assert.equal(await page.locator('#consultations-body tr').count(), 1); assert.equal(await page.locator('#history-body tr').count(), 0);
     await page.locator('.saved-consultation summary').click();
-    assert.equal((await page.locator('.saved-answer').allTextContents())[1], data.rag_answer);
+    assert.equal(visibleAnswer((await page.locator('.saved-answer').allInnerTexts())[1]), visibleAnswer(data.rag_answer));
     await page.screenshot({path: path.join(output, 'consulta-guardada.png'), fullPage: true});
     await page.reload();
     await page.getByRole('button', {name: `Abrir historia de ${patient.name}`}).click();

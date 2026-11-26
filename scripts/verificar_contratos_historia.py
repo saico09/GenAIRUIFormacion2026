@@ -21,7 +21,8 @@ USER_SECOND = USER_FIRST + "no siente dolor en el pecho, se siente mejor al esta
 
 
 def guidance(evidence="dolor de estómago"):
-    return {"possibilities": [{"cause": "dispepsia", "evidence": [evidence], "condition": None}],
+    return {"possibilities": [{"cause": "dispepsia", "evidence": [evidence], "condition": None},
+                              {"cause": "otra causa", "evidence": [evidence], "condition": None}],
             "optional_details": ["localización", "duración"], "current_alert": None}
 
 
@@ -409,11 +410,8 @@ class OfflineContracts(unittest.TestCase):
         raw = json.dumps({"mode": "symptom_guidance", "missing_information": True,
                           "facts": [{"source": source_label(sources[0]), "quote": "Diagnóstico inventado"}],
                           "guidance": guidance("dolor de cabeza"), "questions": []})
-        rendered = validate_rag_answer(raw, sources, "dolor de cabeza")
-        self.assertIn("Diagnóstico orientativo (sin confirmar)", rendered)
-        self.assertNotIn("Diagnóstico inventado", rendered)
-        self.assertNotIn("archivo-inventado", rendered)
-        self.assertIn("sin relación confirmada", rendered)
+        with self.assertRaises(ValueError):
+            validate_rag_answer(raw, sources, "dolor de cabeza")
 
     def test_symptom_history_does_not_quote_prior_documentary_questions(self):
         notes = ["Resume la enfermedad y el tratamiento", "¿Qué cirugía tiene?", "dolor de cabeza desde ayer"]

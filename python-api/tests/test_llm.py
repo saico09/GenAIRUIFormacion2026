@@ -222,6 +222,38 @@ class RetryTests(unittest.TestCase):
         incomplete = Mock(side_effect=[llm.LLMInvalidOutput("LLM no disponible"), "ok"])
         self.assertEqual(llm.con_un_reintento(incomplete, lambda raw: raw, branch="rag"), "ok")
 
+    def test_optional_correction_gets_the_invalid_response_and_specific_error(self):
+        generate = Mock(return_value="bad JSON")
+        correct = Mock(return_value='{"ok": true}')
+        self.assertEqual(llm.con_un_reintento(generate, json.loads, branch="rag", corregir=correct), {"ok": True})
+        generate.assert_called_once_with()
+        self.assertEqual(correct.call_args.args[0], "bad JSON")
+        self.assertIsInstance(correct.call_args.args[1], ValueError)
+        self.assertEqual(correct.call_count, 1)
+        with self.assertRaises(ValueError):
+            llm.con_un_reintento(generate, json.loads, branch="rag", corregir=Mock(return_value="still bad"))
+
+    def test_correction_receives_no_raw_output_after_truncation_and_skips_transport_errors(self):
+        correct = Mock(return_value="ok")
+        incomplete = Mock(side_effect=llm.LLMInvalidOutput("truncated"))
+        self.assertEqual(llm.con_un_reintento(incomplete, str, branch="rag", corregir=correct), "ok")
+        self.assertIsNone(correct.call_args.args[0])
+        correct.reset_mock()
+        with self.assertRaises(llm.LLMUnavailable):
+            llm.con_un_reintento(Mock(side_effect=llm.LLMUnavailable("offline")), str, branch="rag", corregir=correct)
+        correct.assert_not_called()
+
+    def test_correction_system_unwraps_validation_error_and_bounds_previous_output(self):
+        inner = ValueError("La condición repite un dato negado")
+        outer = ValueError("Respuesta RAG con formato inválido")
+        outer.__cause__ = inner
+        system = llm.sistema_de_correccion("REGLAS", "x" * 5000, outer)
+        self.assertTrue(system.startswith("REGLAS\n"))
+        self.assertIn(str(inner), system)
+        self.assertNotIn(str(outer), system)
+        feedback = json.loads(system.rsplit("\n", 1)[1])
+        self.assertEqual(len(feedback["salida_anterior"]), 4000)
+
 
 if __name__ == "__main__":
     unittest.main()

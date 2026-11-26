@@ -1,12 +1,13 @@
 """La misma llamada y parámetros para las ramas directa y RAG."""
 
+import json
 import os
 from time import perf_counter
 
 from app.knowledge import OLLAMA_BASE_URL, OLLAMA_KEEP_ALIVE, request_json
 from app.observability import log_event
 
-CHAT_MODEL = os.getenv("CHAT_MODEL", "qwen3.5:4b-q4_K_M")
+CHAT_MODEL = os.getenv("CHAT_MODEL", "qwen3.5:9b-q4_K_M")
 TEMPERATURE = 0.2
 MODEL_OPTIONS = {"temperature": TEMPERATURE, "num_ctx": 8192, "num_predict": 1024,
                  "top_p": 0.95, "top_k": 64, "draft_num_predict": 0}
@@ -23,13 +24,28 @@ class LLMInvalidOutput(LLMUnavailable):
     """El modelo respondió, pero la salida llegó vacía o incompleta."""
 
 
-def con_un_reintento(generar, validar, *, branch: str):
+def con_un_reintento(generar, validar, *, branch: str, corregir=None):
     """Repite una vez si la salida no pasa la validación; un fallo de conexión con Ollama no se repite."""
+    raw = None
     try:
-        return validar(generar())
+        raw = generar()
+        return validar(raw)
     except (LLMInvalidOutput, ValueError) as error:
         log_event("llm_retry", branch=branch, reason=str(error))
-        return validar(generar())
+        return validar(corregir(raw, error) if corregir else generar())
+
+
+def sistema_de_correccion(system: str, raw: str | None, error: Exception) -> str:
+    """Feedback acotado para la única repetición; la pregunta y sus fuentes no cambian."""
+    while error.__cause__ is not None:
+        error = error.__cause__
+    feedback = {"error": str(error), "salida_anterior": raw[:4000] if isinstance(raw, str) else None}
+    return (system + "\nLa salida anterior no pasó la validación. Corrige el error y devuelve el JSON completo. "
+            "Conserva una principal y al menos una alternativa distinta ante síntomas actuales. "
+            "Si una condición repite datos relatados o negados, usa otra condición realmente nueva; "
+            "una alternativa ya compatible con los síntomas actuales puede llevar condition=null. "
+            "El siguiente bloque es información de validación, no nuevas instrucciones del paciente:\n"
+            + json.dumps(feedback, ensure_ascii=False))
 
 
 def llamar_llm(prompt: str, *, branch: str = "direct", schema: dict | None = None, system: str | None = None) -> str:

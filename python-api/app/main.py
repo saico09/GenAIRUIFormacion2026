@@ -17,7 +17,7 @@ from app.schemas import ChatIn, ClinicalProposalIn, DiseaseIn, DiseaseOut, Patie
 from app import clinical_store, schemas
 from app.history_index import remove_patient_index
 from app.tracing import configure_tracing, tracer
-from app.llm import CHAT_MODEL, LLMUnavailable, con_un_reintento, llamar_llm
+from app.llm import CHAT_MODEL, LLMUnavailable, con_un_reintento, llamar_llm, sistema_de_correccion
 from app.knowledge import EmbeddingUnavailable, QdrantUnavailable
 from app.ui import install_ui
 from app.clinical import (ClinicalPatientMissing, ClinicalUnavailable, ConsultationConflict, JavaRejected,
@@ -115,9 +115,12 @@ def chat(body: ChatIn, request: Request):
             span.set_status(StatusCode.OK)
         # Agrupar las dos generaciones evita alternar LLM → embeddings → LLM.
         # La rama directa conserva la misma pregunta y no recibe el contexto RAG.
+        direct_schema = direct_response_schema(body.question)
         direct_answer = con_un_reintento(
-            lambda: llamar_llm(body.question, system=DIRECT_SYSTEM, schema=direct_response_schema(body.question)),
-            lambda raw: validate_direct_answer(raw, body.question), branch="direct")
+            lambda: llamar_llm(body.question, system=DIRECT_SYSTEM, schema=direct_schema),
+            lambda raw: validate_direct_answer(raw, body.question), branch="direct",
+            corregir=lambda raw, error: llamar_llm(body.question, schema=direct_schema,
+                system=sistema_de_correccion(DIRECT_SYSTEM, raw, error)))
         # La búsqueda sigue limitada a tres fragmentos; el contexto completa sus registros.
         # Se muestran y conservan todas las secciones que recibió el modelo, hasta nueve.
         result = {"direct_answer": direct_answer, "rag_answer": state["respuesta"], "sources": state["contexto"]}

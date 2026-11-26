@@ -122,6 +122,8 @@ class DocumentaryGroundingTests(unittest.TestCase):
 class OptionalDetailTests(unittest.TestCase):
     def render(self, question, details):
         return render_orientation({"possibilities": [{"cause": "causa de ejemplo", "evidence": [question],
+                                                       "condition": None},
+                                                      {"cause": "otra causa de ejemplo", "evidence": [question],
                                                        "condition": None}],
                                    "optional_details": details, "current_alert": None}, question)
 

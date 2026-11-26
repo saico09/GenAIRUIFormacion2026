@@ -292,7 +292,7 @@ async function main() {
       chatStarted.resolve(); await releaseChat.promise;
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
         direct_answer: 'Respuesta simulada para comprobar la interfaz.',
-        rag_answer: `${mockSources[0].text} [${mockSources[0].source}/${mockSources[0].record_id}/${mockSources[0].section}]`,
+        rag_answer: `Diagnóstico orientativo (sin confirmar)\nRespuesta simulada.\n\nAntecedentes relacionados\n**${mockSources[0].text}**\nFuente: ${mockSources[0].source}/${mockSources[0].record_id}/${mockSources[0].section}\n\nOtras posibles causas\nAlternativa simulada para comprobar la presentación.`,
         sources: mockSources,
       }) });
     };
@@ -312,6 +312,8 @@ async function main() {
     await page.waitForFunction(() => !document.querySelector('#submit').disabled);
     assert.match(await page.locator('#direct').textContent(), /simulada/);
     assert.ok((await page.locator('#rag').textContent()).includes(mockSources[0].text));
+    assert.equal(await page.locator('#rag .answer-related strong').textContent(), mockSources[0].text);
+    assert.match(await page.locator('#rag .answer-alternatives').textContent(), /Alternativa simulada/);
     assert.deepEqual(await page.locator('#sources summary').allTextContents(), mockSources.map(source => `${source.source} / ${source.section} · ${source.section === 'Consulta' ? 'Consulta reportada' : 'Registro confirmado'} ${source.record_id}`));
     assert.deepEqual(await page.locator('#sources .source-fragment').allTextContents(), mockSources.map(source => source.text));
     assert.match(await page.locator('#used-question').textContent(), /¿Qué enfermedad tiene Ana Demo\?/);

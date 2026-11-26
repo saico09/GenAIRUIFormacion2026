@@ -207,7 +207,7 @@ def orientation_schema(question: str = "") -> dict:
     text = {"type": "string", "minLength": 1}
     quotes = _candidate_quotes(question, short=True)
     return {"type": "object", "properties": {
-        "possibilities": {"type": "array", "minItems": int(bool(quotes)), "maxItems": 3 if quotes else 0, "items": {
+        "possibilities": {"type": "array", "minItems": 2 if quotes else 0, "maxItems": 3 if quotes else 0, "items": {
             "type": "object", "properties": {"cause": text,
                 "evidence": {"type": "array", "minItems": int(bool(quotes)), "maxItems": 3 if quotes else 0,
                              "items": {**text, "enum": quotes} if quotes else text},
@@ -257,8 +257,6 @@ def _render_possibility(possibility: dict, index: int, question: str) -> str:
         raise ValueError("La evidencia debe citar síntomas afirmados en el relato actual")
     if index == 0 and condition is not None:
         raise ValueError("La primera posibilidad debe apoyarse en síntomas presentes, sin condición adicional")
-    if index > 0 and condition is None:
-        raise ValueError("Una alternativa necesita una condición adicional no relatada")
     if condition is not None:
         condition = _phrase(condition, 220)
         # El renderer ya añade «si además hubiera»: retirar sólo ese inicio redundante del modelo.
@@ -269,18 +267,31 @@ def _render_possibility(possibility: dict, index: int, question: str) -> str:
         return f"Podría ser {cause} si además hubiera {condition}."
     if quotes:
         cited = ", ".join(f"«{quote}»" for quote in dict.fromkeys(quotes))
+        if index > 0:
+            return f"También podría ser {cause}, compatible con {cited}."
         return f"Por lo que describes ({cited}), la posibilidad principal es {cause}."
     raise ValueError("Una posibilidad requiere evidencia actual o una condición adicional")
 
 
-def render_orientation(value: dict, question: str, *, background: str = "") -> str:
+def related_cause(guidance: dict, index: int, question: str) -> str:
+    """Nombre de una hipótesis válida que el modelo vinculó con un antecedente citado."""
+    possibilities = guidance.get("possibilities") if isinstance(guidance, dict) else None
+    if (type(index) is not int or not isinstance(possibilities, list)
+            or not 0 <= index < min(len(possibilities), 3)):
+        raise ValueError("El antecedente debe referir a una posibilidad existente")
+    _render_possibility(possibilities[index], index, question)
+    return _phrase(possibilities[index]["cause"], 120)
+
+
+def render_orientation(value: dict, question: str, *, background: str = "", related: str = "") -> str:
     if not isinstance(value, dict) or set(value) != {"possibilities", "optional_details", "current_alert"}:
         raise ValueError("Formato de orientación inválido")
     possibilities, details = value["possibilities"], value["optional_details"]
     if not isinstance(possibilities, list) or len(possibilities) > 3:
         raise ValueError("La orientación admite hasta tres posibilidades")
-    if not possibilities and _candidate_quotes(question, short=True):
-        raise ValueError("Un relato actual afirmado requiere una posibilidad")
+    requires_causes = bool(_candidate_quotes(question, short=True))
+    if len(possibilities) < 2 and requires_causes:
+        raise ValueError("Un relato actual requiere una principal y al menos una causa alternativa")
     if not isinstance(details, list) or len(details) > 2:
         raise ValueError("Se admiten hasta dos detalles opcionales")
     parts = []
@@ -297,13 +308,29 @@ def render_orientation(value: dict, question: str, *, background: str = "") -> s
         parts.append(f"Busca atención urgente por lo que relatas: «{alert}».")
     if not possibilities:
         parts.append("No describes síntomas actuales afirmados para proponer una causa.")
+    rendered, causes, last_invalid = [], set(), None
     for index, possibility in enumerate(possibilities):
         try:
-            parts.append(_render_possibility(possibility, index, question))
+            text = _render_possibility(possibility, index, question)
+            cause = _plain(_phrase(possibility["cause"], 120))
+            if cause in causes:
+                raise ValueError("Las causas deben ser distintas")
+            rendered.append(text)
+            causes.add(cause)
         except ValueError as error:
             if index == 0:
                 raise
+            last_invalid = error
             LOGGER.warning("orientation_filtered field=possibilities index=%s reason=%s", index, error)
+    if requires_causes and len(rendered) < 2:
+        # El coordinador reintenta una vez: no entregar silenciosamente sólo la principal.
+        raise ValueError("No quedó una alternativa válida; requiere otra generación") from last_invalid
+    if rendered:
+        parts.append(rendered[0])
+    if related:
+        parts.append(related)
+    if len(rendered) > 1:
+        parts.append("Otras posibles causas\n" + "\n\n".join(rendered[1:]))
     if background:
         parts.append(background)
     # Un detalle escrito como pregunta («¿Desde cuándo?») se muestra como dato, sin abrir un cuestionario.
@@ -315,6 +342,7 @@ def render_orientation(value: dict, question: str, *, background: str = "") -> s
             available.append(phrase)
         else:
             LOGGER.warning("orientation_filtered field=optional_details index=%s reason=already_reported", index)
+    parts.append("Para completar la orientación")
     if available:
         parts.append("Para afinar la orientación, puedes añadir: " + "; ".join(available) + ".")
     parts.append(DISCLAIMER)

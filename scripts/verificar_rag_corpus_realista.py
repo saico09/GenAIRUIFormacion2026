@@ -77,7 +77,8 @@ class RealisticCorpusContracts(unittest.TestCase):
 
     def test_symptom_guidance_shows_each_demo_record_literally_when_not_cited(self):
         path = Path(__file__).resolve().parents[1] / "datos/casos_clinicos.json"
-        guidance = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None}],
+        guidance = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None},
+                                      {"cause": "posibilidad B", "evidence": ["dolor de estómago"], "condition": None}],
                     "optional_details": ["desde cuándo ocurre", "qué lo alivia"], "current_alert": None}
         for case in json.loads(path.read_text(encoding="utf-8"))["cases"]:
             sources = [{"source": f"paciente-{case['patient_id']}.md", "record_id": "record", "section": section,

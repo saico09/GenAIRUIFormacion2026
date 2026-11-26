@@ -6,10 +6,10 @@ from typing import NotRequired, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from app.knowledge import record_context, search_fragments
-from app.llm import CHAT_MODEL, MODEL_OPTIONS, THINK, con_un_reintento, llamar_llm
+from app.llm import CHAT_MODEL, MODEL_OPTIONS, THINK, con_un_reintento, llamar_llm, sistema_de_correccion
 from app.observability import log_event, request_id_context
 from app.tracing import trace_node
-from rag import RAG_SYSTEM, build_rag_prompt, rag_response_schema, validate_rag_answer
+from rag import build_rag_prompt, rag_response_schema, system_for_rag, validate_rag_answer
 
 
 class EstadoRag(TypedDict):
@@ -51,9 +51,11 @@ def llamada_llm(state: EstadoRag) -> dict:
     token = request_id_context.set(state["request_id"])
     try:
         schema = rag_response_schema(state["contexto"], state["pregunta"])
+        system = system_for_rag(schema)
         return {"respuesta": con_un_reintento(
-            lambda: llamar_llm(state["prompt"], branch="rag", schema=schema, system=RAG_SYSTEM),
-            comprobar, branch="rag")}
+            lambda: llamar_llm(state["prompt"], branch="rag", schema=schema, system=system),
+            comprobar, branch="rag", corregir=lambda raw, error: llamar_llm(state["prompt"], branch="rag", schema=schema,
+                system=sistema_de_correccion(system, raw, error)))}
     finally:
         request_id_context.reset(token)
 

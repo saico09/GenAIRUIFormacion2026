@@ -202,6 +202,18 @@ dialog label:not(:first-child) { margin-top: 17px; }
 .saved-consultation summary { cursor: pointer; color: var(--green); font-weight: 600; }
 .saved-consultation h3 { margin-top: 18px; }
 .saved-answer { padding: 14px; background: var(--soft); border-radius: 7px; }
+.formatted-answer { white-space: normal; }
+.formatted-answer > .answer-section, .formatted-answer > .answer-paragraph { margin-top: 18px; }
+.formatted-answer > :first-child { margin-top: 0; }
+.answer-section h3, .answer-section h4 { margin: 0 0 9px; font-size: 14px; line-height: 1.5; }
+.answer-paragraph { white-space: pre-wrap; }
+.answer-paragraph + .answer-paragraph { margin-top: 12px; }
+.answer-related { padding: 15px 17px; border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; background: #edf8f0; }
+.answer-related h3, .answer-related h4, .answer-related strong { color: #18583d; }
+.answer-background { padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; }
+.answer-source { margin: 6px 0 12px; font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.answer-alert { padding: 11px 13px; border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; background: #fff0f1; color: #97263a; font-weight: 600; }
+.answer-disclaimer { font-size: 12px; color: var(--muted); }
 #sources details { margin: 8px 0; }
 #sources summary { cursor: pointer; font-size: 12px; }
 .source-fragment { white-space: pre-wrap; color: var(--ink); background: var(--soft); padding: 12px; margin-top: 8px; border-radius: 6px; }

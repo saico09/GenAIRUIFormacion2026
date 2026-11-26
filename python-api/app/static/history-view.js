@@ -1,4 +1,5 @@
 import {fields} from './records.js';
+import {renderAnswer} from './answer-view.js';
 
 export function entryRows(entries, onEdit, onDelete) {
   return entries.map(entry => {
@@ -45,7 +46,8 @@ export function consultationRows(consultations) {
     }
     for (const [title, answer] of [['Sin RAG', consultation.direct_answer], ['Con RAG', consultation.rag_answer]]) {
       const heading = document.createElement('h3'); heading.textContent = title;
-      const text = document.createElement('p'); text.className = 'saved-answer'; text.textContent = answer || 'Sin respuesta registrada.';
+      const text = document.createElement('div'); text.className = 'saved-answer';
+      renderAnswer(text, answer, {saved: true});
       details.append(heading, text);
     }
     content.append(question, identifier, details); row.append(dateCell, content);

@@ -18,13 +18,15 @@ from jsonschema import Draft202012Validator
 from rag import (OUT_OF_SCOPE, direct_response_schema, rag_response_schema, source_label, validate_direct_answer,
                  validate_rag_answer)
 
-guide = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None}],
+guide = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None},
+                           {"cause": "posibilidad B", "evidence": ["dolor de estómago"], "condition": None}],
          "optional_details": ["ubicación", "duración"], "current_alert": None}
 
 
 def with_evidence(quote):
     value = deepcopy(guide)
-    value["possibilities"][0]["evidence"] = [quote]
+    for possibility in value["possibilities"]:
+        possibility["evidence"] = [quote]
     return value
 
 
@@ -43,13 +45,15 @@ for question in ("dolor de estómago", "Tengo dolor de estómago"):
                     ("free_narrative", {"mode": "symptom_guidance", "guidance": "texto libre", **extras}, False, False)]
         for name, change, schema_expected, runtime_expected in (
                 ("question_detail_shown_as_detail", {"optional_details": ["¿Dónde?", "duración"]}, True, True),
-                ("question_cause", {"possibilities": [{"cause": "¿gastritis?", "evidence": [question], "condition": None}]}, True, False),
+                ("question_cause", {"possibilities": [{"cause": "¿gastritis?", "evidence": [question], "condition": None},
+                                                       case_guide["possibilities"][1]]}, True, False),
                 ("control", {"optional_details": ["dato\notro", "duración"]}, True, False),
                 ("blank", {"optional_details": ["   ", "duración"]}, True, False),
                 ("variable_name", {"optional_details": ["frecuencia_dia", "duración"]}, True, False),
                 ("too_long", {"optional_details": ["x" * 121, "duración"]}, True, False),
                 ("no_causes", {"possibilities": []}, False, False),
-                ("four_causes", {"possibilities": case_guide["possibilities"] * 4}, False, False),
+                ("only_one_cause", {"possibilities": case_guide["possibilities"][:1]}, False, False),
+                ("four_causes", {"possibilities": case_guide["possibilities"] * 2}, False, False),
                 ("non_string", {"possibilities": [{"cause": 42, "evidence": [question], "condition": None}]}, False, False)):
             fixtures.append((name, {"mode": "symptom_guidance", "guidance": {**case_guide, **change}, **extras},
                              schema_expected, runtime_expected))
@@ -109,12 +113,13 @@ for branch in ("direct", "rag"):
         schema_valid = Draft202012Validator(schema).is_valid(value)
         cases.append({"branch": branch, "case": label, "schema_valid": schema_valid,
                       "runtime_valid": runtime_valid, "passed": schema_valid == runtime_valid == expected})
-# La orientación cita como máximo un antecedente; la consulta documental, hasta tres.
+# La orientación puede vincular hasta tres antecedentes; requiere síntoma y explicación.
 source = {"source": "paciente-1.md", "record_id": "r1", "section": "Enfermedad", "text": "Ana Demo tiene ERGE."}
 fact = {"source": source_label(source), "quote": "Ana Demo tiene ERGE."}
-for question, mode, guidance_value, expected in (("dolor de estómago", "symptom_guidance", guide, False),
+for question, mode, guidance_value, expected in (("dolor de estómago", "symptom_guidance", guide, True),
                                                  ("¿Qué enfermedad consta?", "record_lookup", None, True)):
-    value = {"mode": mode, "guidance": guidance_value, "missing_information": False, "facts": [fact, fact], "questions": []}
+    item = {**fact, "symptom": question, "cause_index": 0} if mode == "symptom_guidance" else fact
+    value = {"mode": mode, "guidance": guidance_value, "missing_information": False, "facts": [item, item], "questions": []}
     schema_valid = Draft202012Validator(rag_response_schema([source], question)).is_valid(value)
     cases.append({"branch": "rag", "case": f"two_facts_{mode}", "schema_valid": schema_valid, "passed": schema_valid == expected})
 for question, expected in (("¿Cuál es la capital de Francia?", True), ("dolor de estómago", False)):
