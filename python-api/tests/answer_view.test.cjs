@@ -125,3 +125,23 @@ test('omite los detalles vacíos y mantiene el aviso fuera, también en consulta
     assert.equal(target.children.length, 0);
   }
 });
+
+test('agrupa los campos relacionados y mantiene neutral el nuevo encabezado de otros antecedentes', async () => {
+  const render = await renderer();
+  const target = new Element('div');
+  render(target, 'Antecedentes relacionados\n**Antecedente seleccionado**\n'
+    + 'Datos registrados del mismo antecedente (11111111-1111-4111-8111-111111111111):\n'
+    + 'Enfermedad: Dato confirmado.\nTratamiento: Plan registrado.\nMedicamento: Fármaco registrado.\n'
+    + 'Fuente: paciente.md/11111111-1111-4111-8111-111111111111/Enfermedad\n\n'
+    + 'Otras posibles causas\nOtra hipótesis.\nQué la diferencia: Un criterio adicional.\n\n'
+    + 'Otros antecedentes recuperados\nDato de otro registro.\nAntecedentes relacionados\nTexto histórico incrustado.');
+  const nodes = descendants(target);
+  const related = nodes.filter(node => node.className.includes('answer-related'));
+  assert.equal(related.length, 1);
+  assert.match(related[0].textContent, /Enfermedad:.*Tratamiento:.*Medicamento:/s);
+  assert.doesNotMatch(related[0].textContent, /Dato de otro registro/);
+  assert.match(nodes.find(node => node.className.includes('answer-alternatives')).textContent, /Qué la diferencia/);
+  const neutral = nodes.find(node => node.className.includes('answer-background'));
+  assert.match(neutral.textContent, /^Otros antecedentes recuperados/);
+  assert.match(neutral.textContent, /Antecedentes relacionados\nTexto histórico incrustado/);
+});

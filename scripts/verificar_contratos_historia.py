@@ -21,8 +21,8 @@ USER_SECOND = USER_FIRST + "no siente dolor en el pecho, se siente mejor al esta
 
 
 def guidance(evidence="dolor de estómago"):
-    return {"possibilities": [{"cause": "dispepsia", "evidence": [evidence], "condition": None},
-                              {"cause": "otra causa", "evidence": [evidence], "condition": None}],
+    return {"possibilities": [{"cause": "dispepsia", "evidence": [evidence], "condition": None, "difference": None},
+                              {"cause": "otra causa", "evidence": [evidence], "condition": None, "difference": "Dato adicional que distingue esta alternativa de la principal"}],
             "optional_details": ["localización", "duración"], "current_alert": None}
 
 
@@ -279,7 +279,7 @@ class OfflineContracts(unittest.TestCase):
                 self.assertTrue(is_record_lookup(question))
                 self.assertIn("Fuente: " + source_label(sources[0]), validate_rag_answer(raw, sources, question))
 
-    def test_current_narratives_require_guidance_without_a_disease_classifier(self):
+    def test_retrieval_hints_do_not_force_the_models_response_mode(self):
         narratives = (USER_FIRST, USER_SECOND, "Desde ayer tengo diarrea y cólicos.",
                       "Hoy, me duele la cabeza.", "Actualmente el paciente refiere cansancio.",
                       "La paciente presenta tos, pero no tiene fiebre.", "Me siento mal.",
@@ -288,7 +288,10 @@ class OfflineContracts(unittest.TestCase):
             with self.subTest(question=question):
                 self.assertTrue(is_current_symptom_report(question))
                 self.assertFalse(is_record_lookup(question))
-                properties = rag_response_schema([], question)["properties"]
+                schema = rag_response_schema([], question)
+                self.assertEqual(schema_modes(schema), ["out_of_scope", "record_lookup", "symptom_guidance"])
+                properties = next(variant["properties"] for variant in schema_variants(schema)
+                                  if variant["properties"]["mode"]["enum"] == ["symptom_guidance"])
                 self.assertEqual(properties["mode"]["enum"], ["symptom_guidance"])
                 self.assertEqual(properties["guidance"]["type"], "object")
                 self.assertEqual(properties["guidance"]["required"], ["possibilities", "optional_details", "current_alert"])
@@ -333,10 +336,10 @@ class OfflineContracts(unittest.TestCase):
         self.assertEqual(schema_variants(schema)[0]["properties"]["facts"]["items"]["properties"]["source"]["enum"],
                          [source_label(source)])
         # Cambiar fuentes no decide si el texto actual relata síntomas.
-        self.assertEqual(rag_response_schema([source], USER_SECOND)["properties"]["mode"],
-                         rag_response_schema([], USER_SECOND)["properties"]["mode"])
+        self.assertEqual(schema_modes(rag_response_schema([source], USER_SECOND)),
+                         schema_modes(rag_response_schema([], USER_SECOND)))
 
-    def test_failed_record_lookup_replay_is_rejected_for_current_story_but_valid_for_history(self):
+    def test_model_selected_documentary_output_keeps_previous_notes_unconfirmed(self):
         # Reproduce la forma exacta del fallo HTTP: cita literal de la primera
         # consulta, pero modo documental y guidance vacío ante el segundo relato.
         source = {"source": FILENAME, "record_id": OTHER, "section": "Consulta",
@@ -344,14 +347,15 @@ class OfflineContracts(unittest.TestCase):
         payload = {"mode": "record_lookup", "missing_information": False, "guidance": "",
                    "facts": [{"source": source_label(source), "quote": USER_FIRST.strip()}], "questions": []}
         raw = json.dumps(payload)
-        self.assertNotIn(payload["mode"], rag_response_schema([source], USER_SECOND)["properties"]["mode"]["enum"])
-        with self.assertRaises(ValueError):
-            validate_rag_answer(raw, [source], USER_SECOND)
+        self.assertIn(payload["mode"], schema_modes(rag_response_schema([source], USER_SECOND)))
+        shown = validate_rag_answer(raw, [source], USER_SECOND)
+        self.assertIn("Relato registrado (sin diagnóstico confirmado)", shown)
+        self.assertNotIn("Diagnóstico orientativo", shown)
         historical = validate_rag_answer(raw, [source], "¿Qué síntomas relató en consultas anteriores?")
         self.assertIn("Relato registrado (sin diagnóstico confirmado): " + USER_FIRST.strip(), historical)
         self.assertIn("Fuente: " + source_label(source), historical)
         self.assertNotIn("Diagnóstico orientativo", historical)
-        # El guard no inventa orientación ni reinterpreta el JSON rechazado.
+        # La validez del formato no acredita que el modelo haya elegido la intención correcta.
         self.assertEqual(json.loads(raw), payload)
 
     def test_current_story_still_rejects_empty_or_oversized_guidance(self):

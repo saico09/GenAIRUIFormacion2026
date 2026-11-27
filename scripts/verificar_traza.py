@@ -157,8 +157,8 @@ def verify(case, args):
     assert outputs["respuesta"] == {"respuesta": validate_rag_answer(raw_rag, context, case["question"])} == {"respuesta": chat["rag_answer"]}
     llm_span = children[2]
     assert llm_span["span_kind"] == "LLM" and children[0]["span_kind"] == "RETRIEVER"
-    expected_options = {"temperature": 0.2, "num_ctx": 8192, "num_predict": 1024, "top_p": 0.95, "top_k": 64,
-                        "draft_num_predict": 0}
+    expected_options = {"temperature": 0.2, "num_ctx": 8192, "num_predict": 1536, "top_p": 0.9, "top_k": 20,
+                        "min_p": 0, "presence_penalty": 0, "repeat_penalty": 1, "draft_num_predict": 0}
     assert json.loads(attribute(llm_span, "llm.invocation_parameters")) == {**expected_options, "think": False}
 
     query = f'{{service="fastapi"}} | json | request_id="{request_id}"'

@@ -254,6 +254,36 @@ class RetryTests(unittest.TestCase):
         feedback = json.loads(system.rsplit("\n", 1)[1])
         self.assertEqual(len(feedback["salida_anterior"]), 4000)
 
+    def test_conditional_relationship_is_reconsidered_once_without_server_downgrade(self):
+        from rag import RAG_SYSTEM, source_label, validate_rag_answer
+        source = {"source": "paciente-demo.md", "record_id": "registro-qa", "section": "Enfermedad",
+                  "text": "Antecedente documentado."}
+        value = {"mode": "symptom_guidance", "missing_information": False, "questions": [],
+                 "facts": [{"source": source_label(source), "quote": source["text"], "symptom": "molestia", "cause_index": 1}],
+                 "guidance": {"possibilities": [
+                     {"cause": "posibilidad A", "evidence": ["molestia"], "condition": None, "difference": None},
+                     {"cause": "posibilidad B", "evidence": ["molestia"], "condition": "dato adicional",
+                      "difference": "Un dato distinto permitiría distinguir la alternativa"}],
+                     "current_alert": None, "optional_details": []}}
+        initial = json.dumps(value)
+        validate = lambda raw: validate_rag_answer(raw, [source], "Tengo molestia")
+        generate = Mock(return_value=initial)
+        unchanged = Mock(return_value=initial)
+        with self.assertRaises(ValueError):
+            llm.con_un_reintento(generate, validate, branch="rag", corregir=unchanged)
+        generate.assert_called_once_with()
+        unchanged.assert_called_once()
+        feedback = llm.sistema_de_correccion(RAG_SYSTEM, *unchanged.call_args.args)
+        self.assertIn("condiciones pendientes", feedback)
+        self.assertEqual(json.loads(unchanged.call_args.args[0]), value)
+        # La salida de la IA puede retirar el vínculo; el antecedente queda como contexto.
+        reconsidered = {**value, "facts": []}
+        answer = llm.con_un_reintento(Mock(return_value=initial), validate, branch="rag",
+                                     corregir=Mock(return_value=json.dumps(reconsidered)))
+        self.assertNotIn("Antecedentes relacionados", answer)
+        self.assertIn("Otros antecedentes recuperados", answer)
+        self.assertIn("si además hubiera dato adicional", answer)
+
 
 if __name__ == "__main__":
     unittest.main()

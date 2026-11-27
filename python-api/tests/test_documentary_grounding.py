@@ -122,9 +122,9 @@ class DocumentaryGroundingTests(unittest.TestCase):
 class OptionalDetailTests(unittest.TestCase):
     def render(self, question, details):
         return render_orientation({"possibilities": [{"cause": "causa de ejemplo", "evidence": [question],
-                                                       "condition": None},
+                                                       "condition": None, "difference": None},
                                                       {"cause": "otra causa de ejemplo", "evidence": [question],
-                                                       "condition": None}],
+                                                       "condition": None, "difference": "Dato adicional que distingue esta alternativa de la principal"}],
                                    "optional_details": details, "current_alert": None}, question)
 
     def test_reported_timing_omits_optional_duration_and_onset(self):
@@ -143,15 +143,15 @@ class OptionalDetailTests(unittest.TestCase):
     def test_timing_filter_is_not_applied_to_alternative_conditions(self):
         self.assertTrue(_new_condition("duración mayor de tres semanas", "Tengo dolor desde ayer"))
 
-    def test_fever_and_wheezing_equivalents_omit_repeated_conditions(self):
-        for condition, question in (("temperatura alta", "Tengo fiebre"),
-                                    ("fiebre", "Tengo temperatura elevada"),
-                                    ("sin silbidos", "Tengo silbido bronquial"),
-                                    ("wheezing", "Tengo silbidos"),
-                                    ("silbido bronquial", "No tengo wheezing")):
+    def test_repeated_literal_conditions_ignore_accents_articles_and_final_punctuation(self):
+        for condition, question in (("sensación de presión", "Siento una sensacion de presion."),
+                                    ("fiebre", "Tengo fiebre"),
+                                    ("dolor en el brazo", "No tengo dolor en el brazo")):
             with self.subTest(condition=condition, question=question):
                 self.assertFalse(_new_condition(condition, question))
         self.assertTrue(_new_condition("temperatura medida", "Tengo fiebre"))
+        self.assertTrue(_new_condition("dolor intenso", "Tengo dolor"))
+        self.assertTrue(_new_condition("molestia persistente", "Tengo molestia"))
 
 
 if __name__ == "__main__":

@@ -166,8 +166,8 @@ class RagNodeRetryTests(unittest.TestCase):
         self.state = {"pregunta": "dolor de estómago", "patient_id": 1, "request_id": "request-qa",
                       "contexto": [fragment("Enfermedad", "ERGE")], "prompt": "PROMPT"}
         self.valid = json.dumps({"mode": "symptom_guidance", "missing_information": False, "facts": [], "questions": [],
-                                 "guidance": {"possibilities": [{"cause": "gastritis", "evidence": ["dolor de estómago"], "condition": None},
-                                                               {"cause": "dispepsia", "evidence": ["dolor de estómago"], "condition": None}],
+                                 "guidance": {"possibilities": [{"cause": "gastritis", "evidence": ["dolor de estómago"], "condition": None, "difference": None},
+                                                               {"cause": "dispepsia", "evidence": ["dolor de estómago"], "condition": None, "difference": "Dato adicional que distingue esta alternativa de la principal"}],
                                               "optional_details": ["desde cuándo", "qué comió"], "current_alert": None}})
 
     def test_invalid_rag_output_gets_one_more_attempt_with_the_same_prompt(self):

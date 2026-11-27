@@ -77,8 +77,8 @@ class RealisticCorpusContracts(unittest.TestCase):
 
     def test_symptom_guidance_shows_each_demo_record_literally_when_not_cited(self):
         path = Path(__file__).resolve().parents[1] / "datos/casos_clinicos.json"
-        guidance = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None},
-                                      {"cause": "posibilidad B", "evidence": ["dolor de estómago"], "condition": None}],
+        guidance = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None, "difference": None},
+                                      {"cause": "posibilidad B", "evidence": ["dolor de estómago"], "condition": None, "difference": "Dato adicional que distingue esta alternativa de la principal"}],
                     "optional_details": ["desde cuándo ocurre", "qué lo alivia"], "current_alert": None}
         for case in json.loads(path.read_text(encoding="utf-8"))["cases"]:
             sources = [{"source": f"paciente-{case['patient_id']}.md", "record_id": "record", "section": section,
@@ -88,7 +88,7 @@ class RealisticCorpusContracts(unittest.TestCase):
                               "facts": [], "questions": []})
             with self.subTest(patient_id=case["patient_id"]):
                 shown = validate_rag_answer(raw, sources, "dolor de estómago")
-                self.assertIn("Antecedentes registrados del paciente (sin relación confirmada con este relato)", shown)
+                self.assertIn("Otros antecedentes recuperados", shown)
                 for source in sources:
                     self.assertIn(f"{source['text'].strip()}\nFuente: {source_label(source)}", shown)
                 self.assertNotIn("No hay un antecedente verificable", shown)

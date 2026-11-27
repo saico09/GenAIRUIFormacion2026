@@ -4,6 +4,7 @@ const headings = new Map([
   ['Antecedentes relacionados', 'answer-related'],
   ['Otras posibles causas', 'answer-alternatives'],
   ['Antecedentes registrados del paciente (sin relación confirmada con este relato)', 'answer-background'],
+  ['Otros antecedentes recuperados', 'answer-background'],
   ['Para completar la orientación', 'answer-details'],
 ]);
 

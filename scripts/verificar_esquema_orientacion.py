@@ -18,8 +18,8 @@ from jsonschema import Draft202012Validator
 from rag import (OUT_OF_SCOPE, direct_response_schema, rag_response_schema, source_label, validate_direct_answer,
                  validate_rag_answer)
 
-guide = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None},
-                           {"cause": "posibilidad B", "evidence": ["dolor de estómago"], "condition": None}],
+guide = {"possibilities": [{"cause": "posibilidad A", "evidence": ["dolor de estómago"], "condition": None, "difference": None},
+                           {"cause": "posibilidad B", "evidence": ["dolor de estómago"], "condition": None, "difference": "Dato adicional que distingue esta alternativa de la principal"}],
          "optional_details": ["ubicación", "duración"], "current_alert": None}
 
 
@@ -45,16 +45,16 @@ for question in ("dolor de estómago", "Tengo dolor de estómago"):
                     ("free_narrative", {"mode": "symptom_guidance", "guidance": "texto libre", **extras}, False, False)]
         for name, change, schema_expected, runtime_expected in (
                 ("question_detail_shown_as_detail", {"optional_details": ["¿Dónde?", "duración"]}, True, True),
-                ("question_cause", {"possibilities": [{"cause": "¿gastritis?", "evidence": [question], "condition": None},
+                ("question_cause", {"possibilities": [{"cause": "¿gastritis?", "evidence": [question], "condition": None, "difference": None},
                                                        case_guide["possibilities"][1]]}, True, False),
                 ("control", {"optional_details": ["dato\notro", "duración"]}, True, False),
                 ("blank", {"optional_details": ["   ", "duración"]}, True, False),
                 ("variable_name", {"optional_details": ["frecuencia_dia", "duración"]}, True, False),
-                ("too_long", {"optional_details": ["x" * 121, "duración"]}, True, False),
-                ("no_causes", {"possibilities": []}, False, False),
-                ("only_one_cause", {"possibilities": case_guide["possibilities"][:1]}, False, False),
+                ("too_long", {"optional_details": ["x" * 121, "duración"]}, False, False),
+                ("no_causes", {"possibilities": []}, True, True),
+                ("only_one_cause", {"possibilities": case_guide["possibilities"][:1]}, True, True),
                 ("four_causes", {"possibilities": case_guide["possibilities"] * 2}, False, False),
-                ("non_string", {"possibilities": [{"cause": 42, "evidence": [question], "condition": None}]}, False, False)):
+                ("non_string", {"possibilities": [{"cause": 42, "evidence": [question], "condition": None, "difference": None}]}, False, False)):
             fixtures.append((name, {"mode": "symptom_guidance", "guidance": {**case_guide, **change}, **extras},
                              schema_expected, runtime_expected))
         for name, value, schema_expected, runtime_expected in fixtures:
@@ -69,7 +69,7 @@ for question in ("dolor de estómago", "Tengo dolor de estómago"):
                           "schema_valid": schema_valid, "runtime_valid": runtime_valid,
                           "passed": schema_valid == schema_expected and runtime_valid == runtime_expected})
         cases.append({"question": question, "branch": branch, "case": "schema_without_text_pattern",
-                      "passed": '"pattern"' not in json.dumps(schema) and '"maxLength"' not in json.dumps(schema)})
+                      "passed": '"pattern"' not in json.dumps(schema)})
 for branch in ("direct", "rag"):
     question = "Estoy vomitando sangre roja ahora, tengo dolor fuerte en el abdomen y me siento mareada."
     schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([], question)
@@ -85,7 +85,7 @@ for branch in ("direct", "rag"):
             runtime_valid = False
         schema_valid = Draft202012Validator(schema).is_valid(value)
         cases.append({"branch": branch, "case": label, "schema_valid": schema_valid,
-                      "runtime_valid": runtime_valid, "passed": schema_valid == runtime_valid == expected})
+                      "runtime_valid": runtime_valid, "passed": schema_valid and runtime_valid == expected})
 for branch in ("direct", "rag"):
     for label, question, quote, expected in (
             ("negative_final_period", "No estoy vomitando sangre.", "No estoy vomitando sangre.", False),
@@ -112,7 +112,7 @@ for branch in ("direct", "rag"):
             runtime_valid = False
         schema_valid = Draft202012Validator(schema).is_valid(value)
         cases.append({"branch": branch, "case": label, "schema_valid": schema_valid,
-                      "runtime_valid": runtime_valid, "passed": schema_valid == runtime_valid == expected})
+                      "runtime_valid": runtime_valid, "passed": schema_valid and runtime_valid == expected})
 # La orientación puede vincular hasta tres antecedentes; requiere síntoma y explicación.
 source = {"source": "paciente-1.md", "record_id": "r1", "section": "Enfermedad", "text": "Ana Demo tiene ERGE."}
 fact = {"source": source_label(source), "quote": "Ana Demo tiene ERGE."}
@@ -122,7 +122,7 @@ for question, mode, guidance_value, expected in (("dolor de estómago", "symptom
     value = {"mode": mode, "guidance": guidance_value, "missing_information": False, "facts": [item, item], "questions": []}
     schema_valid = Draft202012Validator(rag_response_schema([source], question)).is_valid(value)
     cases.append({"branch": "rag", "case": f"two_facts_{mode}", "schema_valid": schema_valid, "passed": schema_valid == expected})
-for question, expected in (("¿Cuál es la capital de Francia?", True), ("dolor de estómago", False)):
+for question, expected in (("¿Cuál es la capital de Francia?", True), ("dolor de estómago", True)):
     for branch in ("direct", "rag"):
         schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([source], question)
         extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
@@ -143,6 +143,37 @@ for branch in ("direct", "rag"):
     raw = json.dumps(value)
     result = validate_direct_answer(raw, question) if branch == "direct" else validate_rag_answer(raw, [], question)
     cases.append({"branch": branch, "case": "documentary_missing", "passed": Draft202012Validator(schema).is_valid(value) and bool(result)})
+# Límites del esquema y del servidor deben coincidir; son longitudes de texto, no reglas clínicas.
+for branch in ("direct", "rag"):
+    question = "x" * 240
+    schema = direct_response_schema(question) if branch == "direct" else rag_response_schema([], question)
+    extras = {} if branch == "direct" else {"missing_information": True, "facts": [], "questions": []}
+    for field, limit in (("cause", 120), ("evidence", 240), ("condition", 220), ("difference", 280),
+                         ("optional_details", 120), ("current_alert", 240)):
+        for size in (limit, limit + 1):
+            value = with_evidence(question)
+            text = "x" * size
+            if field == "cause":
+                value["possibilities"][0][field] = text
+            elif field == "evidence":
+                value["possibilities"][0][field] = [text]
+            elif field in {"condition", "difference"}:
+                value["possibilities"][1][field] = text
+            elif field == "optional_details":
+                value[field] = [text]
+            else:
+                value[field] = text
+            payload = {"mode": "symptom_guidance", "guidance": value, **extras}
+            schema_valid = Draft202012Validator(schema).is_valid(payload)
+            try:
+                raw = json.dumps(payload)
+                validate_direct_answer(raw, question) if branch == "direct" else validate_rag_answer(raw, [], question)
+                runtime_valid = True
+            except ValueError:
+                runtime_valid = False
+            expected = size == limit
+            cases.append({"branch": branch, "case": f"length_{field}_{size}", "schema_valid": schema_valid,
+                          "runtime_valid": runtime_valid, "passed": schema_valid == runtime_valid == expected})
 report = {"validator": "jsonschema Draft202012Validator", "scope": __doc__, "cases": cases,
           "passed": all(row["passed"] for row in cases),
           "limits": "La paridad de formato no acredita pertinencia clínica ni que una cita de alarma sea una alarma real; eso se prueba por separado."}

@@ -94,29 +94,14 @@ def _current_quote(question: str, quote: str) -> bool:
     return False
 
 
-# Equivalencias acotadas para no pedir otra vez un síntoma ya mencionado (también si fue negado).
-# No diagnostican enfermedades ni intentan cubrir el vocabulario clínico completo.
-SYMPTOM_EQUIVALENTS = tuple(re.compile(pattern) for pattern in (
-    r"\b(?:disnea|dificultad (?:de |para |al )?respira\w*|dificultad respiratoria|falta (?:de |el )?aire|cuesta respirar)\b",
-    r"\b(?:sibilancias?|wheezing|respiracion sibilante|silbidos?(?: bronquial(?:es)?)?|pitidos?|pitos? (?:en el pecho|al respirar))\b",
-    r"\b(?:garganta (?:\w+ ){0,4}(?:tapada|cerrada|cerrando)|cierre de (?:la )?garganta)\b",
-    r"\b(?:dolor (?:en (?:el )?|de )?(?:pecho|torax)|dolor toracico|duele (?:el )?pecho)\b",
-    r"\b(?:dolor (?:de |en (?:el )?)?(?:estomago|abdomen|barriga)|dolor abdominal|duele (?:el |la )?(?:estomago|barriga))\b",
-    r"\b(?:fiebre|febril|temperatura (?:alta|elevada))\b", r"\b(?:hinchazon|hinchad\w*|distension abdominal)\b",
-    r"\b(?:reflujo\w*|acidez|agruras?|ardor (?:de |en (?:el )?)?estomago)\b",
-    r"\b(?:vomit\w*|emesis)\b", r"\b(?:nauseas?|ganas de vomitar)\b",
-    r"\b(?:postura|posicion|de pie|acostarse|acostad[oa]|al acostar\w*)\b",
-))
-
-
 def _new_condition(condition: str, question: str) -> bool:
     condition, question = _plain(condition), _plain(question)
-    if any(pattern.search(condition) and pattern.search(question) for pattern in SYMPTOM_EQUIVALENTS):
-        return False
     # Cotejo léxico: tolera tildes, puntuación y artículos, sin equiparar palabras sólo por prefijo.
-    stopwords = {"de", "del", "la", "el", "los", "las", "en", "al", "un", "una", "y", "o", "con", "sin",
-                 "nuevo", "nueva", "nuevos", "nuevas", "persistente", "persistentes", "intenso", "intensa"}
-    words = lambda text: {word for word in re.findall(r"\w+", text) if word not in stopwords}
+    stopwords = {"de", "del", "la", "el", "los", "las", "en", "al", "un", "una", "y", "o", "con", "sin"}
+    def words(text):
+        # Estas locuciones no aportan un dato distinto; sólo se normalizan para el cotejo.
+        text = re.sub(r"\b(?:presencia|ausencia)\s+de\b", " ", text)
+        return {word for word in re.findall(r"\w+", text) if word not in stopwords}
     added, reported = words(condition), words(question)
     return bool(added) and not added.issubset(reported)
 
@@ -130,91 +115,21 @@ def _new_detail(detail: str, question: str) -> bool:
     return not (timing_given and asks_timing) and _new_condition(detail, question)
 
 
-EXPLICIT_ALERT = re.compile(
-    r"\b(?:no (?:puedo|puede|logro|logra) respirar|sin poder respirar|no (?:estoy|esta) respirando(?: bien)?|"
-    r"(?:vomito|vomita|vomitas|vomitan|vomitando|vomite|vomitado)(?:\s+\w+){0,2}\s+sangre|sangre (?:en (?:el |las )?)?(?:vomito|heces)|"
-    r"dolor (?:en (?:el )?|de )?(?:pecho|torax)|dolor toracico|(?:me |le )?duele (?:el )?pecho|"
-    r"(?:me |se )?desmay\w*|(?:perdi|perdio) (?:el )?conocimiento|"
-    r"dolor intenso(?:\s+\w+){0,5}\s+no (?:cede|se calma))\b")
-THROAT_CLOSING = re.compile(r"\bgarganta\b.{0,45}\b(?:tapada|cerrada|cerrando)\b|\bcierre de (?:la )?garganta\b")
-
-
-def explicit_current_alert(question: str) -> str | None:
-    """Conserva una acción urgente ante señales explícitas; nunca elige un diagnóstico."""
-    # El mapa conserva citas literales incluso si una tilde ocupa dos caracteres Unicode.
-    characters, positions = [], []
-    for index, character in enumerate(question):
-        for folded in _plain(character):
-            characters.append(folded)
-            positions.append(index)
-    plain = "".join(characters)
-
-    def original(start, end):
-        finish = positions[end - 1] + 1
-        while finish < len(question) and unicodedata.combining(question[finish]):
-            finish += 1
-        return question[positions[start]:finish]
-
-    for match in EXPLICIT_ALERT.finditer(plain):
-        quote = original(match.start(), match.end())
-        if _current_quote(question, quote):
-            return quote
-    # La combinación del caso de Marco no debe depender de que el modelo marque la alerta.
-    breathing = SYMPTOM_EQUIVALENTS[0].search(plain)
-    throat = THROAT_CLOSING.search(plain)
-    if breathing and throat:
-        start, end = min(breathing.start(), throat.start()), max(breathing.end(), throat.end())
-        quote = original(start, end)
-        if len(quote) <= 240 and _current_quote(question, quote):
-            return quote
-    return None
-
-
 TEXT_PATTERN = r"^[^¿?\r\n\[\]_\u0000-\u0020][^¿?\r\n\[\]_\u0000-\u001f]*$"
 
 
-def _short_fragments(question: str):
-    # Se separan listas para citar síntomas concretos; _current_quote conserva su negación original.
-    for clause in re.split(r"[,;.!?\n]+|\by\b|\bpero\b", question, flags=re.I):
-        start, end = 0, 0
-        for word in re.finditer(r"\S+", clause):
-            if word.end() - start > 240:
-                if end > start:
-                    yield clause[start:end]
-                start = word.start()
-            end = word.end()
-        if end > start:
-            yield clause[start:end]
-
-
-def _candidate_quotes(question: str, *, short: bool = False) -> list[str]:
-    # Una coma corta sólo ante otra negación o un verbo nuevo: así una negación inicial cubre su lista entera.
-    sentences = re.split(r"[.!?;\n]+", question)
-    clauses = re.split(r"¿[^?]*\?|\by\s+(?=no\b)|" + CLAUSE_BREAK,
-                       question, flags=re.I)
-    # Se conserva también la frase completa cuando ambas partes son afirmativas.
-    clauses += [part for clause in clauses for part in re.split(AFFIRMATIVE_AND, clause, flags=re.I)]
-    fragments = list(_short_fragments(question)) if short else []
-    candidates = [candidate.strip(" ,") for candidate in (question, *sentences, *clauses, *fragments)]
-    return list(dict.fromkeys(candidate for candidate in candidates
-                              if 0 < len(candidate) <= 240 and re.fullmatch(TEXT_PATTERN, candidate)
-                              and not re.search(r"\bni\b", candidate, re.I)
-                              and _current_quote(question, candidate)))
-
-
 def orientation_schema(question: str = "") -> dict:
-    # Ollama descarta esquemas con pattern; maxLength puede cortar palabras durante la generación.
+    # Los campos clínicos los decide el modelo; las citas se comprueban contra el relato al recibirlas.
     text = {"type": "string", "minLength": 1}
-    quotes = _candidate_quotes(question, short=True)
     return {"type": "object", "properties": {
-        "possibilities": {"type": "array", "minItems": 2 if quotes else 0, "maxItems": 3 if quotes else 0, "items": {
-            "type": "object", "properties": {"cause": text,
-                "evidence": {"type": "array", "minItems": int(bool(quotes)), "maxItems": 3 if quotes else 0,
-                             "items": {**text, "enum": quotes} if quotes else text},
-                "condition": {"type": ["string", "null"], "minLength": 1}},
-            "required": ["cause", "evidence", "condition"], "additionalProperties": False}},
-        "optional_details": {"type": "array", "minItems": 0, "maxItems": 2, "items": text},
-        "current_alert": {"type": ["string", "null"], "enum": [None, *_candidate_quotes(question)]}},
+        "possibilities": {"type": "array", "minItems": 0, "maxItems": 3, "items": {
+            "type": "object", "properties": {"cause": {**text, "maxLength": 120},
+                "evidence": {"type": "array", "minItems": 1, "maxItems": 3, "items": {**text, "maxLength": 240}},
+                "condition": {"type": ["string", "null"], "minLength": 1, "maxLength": 220},
+                "difference": {"type": ["string", "null"], "minLength": 1, "maxLength": 280}},
+            "required": ["cause", "evidence", "condition", "difference"], "additionalProperties": False}},
+        "optional_details": {"type": "array", "maxItems": 2, "items": {**text, "maxLength": 120}},
+        "current_alert": {"type": ["string", "null"], "maxLength": 240}},
         "required": ["possibilities", "optional_details", "current_alert"], "additionalProperties": False}
 
 
@@ -244,9 +159,15 @@ def _phrase(value, limit):
 
 
 def _render_possibility(possibility: dict, index: int, question: str) -> str:
-    if not isinstance(possibility, dict) or set(possibility) != {"cause", "evidence", "condition"}:
+    if not isinstance(possibility, dict) or set(possibility) != {"cause", "evidence", "condition", "difference"}:
         raise ValueError("Posibilidad inválida")
     cause = _phrase(possibility["cause"], 120)
+    difference = possibility["difference"]
+    if index == 0 and difference is not None:
+        raise ValueError("La principal lleva difference=null")
+    if index > 0:
+        difference = _text(difference, 280)
+    suffix = f"\nQué la diferencia: {difference.rstrip(' .')}." if index > 0 else ""
     evidence, condition = possibility["evidence"], possibility["condition"]
     if not isinstance(evidence, list) or len(evidence) > 3:
         raise ValueError("La evidencia requiere hasta tres citas actuales")
@@ -264,11 +185,11 @@ def _render_possibility(possibility: dict, index: int, question: str) -> str:
                                   "", condition, flags=re.I), 220)
         if not _new_condition(condition, question):
             raise ValueError("La condición repite un dato ya relatado o negado")
-        return f"Podría ser {cause} si además hubiera {condition}."
+        return f"Podría ser {cause} si además hubiera {condition}." + suffix
     if quotes:
         cited = ", ".join(f"«{quote}»" for quote in dict.fromkeys(quotes))
         if index > 0:
-            return f"También podría ser {cause}, compatible con {cited}."
+            return f"También podría ser {cause}, compatible con {cited}." + suffix
         return f"Por lo que describes ({cited}), la posibilidad principal es {cause}."
     raise ValueError("Una posibilidad requiere evidencia actual o una condición adicional")
 
@@ -280,6 +201,8 @@ def related_cause(guidance: dict, index: int, question: str) -> str:
             or not 0 <= index < min(len(possibilities), 3)):
         raise ValueError("El antecedente debe referir a una posibilidad existente")
     _render_possibility(possibilities[index], index, question)
+    if possibilities[index]["condition"] is not None:
+        raise ValueError("El vínculo actual requiere una hipótesis sin condiciones pendientes; reconsidera facts o la hipótesis")
     return _phrase(possibilities[index]["cause"], 120)
 
 
@@ -289,9 +212,6 @@ def render_orientation(value: dict, question: str, *, background: str = "", rela
     possibilities, details = value["possibilities"], value["optional_details"]
     if not isinstance(possibilities, list) or len(possibilities) > 3:
         raise ValueError("La orientación admite hasta tres posibilidades")
-    requires_causes = bool(_candidate_quotes(question, short=True))
-    if len(possibilities) < 2 and requires_causes:
-        raise ValueError("Un relato actual requiere una principal y al menos una causa alternativa")
     if not isinstance(details, list) or len(details) > 2:
         raise ValueError("Se admiten hasta dos detalles opcionales")
     parts = []
@@ -303,11 +223,10 @@ def render_orientation(value: dict, question: str, *, background: str = "", rela
         # Una cita literal negada o hipotética tampoco acredita una alarma actual.
         if not _current_quote(question, alert):
             raise ValueError("La evidencia de alarma es negativa, condicional o histórica")
-    alert = explicit_current_alert(question) or alert
     if alert is not None:
         parts.append(f"Busca atención urgente por lo que relatas: «{alert}».")
     if not possibilities:
-        parts.append("No describes síntomas actuales afirmados para proponer una causa.")
+        parts.append("No se proponen causas para esta consulta.")
     rendered, causes, last_invalid = [], set(), None
     for index, possibility in enumerate(possibilities):
         try:
@@ -322,8 +241,8 @@ def render_orientation(value: dict, question: str, *, background: str = "", rela
                 raise
             last_invalid = error
             LOGGER.warning("orientation_filtered field=possibilities index=%s reason=%s", index, error)
-    if requires_causes and len(rendered) < 2:
-        # El coordinador reintenta una vez: no entregar silenciosamente sólo la principal.
+    if len(possibilities) > 1 and len(rendered) < 2:
+        # Si el modelo propuso alternativas, no descartarlas todas y entregar sólo la principal.
         raise ValueError("No quedó una alternativa válida; requiere otra generación") from last_invalid
     if rendered:
         parts.append(rendered[0])
