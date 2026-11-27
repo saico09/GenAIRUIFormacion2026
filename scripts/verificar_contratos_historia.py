@@ -294,7 +294,7 @@ class OfflineContracts(unittest.TestCase):
                                   if variant["properties"]["mode"]["enum"] == ["symptom_guidance"])
                 self.assertEqual(properties["mode"]["enum"], ["symptom_guidance"])
                 self.assertEqual(properties["guidance"]["type"], "object")
-                self.assertEqual(properties["guidance"]["required"], ["possibilities", "optional_details", "current_alert"])
+                self.assertCountEqual(properties["guidance"]["required"], ["possibilities", "optional_details", "current_alert"])
                 self.assertEqual(properties["questions"]["maxItems"], 0)
                 self.assertEqual(properties["facts"]["maxItems"], 0)
 

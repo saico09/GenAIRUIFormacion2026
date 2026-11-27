@@ -122,15 +122,15 @@ def orientation_schema(question: str = "") -> dict:
     # Los campos clínicos los decide el modelo; las citas se comprueban contra el relato al recibirlas.
     text = {"type": "string", "minLength": 1}
     return {"type": "object", "properties": {
+        "current_alert": {"type": ["string", "null"], "maxLength": 240},
         "possibilities": {"type": "array", "minItems": 0, "maxItems": 3, "items": {
             "type": "object", "properties": {"cause": {**text, "maxLength": 120},
                 "evidence": {"type": "array", "minItems": 1, "maxItems": 3, "items": {**text, "maxLength": 240}},
                 "condition": {"type": ["string", "null"], "minLength": 1, "maxLength": 220},
                 "difference": {"type": ["string", "null"], "minLength": 1, "maxLength": 280}},
             "required": ["cause", "evidence", "condition", "difference"], "additionalProperties": False}},
-        "optional_details": {"type": "array", "maxItems": 2, "items": {**text, "maxLength": 120}},
-        "current_alert": {"type": ["string", "null"], "maxLength": 240}},
-        "required": ["possibilities", "optional_details", "current_alert"], "additionalProperties": False}
+        "optional_details": {"type": "array", "maxItems": 2, "items": {**text, "maxLength": 120}}},
+        "required": ["current_alert", "possibilities", "optional_details"], "additionalProperties": False}
 
 
 def _text(value, limit):

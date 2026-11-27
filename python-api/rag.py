@@ -7,6 +7,8 @@ from orientation import DISCLAIMER, _current_quote, _text, orientation_schema, r
 
 
 SYMPTOM_GUIDANCE = (
+    "Evalúa primero la urgencia del relato actual, antes de proponer causas. "
+    "Un antecedente que explique los síntomas no reduce su urgencia. "
     "Decide si se relatan síntomas actuales. Si los hay, propone una causa principal y hasta dos alternativas "
     "plausibles distintas cuando aporten una explicación diferente. Cada cause es una sola "
     "enfermedad o causa, no un síntoma, una lista ni un nombre inventado. Mantén el mismo nivel de explicación: "
@@ -36,7 +38,8 @@ RAG_SYSTEM = (
     "ni demostrar que sea el mismo episodio. "
     "El vínculo es orientativo, no confirma causalidad. No enlaces por mera coexistencia y no elimines una "
     "condición necesaria para lograr un vínculo. Usa facts=[] cuando ningún registro aporte apoyo a una causa concreta propuesta. "
-    "Cada fact cita source y quote, añade symptom literal actual y cause_index (0 principal, 1–2 alternativas), "
+    "Cada fact cita source y quote, añade symptom literal afirmado en la consulta actual; "
+    "no uses síntomas negados como apoyo de un antecedente. Añade cause_index (0 principal, 1–2 alternativas), "
     "siempre hacia una hipótesis con condition=null. Cada REGISTRO agrupa enfermedad, tratamiento y medicamento "
     "del mismo antecedente; pertenecer al registro no prueba uso actual, eficacia ni fracaso del tratamiento. "
     "Una hipótesis de efecto farmacológico necesita evidencia temporal relatada. "
